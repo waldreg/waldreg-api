@@ -1,0 +1,8 @@
+rootProject.name = 'waldreg'
+include 'application-layer'
+include 'service-layer'
+include 'stable-service-layer'
+include 'domain-layer'
+include 'repository-layer'
+include 'core-layer'
+include 'external-layer'
