@@ -6,3 +6,6 @@ include 'domain-layer'
 include 'repository-layer'
 include 'core-layer'
 include 'external-layer'
+include 'domain-layer:domain'
+findProject(':domain-layer:domain')?.name = 'domain'
+
