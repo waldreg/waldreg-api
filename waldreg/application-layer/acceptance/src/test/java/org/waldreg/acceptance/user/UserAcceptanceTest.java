@@ -27,13 +27,8 @@ public class UserAcceptanceTest{
 
     @Autowired
     private ObjectMapper objectMapper;
-<<<<<<< HEAD
 
     private final String apiVersion="1.0";
-=======
-    
-    static String apiVersion="1.0";
->>>>>>> b6bf8cc7ac540b9e4376ccb6e353dff9e74eb818
 
     @Test
     @DisplayName("유저 생성 성공 테스트")
@@ -65,8 +60,6 @@ public class UserAcceptanceTest{
                 MockMvcResultMatchers.header().string("api-version",apiVersion)
         ).andDo(MockMvcResultHandlers.print());
     }
-
-<<<<<<< HEAD
 
     @Test
     @DisplayName("유저 생성 실패 인수 테스트 - 중복 아이디")
@@ -156,43 +149,6 @@ public class UserAcceptanceTest{
 
     }
 
-    @Test
-    @DisplayName("유저 생성 실패 인수 테스트 - 비밀번호 보안 기준 미달")
-    public void CREATE_NEW_USER_FAIL_CAUSE_INVALID_REQUEST() throws Exception{
-        //given
-        String url = "/user";
-        String name = "";
-        String userId = "";
-        String userPassword="alcuk_pwd";
-        String phoneNumber="010-1234-1234";
-        UserCreateRequest userCreateRequest = UserCreateRequest.builder()
-                .name(name)
-                .userId(userId)
-                .userPassword(userPassword)
-                .phoneNumber(phoneNumber)
-                .build();
-
-        //when
-        ResultActions result=mvc.perform(MockMvcRequestBuilders
-                .post(url)
-                .contentType(MediaType.APPLICATION_JSON)
-                .accept(MediaType.APPLICATION_JSON)
-                .header("api-version",apiVersion)
-                .content(objectMapper.writeValueAsString(userCreateRequest)));
-
-        //then
-        result.andExpectAll(
-                MockMvcResultMatchers.status().isBadRequest(),
-                MockMvcResultMatchers.header().string(HttpHeaders.CONTENT_TYPE,"application/json"),
-                MockMvcResultMatchers.header().string("api-version",apiVersion),
-                MockMvcResultMatchers.jsonPath("$.messages").value("Invalid request"),
-                MockMvcResultMatchers.jsonPath("$.document_url").value("docs.waldreg.org")
-        ).andDo(MockMvcResultHandlers.print());
-
-    }
-
-=======
->>>>>>> b6bf8cc7ac540b9e4376ccb6e353dff9e74eb818
     private final static class UserCreateRequest{
 
         @JsonProperty("name")
@@ -225,11 +181,6 @@ public class UserAcceptanceTest{
         
         public void setName(String name){this.name = name;}
 
-<<<<<<< HEAD
-        public void setName(String name){this.name = name;}
-
-=======
->>>>>>> b6bf8cc7ac540b9e4376ccb6e353dff9e74eb818
         public void setUserId(String userId){this.userId = userId;}
 
         public void setUserPassword(String userPassword){this.userPassword = userPassword;}
