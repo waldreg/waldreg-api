@@ -27,8 +27,13 @@ public class UserAcceptanceTest{
 
     @Autowired
     private ObjectMapper objectMapper;
+<<<<<<< HEAD
 
     private final String apiVersion="1.0";
+=======
+    
+    static String apiVersion="1.0";
+>>>>>>> b6bf8cc7ac540b9e4376ccb6e353dff9e74eb818
 
     @Test
     @DisplayName("유저 생성 성공 테스트")
@@ -61,6 +66,7 @@ public class UserAcceptanceTest{
         ).andDo(MockMvcResultHandlers.print());
     }
 
+<<<<<<< HEAD
 
     @Test
     @DisplayName("유저 생성 실패 인수 테스트 - 중복 아이디")
@@ -185,6 +191,8 @@ public class UserAcceptanceTest{
 
     }
 
+=======
+>>>>>>> b6bf8cc7ac540b9e4376ccb6e353dff9e74eb818
     private final static class UserCreateRequest{
 
         @JsonProperty("name")
@@ -214,9 +222,14 @@ public class UserAcceptanceTest{
         public String getUserPassword(){return userPassword;}
 
         public String getPhoneNumber(){return phoneNumber;}
-
+        
         public void setName(String name){this.name = name;}
 
+<<<<<<< HEAD
+        public void setName(String name){this.name = name;}
+
+=======
+>>>>>>> b6bf8cc7ac540b9e4376ccb6e353dff9e74eb818
         public void setUserId(String userId){this.userId = userId;}
 
         public void setUserPassword(String userPassword){this.userPassword = userPassword;}
