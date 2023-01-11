@@ -1,7 +1,6 @@
 package org.waldreg.acceptance.user;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -11,9 +10,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.RequestBuilder;
 import org.springframework.test.web.servlet.ResultActions;
-import org.springframework.test.web.servlet.ResultMatcher;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
@@ -28,7 +25,7 @@ public class UserAcceptanceTest{
     @Autowired
     private ObjectMapper objectMapper;
 
-    private final String apiVersion="1.0";
+    private final String apiVersion = "1.0";
 
     @Test
     @DisplayName("유저 생성 성공 테스트")
@@ -37,8 +34,8 @@ public class UserAcceptanceTest{
         String url = "/user";
         String name = "alcuk";
         String userId = "alcuk_id";
-        String userPassword="alcuk_pwd";
-        String phoneNumber="010-1234-1234";
+        String userPassword = "alcuk_pwd";
+        String phoneNumber = "010-1234-1234";
         UserCreateRequest userCreateRequest = UserCreateRequest.builder()
                 .name(name)
                 .userId(userId)
@@ -51,13 +48,13 @@ public class UserAcceptanceTest{
                 .post(url)
                 .contentType(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON)
-                .header("api-version",apiVersion)
+                .header("api-version", apiVersion)
                 .content(objectMapper.writeValueAsString(userCreateRequest)));
 
         //then
         result.andExpectAll(
                 MockMvcResultMatchers.status().isOk(),
-                MockMvcResultMatchers.header().string("api-version",apiVersion)
+                MockMvcResultMatchers.header().string("api-version", apiVersion)
         ).andDo(MockMvcResultHandlers.print());
     }
 
@@ -68,8 +65,8 @@ public class UserAcceptanceTest{
         String url = "/user";
         String name1 = "alcuk1";
         String userId1 = "alcuk_id";
-        String userPassword1="alcuk_pwd1";
-        String phoneNumber1="010-1234-1111";
+        String userPassword1 = "alcuk_pwd1";
+        String phoneNumber1 = "010-1234-1111";
         UserCreateRequest userCreateRequest1 = UserCreateRequest.builder()
                 .name(name1)
                 .userId(userId1)
@@ -79,8 +76,8 @@ public class UserAcceptanceTest{
 
         String name2 = "alcuk2";
         String userId2 = "alcuk_id";
-        String userPassword2="alcuk_pwd2";
-        String phoneNumber2="010-1234-2222";
+        String userPassword2 = "alcuk_pwd2";
+        String phoneNumber2 = "010-1234-2222";
         UserCreateRequest userCreateRequest2 = UserCreateRequest.builder()
                 .name(name2)
                 .userId(userId2)
@@ -93,21 +90,21 @@ public class UserAcceptanceTest{
                 .post(url)
                 .accept(MediaType.APPLICATION_JSON)
                 .contentType(MediaType.APPLICATION_JSON)
-                .header("api-version",apiVersion)
+                .header("api-version", apiVersion)
                 .content(objectMapper.writeValueAsString(userCreateRequest1)));
 
-        ResultActions result=mvc.perform(MockMvcRequestBuilders
+        ResultActions result = mvc.perform(MockMvcRequestBuilders
                 .post(url)
                 .accept(MediaType.APPLICATION_JSON)
                 .contentType(MediaType.APPLICATION_JSON)
-                .header("api-version",apiVersion)
+                .header("api-version", apiVersion)
                 .content(objectMapper.writeValueAsString(userCreateRequest2)));
 
         //then
         result.andExpectAll(
                 MockMvcResultMatchers.status().isBadRequest(),
-                MockMvcResultMatchers.header().string(HttpHeaders.CONTENT_TYPE,"application/json"),
-                MockMvcResultMatchers.header().string("api-version",apiVersion),
+                MockMvcResultMatchers.header().string(HttpHeaders.CONTENT_TYPE, "application/json"),
+                MockMvcResultMatchers.header().string("api-version", apiVersion),
                 MockMvcResultMatchers.jsonPath("$.messages").value("Duplicated user_id"),
                 MockMvcResultMatchers.jsonPath("$.document_url").value("docs.waldreg.org")
         ).andDo(MockMvcResultHandlers.print());
@@ -121,8 +118,8 @@ public class UserAcceptanceTest{
         String url = "/user";
         String name = "alcuk";
         String userId = "alcuk_id";
-        String userPassword="";
-        String phoneNumber="010-1234-1234";
+        String userPassword = "";
+        String phoneNumber = "010-1234-1234";
         UserCreateRequest userCreateRequest = UserCreateRequest.builder()
                 .name(name)
                 .userId(userId)
@@ -135,14 +132,14 @@ public class UserAcceptanceTest{
                 .post(url)
                 .contentType(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON)
-                .header("api-version",apiVersion)
+                .header("api-version", apiVersion)
                 .content(objectMapper.writeValueAsString(userCreateRequest)));
 
         //then
         result.andExpectAll(
                 MockMvcResultMatchers.status().isBadRequest(),
-                MockMvcResultMatchers.header().string(HttpHeaders.CONTENT_TYPE,"application/json"),
-                MockMvcResultMatchers.header().string("api-version",apiVersion),
+                MockMvcResultMatchers.header().string(HttpHeaders.CONTENT_TYPE, "application/json"),
+                MockMvcResultMatchers.header().string("api-version", apiVersion),
                 MockMvcResultMatchers.jsonPath("$.messages").value("Unsecured user_password"),
                 MockMvcResultMatchers.jsonPath("$.document_url").value("docs.waldreg.org")
         ).andDo(MockMvcResultHandlers.print());
@@ -178,7 +175,7 @@ public class UserAcceptanceTest{
         public String getUserPassword(){return userPassword;}
 
         public String getPhoneNumber(){return phoneNumber;}
-        
+
         public void setName(String name){this.name = name;}
 
         public void setUserId(String userId){this.userId = userId;}
@@ -206,8 +203,8 @@ public class UserAcceptanceTest{
                 return this;
             }
 
-            public Builder userPassword(String userPassward){
-                this.userPassword = userPassward;
+            public Builder userPassword(String userPassword){
+                this.userPassword = userPassword;
                 return this;
             }
 
