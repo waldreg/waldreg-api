@@ -28,7 +28,7 @@ public class PermissionAcceptanceTest{
     private final String apiVersion = "1.0";
 
     @Test
-    @DisplayName("새로운 역할 추가 성공 테스트")
+    @DisplayName("새로운 역할 추가 성공 인수 테스트")
     public void CREATE_NEW_CHARACTER_SUCCESS_ACCEPTANCE_TEST() throws Exception{
         // given
         String url = "/character";
@@ -53,7 +53,7 @@ public class PermissionAcceptanceTest{
                 .post(url)
                 .contentType(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON)
-                .header("api-version", "1.0")
+                .header("api-version", apiVersion)
                 .header(HttpHeaders.AUTHORIZATION, token)
                 .content(objectMapper.writeValueAsString(request)));
 
@@ -65,7 +65,7 @@ public class PermissionAcceptanceTest{
     }
 
     @Test
-    @DisplayName("새로운 역할 추가 실패 테스트 - 최고 관리자가 아닐때")
+    @DisplayName("새로운 역할 추가 실패 인수 테스트 - 최고 관리자가 아닐때")
     public void CREATE_NEW_CHARACTER_FAIL_CAUSE_NOT_ADMIN_ACCEPTANCE_TEST() throws Exception{
         // given
         String url = "/character";
@@ -90,7 +90,7 @@ public class PermissionAcceptanceTest{
                 .post(url)
                 .contentType(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON)
-                .header("api-version", "1.0")
+                .header("api-version", apiVersion)
                 .header(HttpHeaders.AUTHORIZATION, token)
                 .content(objectMapper.writeValueAsString(request)));
 
@@ -105,7 +105,7 @@ public class PermissionAcceptanceTest{
     }
 
     @Test
-    @DisplayName("새로운 역할 추가 실패 테스트 - 잘못된 permission_name 에 대해 요청")
+    @DisplayName("새로운 역할 추가 실패 인수 테스트 - 잘못된 permission_name 에 대해 요청")
     public void CREATE_NEW_CHARACTER_FAIL_INVALID_PERMISSION_NAME_ACCEPTANCE_TEST()
             throws Exception{
         // given
@@ -131,7 +131,7 @@ public class PermissionAcceptanceTest{
                 .post(url)
                 .contentType(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON)
-                .header("api-version", "1.0")
+                .header("api-version", apiVersion)
                 .header(HttpHeaders.AUTHORIZATION, token)
                 .content(objectMapper.writeValueAsString(request)));
 
@@ -146,7 +146,7 @@ public class PermissionAcceptanceTest{
     }
 
     @Test
-    @DisplayName("새로운 역할 추가 실패 테스트 - 잘못된 permission_status 요청")
+    @DisplayName("새로운 역할 추가 실패 인수 테스트 - 잘못된 permission_status 요청")
     public void CREATE_NEW_CHARACTER_FAIL_INVALID_PERMISSION_STATUS_ACCEPTANCE_TEST()
             throws Exception{
         // given
@@ -172,7 +172,7 @@ public class PermissionAcceptanceTest{
                 .post(url)
                 .contentType(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON)
-                .header("api-version", "1.0")
+                .header("api-version", apiVersion)
                 .header(HttpHeaders.AUTHORIZATION, token)
                 .content(objectMapper.writeValueAsString(request)));
 
@@ -187,7 +187,7 @@ public class PermissionAcceptanceTest{
     }
 
     @Test
-    @DisplayName("새로운 역할 추가 실패 테스트 - 중복된 character_name 추가 요청")
+    @DisplayName("새로운 역할 추가 실패 인수 테스트 - 중복된 character_name 추가 요청")
     public void CREATE_NEW_CHARACTER_FAIL_DUPLICATED_CHARACTER_NAME_ACCEPTANCE_TEST()
             throws Exception{
         // given
@@ -205,7 +205,7 @@ public class PermissionAcceptanceTest{
                 .post(url)
                 .contentType(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON)
-                .header("api-version", "1.0")
+                .header("api-version", apiVersion)
                 .header(HttpHeaders.AUTHORIZATION, token)
                 .content(objectMapper.writeValueAsString(request)));
 
@@ -213,7 +213,7 @@ public class PermissionAcceptanceTest{
                 .post(url)
                 .contentType(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON)
-                .header("api-version", "1.0")
+                .header("api-version", apiVersion)
                 .header(HttpHeaders.AUTHORIZATION, token)
                 .content(objectMapper.writeValueAsString(duplicatedRequest)));
 
@@ -224,6 +224,40 @@ public class PermissionAcceptanceTest{
                 MockMvcResultMatchers.header().string("api-version", apiVersion),
                 MockMvcResultMatchers.jsonPath("$.messages").value("Duplicated character name"),
                 MockMvcResultMatchers.jsonPath("$.document_url").value("docs.waldreg.org")
+        );
+    }
+
+    @Test
+    @DisplayName("역할 목록 조회 성공 인수 테스트")
+    public void INQUIRY_CHARACTER_LIST_SUCCESS_ACCEPTANCE_TEST() throws Exception{
+        // given
+        String url = "/character";
+        String token = "mock_token";
+        String characterName = "mock_acceptance";
+        CharacterCreateRequest request = CharacterCreateRequest.builder()
+                .characterName(characterName)
+                .permissionList(List.of()).build();
+
+        // when
+        mvc.perform(MockMvcRequestBuilders
+                .post(url)
+                .contentType(MediaType.APPLICATION_JSON)
+                .accept(MediaType.APPLICATION_JSON)
+                .header("api-version", apiVersion)
+                .header(HttpHeaders.AUTHORIZATION, token)
+                .content(objectMapper.writeValueAsString(request)));
+        ResultActions result = mvc.perform(MockMvcRequestBuilders
+                .get(url)
+                .accept(MediaType.APPLICATION_JSON)
+                .header("api-version", apiVersion)
+                .header(HttpHeaders.AUTHORIZATION, token));
+
+        // then
+        result.andExpectAll(
+                MockMvcResultMatchers.status().isOk(),
+                MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON),
+                MockMvcResultMatchers.header().string("api-version", apiVersion),
+                MockMvcResultMatchers.jsonPath("$.character_name.[0]").value(characterName)
         );
     }
 
