@@ -261,6 +261,31 @@ public class PermissionAcceptanceTest{
         );
     }
 
+    @Test
+    @DisplayName("역할 목록 조회 실패 인수 테스트 - 최고 관리자가 아님")
+    public void INQUIRY_CHARACTER_LIST_FAIL_NOT_ADMIN_ACCEPTANCE_TEST() throws Exception{
+        // given
+        String url = "/character";
+        String token = "not_admin_token";
+
+        // when
+        ResultActions result = mvc.perform(MockMvcRequestBuilders
+                .get(url)
+                .accept(MediaType.APPLICATION_JSON)
+                .header("api-version", apiVersion)
+                .header(HttpHeaders.AUTHORIZATION, token));
+
+
+        // then
+        result.andExpectAll(
+                MockMvcResultMatchers.status().isForbidden(),
+                MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON),
+                MockMvcResultMatchers.header().string("api-version", apiVersion),
+                MockMvcResultMatchers.jsonPath("$.messages").value("No permission"),
+                MockMvcResultMatchers.jsonPath("$.document_url").value("docs.waldreg.org")
+        );
+    }
+
     private final static class CharacterCreateRequest{
 
         @JsonProperty("character_name")
