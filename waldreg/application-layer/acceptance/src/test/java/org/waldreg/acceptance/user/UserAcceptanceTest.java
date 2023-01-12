@@ -185,7 +185,7 @@ public class UserAcceptanceTest{
 
     @Test
     @DisplayName("특정 유저 조회 성공 테스트 - 토큰 있을 때")
-    public void INQUERY_USER_WITH_TOKEN_SUCCESS_TEST() throws Exception{
+    public void INQUIRY_USER_WITH_TOKEN_SUCCESS_TEST() throws Exception{
         //given
         String saveUrl = "/user";
         String readUrl = "/user/{name}";
@@ -238,7 +238,7 @@ public class UserAcceptanceTest{
 
     @Test
     @DisplayName("특정 유저 조회 성공 테스트 - 토큰 없을 때")
-    public void INQUERY_USER_WITHOUT_TOKEN_SUCCESS_TEST() throws Exception{
+    public void INQUIRY_USER_WITHOUT_TOKEN_SUCCESS_TEST() throws Exception{
         //given
         String saveUrl = "/user";
         String readUrl = "/user/{name}";
@@ -285,11 +285,10 @@ public class UserAcceptanceTest{
 
     @Test
     @DisplayName("특정 유저 조회 실패 테스트 - 없는 유저")
-    public void INQUERY_USER_FAIL_CAUSE_UNKNOWN_USER_TEST() throws Exception{
+    public void INQUIRY_USER_FAIL_CAUSE_UNKNOWN_USER_TEST() throws Exception{
         //given
         String saveUrl = "/user";
         String readUrl = "/user/{name}";
-        String token = "";
 
         //when
         ResultActions result = mvc.perform(MockMvcRequestBuilders
@@ -304,6 +303,90 @@ public class UserAcceptanceTest{
                 MockMvcResultMatchers.header().string("api-version", apiVersion),
                 MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON),
                 MockMvcResultMatchers.jsonPath("$.messages").value("Unknown user name"),
+                MockMvcResultMatchers.jsonPath("$.document_url").value("docs.waldreg.org")
+        ).andDo(MockMvcResultHandlers.print());
+
+    }
+
+    @Test
+    @DisplayName("로그인된 유저 조회 성공 테스트")
+    public void INQUIRY_USER_ONLINE_SUCCESS_TEST() throws Exception{
+        //given
+        String url = "/user";
+        String token = "mock_token";
+
+        //when
+        ResultActions result = mvc.perform(MockMvcRequestBuilders
+                .get(url)
+                .accept(MediaType.APPLICATION_JSON)
+                .header("api-version", apiVersion)
+                .header(HttpHeaders.AUTHORIZATION, token));
+
+        //then
+        result.andExpectAll(
+                MockMvcResultMatchers.status().isOk(),
+                MockMvcResultMatchers.header().string(HttpHeaders.CONTENT_TYPE, "application/json"),
+                MockMvcResultMatchers.header().string("api-version", apiVersion),
+                MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON),
+                MockMvcResultMatchers.jsonPath("$.id").isNumber(),
+                MockMvcResultMatchers.jsonPath("$.name").isString(),
+                MockMvcResultMatchers.jsonPath("$.user_id").isString(),
+                MockMvcResultMatchers.jsonPath("$.phone_number").isString(),
+                MockMvcResultMatchers.jsonPath("$.character").isString(),
+                MockMvcResultMatchers.jsonPath("$.created_at").isNotEmpty(),
+                MockMvcResultMatchers.jsonPath("$.advantage").isNumber(),
+                MockMvcResultMatchers.jsonPath("$.penalty").isNumber(),
+                MockMvcResultMatchers.jsonPath("$.social_login").isArray()
+        ).andDo(MockMvcResultHandlers.print());
+
+    }
+
+    @Test
+    @DisplayName("로그인된 유저 조회 실패 테스트 - 잘못된 토큰")
+    public void INQUIRY_USER_ONLINE_FAIL_CAUSE_INVALID_TOKEN_TEST() throws Exception{
+        //given
+        String url = "/user";
+        String token = "mock_token";
+        String invalidToken = "";
+
+        //when
+        ResultActions result = mvc.perform(MockMvcRequestBuilders
+                .get(url)
+                .accept(MediaType.APPLICATION_JSON)
+                .header("api-version", apiVersion)
+                .header(HttpHeaders.AUTHORIZATION, invalidToken));
+
+        //then
+        result.andExpectAll(
+                MockMvcResultMatchers.status().isUnauthorized(),
+                MockMvcResultMatchers.header().string(HttpHeaders.CONTENT_TYPE, "application/json"),
+                MockMvcResultMatchers.header().string("api-version", apiVersion),
+                MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON),
+                MockMvcResultMatchers.jsonPath("$.messages").value("Invalid token"),
+                MockMvcResultMatchers.jsonPath("$.document_url").value("docs.waldreg.org")
+        ).andDo(MockMvcResultHandlers.print());
+
+    }
+
+    @Test
+    @DisplayName("로그인된 유저 조회 실패 테스트 - 없는 토큰")
+    public void INQUIRY_USER_ONLINE_FAIL_CAUSE_EMPTY_TOKEN_TEST() throws Exception{
+        //given
+        String url = "/user";
+
+        //when
+        ResultActions result = mvc.perform(MockMvcRequestBuilders
+                .get(url)
+                .accept(MediaType.APPLICATION_JSON)
+                .header("api-version", apiVersion));
+
+        //then
+        result.andExpectAll(
+                MockMvcResultMatchers.status().isUnauthorized(),
+                MockMvcResultMatchers.header().string(HttpHeaders.CONTENT_TYPE, "application/json"),
+                MockMvcResultMatchers.header().string("api-version", apiVersion),
+                MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON),
+                MockMvcResultMatchers.jsonPath("$.messages").value("Empty token"),
                 MockMvcResultMatchers.jsonPath("$.document_url").value("docs.waldreg.org")
         ).andDo(MockMvcResultHandlers.print());
 
