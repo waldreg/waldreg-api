@@ -20,7 +20,8 @@ public class UserAcceptanceTestHelper{
                 .content(content));
     }
 
-    public static ResultActions inquiryUserWithToken(MockMvc mvc, String url, String name, String token)
+    public static ResultActions inquiryUserWithToken(MockMvc mvc, String url, String name,
+            String token)
             throws Exception{
         return mvc.perform(MockMvcRequestBuilders
                 .get(url, name)
@@ -54,16 +55,46 @@ public class UserAcceptanceTestHelper{
                 .header("api-version", apiVersion));
     }
 
-    public static ResultActions modifyUser(MockMvc mvc, String url, String token, String pwd, String content)throws Exception{
+    public static ResultActions modifyUserWithToken(MockMvc mvc, String url, String token,
+            String password,
+            String content) throws Exception{
         return mvc.perform(MockMvcRequestBuilders
                 .patch(url, content)
                 .accept(MediaType.APPLICATION_JSON)
                 .header("api-version", apiVersion)
                 .header(HttpHeaders.AUTHORIZATION, token)
-                .header("password",pwd)
+                .header("password", password)
                 .content(content));
     }
 
+    public static ResultActions modifyUserWithoutToken(MockMvc mvc, String url, String password,
+            String content) throws Exception{
+        return mvc.perform(MockMvcRequestBuilders
+                .patch(url, content)
+                .accept(MediaType.APPLICATION_JSON)
+                .header("api-version", apiVersion)
+                .header("password", password)
+                .content(content));
+    }
 
+    public static ResultActions deleteUserWithToken(MockMvc mvc, String url, String token,
+            String password)
+            throws Exception{
+        return mvc.perform(MockMvcRequestBuilders
+                .delete(url)
+                .accept(MediaType.APPLICATION_JSON)
+                .header("api-version", apiVersion)
+                .header(HttpHeaders.AUTHORIZATION, token)
+                .header("password", password));
+    }
+
+    public static ResultActions deleteUserWithoutToken(MockMvc mvc, String url, String password)
+            throws Exception{
+        return mvc.perform(MockMvcRequestBuilders
+                .delete(url)
+                .accept(MediaType.APPLICATION_JSON)
+                .header("api-version", apiVersion)
+                .header("password", password));
+    }
 
 }
