@@ -49,13 +49,8 @@ public class PermissionAcceptanceTest{
                 ).build();
 
         // when
-        ResultActions result = mvc.perform(MockMvcRequestBuilders
-                .post(url)
-                .contentType(MediaType.APPLICATION_JSON)
-                .accept(MediaType.APPLICATION_JSON)
-                .header("api-version", apiVersion)
-                .header(HttpHeaders.AUTHORIZATION, token)
-                .content(objectMapper.writeValueAsString(request)));
+        ResultActions result = PermissionAcceptanceTestHelper
+                .createCharacter(mvc, url, token, objectMapper.writeValueAsString(request));
 
         // then
         result.andExpectAll(
@@ -86,13 +81,8 @@ public class PermissionAcceptanceTest{
                 ).build();
 
         // when
-        ResultActions result = mvc.perform(MockMvcRequestBuilders
-                .post(url)
-                .contentType(MediaType.APPLICATION_JSON)
-                .accept(MediaType.APPLICATION_JSON)
-                .header("api-version", apiVersion)
-                .header(HttpHeaders.AUTHORIZATION, token)
-                .content(objectMapper.writeValueAsString(request)));
+        ResultActions result = PermissionAcceptanceTestHelper
+                .createCharacter(mvc, url, token, objectMapper.writeValueAsString(request));
 
         // then
         result.andExpectAll(
@@ -128,13 +118,8 @@ public class PermissionAcceptanceTest{
                 ).build();
 
         // when
-        ResultActions result = mvc.perform(MockMvcRequestBuilders
-                .post(url)
-                .contentType(MediaType.APPLICATION_JSON)
-                .accept(MediaType.APPLICATION_JSON)
-                .header("api-version", apiVersion)
-                .header(HttpHeaders.AUTHORIZATION, token)
-                .content(objectMapper.writeValueAsString(request)));
+        ResultActions result = PermissionAcceptanceTestHelper
+                .createCharacter(mvc, url, token, objectMapper.writeValueAsString(request));
 
         // then
         result.andExpectAll(
@@ -170,13 +155,8 @@ public class PermissionAcceptanceTest{
                 ).build();
 
         // when
-        ResultActions result = mvc.perform(MockMvcRequestBuilders
-                .post(url)
-                .contentType(MediaType.APPLICATION_JSON)
-                .accept(MediaType.APPLICATION_JSON)
-                .header("api-version", apiVersion)
-                .header(HttpHeaders.AUTHORIZATION, token)
-                .content(objectMapper.writeValueAsString(request)));
+        ResultActions result = PermissionAcceptanceTestHelper
+                .createCharacter(mvc, url, token, objectMapper.writeValueAsString(request));
 
         // then
         result.andExpectAll(
@@ -204,21 +184,12 @@ public class PermissionAcceptanceTest{
                 .permissionList(List.of()).build();
 
         // when
-        mvc.perform(MockMvcRequestBuilders
-                .post(url)
-                .contentType(MediaType.APPLICATION_JSON)
-                .accept(MediaType.APPLICATION_JSON)
-                .header("api-version", apiVersion)
-                .header(HttpHeaders.AUTHORIZATION, token)
-                .content(objectMapper.writeValueAsString(request)));
+        PermissionAcceptanceTestHelper
+                .createCharacter(mvc, url, token, objectMapper.writeValueAsString(request));
 
-        ResultActions duplicatedResult = mvc.perform(MockMvcRequestBuilders
-                .post(url)
-                .contentType(MediaType.APPLICATION_JSON)
-                .accept(MediaType.APPLICATION_JSON)
-                .header("api-version", apiVersion)
-                .header(HttpHeaders.AUTHORIZATION, token)
-                .content(objectMapper.writeValueAsString(duplicatedRequest)));
+        ResultActions duplicatedResult = PermissionAcceptanceTestHelper
+                .createCharacter(mvc, url, token,
+                        objectMapper.writeValueAsString(duplicatedRequest));
 
         // then
         duplicatedResult.andExpectAll(
@@ -243,19 +214,10 @@ public class PermissionAcceptanceTest{
                 .permissionList(List.of()).build();
 
         // when
-        mvc.perform(MockMvcRequestBuilders
-                .post(url)
-                .contentType(MediaType.APPLICATION_JSON)
-                .accept(MediaType.APPLICATION_JSON)
-                .header("api-version", apiVersion)
-                .header(HttpHeaders.AUTHORIZATION, token)
-                .content(objectMapper.writeValueAsString(request)));
+        PermissionAcceptanceTestHelper
+                .createCharacter(mvc, url, token, objectMapper.writeValueAsString(request));
 
-        ResultActions result = mvc.perform(MockMvcRequestBuilders
-                .get(url)
-                .accept(MediaType.APPLICATION_JSON)
-                .header("api-version", apiVersion)
-                .header(HttpHeaders.AUTHORIZATION, token));
+        ResultActions result = PermissionAcceptanceTestHelper.inquiryCharacterList(mvc, url, token);
 
         // then
         result.andExpectAll(
@@ -275,11 +237,7 @@ public class PermissionAcceptanceTest{
         String token = "not_admin_token";
 
         // when
-        ResultActions result = mvc.perform(MockMvcRequestBuilders
-                .get(url)
-                .accept(MediaType.APPLICATION_JSON)
-                .header("api-version", apiVersion)
-                .header(HttpHeaders.AUTHORIZATION, token));
+        ResultActions result = PermissionAcceptanceTestHelper.inquiryCharacterList(mvc, url, token);
 
         // then
         result.andExpectAll(
@@ -312,19 +270,12 @@ public class PermissionAcceptanceTest{
                 .build();
 
         // when
-        mvc.perform(MockMvcRequestBuilders
-                .post("/character")
-                .contentType(MediaType.APPLICATION_JSON)
-                .accept(MediaType.APPLICATION_JSON)
-                .header("api-version", apiVersion)
-                .header(HttpHeaders.AUTHORIZATION, token)
-                .content(objectMapper.writeValueAsString(request)));
+        PermissionAcceptanceTestHelper
+                .createCharacter(mvc, "/character", token,
+                        objectMapper.writeValueAsString(request));
 
-        ResultActions result = mvc.perform(MockMvcRequestBuilders
-                .get(url, characterName)
-                .accept(MediaType.APPLICATION_JSON)
-                .header("api-version", apiVersion)
-                .header(HttpHeaders.AUTHORIZATION, token));
+        ResultActions result = PermissionAcceptanceTestHelper
+                .inquirySpecificCharacter(mvc, url, characterName, token);
 
         // then
         result.andExpectAll(
@@ -349,11 +300,8 @@ public class PermissionAcceptanceTest{
         String characterName = "mock_character_name";
 
         // when
-        ResultActions result = mvc.perform(MockMvcRequestBuilders
-                .get(url, characterName)
-                .accept(MediaType.APPLICATION_JSON)
-                .header("api-version", apiVersion)
-                .header(HttpHeaders.AUTHORIZATION, token));
+        ResultActions result = PermissionAcceptanceTestHelper
+                .inquirySpecificCharacter(mvc, url, characterName, token);
 
         // then
         result.andExpectAll(
@@ -376,11 +324,8 @@ public class PermissionAcceptanceTest{
         String characterName = "unknown_character_name";
 
         // when
-        ResultActions result = mvc.perform(MockMvcRequestBuilders
-                .get(url, characterName)
-                .accept(MediaType.APPLICATION_JSON)
-                .header("api-version", apiVersion)
-                .header(HttpHeaders.AUTHORIZATION, token));
+        ResultActions result = PermissionAcceptanceTestHelper
+                .inquirySpecificCharacter(mvc, url, characterName, token);
 
         // then
         result.andExpectAll(
@@ -412,23 +357,15 @@ public class PermissionAcceptanceTest{
                 )).build();
 
         // when
-        mvc.perform(MockMvcRequestBuilders
-                .post("/character")
-                .contentType(MediaType.APPLICATION_JSON)
-                .accept(MediaType.APPLICATION_JSON)
-                .header("api-version", apiVersion)
-                .header(HttpHeaders.AUTHORIZATION, token)
-                .content(objectMapper.writeValueAsString(request)));
+        PermissionAcceptanceTestHelper
+                .createCharacter(mvc, "/character", token,
+                        objectMapper.writeValueAsString(request));
 
         request.characterName = "modified_character_name";
 
-        ResultActions result = mvc.perform(MockMvcRequestBuilders
-                .patch(url, characterName)
-                .accept(MediaType.APPLICATION_JSON)
-                .contentType(MediaType.APPLICATION_JSON)
-                .header("api-version", apiVersion)
-                .header(HttpHeaders.AUTHORIZATION, token)
-                .content(objectMapper.writeValueAsString(request)));
+        ResultActions result = PermissionAcceptanceTestHelper
+                .modifySpecificCharacter(mvc, url, characterName, token,
+                        objectMapper.writeValueAsString(request));
 
         // then
         result.andExpectAll(
@@ -449,13 +386,9 @@ public class PermissionAcceptanceTest{
                 .permissionList(List.of()).build();
 
         // when
-        ResultActions result = mvc.perform(MockMvcRequestBuilders
-                .patch(url, characterName)
-                .accept(MediaType.APPLICATION_JSON)
-                .contentType(MediaType.APPLICATION_JSON)
-                .header("api-version", apiVersion)
-                .header(HttpHeaders.AUTHORIZATION, token)
-                .content(objectMapper.writeValueAsString(request)));
+        ResultActions result = PermissionAcceptanceTestHelper
+                .modifySpecificCharacter(mvc, url, characterName, token,
+                        objectMapper.writeValueAsString(request));
 
         // then
         result.andExpectAll(
@@ -485,31 +418,17 @@ public class PermissionAcceptanceTest{
                 .permissionList(List.of()).build();
 
         // when
-        mvc.perform(MockMvcRequestBuilders
-                .post(createUrl)
-                .contentType(MediaType.APPLICATION_JSON)
-                .accept(MediaType.APPLICATION_JSON)
-                .header("api-version", apiVersion)
-                .header(HttpHeaders.AUTHORIZATION, token)
-                .content(objectMapper.writeValueAsString(request)));
+        PermissionAcceptanceTestHelper
+                .createCharacter(mvc, createUrl, token, objectMapper.writeValueAsString(request));
 
-        mvc.perform(MockMvcRequestBuilders
-                .post(createUrl)
-                .contentType(MediaType.APPLICATION_JSON)
-                .accept(MediaType.APPLICATION_JSON)
-                .header("api-version", apiVersion)
-                .header(HttpHeaders.AUTHORIZATION, token)
-                .content(objectMapper.writeValueAsString(request2)));
+        PermissionAcceptanceTestHelper
+                .createCharacter(mvc, createUrl, token, objectMapper.writeValueAsString(request2));
 
         request2.characterName = characterName;
 
-        ResultActions result = mvc.perform(MockMvcRequestBuilders
-                .patch(changeUrl, beforeCharacterName)
-                .accept(MediaType.APPLICATION_JSON)
-                .contentType(MediaType.APPLICATION_JSON)
-                .header("api-version", apiVersion)
-                .header(HttpHeaders.AUTHORIZATION, token)
-                .content(objectMapper.writeValueAsString(request2)));
+        ResultActions result = PermissionAcceptanceTestHelper.modifySpecificCharacter(
+                mvc, changeUrl, beforeCharacterName, token,
+                objectMapper.writeValueAsString(request2));
 
         // then
         result.andExpectAll(
@@ -534,13 +453,9 @@ public class PermissionAcceptanceTest{
                 .permissionList(List.of()).build();
 
         // when
-        ResultActions result = mvc.perform(MockMvcRequestBuilders
-                .patch(url, characterName)
-                .accept(MediaType.APPLICATION_JSON)
-                .contentType(MediaType.APPLICATION_JSON)
-                .header("api-version", apiVersion)
-                .header(HttpHeaders.AUTHORIZATION, token)
-                .content(objectMapper.writeValueAsString(request)));
+        ResultActions result = PermissionAcceptanceTestHelper.modifySpecificCharacter(
+                mvc, url, characterName, token,
+                objectMapper.writeValueAsString(request));
 
         // then
         result.andExpectAll(
@@ -582,21 +497,12 @@ public class PermissionAcceptanceTest{
                 )).build();
 
         // when
-        mvc.perform(MockMvcRequestBuilders
-                .post(createUrl)
-                .contentType(MediaType.APPLICATION_JSON)
-                .accept(MediaType.APPLICATION_JSON)
-                .header("api-version", apiVersion)
-                .header(HttpHeaders.AUTHORIZATION, token)
-                .content(objectMapper.writeValueAsString(request)));
+        PermissionAcceptanceTestHelper
+                .createCharacter(mvc, createUrl, token, objectMapper.writeValueAsString(request));
 
-        ResultActions result = mvc.perform(MockMvcRequestBuilders
-                .patch(url, characterName)
-                .accept(MediaType.APPLICATION_JSON)
-                .contentType(MediaType.APPLICATION_JSON)
-                .header("api-version", apiVersion)
-                .header(HttpHeaders.AUTHORIZATION, token)
-                .content(objectMapper.writeValueAsString(changeRequest)));
+        ResultActions result = PermissionAcceptanceTestHelper.modifySpecificCharacter(
+                mvc, url, characterName, token,
+                objectMapper.writeValueAsString(changeRequest));
 
         // then
         result.andExpectAll(
@@ -638,21 +544,12 @@ public class PermissionAcceptanceTest{
                 )).build();
 
         // when
-        mvc.perform(MockMvcRequestBuilders
-                .post(createUrl)
-                .contentType(MediaType.APPLICATION_JSON)
-                .accept(MediaType.APPLICATION_JSON)
-                .header("api-version", apiVersion)
-                .header(HttpHeaders.AUTHORIZATION, token)
-                .content(objectMapper.writeValueAsString(request)));
+        PermissionAcceptanceTestHelper
+                .createCharacter(mvc, createUrl, token, objectMapper.writeValueAsString(request));
 
-        ResultActions result = mvc.perform(MockMvcRequestBuilders
-                .patch(url, characterName)
-                .accept(MediaType.APPLICATION_JSON)
-                .contentType(MediaType.APPLICATION_JSON)
-                .header("api-version", apiVersion)
-                .header(HttpHeaders.AUTHORIZATION, token)
-                .content(objectMapper.writeValueAsString(changeRequest)));
+        ResultActions result = PermissionAcceptanceTestHelper.modifySpecificCharacter(
+                mvc, url, characterName, token,
+                objectMapper.writeValueAsString(changeRequest));
 
         // then
         result.andExpectAll(
@@ -727,24 +624,45 @@ public class PermissionAcceptanceTest{
                 .permissionList(List.of()).build();
 
         // when
-        mvc.perform(MockMvcRequestBuilders
-                .post(url)
-                .contentType(MediaType.APPLICATION_JSON)
-                .accept(MediaType.APPLICATION_JSON)
-                .header("api-version", apiVersion)
-                .header(HttpHeaders.AUTHORIZATION, token)
-                .content(objectMapper.writeValueAsString(request)));
-        ResultActions result = mvc.perform(MockMvcRequestBuilders
-                .delete(deleteUrl, characterName)
-                .accept(MediaType.APPLICATION_JSON)
-                .header("api-version", apiVersion)
-                .header(HttpHeaders.AUTHORIZATION, token));
+        PermissionAcceptanceTestHelper
+                .createCharacter(mvc, url, token, objectMapper.writeValueAsString(request));
+
+        ResultActions result = PermissionAcceptanceTestHelper
+                .deleteSpecificCharacter(mvc, deleteUrl, characterName, token);
 
         // then
         result.andExpectAll(
                 MockMvcResultMatchers.status().isOk(),
                 MockMvcResultMatchers.header().string(HttpHeaders.CONTENT_TYPE, "application/json"),
+                MockMvcResultMatchers.header().string("api-version", apiVersion)
+        );
+    }
+
+    @Test
+    @DisplayName("역할 삭제 실패 - 최고 관리자가 아님")
+    public void DELETE_CHARACTER_FAIL_NOT_ADMIN_TEST() throws Exception{
+        // given
+        String url = "/permission";
+        String deleteUrl = "/permission/{character-name}";
+        String characterName = "mock_character";
+        String token = "mock_token";
+        String notAdminToken = "not_admin_token";
+        CharacterCreateRequest request = CharacterCreateRequest.builder()
+                .characterName(characterName)
+                .permissionList(List.of()).build();
+
+        // when
+        PermissionAcceptanceTestHelper
+                .createCharacter(mvc, url, token, objectMapper.writeValueAsString(request));
+
+        ResultActions result = PermissionAcceptanceTestHelper
+                .deleteSpecificCharacter(mvc, deleteUrl, characterName, notAdminToken);
+
+        // then
+        result.andExpectAll(
+                MockMvcResultMatchers.status().isForbidden(),
                 MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON),
+                MockMvcResultMatchers.header().string(HttpHeaders.CONTENT_TYPE, "application/json"),
                 MockMvcResultMatchers.header().string("api-version", apiVersion),
                 MockMvcResultMatchers.jsonPath("$.messages").value("No permission"),
                 MockMvcResultMatchers.jsonPath("$.document_url").value("docs.waldreg.org")
@@ -759,16 +677,10 @@ public class PermissionAcceptanceTest{
         String deleteUrl = "/permission/{character-name}";
         String characterName = "mock_character";
         String token = "mock_token";
-        CharacterCreateRequest request = CharacterCreateRequest.builder()
-                .characterName(characterName)
-                .permissionList(List.of()).build();
 
         // when
-        ResultActions result = mvc.perform(MockMvcRequestBuilders
-                .delete(deleteUrl, characterName)
-                .accept(MediaType.APPLICATION_JSON)
-                .header("api-version", apiVersion)
-                .header(HttpHeaders.AUTHORIZATION, token));
+        ResultActions result = PermissionAcceptanceTestHelper
+                .deleteSpecificCharacter(mvc, deleteUrl, characterName, token);
 
         // then
         result.andExpectAll(
