@@ -714,6 +714,73 @@ public class PermissionAcceptanceTest{
         );
     }
 
+    @Test
+    @DisplayName("역할 삭제 성공 인수 테스트")
+    public void DELETE_CHARACTER_SUCCESS_ACCEPTANCE_TEST() throws Exception{
+        // given
+        String url = "/permission";
+        String deleteUrl = "/permission/{character-name}";
+        String characterName = "mock_character";
+        String token = "mock_token";
+        CharacterCreateRequest request = CharacterCreateRequest.builder()
+                .characterName(characterName)
+                .permissionList(List.of()).build();
+
+        // when
+        mvc.perform(MockMvcRequestBuilders
+                .post(url)
+                .contentType(MediaType.APPLICATION_JSON)
+                .accept(MediaType.APPLICATION_JSON)
+                .header("api-version", apiVersion)
+                .header(HttpHeaders.AUTHORIZATION, token)
+                .content(objectMapper.writeValueAsString(request)));
+        ResultActions result = mvc.perform(MockMvcRequestBuilders
+                .delete(deleteUrl, characterName)
+                .accept(MediaType.APPLICATION_JSON)
+                .header("api-version", apiVersion)
+                .header(HttpHeaders.AUTHORIZATION, token));
+
+        // then
+        result.andExpectAll(
+                MockMvcResultMatchers.status().isOk(),
+                MockMvcResultMatchers.header().string(HttpHeaders.CONTENT_TYPE, "application/json"),
+                MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON),
+                MockMvcResultMatchers.header().string("api-version", apiVersion),
+                MockMvcResultMatchers.jsonPath("$.messages").value("No permission"),
+                MockMvcResultMatchers.jsonPath("$.document_url").value("docs.waldreg.org")
+        );
+    }
+
+    @Test
+    @DisplayName("역할 삭제 실패 인수 테스트 - 없는 역할에 대한 삭제 요청")
+    public void DELETE_CHARACTER_FAIL_INVALID_CHARACTER_ACCEPTANCE_TEST() throws Exception{
+        // given
+        String url = "/permission";
+        String deleteUrl = "/permission/{character-name}";
+        String characterName = "mock_character";
+        String token = "mock_token";
+        CharacterCreateRequest request = CharacterCreateRequest.builder()
+                .characterName(characterName)
+                .permissionList(List.of()).build();
+
+        // when
+        ResultActions result = mvc.perform(MockMvcRequestBuilders
+                .delete(deleteUrl, characterName)
+                .accept(MediaType.APPLICATION_JSON)
+                .header("api-version", apiVersion)
+                .header(HttpHeaders.AUTHORIZATION, token));
+
+        // then
+        result.andExpectAll(
+                MockMvcResultMatchers.status().isBadRequest(),
+                MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON),
+                MockMvcResultMatchers.header().string(HttpHeaders.CONTENT_TYPE, "application/json"),
+                MockMvcResultMatchers.header().string("api-version", apiVersion),
+                MockMvcResultMatchers.jsonPath("$.messages").value("Unknown permission name"),
+                MockMvcResultMatchers.jsonPath("$.document_url").value("docs.waldreg.org")
+        );
+    }
+
     private final static class CharacterCreateRequest{
 
         @JsonProperty("character_name")
