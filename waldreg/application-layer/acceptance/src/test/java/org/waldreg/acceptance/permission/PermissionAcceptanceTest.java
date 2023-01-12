@@ -246,6 +246,7 @@ public class PermissionAcceptanceTest{
                 .header("api-version", apiVersion)
                 .header(HttpHeaders.AUTHORIZATION, token)
                 .content(objectMapper.writeValueAsString(request)));
+
         ResultActions result = mvc.perform(MockMvcRequestBuilders
                 .get(url)
                 .accept(MediaType.APPLICATION_JSON)
@@ -275,13 +276,110 @@ public class PermissionAcceptanceTest{
                 .header("api-version", apiVersion)
                 .header(HttpHeaders.AUTHORIZATION, token));
 
-
         // then
         result.andExpectAll(
                 MockMvcResultMatchers.status().isForbidden(),
                 MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON),
                 MockMvcResultMatchers.header().string("api-version", apiVersion),
                 MockMvcResultMatchers.jsonPath("$.messages").value("No permission"),
+                MockMvcResultMatchers.jsonPath("$.document_url").value("docs.waldreg.org")
+        );
+    }
+
+    @Test
+    @DisplayName("특정 역할 조회 성공 인수 테스트")
+    public void INQUIRY_CHARACTER_BY_NAME_SUCCESS_ACCEPTANCE_TEST() throws Exception{
+        // given
+        String url = "/character/{character-name}";
+        String token = "mock_token";
+        String characterName = "mock_character";
+        String permissionName = "mock_permission";
+        String permissionStatus = "mock_permission_status";
+        CharacterCreateRequest request = CharacterCreateRequest.builder()
+                .characterName(characterName)
+                .permissionList(List.of(
+                        PermissionCreateRequest.builder()
+                                .name(permissionName)
+                                .status(permissionStatus)
+                                .build()
+                ))
+                .build();
+
+        // when
+        mvc.perform(MockMvcRequestBuilders
+                .post("/character")
+                .contentType(MediaType.APPLICATION_JSON)
+                .accept(MediaType.APPLICATION_JSON)
+                .header("api-version", apiVersion)
+                .header(HttpHeaders.AUTHORIZATION, token)
+                .content(objectMapper.writeValueAsString(request)));
+
+        ResultActions result = mvc.perform(MockMvcRequestBuilders
+                .get(url, characterName)
+                .accept(MediaType.APPLICATION_JSON)
+                .header("api-version", apiVersion)
+                .header(HttpHeaders.AUTHORIZATION, token));
+
+        // then
+        result.andExpectAll(
+                MockMvcResultMatchers.status().isOk(),
+                MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON),
+                MockMvcResultMatchers.header().string("api-version", apiVersion),
+                MockMvcResultMatchers.jsonPath("$.character_name").value(characterName),
+                MockMvcResultMatchers.jsonPath("$.permissions.[0].permission_name")
+                        .value(permissionName),
+                MockMvcResultMatchers.jsonPath("$.permissions.[0].permission_status")
+                        .value(permissionStatus)
+        );
+    }
+
+    @Test
+    @DisplayName("특정 역할 조회 실패 인수테스트 - 최고 관리자가 아님")
+    public void INQUIRY_CHARACTER_BY_NAME_FAIL_NOT_ADMIN_ACCEPTANCE_TEST() throws Exception{
+        // given
+        String url = "/character/{character-name}";
+        String token = "not_admin_token";
+        String characterName = "mock_character_name";
+
+        // when
+        ResultActions result = mvc.perform(MockMvcRequestBuilders
+                .get(url, characterName)
+                .accept(MediaType.APPLICATION_JSON)
+                .header("api-version", apiVersion)
+                .header(HttpHeaders.AUTHORIZATION, token));
+
+        // then
+        result.andExpectAll(
+                MockMvcResultMatchers.status().isBadRequest(),
+                MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON),
+                MockMvcResultMatchers.header().string("api-version", apiVersion),
+                MockMvcResultMatchers.jsonPath("$.messages").value("No permission"),
+                MockMvcResultMatchers.jsonPath("$.document_url").value("docs.waldreg.org")
+        );
+    }
+
+    @Test
+    @DisplayName("특정 역할 조회 실패 인수테스트 - 잘못된 character-name으로 조회")
+    public void INQUIRY_CHARACTER_BY_NAME_FAIL_WRONG_CHARACTER_NAME_ACCEPTANCE_TEST()
+            throws Exception{
+        // given
+        String url = "/character/{character-name}";
+        String token = "mock_token";
+        String characterName = "unknown_character_name";
+
+        // when
+        ResultActions result = mvc.perform(MockMvcRequestBuilders
+                .get(url, characterName)
+                .accept(MediaType.APPLICATION_JSON)
+                .header("api-version", apiVersion)
+                .header(HttpHeaders.AUTHORIZATION, token));
+
+        // then
+        result.andExpectAll(
+                MockMvcResultMatchers.status().isBadRequest(),
+                MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON),
+                MockMvcResultMatchers.header().string("api-version", apiVersion),
+                MockMvcResultMatchers.jsonPath("$.messages").value("Unknown character name"),
                 MockMvcResultMatchers.jsonPath("$.document_url").value("docs.waldreg.org")
         );
     }
