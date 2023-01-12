@@ -206,8 +206,8 @@ public class UserAcceptanceTest{
                 return this;
             }
 
-            public Builder userPassword(String userPassward){
-                this.userPassword = userPassward;
+            public Builder userPassword(String userPassword){
+                this.userPassword = userPassword;
                 return this;
             }
 
