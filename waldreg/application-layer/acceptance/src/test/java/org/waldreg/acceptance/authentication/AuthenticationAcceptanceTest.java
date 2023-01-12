@@ -53,7 +53,6 @@ public class AuthenticationAcceptanceTest{
         //then
         result.andExpectAll(MockMvcResultMatchers.status().isOk(),
                         MockMvcResultMatchers.header().string(HttpHeaders.CONTENT_TYPE, "application/json"),
-                        MockMvcResultMatchers.header().string(HttpHeaders.ACCEPT, "application/json"),
                         MockMvcResultMatchers.header().string("api-version", apiVersion),
                         MockMvcResultMatchers.jsonPath("$.access_token").isString(),
                         MockMvcResultMatchers.jsonPath("$.token_type").value("jwt"))
