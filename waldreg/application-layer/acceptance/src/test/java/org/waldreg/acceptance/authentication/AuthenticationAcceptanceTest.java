@@ -65,7 +65,6 @@ public class AuthenticationAcceptanceTest{
         String url = "/token";
         String userId = "";
         String userPassword = "";
-
         TokenCreateRequest tokenCreateRequest = TokenCreateRequest.builder()
                 .userId(userId)
                 .userPassword(userPassword)
@@ -81,11 +80,10 @@ public class AuthenticationAcceptanceTest{
 
         //then
         result.andExpectAll(MockMvcResultMatchers.status().isBadRequest(),
-                        MockMvcResultMatchers.header().string(HttpHeaders.CONTENT_TYPE, "application/json"),
-                        MockMvcResultMatchers.header().string("api-version", apiVersion),
-                        MockMvcResultMatchers.jsonPath("$.messages")
-                                .value("Invalid authentication information"),
-                        MockMvcResultMatchers.jsonPath("$.document_url").value("docs.waldreg.org"))
+                            MockMvcResultMatchers.header().string(HttpHeaders.CONTENT_TYPE, "application/json"),
+                            MockMvcResultMatchers.header().string("api-version", apiVersion),
+                            MockMvcResultMatchers.jsonPath("$.messages").value("Invalid authentication information"),
+                            MockMvcResultMatchers.jsonPath("$.document_url").value("docs.waldreg.org"))
                 .andDo(MockMvcResultHandlers.print());
 
     }
