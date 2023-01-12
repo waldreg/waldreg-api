@@ -1,0 +1,227 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="org.waldreg.acceptance.authentication.AuthenticationAcceptanceTest" tests="1" skipped="0" failures="1" errors="0" timestamp="2023-01-12T06:07:56" hostname="hwangseonghaui-MacBookPro.local" time="0.504">
+  <properties/>
+  <testcase name="토큰 발급 실패 잘못된 인증 정보" classname="org.waldreg.acceptance.authentication.AuthenticationAcceptanceTest" time="0.504">
+    <failure message="java.lang.AssertionError: Multiple Exceptions (5):&#10;Status expected:&lt;400&gt; but was:&lt;404&gt;&#10;Response header 'Content-Type' expected:&lt;application/json&gt; but was:&lt;null&gt;&#10;Response header 'api-version' expected:&lt;1.0&gt; but was:&lt;null&gt;&#10;No value at JSON path &quot;$.messages&quot;&#10;No value at JSON path &quot;$.document_url&quot;" type="java.lang.AssertionError">java.lang.AssertionError: Multiple Exceptions (5):
+Status expected:&lt;400&gt; but was:&lt;404&gt;
+Response header 'Content-Type' expected:&lt;application/json&gt; but was:&lt;null&gt;
+Response header 'api-version' expected:&lt;1.0&gt; but was:&lt;null&gt;
+No value at JSON path &quot;$.messages&quot;
+No value at JSON path &quot;$.document_url&quot;
+	at org.springframework.test.util.ExceptionCollector.assertEmpty(ExceptionCollector.java:107)
+	at org.springframework.test.web.servlet.ResultActions.andExpectAll(ResultActions.java:88)
+	at org.waldreg.acceptance.authentication.AuthenticationAcceptanceTest.TOKEN_PUBLISH_FAIL_INVALID_INFORMATION(AuthenticationAcceptanceTest.java:83)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)
+	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:566)
+	at org.junit.platform.commons.util.ReflectionUtils.invokeMethod(ReflectionUtils.java:725)
+	at org.junit.jupiter.engine.execution.MethodInvocation.proceed(MethodInvocation.java:60)
+	at org.junit.jupiter.engine.execution.InvocationInterceptorChain$ValidatingInvocation.proceed(InvocationInterceptorChain.java:131)
+	at org.junit.jupiter.engine.extension.TimeoutExtension.intercept(TimeoutExtension.java:149)
+	at org.junit.jupiter.engine.extension.TimeoutExtension.interceptTestableMethod(TimeoutExtension.java:140)
+	at org.junit.jupiter.engine.extension.TimeoutExtension.interceptTestMethod(TimeoutExtension.java:84)
+	at org.junit.jupiter.engine.execution.ExecutableInvoker$ReflectiveInterceptorCall.lambda$ofVoidMethod$0(ExecutableInvoker.java:115)
+	at org.junit.jupiter.engine.execution.ExecutableInvoker.lambda$invoke$0(ExecutableInvoker.java:105)
+	at org.junit.jupiter.engine.execution.InvocationInterceptorChain$InterceptedInvocation.proceed(InvocationInterceptorChain.java:106)
+	at org.junit.jupiter.engine.execution.InvocationInterceptorChain.proceed(InvocationInterceptorChain.java:64)
+	at org.junit.jupiter.engine.execution.InvocationInterceptorChain.chainAndInvoke(InvocationInterceptorChain.java:45)
+	at org.junit.jupiter.engine.execution.InvocationInterceptorChain.invoke(InvocationInterceptorChain.java:37)
+	at org.junit.jupiter.engine.execution.ExecutableInvoker.invoke(ExecutableInvoker.java:104)
+	at org.junit.jupiter.engine.execution.ExecutableInvoker.invoke(ExecutableInvoker.java:98)
+	at org.junit.jupiter.engine.descriptor.TestMethodTestDescriptor.lambda$invokeTestMethod$7(TestMethodTestDescriptor.java:214)
+	at org.junit.platform.engine.support.hierarchical.ThrowableCollector.execute(ThrowableCollector.java:73)
+	at org.junit.jupiter.engine.descriptor.TestMethodTestDescriptor.invokeTestMethod(TestMethodTestDescriptor.java:210)
+	at org.junit.jupiter.engine.descriptor.TestMethodTestDescriptor.execute(TestMethodTestDescriptor.java:135)
+	at org.junit.jupiter.engine.descriptor.TestMethodTestDescriptor.execute(TestMethodTestDescriptor.java:66)
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.lambda$executeRecursively$6(NodeTestTask.java:151)
+	at org.junit.platform.engine.support.hierarchical.ThrowableCollector.execute(ThrowableCollector.java:73)
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.lambda$executeRecursively$8(NodeTestTask.java:141)
+	at org.junit.platform.engine.support.hierarchical.Node.around(Node.java:137)
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.lambda$executeRecursively$9(NodeTestTask.java:139)
+	at org.junit.platform.engine.support.hierarchical.ThrowableCollector.execute(ThrowableCollector.java:73)
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.executeRecursively(NodeTestTask.java:138)
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.execute(NodeTestTask.java:95)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1541)
+	at org.junit.platform.engine.support.hierarchical.SameThreadHierarchicalTestExecutorService.invokeAll(SameThreadHierarchicalTestExecutorService.java:41)
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.lambda$executeRecursively$6(NodeTestTask.java:155)
+	at org.junit.platform.engine.support.hierarchical.ThrowableCollector.execute(ThrowableCollector.java:73)
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.lambda$executeRecursively$8(NodeTestTask.java:141)
+	at org.junit.platform.engine.support.hierarchical.Node.around(Node.java:137)
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.lambda$executeRecursively$9(NodeTestTask.java:139)
+	at org.junit.platform.engine.support.hierarchical.ThrowableCollector.execute(ThrowableCollector.java:73)
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.executeRecursively(NodeTestTask.java:138)
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.execute(NodeTestTask.java:95)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1541)
+	at org.junit.platform.engine.support.hierarchical.SameThreadHierarchicalTestExecutorService.invokeAll(SameThreadHierarchicalTestExecutorService.java:41)
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.lambda$executeRecursively$6(NodeTestTask.java:155)
+	at org.junit.platform.engine.support.hierarchical.ThrowableCollector.execute(ThrowableCollector.java:73)
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.lambda$executeRecursively$8(NodeTestTask.java:141)
+	at org.junit.platform.engine.support.hierarchical.Node.around(Node.java:137)
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.lambda$executeRecursively$9(NodeTestTask.java:139)
+	at org.junit.platform.engine.support.hierarchical.ThrowableCollector.execute(ThrowableCollector.java:73)
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.executeRecursively(NodeTestTask.java:138)
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.execute(NodeTestTask.java:95)
+	at org.junit.platform.engine.support.hierarchical.SameThreadHierarchicalTestExecutorService.submit(SameThreadHierarchicalTestExecutorService.java:35)
+	at org.junit.platform.engine.support.hierarchical.HierarchicalTestExecutor.execute(HierarchicalTestExecutor.java:57)
+	at org.junit.platform.engine.support.hierarchical.HierarchicalTestEngine.execute(HierarchicalTestEngine.java:54)
+	at org.junit.platform.launcher.core.EngineExecutionOrchestrator.execute(EngineExecutionOrchestrator.java:108)
+	at org.junit.platform.launcher.core.EngineExecutionOrchestrator.execute(EngineExecutionOrchestrator.java:88)
+	at org.junit.platform.launcher.core.EngineExecutionOrchestrator.lambda$execute$0(EngineExecutionOrchestrator.java:54)
+	at org.junit.platform.launcher.core.EngineExecutionOrchestrator.withInterceptedStreams(EngineExecutionOrchestrator.java:67)
+	at org.junit.platform.launcher.core.EngineExecutionOrchestrator.execute(EngineExecutionOrchestrator.java:52)
+	at org.junit.platform.launcher.core.DefaultLauncher.execute(DefaultLauncher.java:96)
+	at org.junit.platform.launcher.core.DefaultLauncher.execute(DefaultLauncher.java:75)
+	at org.gradle.api.internal.tasks.testing.junitplatform.JUnitPlatformTestClassProcessor$CollectAllTestClassesExecutor.processAllTestClasses(JUnitPlatformTestClassProcessor.java:99)
+	at org.gradle.api.internal.tasks.testing.junitplatform.JUnitPlatformTestClassProcessor$CollectAllTestClassesExecutor.access$000(JUnitPlatformTestClassProcessor.java:79)
+	at org.gradle.api.internal.tasks.testing.junitplatform.JUnitPlatformTestClassProcessor.stop(JUnitPlatformTestClassProcessor.java:75)
+	at org.gradle.api.internal.tasks.testing.SuiteTestClassProcessor.stop(SuiteTestClassProcessor.java:61)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)
+	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:566)
+	at org.gradle.internal.dispatch.ReflectionDispatch.dispatch(ReflectionDispatch.java:36)
+	at org.gradle.internal.dispatch.ReflectionDispatch.dispatch(ReflectionDispatch.java:24)
+	at org.gradle.internal.dispatch.ContextClassLoaderDispatch.dispatch(ContextClassLoaderDispatch.java:33)
+	at org.gradle.internal.dispatch.ProxyDispatchAdapter$DispatchingInvocationHandler.invoke(ProxyDispatchAdapter.java:94)
+	at com.sun.proxy.$Proxy2.stop(Unknown Source)
+	at org.gradle.api.internal.tasks.testing.worker.TestWorker$3.run(TestWorker.java:193)
+	at org.gradle.api.internal.tasks.testing.worker.TestWorker.executeAndMaintainThreadName(TestWorker.java:129)
+	at org.gradle.api.internal.tasks.testing.worker.TestWorker.execute(TestWorker.java:100)
+	at org.gradle.api.internal.tasks.testing.worker.TestWorker.execute(TestWorker.java:60)
+	at org.gradle.process.internal.worker.child.ActionExecutionWorker.execute(ActionExecutionWorker.java:56)
+	at org.gradle.process.internal.worker.child.SystemApplicationClassLoaderWorker.call(SystemApplicationClassLoaderWorker.java:133)
+	at org.gradle.process.internal.worker.child.SystemApplicationClassLoaderWorker.call(SystemApplicationClassLoaderWorker.java:71)
+	at worker.org.gradle.process.internal.worker.GradleWorkerMain.run(GradleWorkerMain.java:69)
+	at worker.org.gradle.process.internal.worker.GradleWorkerMain.main(GradleWorkerMain.java:74)
+	Suppressed: java.lang.AssertionError: Status expected:&lt;400&gt; but was:&lt;404&gt;
+		at org.springframework.test.util.AssertionErrors.fail(AssertionErrors.java:59)
+		at org.springframework.test.util.AssertionErrors.assertEquals(AssertionErrors.java:122)
+		at org.springframework.test.web.servlet.result.StatusResultMatchers.lambda$matcher$9(StatusResultMatchers.java:627)
+		at org.springframework.test.web.servlet.MockMvc$1.andExpect(MockMvc.java:212)
+		at org.springframework.test.web.servlet.ResultActions.lambda$andExpectAll$0(ResultActions.java:86)
+		at org.springframework.test.util.ExceptionCollector.execute(ExceptionCollector.java:49)
+		at org.springframework.test.web.servlet.ResultActions.andExpectAll(ResultActions.java:86)
+		... 84 more
+	Suppressed: java.lang.AssertionError: Response header 'Content-Type' expected:&lt;application/json&gt; but was:&lt;null&gt;
+		at org.springframework.test.util.AssertionErrors.fail(AssertionErrors.java:59)
+		at org.springframework.test.util.AssertionErrors.assertEquals(AssertionErrors.java:122)
+		at org.springframework.test.web.servlet.result.HeaderResultMatchers.lambda$string$2(HeaderResultMatchers.java:79)
+		at org.springframework.test.web.servlet.MockMvc$1.andExpect(MockMvc.java:212)
+		at org.springframework.test.web.servlet.ResultActions.lambda$andExpectAll$0(ResultActions.java:86)
+		at org.springframework.test.util.ExceptionCollector.execute(ExceptionCollector.java:49)
+		at org.springframework.test.web.servlet.ResultActions.andExpectAll(ResultActions.java:86)
+		... 84 more
+	Suppressed: java.lang.AssertionError: Response header 'api-version' expected:&lt;1.0&gt; but was:&lt;null&gt;
+		at org.springframework.test.util.AssertionErrors.fail(AssertionErrors.java:59)
+		at org.springframework.test.util.AssertionErrors.assertEquals(AssertionErrors.java:122)
+		at org.springframework.test.web.servlet.result.HeaderResultMatchers.lambda$string$2(HeaderResultMatchers.java:79)
+		at org.springframework.test.web.servlet.MockMvc$1.andExpect(MockMvc.java:212)
+		at org.springframework.test.web.servlet.ResultActions.lambda$andExpectAll$0(ResultActions.java:86)
+		at org.springframework.test.util.ExceptionCollector.execute(ExceptionCollector.java:49)
+		at org.springframework.test.web.servlet.ResultActions.andExpectAll(ResultActions.java:86)
+		... 84 more
+	Suppressed: java.lang.AssertionError: No value at JSON path &quot;$.messages&quot;
+		at org.springframework.test.util.JsonPathExpectationsHelper.evaluateJsonPath(JsonPathExpectationsHelper.java:304)
+		at org.springframework.test.util.JsonPathExpectationsHelper.assertValue(JsonPathExpectationsHelper.java:99)
+		at org.springframework.test.web.servlet.result.JsonPathResultMatchers.lambda$value$2(JsonPathResultMatchers.java:111)
+		at org.springframework.test.web.servlet.MockMvc$1.andExpect(MockMvc.java:212)
+		at org.springframework.test.web.servlet.ResultActions.lambda$andExpectAll$0(ResultActions.java:86)
+		at org.springframework.test.util.ExceptionCollector.execute(ExceptionCollector.java:49)
+		at org.springframework.test.web.servlet.ResultActions.andExpectAll(ResultActions.java:86)
+		... 84 more
+	Caused by: java.lang.IllegalArgumentException: json can not be null or empty
+		at com.jayway.jsonpath.internal.Utils.notEmpty(Utils.java:401)
+		at com.jayway.jsonpath.JsonPath.read(JsonPath.java:390)
+		at com.jayway.jsonpath.JsonPath.read(JsonPath.java:377)
+		at org.springframework.test.util.JsonPathExpectationsHelper.evaluateJsonPath(JsonPathExpectationsHelper.java:301)
+		... 90 more
+	Suppressed: java.lang.AssertionError: No value at JSON path &quot;$.document_url&quot;
+		at org.springframework.test.util.JsonPathExpectationsHelper.evaluateJsonPath(JsonPathExpectationsHelper.java:304)
+		at org.springframework.test.util.JsonPathExpectationsHelper.assertValue(JsonPathExpectationsHelper.java:99)
+		at org.springframework.test.web.servlet.result.JsonPathResultMatchers.lambda$value$2(JsonPathResultMatchers.java:111)
+		at org.springframework.test.web.servlet.MockMvc$1.andExpect(MockMvc.java:212)
+		at org.springframework.test.web.servlet.ResultActions.lambda$andExpectAll$0(ResultActions.java:86)
+		at org.springframework.test.util.ExceptionCollector.execute(ExceptionCollector.java:49)
+		at org.springframework.test.web.servlet.ResultActions.andExpectAll(ResultActions.java:86)
+		... 84 more
+	Caused by: java.lang.IllegalArgumentException: json can not be null or empty
+		at com.jayway.jsonpath.internal.Utils.notEmpty(Utils.java:401)
+		at com.jayway.jsonpath.JsonPath.read(JsonPath.java:390)
+		at com.jayway.jsonpath.JsonPath.read(JsonPath.java:377)
+		at org.springframework.test.util.JsonPathExpectationsHelper.evaluateJsonPath(JsonPathExpectationsHelper.java:301)
+		... 90 more
+</failure>
+  </testcase>
+  <system-out><![CDATA[15:07:54.491 [Test worker] DEBUG org.springframework.test.context.BootstrapUtils - Instantiating CacheAwareContextLoaderDelegate from class [org.springframework.test.context.cache.DefaultCacheAwareContextLoaderDelegate]
+15:07:54.501 [Test worker] DEBUG org.springframework.test.context.BootstrapUtils - Instantiating BootstrapContext using constructor [public org.springframework.test.context.support.DefaultBootstrapContext(java.lang.Class,org.springframework.test.context.CacheAwareContextLoaderDelegate)]
+15:07:54.537 [Test worker] DEBUG org.springframework.test.context.BootstrapUtils - Instantiating TestContextBootstrapper for test class [org.waldreg.acceptance.authentication.AuthenticationAcceptanceTest] from class [org.springframework.boot.test.context.SpringBootTestContextBootstrapper]
+15:07:54.549 [Test worker] INFO org.springframework.boot.test.context.SpringBootTestContextBootstrapper - Neither @ContextConfiguration nor @ContextHierarchy found for test class [org.waldreg.acceptance.authentication.AuthenticationAcceptanceTest], using SpringBootContextLoader
+15:07:54.554 [Test worker] DEBUG org.springframework.test.context.support.AbstractContextLoader - Did not detect default resource location for test class [org.waldreg.acceptance.authentication.AuthenticationAcceptanceTest]: class path resource [org/waldreg/acceptance/authentication/AuthenticationAcceptanceTest-context.xml] does not exist
+15:07:54.555 [Test worker] DEBUG org.springframework.test.context.support.AbstractContextLoader - Did not detect default resource location for test class [org.waldreg.acceptance.authentication.AuthenticationAcceptanceTest]: class path resource [org/waldreg/acceptance/authentication/AuthenticationAcceptanceTestContext.groovy] does not exist
+15:07:54.555 [Test worker] INFO org.springframework.test.context.support.AbstractContextLoader - Could not detect default resource locations for test class [org.waldreg.acceptance.authentication.AuthenticationAcceptanceTest]: no resource found for suffixes {-context.xml, Context.groovy}.
+15:07:54.555 [Test worker] DEBUG org.springframework.test.context.support.AnnotationConfigContextLoaderUtils - Ignoring class [org.waldreg.acceptance.authentication.AuthenticationAcceptanceTest$TokenCreateRequest]; it must be static, non-private, non-final, and annotated with @Configuration to be considered a default configuration class.
+15:07:54.556 [Test worker] INFO org.springframework.test.context.support.AnnotationConfigContextLoaderUtils - Could not detect default configuration classes for test class [org.waldreg.acceptance.authentication.AuthenticationAcceptanceTest]: AuthenticationAcceptanceTest does not declare any static, non-private, non-final, nested classes annotated with @Configuration.
+15:07:54.617 [Test worker] DEBUG org.springframework.test.context.support.ActiveProfilesUtils - Could not find an 'annotation declaring class' for annotation type [org.springframework.test.context.ActiveProfiles] and class [org.waldreg.acceptance.authentication.AuthenticationAcceptanceTest]
+15:07:54.682 [Test worker] DEBUG org.springframework.context.annotation.ClassPathScanningCandidateComponentProvider - Identified candidate component class: file [/Users/hwangseongha/Desktop/waldreg-api/waldreg/application-layer/acceptance/build/classes/java/main/org/waldreg/Application.class]
+15:07:54.683 [Test worker] INFO org.springframework.boot.test.context.SpringBootTestContextBootstrapper - Found @SpringBootConfiguration org.waldreg.Application for test class org.waldreg.acceptance.authentication.AuthenticationAcceptanceTest
+15:07:54.836 [Test worker] DEBUG org.springframework.boot.test.context.SpringBootTestContextBootstrapper - @TestExecutionListeners is not present for class [org.waldreg.acceptance.authentication.AuthenticationAcceptanceTest]: using defaults.
+15:07:54.837 [Test worker] INFO org.springframework.boot.test.context.SpringBootTestContextBootstrapper - Loaded default TestExecutionListener class names from location [META-INF/spring.factories]: [org.springframework.boot.test.autoconfigure.restdocs.RestDocsTestExecutionListener, org.springframework.boot.test.autoconfigure.web.client.MockRestServiceServerResetTestExecutionListener, org.springframework.boot.test.autoconfigure.web.servlet.MockMvcPrintOnlyOnFailureTestExecutionListener, org.springframework.boot.test.autoconfigure.web.servlet.WebDriverTestExecutionListener, org.springframework.boot.test.autoconfigure.webservices.client.MockWebServiceServerTestExecutionListener, org.springframework.boot.test.mock.mockito.MockitoTestExecutionListener, org.springframework.boot.test.mock.mockito.ResetMocksTestExecutionListener, org.springframework.test.context.web.ServletTestExecutionListener, org.springframework.test.context.support.DirtiesContextBeforeModesTestExecutionListener, org.springframework.test.context.event.ApplicationEventsTestExecutionListener, org.springframework.test.context.support.DependencyInjectionTestExecutionListener, org.springframework.test.context.support.DirtiesContextTestExecutionListener, org.springframework.test.context.transaction.TransactionalTestExecutionListener, org.springframework.test.context.jdbc.SqlScriptsTestExecutionListener, org.springframework.test.context.event.EventPublishingTestExecutionListener]
+15:07:54.855 [Test worker] DEBUG org.springframework.boot.test.context.SpringBootTestContextBootstrapper - Skipping candidate TestExecutionListener [org.springframework.test.context.transaction.TransactionalTestExecutionListener] due to a missing dependency. Specify custom listener classes or make the default listener classes and their required dependencies available. Offending class: [org/springframework/transaction/TransactionDefinition]
+15:07:54.856 [Test worker] DEBUG org.springframework.boot.test.context.SpringBootTestContextBootstrapper - Skipping candidate TestExecutionListener [org.springframework.test.context.jdbc.SqlScriptsTestExecutionListener] due to a missing dependency. Specify custom listener classes or make the default listener classes and their required dependencies available. Offending class: [org/springframework/transaction/interceptor/TransactionAttribute]
+15:07:54.857 [Test worker] INFO org.springframework.boot.test.context.SpringBootTestContextBootstrapper - Using TestExecutionListeners: [org.springframework.test.context.web.ServletTestExecutionListener@39c11e6c, org.springframework.test.context.support.DirtiesContextBeforeModesTestExecutionListener@324dcd31, org.springframework.test.context.event.ApplicationEventsTestExecutionListener@503d56b5, org.springframework.boot.test.mock.mockito.MockitoTestExecutionListener@72bca894, org.springframework.boot.test.autoconfigure.SpringBootDependencyInjectionTestExecutionListener@433ffad1, org.springframework.test.context.support.DirtiesContextTestExecutionListener@1fc793c2, org.springframework.test.context.event.EventPublishingTestExecutionListener@2575f671, org.springframework.boot.test.autoconfigure.restdocs.RestDocsTestExecutionListener@329a1243, org.springframework.boot.test.autoconfigure.web.client.MockRestServiceServerResetTestExecutionListener@ecf9fb3, org.springframework.boot.test.autoconfigure.web.servlet.MockMvcPrintOnlyOnFailureTestExecutionListener@2d35442b, org.springframework.boot.test.autoconfigure.web.servlet.WebDriverTestExecutionListener@27f9e982, org.springframework.boot.test.autoconfigure.webservices.client.MockWebServiceServerTestExecutionListener@4593ff34, org.springframework.boot.test.mock.mockito.ResetMocksTestExecutionListener@37d3d232]
+15:07:54.862 [Test worker] DEBUG org.springframework.test.context.support.AbstractDirtiesContextTestExecutionListener - Before test class: context [DefaultTestContext@7048f722 testClass = AuthenticationAcceptanceTest, testInstance = [null], testMethod = [null], testException = [null], mergedContextConfiguration = [WebMergedContextConfiguration@c074c0c testClass = AuthenticationAcceptanceTest, locations = '{}', classes = '{class org.waldreg.Application}', contextInitializerClasses = '[]', activeProfiles = '{}', propertySourceLocations = '{}', propertySourceProperties = '{org.springframework.boot.test.context.SpringBootTestContextBootstrapper=true}', contextCustomizers = set[org.springframework.boot.test.autoconfigure.actuate.metrics.MetricsExportContextCustomizerFactory$DisableMetricExportContextCustomizer@2a8d39c4, org.springframework.boot.test.autoconfigure.properties.PropertyMappingContextCustomizer@4b3fa0b3, org.springframework.boot.test.autoconfigure.web.servlet.WebDriverContextCustomizerFactory$Customizer@58c34bb3, [ImportsContextCustomizer@58a55449 key = [org.springframework.boot.test.autoconfigure.web.servlet.MockMvcAutoConfiguration, org.springframework.boot.test.autoconfigure.web.servlet.MockMvcWebClientAutoConfiguration, org.springframework.boot.test.autoconfigure.web.servlet.MockMvcWebDriverAutoConfiguration, org.springframework.boot.autoconfigure.security.oauth2.client.servlet.OAuth2ClientAutoConfiguration, org.springframework.boot.autoconfigure.security.oauth2.resource.servlet.OAuth2ResourceServerAutoConfiguration, org.springframework.boot.autoconfigure.security.servlet.SecurityAutoConfiguration, org.springframework.boot.autoconfigure.security.servlet.SecurityFilterAutoConfiguration, org.springframework.boot.autoconfigure.security.servlet.UserDetailsServiceAutoConfiguration, org.springframework.boot.test.autoconfigure.web.servlet.MockMvcSecurityConfiguration, org.springframework.boot.test.autoconfigure.web.reactive.WebTestClientAutoConfiguration]], org.springframework.boot.test.context.filter.ExcludeFilterContextCustomizer@75f5fd58, org.springframework.boot.test.json.DuplicateJsonObjectContextCustomizerFactory$DuplicateJsonObjectContextCustomizer@47db5fa5, org.springframework.boot.test.mock.mockito.MockitoContextCustomizer@0, org.springframework.boot.test.web.client.TestRestTemplateContextCustomizer@609640d5, org.springframework.boot.test.context.SpringBootTestArgs@1, org.springframework.boot.test.context.SpringBootTestWebEnvironment@1c9b0314], resourceBasePath = 'src/main/webapp', contextLoader = 'org.springframework.boot.test.context.SpringBootContextLoader', parent = [null]], attributes = map['org.springframework.test.context.web.ServletTestExecutionListener.activateListener' -> true]], class annotated with @DirtiesContext [false] with mode [null].
+
+  .   ____          _            __ _ _
+ /\\ / ___'_ __ _ _(_)_ __  __ _ \ \ \ \
+( ( )\___ | '_ | '_| | '_ \/ _` | \ \ \ \
+ \\/  ___)| |_)| | | | | || (_| |  ) ) ) )
+  '  |____| .__|_| |_|_| |_\__, | / / / /
+ =========|_|==============|___/=/_/_/_/
+ :: Spring Boot ::                (v2.7.1)
+
+2023-01-12 15:07:55.400  INFO 4797 --- [    Test worker] o.w.a.a.AuthenticationAcceptanceTest     : Starting AuthenticationAcceptanceTest using Java 11.0.16.1 on hwangseonghaui-MacBookPro.local with PID 4797 (started by hwangseongha in /Users/hwangseongha/Desktop/waldreg-api/waldreg/application-layer/acceptance)
+2023-01-12 15:07:55.402  INFO 4797 --- [    Test worker] o.w.a.a.AuthenticationAcceptanceTest     : No active profile set, falling back to 1 default profile: "default"
+2023-01-12 15:07:56.758  INFO 4797 --- [    Test worker] o.s.b.t.m.w.SpringBootMockServletContext : Initializing Spring TestDispatcherServlet ''
+2023-01-12 15:07:56.758  INFO 4797 --- [    Test worker] o.s.t.web.servlet.TestDispatcherServlet  : Initializing Servlet ''
+2023-01-12 15:07:56.759  INFO 4797 --- [    Test worker] o.s.t.web.servlet.TestDispatcherServlet  : Completed initialization in 1 ms
+2023-01-12 15:07:56.776  INFO 4797 --- [    Test worker] o.w.a.a.AuthenticationAcceptanceTest     : Started AuthenticationAcceptanceTest in 1.86 seconds (JVM running for 3.207)
+
+MockHttpServletRequest:
+      HTTP Method = POST
+      Request URI = /token
+       Parameters = {}
+          Headers = [Content-Type:"application/json;charset=UTF-8", Accept:"application/json", api-version:"1.0", Content-Length:"33"]
+             Body = {"user_id":"","user_password":""}
+    Session Attrs = {}
+
+Handler:
+             Type = org.springframework.web.servlet.resource.ResourceHttpRequestHandler
+
+Async:
+    Async started = false
+     Async result = null
+
+Resolved Exception:
+             Type = null
+
+ModelAndView:
+        View name = null
+             View = null
+            Model = null
+
+FlashMap:
+       Attributes = null
+
+MockHttpServletResponse:
+           Status = 404
+    Error message = null
+          Headers = [Vary:"Origin", "Access-Control-Request-Method", "Access-Control-Request-Headers"]
+     Content type = null
+             Body = 
+    Forwarded URL = null
+   Redirected URL = null
+          Cookies = []
+]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

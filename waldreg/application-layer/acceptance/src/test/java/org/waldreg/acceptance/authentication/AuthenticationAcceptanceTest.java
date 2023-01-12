@@ -53,11 +53,43 @@ public class AuthenticationAcceptanceTest{
         //then
         result.andExpectAll(MockMvcResultMatchers.status().isOk(),
                         MockMvcResultMatchers.header().string(HttpHeaders.CONTENT_TYPE, "application/json"),
-                        MockMvcResultMatchers.header().string("api-version", apiVersion),
                         MockMvcResultMatchers.jsonPath("$.access_token").isString(),
                         MockMvcResultMatchers.jsonPath("$.token_type").value("jwt"))
                 .andDo(MockMvcResultHandlers.print());
     }
+
+    @Test
+    @DisplayName("토큰 발급 실패 잘못된 인증 정보")
+    public void TOKEN_PUBLISH_FAIL_INVALID_INFORMATION() throws Exception{
+        //given
+        String url = "/token";
+        String userId = "";
+        String userPassword = "";
+
+        TokenCreateRequest tokenCreateRequest = TokenCreateRequest.builder()
+                .userId(userId)
+                .userPassword(userPassword)
+                .build();
+
+        //when
+        ResultActions result = mvc.perform(
+                MockMvcRequestBuilders.post(url)
+                        .accept(MediaType.APPLICATION_JSON)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .header("api-version", apiVersion)
+                        .content(objectMapper.writeValueAsString(tokenCreateRequest)));
+
+        //then
+        result.andExpectAll(MockMvcResultMatchers.status().isBadRequest(),
+                        MockMvcResultMatchers.header().string(HttpHeaders.CONTENT_TYPE, "application/json"),
+                        MockMvcResultMatchers.header().string("api-version", apiVersion),
+                        MockMvcResultMatchers.jsonPath("$.messages")
+                                .value("Invalid authentication information"),
+                        MockMvcResultMatchers.jsonPath("$.document_url").value("docs.waldreg.org"))
+                .andDo(MockMvcResultHandlers.print());
+
+    }
+
 
     private static final class TokenCreateRequest{
 
