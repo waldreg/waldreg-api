@@ -19,21 +19,27 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 public class UserAcceptanceTest{
 
     @Autowired
-    MockMvc mvc;
+    private MockMvc mvc;
 
     @Autowired
-    ObjectMapper objectMapper;
+    private ObjectMapper objectMapper;
+    
+    static String apiVersion="1.0";
 
     @Test
     @DisplayName("유저 생성 성공 테스트")
     public void CREATE_NEW_USER_SUCCESS_TEST() throws Exception{
         //given
         String url = "/user";
+        String name = "alcuk";
+        String userId = "alcuk_id";
+        String userPassword="alcuk_pwd";
+        String phoneNumber="010-1234-1234";
         UserCreateRequest userCreateRequest = UserCreateRequest.builder()
-                .name("alcuk")
-                .userId("alcuk_id")
-                .userPassword("alcuk_pwd")
-                .phoneNumber("010-1234-1234")
+                .name(name)
+                .userId(userId)
+                .userPassword(userPassword)
+                .phoneNumber(phoneNumber)
                 .build();
 
         //when
@@ -41,17 +47,17 @@ public class UserAcceptanceTest{
                 .post(url)
                 .contentType(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON)
-                .header("api-version","1.0")
+                .header("api-version",apiVersion)
                 .content(objectMapper.writeValueAsString(userCreateRequest)));
 
         //then
         result.andExpectAll(
                 MockMvcResultMatchers.status().isOk(),
-                MockMvcResultMatchers.header().string("api-version","1.0")
+                MockMvcResultMatchers.header().string("api-version",apiVersion)
         ).andDo(MockMvcResultHandlers.print());
     }
 
-    private static class UserCreateRequest{
+    private final static class UserCreateRequest{
 
         @JsonProperty("name")
         private String name;
@@ -80,8 +86,16 @@ public class UserAcceptanceTest{
         public String getUserPassword(){return userPassword;}
 
         public String getPhoneNumber(){return phoneNumber;}
+        
+        public void setName(String name){this.name = name;}
 
-        public static class Builder{
+        public void setUserId(String userId){this.userId = userId;}
+
+        public void setUserPassword(String userPassword){this.userPassword = userPassword;}
+
+        public void setPhoneNumber(String phoneNumber){this.phoneNumber = phoneNumber;}
+
+        public final static class Builder{
 
             private String name;
             private String userId;
