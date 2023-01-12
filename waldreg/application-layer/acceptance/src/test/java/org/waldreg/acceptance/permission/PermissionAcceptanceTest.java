@@ -665,6 +665,55 @@ public class PermissionAcceptanceTest{
         );
     }
 
+    @Test
+    @DisplayName("선택가능한 permission 목록 조회 성공 인수 테스트")
+    public void INQUIRY_PERMISSION_LIST_SUCCESS_ACCEPTANCE_TEST() throws Exception{
+        // given
+        String url = "/permission";
+        String token = "mock_token";
+
+        // when
+        ResultActions result = mvc.perform(MockMvcRequestBuilders
+                .get(url)
+                .accept(MediaType.APPLICATION_JSON)
+                .header("api-version", apiVersion)
+                .header(HttpHeaders.AUTHORIZATION, token));
+
+        // then
+        result.andExpectAll(
+                MockMvcResultMatchers.status().isOk(),
+                MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON),
+                MockMvcResultMatchers.header().string(HttpHeaders.CONTENT_TYPE, "application/json"),
+                MockMvcResultMatchers.header().string("api-version", apiVersion),
+                MockMvcResultMatchers.jsonPath("$.permissions").isArray()
+        );
+    }
+
+    @Test
+    @DisplayName("선택 가능한 permission 목록 조회 실패 인수 테스트 - 최고 관리자 아님")
+    public void INQUIRY_PERMISSION_LIST_FAIL_NOT_ADMIN_ACCEPTANCE_TEST() throws Exception{
+        // given
+        String url = "/permission";
+        String token = "not_admin_token";
+
+        // when
+        ResultActions result = mvc.perform(MockMvcRequestBuilders
+                .get(url)
+                .accept(MediaType.APPLICATION_JSON)
+                .header("api-version", apiVersion)
+                .header(HttpHeaders.AUTHORIZATION, token));
+
+        // then
+        result.andExpectAll(
+                MockMvcResultMatchers.status().isForbidden(),
+                MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON),
+                MockMvcResultMatchers.header().string(HttpHeaders.CONTENT_TYPE, "application/json"),
+                MockMvcResultMatchers.header().string("api-version", apiVersion),
+                MockMvcResultMatchers.jsonPath("$.messages").value("No permission"),
+                MockMvcResultMatchers.jsonPath("$.document_url").value("docs.waldreg.org")
+        );
+    }
+
     private final static class CharacterCreateRequest{
 
         @JsonProperty("character_name")
