@@ -59,7 +59,7 @@ public class AuthenticationAcceptanceTest{
                 .andDo(MockMvcResultHandlers.print());
     }
 
-    private static class TokenCreateRequest{
+    private static final class TokenCreateRequest{
 
         @JsonProperty("user_id")
         private String userId;
@@ -77,7 +77,7 @@ public class AuthenticationAcceptanceTest{
             return new Builder();
         }
 
-        public static class Builder{
+        public static final class Builder{
 
             private String userId;
             private String userPassword;
