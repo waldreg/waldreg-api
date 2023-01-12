@@ -4,6 +4,8 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.time.LocalDate;
 import java.util.ArrayList;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,6 +30,36 @@ public class UserAcceptanceTest{
 
     private final String apiVersion = "1.0";
 
+    private ArrayList<UserCreateRequest> userCreateRequestList;
+
+    {
+        userCreateRequestList = new ArrayList<>();
+    }
+
+    @BeforeEach
+    @AfterEach
+    public void INITIATE() throws Exception{
+        String url = "/user/{id}";
+        String adminToken = "admin_token";
+        for (UserCreateRequest request : userCreateRequestList){
+            UserResponse userResponse = objectMapper.readValue(UserAcceptanceTestHelper.inquiryUserWithoutToken(mvc, "/user/{name}", request.getUserId())
+                    .andReturn()
+                    .getResponse()
+                    .getContentAsString(), UserResponse.class);
+            UserAcceptanceTestHelper.forcedDeleteUserWithToken(mvc, url, userResponse.getId(), adminToken);
+            ResultActions result = UserAcceptanceTestHelper.inquiryUserWithoutToken(mvc, "/user/{name}", request.getUserId());
+            result.andExpectAll(
+                    MockMvcResultMatchers.status().isBadRequest(),
+                    MockMvcResultMatchers.header().string(HttpHeaders.CONTENT_TYPE, "application/json"),
+                    MockMvcResultMatchers.header().string("api-version", apiVersion),
+                    MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON),
+                    MockMvcResultMatchers.jsonPath("$.messages").value("Unknown user name"),
+                    MockMvcResultMatchers.jsonPath("$.document_url").value("docs.waldreg.org")
+            ).andDo(MockMvcResultHandlers.print());
+        }
+        userCreateRequestList.clear();
+    }
+
     @Test
     @DisplayName("유저 생성 성공 인수 테스트")
     public void CREATE_NEW_USER_SUCCESS_TEST() throws Exception{
@@ -45,8 +77,8 @@ public class UserAcceptanceTest{
                 .build();
 
         //when
-        ResultActions result = UserAcceptanceTestHelper.createUser(mvc, url,
-                objectMapper.writeValueAsString(userCreateRequest));
+        ResultActions result = UserAcceptanceTestHelper.createUser(mvc, url, objectMapper.writeValueAsString(userCreateRequest));
+        userCreateRequestList.add(userCreateRequest);
 
         //then
         result.andExpectAll(
@@ -83,11 +115,10 @@ public class UserAcceptanceTest{
                 .build();
 
         //when
-        UserAcceptanceTestHelper.createUser(mvc, url,
-                objectMapper.writeValueAsString(userCreateRequest1));
-
-        ResultActions result = UserAcceptanceTestHelper.createUser(mvc, url,
-                objectMapper.writeValueAsString(userCreateRequest2));
+        UserAcceptanceTestHelper.createUser(mvc, url, objectMapper.writeValueAsString(userCreateRequest1));
+        userCreateRequestList.add(userCreateRequest1);
+        ResultActions result = UserAcceptanceTestHelper.createUser(mvc, url, objectMapper.writeValueAsString(userCreateRequest2));
+        userCreateRequestList.add(userCreateRequest2);
 
         //then
         result.andExpectAll(
@@ -118,8 +149,8 @@ public class UserAcceptanceTest{
                 .build();
 
         //when
-        ResultActions result = UserAcceptanceTestHelper.createUser(mvc, url,
-                objectMapper.writeValueAsString(userCreateRequest));
+        ResultActions result = UserAcceptanceTestHelper.createUser(mvc, url, objectMapper.writeValueAsString(userCreateRequest));
+        userCreateRequestList.add(userCreateRequest);
 
         //then
         result.andExpectAll(
@@ -150,8 +181,8 @@ public class UserAcceptanceTest{
                 .build();
 
         //when
-        ResultActions result = UserAcceptanceTestHelper.createUser(mvc, url,
-                objectMapper.writeValueAsString(userCreateRequest));
+        ResultActions result = UserAcceptanceTestHelper.createUser(mvc, url, objectMapper.writeValueAsString(userCreateRequest));
+        userCreateRequestList.add(userCreateRequest);
 
         //then
         result.andExpectAll(
@@ -184,10 +215,9 @@ public class UserAcceptanceTest{
                 .build();
 
         //when
-        UserAcceptanceTestHelper.createUser(mvc, saveUrl,
-                objectMapper.writeValueAsString(userCreateRequest));
-        ResultActions result = UserAcceptanceTestHelper.inquiryUserWithToken(mvc, readUrl,
-                userCreateRequest.getName(), token);
+        UserAcceptanceTestHelper.createUser(mvc, saveUrl, objectMapper.writeValueAsString(userCreateRequest));
+        userCreateRequestList.add(userCreateRequest);
+        ResultActions result = UserAcceptanceTestHelper.inquiryUserWithToken(mvc, readUrl, userCreateRequest.getName(), token);
 
         //then
         result.andExpectAll(
@@ -229,10 +259,9 @@ public class UserAcceptanceTest{
                 .build();
 
         //when
-        UserAcceptanceTestHelper.createUser(mvc, saveUrl,
-                objectMapper.writeValueAsString(userCreateRequest));
-        ResultActions result = UserAcceptanceTestHelper.inquiryUserWithoutToken(mvc, readUrl,
-                userCreateRequest.getName());
+        UserAcceptanceTestHelper.createUser(mvc, saveUrl, objectMapper.writeValueAsString(userCreateRequest));
+        userCreateRequestList.add(userCreateRequest);
+        ResultActions result = UserAcceptanceTestHelper.inquiryUserWithoutToken(mvc, readUrl, userCreateRequest.getName());
 
         //then
         result.andExpectAll(
@@ -258,8 +287,7 @@ public class UserAcceptanceTest{
         String unknownUser = "unknown";
 
         //when
-        ResultActions result = UserAcceptanceTestHelper.inquiryUserWithoutToken(mvc, readUrl,
-                unknownUser);
+        ResultActions result = UserAcceptanceTestHelper.inquiryUserWithoutToken(mvc, readUrl, unknownUser);
 
         //then
         result.andExpectAll(
@@ -373,11 +401,9 @@ public class UserAcceptanceTest{
                 .build();
 
         //when
-        UserAcceptanceTestHelper.createUser(mvc, url,
-                objectMapper.writeValueAsString(userCreateRequest));
-        ResultActions result = UserAcceptanceTestHelper.modifyUserWithToken(mvc, url, token,
-                password,
-                objectMapper.writeValueAsString(modifyUserCreateRequest));
+        UserAcceptanceTestHelper.createUser(mvc, url, objectMapper.writeValueAsString(userCreateRequest));
+        userCreateRequestList.add(userCreateRequest);
+        ResultActions result = UserAcceptanceTestHelper.modifyUserWithToken(mvc, url, token, password, objectMapper.writeValueAsString(modifyUserCreateRequest));
 
         //then
         result.andExpectAll(
@@ -410,11 +436,9 @@ public class UserAcceptanceTest{
                 .build();
 
         //when
-        UserAcceptanceTestHelper.createUser(mvc, url,
-                objectMapper.writeValueAsString(userCreateRequest));
-        ResultActions result = UserAcceptanceTestHelper.modifyUserWithToken(mvc, url, token,
-                password,
-                objectMapper.writeValueAsString(modifyUserCreateRequest));
+        UserAcceptanceTestHelper.createUser(mvc, url, objectMapper.writeValueAsString(userCreateRequest));
+        userCreateRequestList.add(userCreateRequest);
+        ResultActions result = UserAcceptanceTestHelper.modifyUserWithToken(mvc, url, token, password, objectMapper.writeValueAsString(modifyUserCreateRequest));
 
         //then
         result.andExpectAll(
@@ -449,11 +473,9 @@ public class UserAcceptanceTest{
                 .build();
 
         //when
-        UserAcceptanceTestHelper.createUser(mvc, url,
-                objectMapper.writeValueAsString(userCreateRequest));
-        ResultActions result = UserAcceptanceTestHelper.modifyUserWithToken(mvc, url, token,
-                password,
-                objectMapper.writeValueAsString(modifyUserCreateRequest));
+        UserAcceptanceTestHelper.createUser(mvc, url, objectMapper.writeValueAsString(userCreateRequest));
+        userCreateRequestList.add(userCreateRequest);
+        ResultActions result = UserAcceptanceTestHelper.modifyUserWithToken(mvc, url, token, password, objectMapper.writeValueAsString(modifyUserCreateRequest));
 
         //then
         result.andExpectAll(
@@ -486,11 +508,9 @@ public class UserAcceptanceTest{
                 .build();
 
         //when
-        UserAcceptanceTestHelper.createUser(mvc, url,
-                objectMapper.writeValueAsString(userCreateRequest));
-        ResultActions result = UserAcceptanceTestHelper.modifyUserWithToken(mvc, url, token,
-                invalidPassword,
-                objectMapper.writeValueAsString(modifyUserCreateRequest));
+        UserAcceptanceTestHelper.createUser(mvc, url, objectMapper.writeValueAsString(userCreateRequest));
+        userCreateRequestList.add(userCreateRequest);
+        ResultActions result = UserAcceptanceTestHelper.modifyUserWithToken(mvc, url, token, invalidPassword, objectMapper.writeValueAsString(modifyUserCreateRequest));
 
         //then
         result.andExpectAll(
@@ -527,11 +547,9 @@ public class UserAcceptanceTest{
                 .build();
 
         //when
-        UserAcceptanceTestHelper.createUser(mvc, url,
-                objectMapper.writeValueAsString(userCreateRequest));
-        ResultActions result = UserAcceptanceTestHelper.modifyUserWithToken(mvc, url, token,
-                password,
-                objectMapper.writeValueAsString(modifyUserCreateRequest));
+        UserAcceptanceTestHelper.createUser(mvc, url, objectMapper.writeValueAsString(userCreateRequest));
+        userCreateRequestList.add(userCreateRequest);
+        ResultActions result = UserAcceptanceTestHelper.modifyUserWithToken(mvc, url, token, password, objectMapper.writeValueAsString(modifyUserCreateRequest));
 
         //then
         result.andExpectAll(
@@ -568,11 +586,9 @@ public class UserAcceptanceTest{
                 .build();
 
         //when
-        UserAcceptanceTestHelper.createUser(mvc, url,
-                objectMapper.writeValueAsString(userCreateRequest));
-        ResultActions result = UserAcceptanceTestHelper.modifyUserWithToken(mvc, url, invalidToken,
-                password,
-                objectMapper.writeValueAsString(modifyUserCreateRequest));
+        UserAcceptanceTestHelper.createUser(mvc, url, objectMapper.writeValueAsString(userCreateRequest));
+        userCreateRequestList.add(userCreateRequest);
+        ResultActions result = UserAcceptanceTestHelper.modifyUserWithToken(mvc, url, invalidToken, password, objectMapper.writeValueAsString(modifyUserCreateRequest));
 
         //then
         result.andExpectAll(
@@ -607,10 +623,9 @@ public class UserAcceptanceTest{
                 .build();
 
         //when
-        UserAcceptanceTestHelper.createUser(mvc, url,
-                objectMapper.writeValueAsString(userCreateRequest));
-        ResultActions result = UserAcceptanceTestHelper.modifyUserWithoutToken(mvc, url, password,
-                objectMapper.writeValueAsString(modifyUserCreateRequest));
+        UserAcceptanceTestHelper.createUser(mvc, url, objectMapper.writeValueAsString(userCreateRequest));
+        userCreateRequestList.add(userCreateRequest);
+        ResultActions result = UserAcceptanceTestHelper.modifyUserWithoutToken(mvc, url, password, objectMapper.writeValueAsString(modifyUserCreateRequest));
 
         //then
         result.andExpectAll(
@@ -642,10 +657,9 @@ public class UserAcceptanceTest{
         String password = userCreateRequest.getUserPassword();
 
         //when
-        UserAcceptanceTestHelper.createUser(mvc, url,
-                objectMapper.writeValueAsString(userCreateRequest));
-        ResultActions result = UserAcceptanceTestHelper.securedDeleteUserWithToken(mvc, url, token,
-                password);
+        UserAcceptanceTestHelper.createUser(mvc, url, objectMapper.writeValueAsString(userCreateRequest));
+        userCreateRequestList.add(userCreateRequest);
+        ResultActions result = UserAcceptanceTestHelper.securedDeleteUserWithToken(mvc, url, token, password);
 
         //then
         result.andExpectAll(
@@ -673,10 +687,9 @@ public class UserAcceptanceTest{
         String invalidPassword = "";
 
         //when
-        UserAcceptanceTestHelper.createUser(mvc, url,
-                objectMapper.writeValueAsString(userCreateRequest));
-        ResultActions result = UserAcceptanceTestHelper.securedDeleteUserWithToken(mvc, url, token,
-                invalidPassword);
+        UserAcceptanceTestHelper.createUser(mvc, url, objectMapper.writeValueAsString(userCreateRequest));
+        userCreateRequestList.add(userCreateRequest);
+        ResultActions result = UserAcceptanceTestHelper.securedDeleteUserWithToken(mvc, url, token, invalidPassword);
 
         //then
         result.andExpectAll(
@@ -708,11 +721,9 @@ public class UserAcceptanceTest{
         String password = userCreateRequest.getUserPassword();
 
         //when
-        UserAcceptanceTestHelper.createUser(mvc, url,
-                objectMapper.writeValueAsString(userCreateRequest));
-        ResultActions result = UserAcceptanceTestHelper.securedDeleteUserWithToken(mvc, url,
-                invalidToken,
-                password);
+        UserAcceptanceTestHelper.createUser(mvc, url, objectMapper.writeValueAsString(userCreateRequest));
+        userCreateRequestList.add(userCreateRequest);
+        ResultActions result = UserAcceptanceTestHelper.securedDeleteUserWithToken(mvc, url, invalidToken, password);
 
         //then
         result.andExpectAll(
@@ -744,10 +755,9 @@ public class UserAcceptanceTest{
         String password = userCreateRequest.getUserPassword();
 
         //when
-        UserAcceptanceTestHelper.createUser(mvc, url,
-                objectMapper.writeValueAsString(userCreateRequest));
-        ResultActions result = UserAcceptanceTestHelper.securedDeleteUserWithoutToken(mvc, url,
-                password);
+        UserAcceptanceTestHelper.createUser(mvc, url, objectMapper.writeValueAsString(userCreateRequest));
+        userCreateRequestList.add(userCreateRequest);
+        ResultActions result = UserAcceptanceTestHelper.securedDeleteUserWithoutToken(mvc, url, password);
 
         //then
         result.andExpectAll(
@@ -779,16 +789,15 @@ public class UserAcceptanceTest{
         String token = "mock_token";
 
         //when
-        UserAcceptanceTestHelper.createUser(mvc, postUrl,
-                objectMapper.writeValueAsString(userCreateRequest));
+        UserAcceptanceTestHelper.createUser(mvc, postUrl, objectMapper.writeValueAsString(userCreateRequest));
+        userCreateRequestList.add(userCreateRequest);
         UserResponse userResponse = objectMapper.readValue(
                 UserAcceptanceTestHelper.inquiryUserWithToken(mvc, "/user/{name}",
                                 userCreateRequest.getUserId(), token)
                         .andReturn()
                         .getResponse()
                         .getContentAsString(), UserResponse.class);
-        ResultActions result = UserAcceptanceTestHelper.forcedDeleteUserWithToken(mvc, deleteUrl,
-                userResponse.getId(), token);
+        ResultActions result = UserAcceptanceTestHelper.forcedDeleteUserWithToken(mvc, deleteUrl, userResponse.getId(), token);
 
         //then
         result.andExpectAll(
@@ -817,10 +826,9 @@ public class UserAcceptanceTest{
         int unknownId = -1;
 
         //when
-        UserAcceptanceTestHelper.createUser(mvc, postUrl,
-                objectMapper.writeValueAsString(userCreateRequest));
-        ResultActions result = UserAcceptanceTestHelper.forcedDeleteUserWithToken(mvc, deleteUrl,
-                unknownId, token);
+        UserAcceptanceTestHelper.createUser(mvc, postUrl, objectMapper.writeValueAsString(userCreateRequest));
+        userCreateRequestList.add(userCreateRequest);
+        ResultActions result = UserAcceptanceTestHelper.forcedDeleteUserWithToken(mvc, deleteUrl, unknownId, token);
 
         //then
         result.andExpectAll(
@@ -862,24 +870,21 @@ public class UserAcceptanceTest{
         String superToken = "mock_token";
 
         //when
-        UserAcceptanceTestHelper.createUser(mvc, postUrl,
-                objectMapper.writeValueAsString(subjectUserCreateRequest));
-        UserAcceptanceTestHelper.createUser(mvc, postUrl,
-                objectMapper.writeValueAsString(objectUserCreateRequest));
+        UserAcceptanceTestHelper.createUser(mvc, postUrl, objectMapper.writeValueAsString(subjectUserCreateRequest));
+        userCreateRequestList.add(subjectUserCreateRequest);
+        UserAcceptanceTestHelper.createUser(mvc, postUrl, objectMapper.writeValueAsString(objectUserCreateRequest));
+        userCreateRequestList.add(subjectUserCreateRequest);
         UserResponse subjectUserResponse = objectMapper.readValue(
-                UserAcceptanceTestHelper.inquiryUserWithToken(mvc, "/user/{name}",
-                                subjectUserCreateRequest.getUserId(), superToken)
+                UserAcceptanceTestHelper.inquiryUserWithToken(mvc, "/user/{name}", subjectUserCreateRequest.getUserId(), superToken)
                         .andReturn()
                         .getResponse()
                         .getContentAsString(), UserResponse.class);
         UserResponse objectUserResponse = objectMapper.readValue(
-                UserAcceptanceTestHelper.inquiryUserWithToken(mvc, "/user/{name}",
-                                objectUserCreateRequest.getUserId(), superToken)
+                UserAcceptanceTestHelper.inquiryUserWithToken(mvc, "/user/{name}", objectUserCreateRequest.getUserId(), superToken)
                         .andReturn()
                         .getResponse()
                         .getContentAsString(), UserResponse.class);
-        ResultActions result = UserAcceptanceTestHelper.forcedDeleteUserWithToken(mvc, deleteUrl,
-                objectUserResponse.getId(), superToken);
+        ResultActions result = UserAcceptanceTestHelper.forcedDeleteUserWithToken(mvc, deleteUrl, objectUserResponse.getId(), superToken);
 
         //then
         result.andExpectAll(
@@ -911,16 +916,14 @@ public class UserAcceptanceTest{
         String token = "";
 
         //when
-        UserAcceptanceTestHelper.createUser(mvc, postUrl,
-                objectMapper.writeValueAsString(userCreateRequest));
+        UserAcceptanceTestHelper.createUser(mvc, postUrl, objectMapper.writeValueAsString(userCreateRequest));
+        userCreateRequestList.add(userCreateRequest);
         UserResponse userResponse = objectMapper.readValue(
-                UserAcceptanceTestHelper.inquiryUserWithToken(mvc, "/user/{name}",
-                                userCreateRequest.getUserId(), token)
+                UserAcceptanceTestHelper.inquiryUserWithToken(mvc, "/user/{name}", userCreateRequest.getUserId(), token)
                         .andReturn()
                         .getResponse()
                         .getContentAsString(), UserResponse.class);
-        ResultActions result = UserAcceptanceTestHelper.forcedDeleteUserWithToken(mvc, deleteUrl,
-                userResponse.getId(), token);
+        ResultActions result = UserAcceptanceTestHelper.forcedDeleteUserWithToken(mvc, deleteUrl, userResponse.getId(), token);
 
         //then
         result.andExpectAll(
@@ -951,16 +954,14 @@ public class UserAcceptanceTest{
                 .build();
 
         //when
-        UserAcceptanceTestHelper.createUser(mvc, postUrl,
-                objectMapper.writeValueAsString(userCreateRequest));
+        UserAcceptanceTestHelper.createUser(mvc, postUrl, objectMapper.writeValueAsString(userCreateRequest));
+        userCreateRequestList.add(userCreateRequest);
         UserResponse userResponse = objectMapper.readValue(
-                UserAcceptanceTestHelper.inquiryUserWithoutToken(mvc, "/user/{name}",
-                                userCreateRequest.getUserId())
+                UserAcceptanceTestHelper.inquiryUserWithoutToken(mvc, "/user/{name}", userCreateRequest.getUserId())
                         .andReturn()
                         .getResponse()
                         .getContentAsString(), UserResponse.class);
-        ResultActions result = UserAcceptanceTestHelper.forcedDeleteUserWithoutToken(mvc, deleteUrl,
-                userResponse.getId());
+        ResultActions result = UserAcceptanceTestHelper.forcedDeleteUserWithoutToken(mvc, deleteUrl, userResponse.getId());
 
         //then
         result.andExpectAll(
