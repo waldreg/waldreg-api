@@ -10,9 +10,8 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
-import org.waldreg.character.config.PermissionConfiguration;
-import org.waldreg.character.permission.core.PermissionUnit;
 import org.waldreg.character.exception.DuplicatedPermissionNameException;
+import org.waldreg.character.permission.core.PermissionUnit;
 import org.waldreg.character.permission.management.PermissionUnitManager;
 
 @ExtendWith(SpringExtension.class)
