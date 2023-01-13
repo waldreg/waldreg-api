@@ -15,7 +15,7 @@ public class PermissionUnitTest{
         List<String> statusList = List.of("success", "fail", "unknown");
 
         // when
-        PermissionUnit<String> permissionUnit = PermissionUnit.<String>builder()
+        PermissionUnit permissionUnit = PermissionUnit.builder()
                 .name(permissionName)
                 .permissionVerifiable((s) -> s.equals("success"))
                 .statusList(statusList)
@@ -26,27 +26,6 @@ public class PermissionUnitTest{
                 ()-> Assertions.assertTrue(permissionUnit.verify("success")),
                 ()-> Assertions.assertFalse(permissionUnit.verify("fail")),
                 ()-> Assertions.assertFalse(permissionUnit.verify("unknown"))
-        );
-    }
-
-    @Test
-    @DisplayName("Integer status PermissionUnit 생성 성공 테스트")
-    public void CREATE_INTEGER_PERMISSION_UNIT_SUCCESS_TEST(){
-        // given
-        String permissionName = "Integer permission";
-        List<Integer> statusList = List.of(0, 1);
-
-        // when
-        PermissionUnit<Integer> permissionUnit = PermissionUnit.<Integer>builder()
-                .name(permissionName)
-                .permissionVerifiable((i) -> (i == 0))
-                .statusList(statusList)
-                .build();
-
-        // then
-        Assertions.assertAll(
-                () -> Assertions.assertTrue(permissionUnit.verify(0)),
-                () -> Assertions.assertFalse(permissionUnit.verify(1))
         );
     }
 

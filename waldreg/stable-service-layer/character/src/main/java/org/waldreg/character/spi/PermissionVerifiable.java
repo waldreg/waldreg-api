@@ -1,8 +1,8 @@
 package org.waldreg.character.spi;
 
 @FunctionalInterface
-public interface PermissionVerifiable<P>{
+public interface PermissionVerifiable{
 
-    boolean verify(P status);
+    boolean verify(String status);
 
 }

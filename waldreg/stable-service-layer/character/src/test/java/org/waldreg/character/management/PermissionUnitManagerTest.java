@@ -28,25 +28,25 @@ public class PermissionUnitManagerTest{
     }
 
     @Test
-    @DisplayName("서로 다른 타입의 PermissionUnit 등록 성공 테스트")
+    @DisplayName("PermissionUnit 생성 성공 테스트")
     public void ADD_DIFFERENT_TYPE_PERMISSION_UNIT_TEST(){
         // given
-        PermissionUnit<String> stringPermissionUnit = PermissionUnit.<String>builder()
-                .name("String permission")
+        PermissionUnit stringPermissionUnit = PermissionUnit.builder()
+                .name("permission 1")
                 .permissionVerifiable((s) -> s.equals("true"))
                 .statusList(List.of("true", "false"))
                 .build();
 
-        PermissionUnit<Integer> integerPermissionUnit = PermissionUnit.<Integer>builder()
-                .name("Integer permission")
-                .permissionVerifiable((i) -> i == 0)
-                .statusList(List.of(0, 1))
+        PermissionUnit integerPermissionUnit = PermissionUnit.builder()
+                .name("permission 2")
+                .permissionVerifiable((s) -> s.equals("false"))
+                .statusList(List.of("true", "false"))
                 .build();
 
         // when & then
         Assertions.assertAll(
-                ()-> Assertions.assertDoesNotThrow(()-> permissionUnitManager.add(stringPermissionUnit)),
-                ()-> Assertions.assertDoesNotThrow(()-> permissionUnitManager.add(integerPermissionUnit))
+                () -> Assertions.assertDoesNotThrow(() -> permissionUnitManager.add(stringPermissionUnit)),
+                () -> Assertions.assertDoesNotThrow(() -> permissionUnitManager.add(integerPermissionUnit))
         );
     }
 
@@ -54,7 +54,7 @@ public class PermissionUnitManagerTest{
     @DisplayName("중복 이름 PermissionUnit 등록 실패 테스트")
     public void ADD_DUPLICATED_NAME_PERMISSION_UNIT_TEST(){
         // given
-        PermissionUnit<String> stringPermissionUnit = PermissionUnit.<String>builder()
+        PermissionUnit stringPermissionUnit = PermissionUnit.builder()
                 .name("String permission")
                 .permissionVerifiable((s) -> s.equals("true"))
                 .statusList(List.of("true", "false"))
@@ -62,9 +62,9 @@ public class PermissionUnitManagerTest{
 
         // when & then
         Assertions.assertAll(
-                ()-> Assertions.assertDoesNotThrow(()-> permissionUnitManager.add(stringPermissionUnit)),
-                ()-> Assertions.assertThrows(DuplicatedPermissionNameException.class,
-                        ()-> permissionUnitManager.add(stringPermissionUnit))
+                () -> Assertions.assertDoesNotThrow(() -> permissionUnitManager.add(stringPermissionUnit)),
+                () -> Assertions.assertThrows(DuplicatedPermissionNameException.class,
+                        () -> permissionUnitManager.add(stringPermissionUnit))
         );
     }
 
@@ -73,7 +73,7 @@ public class PermissionUnitManagerTest{
     public void GET_PERMISSION_UNIT_BY_NAME_TEST(){
         // given
         String permissionName = "name";
-        PermissionUnit<String> stringPermissionUnit = PermissionUnit.<String>builder()
+        PermissionUnit stringPermissionUnit = PermissionUnit.builder()
                 .name(permissionName)
                 .permissionVerifiable((s) -> s.equals("true"))
                 .statusList(List.of("true", "false"))
@@ -81,13 +81,13 @@ public class PermissionUnitManagerTest{
 
         // when
         permissionUnitManager.add(stringPermissionUnit);
-        PermissionUnit<String> result = permissionUnitManager.getPermission(permissionName);
+        PermissionUnit result = permissionUnitManager.getPermission(permissionName);
 
         // then
         Assertions.assertAll(
-                ()-> Assertions.assertEquals(permissionName, result.getName()),
-                ()-> Assertions.assertTrue(result.verify("true")),
-                ()-> Assertions.assertFalse(result.verify("false"))
+                () -> Assertions.assertEquals(permissionName, result.getName()),
+                () -> Assertions.assertTrue(result.verify("true")),
+                () -> Assertions.assertFalse(result.verify("false"))
         );
     }
 
@@ -98,26 +98,26 @@ public class PermissionUnitManagerTest{
         String permissionName = "unknown name";
 
         // when && then
-        Assertions.assertThrows(UnknownPermissionException.class, ()-> permissionUnitManager.getPermission(permissionName));
+        Assertions.assertThrows(UnknownPermissionException.class, () -> permissionUnitManager.getPermission(permissionName));
     }
 
     @Test
     @DisplayName("PermissionUnitList 조회 성공 테스트")
     public void GET_PERMISSION_UNIT_LIST_TEST(){
         // given
-        PermissionUnit<String> permissionUnit1 = PermissionUnit.<String>builder()
+        PermissionUnit permissionUnit1 = PermissionUnit.builder()
                 .name("permission 1")
                 .permissionVerifiable((s) -> s.equals("true"))
                 .statusList(List.of("true", "false"))
                 .build();
 
-        PermissionUnit<String> permissionUnit2 = PermissionUnit.<String>builder()
+        PermissionUnit permissionUnit2 = PermissionUnit.builder()
                 .name("permission 2")
                 .permissionVerifiable((s) -> s.equals("true"))
                 .statusList(List.of("true", "false"))
                 .build();
 
-        PermissionUnit<String> permissionUnit3 = PermissionUnit.<String>builder()
+        PermissionUnit permissionUnit3 = PermissionUnit.builder()
                 .name("permission 3")
                 .permissionVerifiable((s) -> s.equals("true"))
                 .statusList(List.of("true", "false"))
@@ -127,7 +127,7 @@ public class PermissionUnitManagerTest{
         permissionUnitManager.add(permissionUnit1);
         permissionUnitManager.add(permissionUnit2);
         permissionUnitManager.add(permissionUnit3);
-        List<PermissionUnit<?>> result = permissionUnitManager.getPermissionUnitList();
+        List<PermissionUnit> result = permissionUnitManager.getPermissionUnitList();
 
         // then
         Assertions.assertEquals(3, result.size());
