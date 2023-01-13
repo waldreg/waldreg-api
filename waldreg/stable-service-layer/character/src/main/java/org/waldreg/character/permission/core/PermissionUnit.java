@@ -1,7 +1,7 @@
-package org.waldreg.character.core;
+package org.waldreg.character.permission.core;
 
 import java.util.List;
-import org.waldreg.character.spi.PermissionVerifiable;
+import org.waldreg.character.permission.spi.PermissionVerifiable;
 
 public final class PermissionUnit{
 

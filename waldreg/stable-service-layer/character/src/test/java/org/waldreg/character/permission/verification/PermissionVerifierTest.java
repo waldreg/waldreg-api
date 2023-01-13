@@ -1,4 +1,4 @@
-package org.waldreg.character.verification;
+package org.waldreg.character.permission.verification;
 
 import java.util.List;
 import org.junit.jupiter.api.Assertions;
@@ -8,9 +8,9 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
-import org.waldreg.character.core.PermissionUnit;
-import org.waldreg.character.extension.PermissionExtension;
-import org.waldreg.character.management.PermissionUnitManager;
+import org.waldreg.character.permission.core.PermissionUnit;
+import org.waldreg.character.permission.extension.PermissionExtension;
+import org.waldreg.character.permission.management.PermissionUnitManager;
 
 @ExtendWith(SpringExtension.class)
 @ContextConfiguration(classes = {PermissionVerifier.class, PermissionExtension.class, PermissionUnitManager.class})
