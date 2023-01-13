@@ -1,4 +1,4 @@
-package org.waldreg.character.management;
+package org.waldreg.character.permission.management;
 
 import com.google.common.annotations.VisibleForTesting;
 import java.util.ArrayList;
@@ -6,7 +6,7 @@ import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 import org.springframework.stereotype.Service;
-import org.waldreg.character.core.PermissionUnit;
+import org.waldreg.character.permission.core.PermissionUnit;
 import org.waldreg.character.exception.DuplicatedPermissionNameException;
 import org.waldreg.character.exception.UnknownPermissionException;
 

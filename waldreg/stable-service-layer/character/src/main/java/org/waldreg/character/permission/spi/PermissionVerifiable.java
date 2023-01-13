@@ -1,4 +1,4 @@
-package org.waldreg.character.spi;
+package org.waldreg.character.permission.spi;
 
 @FunctionalInterface
 public interface PermissionVerifiable{

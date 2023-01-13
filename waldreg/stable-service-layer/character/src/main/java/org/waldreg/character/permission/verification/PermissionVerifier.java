@@ -1,9 +1,9 @@
-package org.waldreg.character.verification;
+package org.waldreg.character.permission.verification;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.waldreg.character.core.PermissionUnit;
-import org.waldreg.character.management.PermissionUnitManager;
+import org.waldreg.character.permission.core.PermissionUnit;
+import org.waldreg.character.permission.management.PermissionUnitManager;
 
 @Service
 public class PermissionVerifier{

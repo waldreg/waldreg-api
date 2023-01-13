@@ -1,4 +1,4 @@
-package org.waldreg.character.extension;
+package org.waldreg.character.permission.extension;
 
 import java.util.List;
 import org.junit.jupiter.api.AfterEach;
@@ -10,9 +10,9 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
-import org.waldreg.character.core.PermissionUnit;
 import org.waldreg.character.exception.DuplicatedPermissionNameException;
-import org.waldreg.character.management.PermissionUnitManager;
+import org.waldreg.character.permission.core.PermissionUnit;
+import org.waldreg.character.permission.management.PermissionUnitManager;
 
 @ExtendWith(SpringExtension.class)
 @ContextConfiguration(classes = {PermissionExtension.class, PermissionUnitManager.class})

@@ -1,4 +1,4 @@
-package org.waldreg.character.core;
+package org.waldreg.character.permission.core;
 
 import java.util.List;
 import org.junit.jupiter.api.Assertions;
