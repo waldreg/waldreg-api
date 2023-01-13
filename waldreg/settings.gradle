@@ -10,4 +10,6 @@ include 'domain-layer:domain'
 findProject(':domain-layer:domain')?.name = 'domain'
 include 'application-layer:acceptance'
 findProject(':application-layer:acceptance')?.name = 'acceptance'
+include 'stable-service-layer:character'
+findProject(':stable-service-layer:character')?.name = 'character'
 
