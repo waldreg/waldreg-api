@@ -7,25 +7,19 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
-import org.waldreg.token.TokenAuthenticator;
 import org.waldreg.token.dto.TokenDto;
-import org.waldreg.token.TokenPublisher;
+import org.waldreg.token.jwt.publisher.JwtTokenPublisher;
+import org.waldreg.token.publisher.TokenPublisher;
 
 @ExtendWith(SpringExtension.class)
-@ContextConfiguration(classes = {authenticatorImpl.class})
-public class authenticatorTest{
+@ContextConfiguration(classes = {JwtTokenPublisher.class, SuperTokenPublisher.class, JwtTokenAuthenticator.class, SuperTokenAuthenticator.class})
+public class JwtAuthenticatorTest{
 
     @Autowired
     private TokenPublisher jwtTokenPublisher;
 
     @Autowired
-    private TokenPublisher superTokenPulisher;
-
-    @Autowired
     private TokenAuthenticator jwtTokenAuthenticator;
-
-    @Autowired
-    private TokenAuthenticator superTokenAuthenticator;
 
     @Test
     @DisplayName("jwt 토큰 인증 성공")
@@ -42,22 +36,6 @@ public class authenticatorTest{
                 () -> Assertions.assertDoesNotThrow(jwtTokenAuthenticator.authenticate(encryptedToken))
         );
 
-    }
-
-    @Test
-    @DisplayName("super 토큰 인증 성공")
-    public void AUTHENTICATE_SUPER_TOKEN_SUCCESS_TEST(){
-        //given
-        int id = 1;
-        TokenDto tokenDto = TokenDto.builder().id(id).build();
-
-        //when
-        String encryptedToken = superTokenPulisher.publish(tokenDto);
-
-        //then
-        Assertions.assertAll(
-                () -> Assertions.assertDoesNotThrow(superTokenAuthenticator.authenticate(encryptedToken))
-        );
     }
 
 

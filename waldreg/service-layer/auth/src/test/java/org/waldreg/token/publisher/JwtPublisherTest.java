@@ -7,18 +7,15 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
-import org.waldreg.token.TokenPublisher;
 import org.waldreg.token.dto.TokenDto;
+import org.waldreg.token.jwt.publisher.JwtTokenPublisher;
 
 @ExtendWith(SpringExtension.class)
-@ContextConfiguration(classes = {publisherImpl.class})
-public class publisherTest{
+@ContextConfiguration(classes = {JwtTokenPublisher.class})
+public class JwtPublisherTest{
 
     @Autowired
     private TokenPublisher jwtTokenPublisher;
-
-    @Autowired
-    private TokenPublisher superTokenPulisher;
 
     @Test
     @DisplayName("jwt 토큰 생성 성공")
@@ -33,26 +30,8 @@ public class publisherTest{
         //when
 
         //then
-        Assertions.assertAll(
-                () -> Assertions.assertDoesNotThrow(jwtTokenPublisher.publish(tokenDto))
-        );
+        Assertions.assertDoesNotThrow(jwtTokenPublisher.publish(tokenDto));
 
-    }
-
-
-    @Test
-    @DisplayName("super 토큰 생성 성공")
-    public void CREATE_SUPER_TOKEN_SUCCESS_TEST(){
-        //given
-        int id = 1;
-        TokenDto tokenDto = TokenDto.builder().id(id).build();
-
-        //when
-
-        //then
-        Assertions.assertAll(
-                ()-> Assertions.assertDoesNotThrow(superTokenPulisher.publish(TokenDto))
-        );
     }
 
 
