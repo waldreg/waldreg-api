@@ -20,6 +20,8 @@ dependencyManagement {
 }
 
 dependencies {
+    implementation "com.google.guava:guava:31.1-jre"
+
     implementation 'org.springframework.boot:spring-boot-starter'
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
 

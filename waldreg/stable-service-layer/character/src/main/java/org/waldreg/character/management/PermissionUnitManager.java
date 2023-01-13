@@ -1,5 +1,6 @@
 package org.waldreg.character.management;
 
+import com.google.common.annotations.VisibleForTesting;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
@@ -44,7 +45,8 @@ public class PermissionUnitManager{
         return new ArrayList<>(permissionUnitMap.values());
     }
 
-    void deleteAllPermission(){
+    @VisibleForTesting
+    public void deleteAllPermission(){
         this.permissionUnitMap.clear();
     }
 
