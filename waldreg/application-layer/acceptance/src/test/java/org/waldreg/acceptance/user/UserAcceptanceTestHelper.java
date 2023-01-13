@@ -77,7 +77,7 @@ public class UserAcceptanceTestHelper{
                 .content(content));
     }
 
-    public static ResultActions deleteUserWithToken(MockMvc mvc, String url, String token,
+    public static ResultActions securedDeleteUserWithToken(MockMvc mvc, String url, String token,
             String password)
             throws Exception{
         return mvc.perform(MockMvcRequestBuilders
@@ -88,13 +88,32 @@ public class UserAcceptanceTestHelper{
                 .header("password", password));
     }
 
-    public static ResultActions deleteUserWithoutToken(MockMvc mvc, String url, String password)
+    public static ResultActions securedDeleteUserWithoutToken(MockMvc mvc, String url,
+            String password)
             throws Exception{
         return mvc.perform(MockMvcRequestBuilders
                 .delete(url)
                 .accept(MediaType.APPLICATION_JSON)
                 .header("api-version", apiVersion)
                 .header("password", password));
+    }
+
+    public static ResultActions forcedDeleteUserWithToken(MockMvc mvc, String url, int id,
+            String token)
+            throws Exception{
+        return mvc.perform(MockMvcRequestBuilders
+                .delete(url, id)
+                .accept(MediaType.APPLICATION_JSON)
+                .header("api-version", apiVersion)
+                .header(HttpHeaders.AUTHORIZATION, token));
+    }
+
+    public static ResultActions forcedDeleteUserWithoutToken(MockMvc mvc, String url, int id)
+            throws Exception{
+        return mvc.perform(MockMvcRequestBuilders
+                .delete(url, id)
+                .accept(MediaType.APPLICATION_JSON)
+                .header("api-version", apiVersion));
     }
 
 }
