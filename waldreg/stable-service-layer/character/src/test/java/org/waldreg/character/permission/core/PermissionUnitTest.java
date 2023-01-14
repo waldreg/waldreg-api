@@ -15,7 +15,7 @@ public class PermissionUnitTest{
         List<String> statusList = List.of("success", "fail", "unknown");
 
         // when
-        PermissionUnit permissionUnit = PermissionUnit.builder()
+        PermissionUnit permissionUnit = DefaultPermissionUnit.builder()
                 .name(permissionName)
                 .permissionVerifiable((s) -> s.equals("success"))
                 .statusList(statusList)

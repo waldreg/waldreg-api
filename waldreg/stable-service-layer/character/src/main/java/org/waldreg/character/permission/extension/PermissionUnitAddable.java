@@ -2,8 +2,8 @@ package org.waldreg.character.permission.extension;
 
 import org.waldreg.character.permission.core.PermissionUnit;
 
-public interface PermissionExtension{
+public interface PermissionUnitAddable{
 
-    void extend(PermissionUnit permissionUnit);
+    void add(PermissionUnit permissionUnit);
 
 }

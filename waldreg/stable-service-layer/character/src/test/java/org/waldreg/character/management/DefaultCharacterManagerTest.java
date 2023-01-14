@@ -1,4 +1,4 @@
-package org.waldreg.character.permission;
+package org.waldreg.character.management;
 
 import java.util.List;
 import org.junit.jupiter.api.AfterEach;
@@ -17,6 +17,7 @@ import org.waldreg.character.exception.UnknownPermissionException;
 import org.waldreg.character.exception.UnknownPermissionStatusException;
 import org.waldreg.character.management.CharacterManager;
 import org.waldreg.character.management.DefaultCharacterManager;
+import org.waldreg.character.permission.core.DefaultPermissionUnit;
 import org.waldreg.character.permission.core.PermissionUnit;
 import org.waldreg.character.permission.management.PermissionUnitManager;
 import org.waldreg.character.spi.CharacterRepository;
@@ -40,7 +41,7 @@ public class DefaultCharacterManagerTest{
     @AfterEach
     public void initPermission(){
         permissionUnitManager.deleteAllPermission();
-        PermissionUnit permissionUnit = PermissionUnit.builder()
+        PermissionUnit permissionUnit = DefaultPermissionUnit.builder()
                 .name(permissionName)
                 .statusList(List.of("true", "fail"))
                 .build();

@@ -6,13 +6,15 @@ import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 import org.springframework.stereotype.Service;
-import org.waldreg.character.management.PermissionChecker;
-import org.waldreg.character.permission.core.PermissionUnit;
 import org.waldreg.character.exception.DuplicatedPermissionNameException;
 import org.waldreg.character.exception.UnknownPermissionException;
+import org.waldreg.character.management.PermissionChecker;
+import org.waldreg.character.permission.core.PermissionUnit;
+import org.waldreg.character.permission.extension.PermissionUnitAddable;
+import org.waldreg.character.permission.verification.PermissionUnitInquiryable;
 
 @Service
-public class PermissionUnitManager implements PermissionChecker{
+public class PermissionUnitManager implements PermissionChecker, PermissionUnitAddable, PermissionUnitInquiryable{
 
     private final ConcurrentMap<String, PermissionUnit> permissionUnitMap;
 
@@ -20,6 +22,7 @@ public class PermissionUnitManager implements PermissionChecker{
         permissionUnitMap = new ConcurrentHashMap<>();
     }
 
+    @Override
     public void add(PermissionUnit permissionUnit){
         throwIfDuplicatedPermissionName(permissionUnit);
         permissionUnitMap.put(permissionUnit.getName(), permissionUnit);
@@ -31,6 +34,7 @@ public class PermissionUnitManager implements PermissionChecker{
         }
     }
 
+    @Override
     public PermissionUnit getPermission(String name){
         throwIfDoesNotFindPermission(name);
         return permissionUnitMap.get(name);
@@ -38,11 +42,6 @@ public class PermissionUnitManager implements PermissionChecker{
 
     public List<PermissionUnit> getPermissionUnitList(){
         return new ArrayList<>(permissionUnitMap.values());
-    }
-
-    @VisibleForTesting
-    public void deleteAllPermission(){
-        permissionUnitMap.clear();
     }
 
     @Override
@@ -61,6 +60,11 @@ public class PermissionUnitManager implements PermissionChecker{
         if (permissionUnitMap.get(name) == null){
             throw new UnknownPermissionException(name);
         }
+    }
+
+    @VisibleForTesting
+    public void deleteAllPermission(){
+        permissionUnitMap.clear();
     }
 
 }
