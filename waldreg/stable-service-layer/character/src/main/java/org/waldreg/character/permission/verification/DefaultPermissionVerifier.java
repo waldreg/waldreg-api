@@ -7,17 +7,17 @@ import org.waldreg.character.permission.core.PermissionUnit;
 @Service
 public class DefaultPermissionVerifier implements PermissionVerifier{
 
-    private final PermissionUnitInquiryable permissionUnitInquiryable;
+    private final PermissionUnitReadable permissionUnitReadable;
 
     @Override
     public boolean verify(String name, String status){
-        PermissionUnit permissionUnit = permissionUnitInquiryable.getPermission(name);
+        PermissionUnit permissionUnit = permissionUnitReadable.getPermission(name);
         return permissionUnit.verify(status);
     }
 
     @Autowired
-    private DefaultPermissionVerifier(PermissionUnitInquiryable permissionUnitInquiryable){
-        this.permissionUnitInquiryable = permissionUnitInquiryable;
+    private DefaultPermissionVerifier(PermissionUnitReadable permissionUnitReadable){
+        this.permissionUnitReadable = permissionUnitReadable;
     }
 
 }

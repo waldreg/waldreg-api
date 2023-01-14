@@ -11,10 +11,10 @@ import org.waldreg.character.exception.UnknownPermissionException;
 import org.waldreg.character.management.PermissionChecker;
 import org.waldreg.character.permission.core.PermissionUnit;
 import org.waldreg.character.permission.extension.PermissionUnitAddable;
-import org.waldreg.character.permission.verification.PermissionUnitInquiryable;
+import org.waldreg.character.permission.verification.PermissionUnitReadable;
 
 @Service
-public class PermissionUnitManager implements PermissionChecker, PermissionUnitAddable, PermissionUnitInquiryable{
+public class PermissionUnitManager implements PermissionChecker, PermissionUnitAddable, PermissionUnitReadable, PermissionUnitListReadable{
 
     private final ConcurrentMap<String, PermissionUnit> permissionUnitMap;
 
@@ -40,6 +40,7 @@ public class PermissionUnitManager implements PermissionChecker, PermissionUnitA
         return permissionUnitMap.get(name);
     }
 
+    @Override
     public List<PermissionUnit> getPermissionUnitList(){
         return new ArrayList<>(permissionUnitMap.values());
     }
