@@ -36,6 +36,10 @@ public final class PermissionUnit{
         return statusList;
     }
 
+    public boolean isPossibleStatus(String status){
+        return statusList.contains(status);
+    }
+
     public static final class Builder{
 
         private String name;
