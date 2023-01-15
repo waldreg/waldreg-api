@@ -9,19 +9,24 @@ import org.waldreg.character.dto.CharacterDto;
 import org.waldreg.character.exception.DuplicatedCharacterException;
 import org.waldreg.character.exception.UnknownCharacterException;
 import org.waldreg.character.spi.CharacterRepository;
+import org.waldreg.domain.user.User;
 import org.waldreg.repository.MemoryCharacterStorage;
 import org.waldreg.domain.character.Character;
+import org.waldreg.repository.MemoryUserStorage;
 
 @Repository
 public class MemoryCharacterRepository implements CharacterRepository{
 
     private final MemoryCharacterStorage memoryCharacterStorage;
+    private final MemoryUserStorage memoryUserStorage;
     private final CharacterMapper characterMapper;
 
     @Autowired
     public MemoryCharacterRepository(MemoryCharacterStorage memoryCharacterStorage,
+            MemoryUserStorage memoryUserStorage,
             CharacterMapper characterMapper){
         this.memoryCharacterStorage = memoryCharacterStorage;
+        this.memoryUserStorage = memoryUserStorage;
         this.characterMapper = characterMapper;
     }
 
@@ -47,16 +52,19 @@ public class MemoryCharacterRepository implements CharacterRepository{
         return characterMapper.characterDomainToDto(character);
     }
 
+    @Override
+    public CharacterDto readCharacterByUserId(int id){
+        User user = memoryUserStorage.readUserById(id);
+        throwIfCharacterDoesNotExist(user.getCharacter().getCharacterName());
+        return characterMapper.characterDomainToDto(user.getCharacter());
+    }
+
     private void throwIfCharacterDoesNotExist(String characterName){
         if(memoryCharacterStorage.readCharacterByName(characterName) == null){
             throw new UnknownCharacterException(characterName);
         }
     }
 
-    @Override
-    public CharacterDto readCharacterByUserId(int id){
-        return null;
-    }
 
     @Override
     public List<CharacterDto> readCharacterList(){
