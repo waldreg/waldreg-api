@@ -52,9 +52,10 @@ public class AuthenticationAcceptanceTest{
 
         //then
         result.andExpectAll(MockMvcResultMatchers.status().isOk(),
-                        MockMvcResultMatchers.header().string(HttpHeaders.CONTENT_TYPE, "application/json"),
-                        MockMvcResultMatchers.jsonPath("$.access_token").isString(),
-                        MockMvcResultMatchers.jsonPath("$.token_type").value("jwt"))
+                            MockMvcResultMatchers.header().string(HttpHeaders.CONTENT_TYPE,
+                                                                  "application/json"),
+                            MockMvcResultMatchers.jsonPath("$.access_token").isString(),
+                            MockMvcResultMatchers.jsonPath("$.token_type").value("jwt"))
                 .andDo(MockMvcResultHandlers.print());
     }
 
@@ -80,10 +81,13 @@ public class AuthenticationAcceptanceTest{
 
         //then
         result.andExpectAll(MockMvcResultMatchers.status().isBadRequest(),
-                            MockMvcResultMatchers.header().string(HttpHeaders.CONTENT_TYPE, "application/json"),
+                            MockMvcResultMatchers.header().string(HttpHeaders.CONTENT_TYPE,
+                                                                  "application/json"),
                             MockMvcResultMatchers.header().string("api-version", apiVersion),
-                            MockMvcResultMatchers.jsonPath("$.messages").value("Invalid authentication information"),
-                            MockMvcResultMatchers.jsonPath("$.document_url").value("docs.waldreg.org"))
+                            MockMvcResultMatchers.jsonPath("$.messages").value(
+                                    "Invalid authentication information"),
+                            MockMvcResultMatchers.jsonPath("$.document_url").value(
+                                    "docs.waldreg.org"))
                 .andDo(MockMvcResultHandlers.print());
 
     }

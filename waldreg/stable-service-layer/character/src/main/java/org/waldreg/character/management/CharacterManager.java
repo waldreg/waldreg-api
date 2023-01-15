@@ -1,15 +1,14 @@
 package org.waldreg.character.management;
 
 import java.util.List;
+import org.waldreg.character.aop.CharacterInUserReadable;
 import org.waldreg.character.dto.CharacterDto;
 
-public interface CharacterManager{
+public interface CharacterManager extends CharacterInUserReadable{
 
     void createCharacter(CharacterDto characterDto);
 
     CharacterDto readCharacter(String characterName);
-
-    CharacterDto readCharacterByUserId(int id);
 
     List<CharacterDto> readCharacterList();
 
