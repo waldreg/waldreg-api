@@ -11,4 +11,6 @@ public interface CharacterManager{
 
     List<CharacterDto> readCharacterList();
 
+    void updateCharacter(String targetName, CharacterDto changedCharacter);
+
 }
