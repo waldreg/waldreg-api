@@ -5,7 +5,7 @@ import java.util.Map;
 import org.springframework.stereotype.Service;
 
 @Service
-public class UserIdContextHolder{
+public class DecryptedTokenContextHolder{
 
     private static final ThreadLocal<Map<String, Integer>> threadLocal;
     private static final String key;
@@ -19,10 +19,13 @@ public class UserIdContextHolder{
         threadLocal.get().put(key, id);
     }
 
-    public int resolve(){
+    public int get(){
+        return threadLocal.get().get(key);
+    }
+
+    public void resolve(){
         int id = threadLocal.get().get(key);
         threadLocal.remove();
-        return id;
     }
 
 }

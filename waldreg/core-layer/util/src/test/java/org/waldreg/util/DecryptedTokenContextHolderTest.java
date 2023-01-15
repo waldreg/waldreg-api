@@ -15,11 +15,11 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 @ExtendWith(SpringExtension.class)
-@ContextConfiguration(classes = {UserIdContextHolder.class})
-public class UserIdContextHolderTest{
+@ContextConfiguration(classes = {DecryptedTokenContextHolder.class})
+public class DecryptedTokenContextHolderTest{
 
     @Autowired
-    private UserIdContextHolder userIdContextHolder;
+    private DecryptedTokenContextHolder decryptedTokenContextHolder;
 
     @Test
     @DisplayName("UserId를 같은 스레드에서 전달 하는 테스트")
@@ -27,14 +27,18 @@ public class UserIdContextHolderTest{
         // given
         ExecutorService executorService = Executors.newFixedThreadPool(2);
         Callable<Integer> callable1 = () -> {
-            userIdContextHolder.hold(1);
+            decryptedTokenContextHolder.hold(1);
             Thread.sleep(500);
-            return userIdContextHolder.resolve();
+            int result = decryptedTokenContextHolder.get();
+            decryptedTokenContextHolder.resolve();
+            return result;
         };
 
         Callable<Integer> callable2 = () -> {
-            userIdContextHolder.hold(2);
-            return userIdContextHolder.resolve();
+            decryptedTokenContextHolder.hold(2);
+            int result = decryptedTokenContextHolder.get();
+            decryptedTokenContextHolder.resolve();
+            return result;
         };
 
         // when
@@ -56,13 +60,21 @@ public class UserIdContextHolderTest{
         for (int i = 0; i < 100; i++){
             int finalI = i;
             runnableList.add(() -> {
-                userIdContextHolder.hold(finalI);
+                decryptedTokenContextHolder.hold(finalI);
                 Thread.sleep((int) (Math.random() * 1000));
-                Assertions.assertEquals(finalI, userIdContextHolder.resolve());
+                Assertions.assertEquals(finalI, decryptedTokenContextHolder.get());
+                decryptedTokenContextHolder.resolve();
                 return 0;
             });
         }
-        executorService.invokeAll(runnableList);
+        List<Future<Integer>> futureList = executorService.invokeAll(runnableList);
+        waitUntilAllFutureDone(futureList);
+    }
+
+    private void waitUntilAllFutureDone(List<Future<Integer>> futureList) throws Exception{
+        for(Future<Integer> future : futureList){
+            future.get();
+        }
     }
 
 }
