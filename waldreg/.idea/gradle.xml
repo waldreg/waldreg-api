@@ -12,12 +12,14 @@
             <option value="$PROJECT_DIR$/application-layer" />
             <option value="$PROJECT_DIR$/application-layer/acceptance" />
             <option value="$PROJECT_DIR$/core-layer" />
+            <option value="$PROJECT_DIR$/core-layer/util" />
             <option value="$PROJECT_DIR$/domain-layer" />
             <option value="$PROJECT_DIR$/domain-layer/domain" />
             <option value="$PROJECT_DIR$/external-layer" />
             <option value="$PROJECT_DIR$/repository-layer" />
             <option value="$PROJECT_DIR$/service-layer" />
             <option value="$PROJECT_DIR$/stable-service-layer" />
+            <option value="$PROJECT_DIR$/stable-service-layer/character" />
           </set>
         </option>
       </GradleProjectSettings>
