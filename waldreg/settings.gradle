@@ -10,4 +10,8 @@ include 'domain-layer:domain'
 findProject(':domain-layer:domain')?.name = 'domain'
 include 'application-layer:acceptance'
 findProject(':application-layer:acceptance')?.name = 'acceptance'
+include 'service-layer:auth'
+findProject(':service-layer:tokenauthentication')?.name = 'auth'
+include 'service-layer:jwt-auth'
+findProject(':service-layer:jwt-auth')?.name = 'jwt-auth'
 

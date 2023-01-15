@@ -8,18 +8,19 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.waldreg.token.dto.TokenDto;
+import org.waldreg.token.jwt.authenticator.JwtAuthenticator;
 import org.waldreg.token.jwt.publisher.JwtTokenPublisher;
-import org.waldreg.token.publisher.TokenPublisher;
+import org.waldreg.token.jwt.secret.Secret;
 
 @ExtendWith(SpringExtension.class)
-@ContextConfiguration(classes = {JwtTokenPublisher.class, SuperTokenPublisher.class, JwtTokenAuthenticator.class, SuperTokenAuthenticator.class})
+@ContextConfiguration(classes = {JwtTokenPublisher.class, JwtAuthenticator.class, Secret.class})
 public class JwtAuthenticatorTest{
 
     @Autowired
-    private TokenPublisher jwtTokenPublisher;
+    private JwtTokenPublisher jwtTokenPublisher;
 
     @Autowired
-    private TokenAuthenticator jwtTokenAuthenticator;
+    private JwtAuthenticator jwtTokenAuthenticator;
 
     @Test
     @DisplayName("jwt 토큰 인증 성공")
@@ -32,9 +33,7 @@ public class JwtAuthenticatorTest{
         String encryptedToken = jwtTokenPublisher.publish(tokenDto);
 
         //then
-        Assertions.assertAll(
-                () -> Assertions.assertDoesNotThrow(jwtTokenAuthenticator.authenticate(encryptedToken))
-        );
+        Assertions.assertTrue(jwtTokenAuthenticator.authenticate(encryptedToken));
 
     }
 
