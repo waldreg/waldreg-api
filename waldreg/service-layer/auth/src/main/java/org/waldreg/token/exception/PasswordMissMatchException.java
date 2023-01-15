@@ -1,8 +1,8 @@
 package org.waldreg.token.exception;
 
-public class PasswordMisMatchException extends RuntimeException{
+public class PasswordMissMatchException extends RuntimeException{
 
-    public PasswordMisMatchException(){
+    public PasswordMissMatchException(){
         super("wrong Password");
     }
 }
