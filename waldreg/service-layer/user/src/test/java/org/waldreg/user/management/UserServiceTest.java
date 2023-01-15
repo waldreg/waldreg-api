@@ -46,5 +46,9 @@ public class UserServiceTest{
 
     }
 
+    @Test
+    @DisplayName("유저 수정 성공 테스트")
+    public void
+
 
 }
