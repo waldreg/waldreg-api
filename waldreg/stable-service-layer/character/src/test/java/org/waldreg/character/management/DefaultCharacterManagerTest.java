@@ -125,4 +125,39 @@ public class DefaultCharacterManagerTest{
         );
     }
 
+    @Test
+    @DisplayName("Character 목록 조회 성공 테스트")
+    public void READ_CHARACTER_LIST_SUCCESS_TEST(){
+        // given
+        CharacterDto characterDto1 = CharacterDto.builder()
+                .characterName("1")
+                .permissionDtoList(List.of(
+                        PermissionDto.builder()
+                                .name(permissionName)
+                                .status("fail")
+                                .build()
+                )).build();
+        CharacterDto characterDto2 = CharacterDto.builder()
+                .characterName("2")
+                .permissionDtoList(List.of(
+                        PermissionDto.builder()
+                                .name(permissionName)
+                                .status("fail")
+                                .build()
+                )).build();
+
+        // when
+        defaultCharacterManager.createCharacter(characterDto1);
+        defaultCharacterManager.createCharacter(characterDto2);
+        Mockito.when(defaultCharacterManager.readCharacterList()).thenReturn(List.of(characterDto1, characterDto2));
+        List<CharacterDto> result = defaultCharacterManager.readCharacterList();
+
+        // then
+        Assertions.assertAll(
+                () -> Assertions.assertEquals(2, result.size()),
+                () -> Assertions.assertEquals(characterDto1.getCharacterName(), result.get(0).getCharacterName()),
+                () -> Assertions.assertEquals(characterDto2.getCharacterName(), result.get(1).getCharacterName())
+        );
+    }
+
 }
