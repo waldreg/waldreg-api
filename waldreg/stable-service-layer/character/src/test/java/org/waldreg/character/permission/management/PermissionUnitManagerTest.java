@@ -10,6 +10,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
+import org.waldreg.character.permission.core.DefaultPermissionUnit;
 import org.waldreg.character.permission.core.PermissionUnit;
 import org.waldreg.character.exception.DuplicatedPermissionNameException;
 import org.waldreg.character.exception.UnknownPermissionException;
@@ -31,13 +32,13 @@ public class PermissionUnitManagerTest{
     @DisplayName("PermissionUnit 생성 성공 테스트")
     public void ADD_DIFFERENT_TYPE_PERMISSION_UNIT_TEST(){
         // given
-        PermissionUnit stringPermissionUnit = PermissionUnit.builder()
+        PermissionUnit stringPermissionUnit = DefaultPermissionUnit.builder()
                 .name("permission 1")
                 .permissionVerifiable((s) -> s.equals("true"))
                 .statusList(List.of("true", "false"))
                 .build();
 
-        PermissionUnit integerPermissionUnit = PermissionUnit.builder()
+        PermissionUnit integerPermissionUnit = DefaultPermissionUnit.builder()
                 .name("permission 2")
                 .permissionVerifiable((s) -> s.equals("false"))
                 .statusList(List.of("true", "false"))
@@ -54,7 +55,7 @@ public class PermissionUnitManagerTest{
     @DisplayName("중복 이름 PermissionUnit 등록 실패 테스트")
     public void ADD_DUPLICATED_NAME_PERMISSION_UNIT_TEST(){
         // given
-        PermissionUnit stringPermissionUnit = PermissionUnit.builder()
+        PermissionUnit stringPermissionUnit = DefaultPermissionUnit.builder()
                 .name("String permission")
                 .permissionVerifiable((s) -> s.equals("true"))
                 .statusList(List.of("true", "false"))
@@ -73,7 +74,7 @@ public class PermissionUnitManagerTest{
     public void GET_PERMISSION_UNIT_BY_NAME_TEST(){
         // given
         String permissionName = "name";
-        PermissionUnit stringPermissionUnit = PermissionUnit.builder()
+        PermissionUnit stringPermissionUnit = DefaultPermissionUnit.builder()
                 .name(permissionName)
                 .permissionVerifiable((s) -> s.equals("true"))
                 .statusList(List.of("true", "false"))
@@ -105,19 +106,19 @@ public class PermissionUnitManagerTest{
     @DisplayName("PermissionUnitList 조회 성공 테스트")
     public void GET_PERMISSION_UNIT_LIST_TEST(){
         // given
-        PermissionUnit permissionUnit1 = PermissionUnit.builder()
+        PermissionUnit permissionUnit1 = DefaultPermissionUnit.builder()
                 .name("permission 1")
                 .permissionVerifiable((s) -> s.equals("true"))
                 .statusList(List.of("true", "false"))
                 .build();
 
-        PermissionUnit permissionUnit2 = PermissionUnit.builder()
+        PermissionUnit permissionUnit2 = DefaultPermissionUnit.builder()
                 .name("permission 2")
                 .permissionVerifiable((s) -> s.equals("true"))
                 .statusList(List.of("true", "false"))
                 .build();
 
-        PermissionUnit permissionUnit3 = PermissionUnit.builder()
+        PermissionUnit permissionUnit3 = DefaultPermissionUnit.builder()
                 .name("permission 3")
                 .permissionVerifiable((s) -> s.equals("true"))
                 .statusList(List.of("true", "false"))
