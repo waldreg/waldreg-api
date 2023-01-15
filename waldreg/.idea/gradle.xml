@@ -17,7 +17,10 @@
             <option value="$PROJECT_DIR$/domain-layer/domain" />
             <option value="$PROJECT_DIR$/external-layer" />
             <option value="$PROJECT_DIR$/repository-layer" />
+            <option value="$PROJECT_DIR$/repository-layer/memory-repository" />
             <option value="$PROJECT_DIR$/service-layer" />
+            <option value="$PROJECT_DIR$/service-layer/auth" />
+            <option value="$PROJECT_DIR$/service-layer/jwt-auth" />
             <option value="$PROJECT_DIR$/stable-service-layer" />
             <option value="$PROJECT_DIR$/stable-service-layer/character" />
           </set>
