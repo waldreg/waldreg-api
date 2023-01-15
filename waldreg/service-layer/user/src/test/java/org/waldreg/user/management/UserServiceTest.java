@@ -46,7 +46,7 @@ public class UserServiceTest{
     }
 
     @Test
-    @DisplayName("유저 보안 조회 성공 테스트")
+    @DisplayName("토큰에 해당하는 유저 조회 성공 테스트")
     public void READ_USER_ONLINE_SUCCESS_TEST(){
         //given
         int id = 1;
@@ -193,5 +193,6 @@ public class UserServiceTest{
         Assertions.assertThrows(InvalidRangeException.class, () -> userManager.readUserList(stIdx, enIdx));
 
     }
+
 
 }

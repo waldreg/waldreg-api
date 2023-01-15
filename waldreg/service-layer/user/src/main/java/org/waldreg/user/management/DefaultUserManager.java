@@ -35,8 +35,8 @@ public class DefaultUserManager implements UserManager{
     }
 
     private void throwIfInvalidRange(int stIdx, int enIdx, int maxIdx){
-        if(stIdx>maxIdx||enIdx>maxIdx||stIdx>enIdx){
-            throw new InvalidRangeException(stIdx,enIdx);
+        if (stIdx > maxIdx || enIdx > maxIdx || stIdx > enIdx){
+            throw new InvalidRangeException(stIdx, enIdx);
         }
     }
 
