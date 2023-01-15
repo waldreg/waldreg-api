@@ -9,13 +9,14 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.waldreg.token.dto.TokenDto;
 import org.waldreg.token.jwt.publisher.JwtTokenPublisher;
+import org.waldreg.token.jwt.secret.Secret;
 
 @ExtendWith(SpringExtension.class)
-@ContextConfiguration(classes = {JwtTokenPublisher.class})
+@ContextConfiguration(classes = {JwtTokenPublisher.class, Secret.class})
 public class JwtPublisherTest{
 
     @Autowired
-    private TokenPublisher jwtTokenPublisher;
+    private JwtTokenPublisher jwtTokenPublisher;
 
     @Test
     @DisplayName("jwt 토큰 생성 성공")
@@ -30,7 +31,7 @@ public class JwtPublisherTest{
         //when
 
         //then
-        Assertions.assertDoesNotThrow(jwtTokenPublisher.publish(tokenDto));
+        Assertions.assertDoesNotThrow(()->jwtTokenPublisher.publish(tokenDto));
 
     }
 
