@@ -40,6 +40,11 @@ public class DefaultCharacterManager implements CharacterManager{
         }
     }
 
+    @Override
+    public CharacterDto readCharacter(String characterName){
+        return characterRepository.readCharacter(characterName);
+    }
+
     @Autowired
     private DefaultCharacterManager(CharacterRepository characterRepository, PermissionChecker permissionChecker){
         this.characterRepository = characterRepository;
