@@ -101,6 +101,12 @@ public class MemoryCharacterRepository implements CharacterRepository{
         return characterMapper.characterDomainToDto(user.getCharacter());
     }
 
+    @Override
+    public void deleteCharacter(String characterName){
+        throwIfCharacterDoesNotExist(characterName);
+        memoryCharacterStorage.deleteCharacterByName(characterName);
+    }
+
     private void throwIfCharacterDoesNotExist(String characterName){
         if (memoryCharacterStorage.readCharacterByName(characterName) == null){
             throw new UnknownCharacterException(characterName);
@@ -115,11 +121,6 @@ public class MemoryCharacterRepository implements CharacterRepository{
             characterDtoList.add(characterMapper.characterDomainToDto(characterEntry.getValue()));
         }
         return characterDtoList;
-    }
-
-    @Override
-    public void deleteCharacter(String characterName){
-
     }
 
 }

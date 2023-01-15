@@ -329,4 +329,44 @@ public class CharacterRepositoryTest{
         );
     }
 
+    @Test
+    @DisplayName("역할 삭제 성공 테스트")
+    public void DELETE_CHARACTER_SUCCESS_TEST(){
+        // given
+        String name = "mock";
+        CharacterDto characterDto = CharacterDto.builder()
+                .characterName(name)
+                .permissionDtoList(
+                        List.of(
+                                PermissionDto.builder()
+                                        .name("permission1")
+                                        .status("before_fail")
+                                        .build(),
+                                PermissionDto.builder()
+                                        .name("permission2")
+                                        .status("before_true")
+                                        .build()
+                        )
+                ).build();
+
+        // when
+        characterRepository.createCharacter(characterDto);
+        characterRepository.deleteCharacter(name);
+
+        // then
+        Assertions.assertThrows(UnknownCharacterException.class,
+                () -> characterRepository.readCharacter(name));
+    }
+
+    @Test
+    @DisplayName("역할 삭제 실패 테스트 - 없는 역할")
+    public void DELETE_CHARACTER_FAIL_UNKNOWN_CHARACTER_NAME(){
+        // given
+        String name = "unknown character";
+
+        // when & then
+        Assertions.assertThrows(UnknownCharacterException.class,
+                () -> characterRepository.deleteCharacter(name));
+    }
+
 }
