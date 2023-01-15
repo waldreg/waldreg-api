@@ -11,8 +11,7 @@ public final class DefaultPermissionUnit implements PermissionUnit{
     private final List<String> statusList;
 
     private DefaultPermissionUnit(){
-        throw new UnsupportedOperationException
-                ("Can not invoke constructor \"PermissionUnit()\"");
+        throw new UnsupportedOperationException("Can not invoke constructor \"PermissionUnit()\"");
     }
 
     private DefaultPermissionUnit(Builder builder){
