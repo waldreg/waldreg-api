@@ -6,6 +6,8 @@ public interface PermissionUnit{
 
     String getName();
 
+    String getInfo();
+
     boolean verify(String status);
 
     List<String> getStatusList();
