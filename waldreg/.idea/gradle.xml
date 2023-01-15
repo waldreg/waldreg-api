@@ -12,6 +12,7 @@
             <option value="$PROJECT_DIR$/application-layer" />
             <option value="$PROJECT_DIR$/application-layer/acceptance" />
             <option value="$PROJECT_DIR$/core-layer" />
+            <option value="$PROJECT_DIR$/core-layer/util" />
             <option value="$PROJECT_DIR$/domain-layer" />
             <option value="$PROJECT_DIR$/domain-layer/domain" />
             <option value="$PROJECT_DIR$/external-layer" />
