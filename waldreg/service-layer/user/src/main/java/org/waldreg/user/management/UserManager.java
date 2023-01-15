@@ -8,4 +8,6 @@ public interface UserManager{
 
     UserDto readUserById(int id);
 
+    UserDto readUserByName(String name);
+
 }
