@@ -28,7 +28,6 @@ public class JwtAuthenticator implements TokenAuthenticator{
     public boolean authenticate(String token) throws JwtException{
         try{
             Jws<Claims> claim = Jwts.parserBuilder().setSigningKey(secret.getSecretKey()).build().parseClaimsJws(token);
-            System.out.println("\n\n" + claim.getBody().getSubject());
             int id = Integer.parseInt(claim.getBody().getSubject());
             decryptedTokenContextHolder.hold(id);
             return true;
