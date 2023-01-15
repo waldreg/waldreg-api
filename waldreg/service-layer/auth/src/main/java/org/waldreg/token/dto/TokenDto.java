@@ -34,20 +34,9 @@ public class TokenDto{
     public static final class Builder{
 
         private int id;
-        private final Date createdAt;
-        private final Date expiredAt;
-
-        {
-            createdAt = new Date();
-            expiredAt = calculateExpiredAt();
-        }
-        
-        private Date calculateExpiredAt(){
-            Calendar calendar = Calendar.getInstance();
-            int tokenExpirationMsec = 3600000;
-            calendar.add(Calendar.MILLISECOND, tokenExpirationMsec);
-            return calendar.getTime();
-        }
+        private int expiredMilliSec;
+        private Date createdAt;
+        private Date expiredAt;
 
         private Builder(){}
 
@@ -56,10 +45,27 @@ public class TokenDto{
             return this;
         }
 
+        public Builder expiredMilliSec(int expiredMilliSec){
+            this.expiredMilliSec = expiredMilliSec;
+            return this;
+        }
+
         public TokenDto build(){
+            initTokenValidatedDate();
             return new TokenDto(this);
         }
-       
+
+        private void initTokenValidatedDate(){
+            createdAt = new Date();
+            expiredAt = calculateExpiredAt();
+        }
+
+        private Date calculateExpiredAt(){
+            Calendar calendar = Calendar.getInstance();
+            calendar.add(Calendar.MILLISECOND, expiredMilliSec);
+            return calendar.getTime();
+        }
+
     }
 
 }

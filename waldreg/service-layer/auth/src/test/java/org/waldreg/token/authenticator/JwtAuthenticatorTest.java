@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.waldreg.token.dto.TokenDto;
+import org.waldreg.token.exception.TokenExpiredException;
 import org.waldreg.token.jwt.authenticator.JwtAuthenticator;
 import org.waldreg.token.jwt.publisher.JwtTokenPublisher;
 import org.waldreg.token.jwt.secret.Secret;
@@ -37,5 +38,20 @@ public class JwtAuthenticatorTest{
 
     }
 
+    @Test
+    @DisplayName("만료된 jwt 토큰")
+    public void EXPIRED_JWT_TOKEN_TEST(){
+        //given
+        int id = 1;
+        TokenDto tokenDto = TokenDto.builder()
+                .id(id)
+                .expiredMilliSec(0)
+                .build();
+        //when
+        String expiredToken = jwtTokenPublisher.publish(tokenDto);
+
+        //then
+        Assertions.assertThrows(TokenExpiredException.class, ()->jwtTokenAuthenticator.authenticate(expiredToken));
+    }
 
 }
