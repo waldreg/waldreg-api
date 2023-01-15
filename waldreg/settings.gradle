@@ -20,4 +20,6 @@ include 'core-layer:util'
 findProject(':core-layer:util')?.name = 'util'
 include 'repository-layer:memory-repository'
 findProject(':repository-layer:memory-repository')?.name = 'memory-repository'
+include 'application-layer:character-controller'
+findProject(':application-layer:character-controller')?.name = 'character-controller'
 
