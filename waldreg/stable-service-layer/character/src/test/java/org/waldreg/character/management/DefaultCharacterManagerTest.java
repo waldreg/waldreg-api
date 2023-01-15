@@ -126,6 +126,29 @@ public class DefaultCharacterManagerTest{
     }
 
     @Test
+    @DisplayName("유저 id에 속한 Character 조회 테스트")
+    public void READ_CHARACTER_BY_USER_ID_TEST(){
+        // given
+        int id = 1;
+        String characterName = "admin";
+        CharacterDto characterDto = CharacterDto.builder()
+                .characterName(characterName)
+                .permissionDtoList(List.of(
+                        PermissionDto.builder()
+                                .name(permissionName)
+                                .status("fail")
+                                .build()
+                )).build();
+
+        // when
+        Mockito.when(defaultCharacterManager.readCharacterByUserId(id)).thenReturn(characterDto);
+        CharacterDto result = defaultCharacterManager.readCharacterByUserId(id);
+
+        // then
+        Assertions.assertEquals("admin", characterDto.getCharacterName());
+    }
+
+    @Test
     @DisplayName("Character 목록 조회 성공 테스트")
     public void READ_CHARACTER_LIST_SUCCESS_TEST(){
         // given
