@@ -18,3 +18,6 @@ include 'stable-service-layer:character'
 findProject(':stable-service-layer:character')?.name = 'character'
 include 'core-layer:util'
 findProject(':core-layer:util')?.name = 'util'
+include 'repository-layer:memory-repository'
+findProject(':repository-layer:memory-repository')?.name = 'memory-repository'
+
