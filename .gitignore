@@ -9,6 +9,8 @@ ivy-cache
 argfile*
 activemq-data/
 classes/
+*/build
+*/.gradle
 
 # Log files
 jxl.log
@@ -52,3 +54,7 @@ atlassian-ide-plugin.xml
 
 # VS Code
 .vscode/
+
+
+*/build
+*/.gradle
