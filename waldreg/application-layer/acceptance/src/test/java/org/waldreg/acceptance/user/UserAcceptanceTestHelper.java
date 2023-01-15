@@ -109,4 +109,19 @@ public class UserAcceptanceTestHelper{
                 .content(content));
     }
 
+    public static ResultActions inquiryAllUserWithToken(MockMvc mvc, String url, int startIdx, int endIdx, String token) throws Exception{
+        return mvc.perform(MockMvcRequestBuilders
+                .get(url, startIdx, endIdx)
+                .accept(MediaType.APPLICATION_JSON)
+                .header("api-version", apiVersion)
+                .header(HttpHeaders.AUTHORIZATION, token));
+    }
+
+    public static ResultActions inquiryAllUserWithoutToken(MockMvc mvc, String url, int startIdx, int endIdx) throws Exception{
+        return mvc.perform(MockMvcRequestBuilders
+                .get(url, startIdx, endIdx)
+                .accept(MediaType.APPLICATION_JSON)
+                .header("api-version", apiVersion));
+    }
+
 }
