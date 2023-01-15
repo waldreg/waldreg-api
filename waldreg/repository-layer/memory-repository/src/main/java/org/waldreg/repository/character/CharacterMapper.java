@@ -29,4 +29,22 @@ public class CharacterMapper{
         return permissionList;
     }
 
+    public CharacterDto characterDomainToDto(Character character){
+        return CharacterDto.builder()
+                .characterName(character.getCharacterName())
+                .permissionDtoList(permissionDomainToDto(character.getPermissionList()))
+                .build();
+    }
+
+    private List<PermissionDto> permissionDomainToDto(List<Permission> permissionList){
+        List<PermissionDto> permissionDtoList = new ArrayList<>();
+        for(Permission permission : permissionList){
+            permissionDtoList.add(PermissionDto.builder()
+                    .name(permission.getName())
+                    .status(permission.getStatus())
+                    .build());
+        }
+        return permissionDtoList;
+    }
+
 }
