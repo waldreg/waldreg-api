@@ -160,4 +160,97 @@ public class DefaultCharacterManagerTest{
         );
     }
 
+    @Test
+    @DisplayName("Character 수정 성공 테스트")
+    public void UPDATE_CHARACTER_SUCCESS_TEST(){
+        // given
+        String beforeName = "mock character";
+        CharacterDto beforeCharacter = CharacterDto.builder()
+                .characterName(beforeName)
+                .permissionDtoList(List.of(
+                        PermissionDto.builder()
+                                .name(permissionName)
+                                .status("fail")
+                                .build()
+                )).build();
+        String afterName = "hello world";
+        CharacterDto afterCharacter = CharacterDto.builder()
+                .characterName(afterName)
+                .permissionDtoList(List.of(
+                        PermissionDto.builder()
+                                .name(permissionName)
+                                .status("fail")
+                                .build()
+                )).build();
+
+        // when
+        Mockito.when(characterRepository.readCharacter(afterName)).thenReturn(afterCharacter);
+        defaultCharacterManager.createCharacter(beforeCharacter);
+        defaultCharacterManager.updateCharacter(beforeName, afterCharacter);
+        CharacterDto result = defaultCharacterManager.readCharacter(afterName);
+
+        // then
+        Assertions.assertEquals(afterName, result.getCharacterName());
+    }
+
+    @Test
+    @DisplayName("Character 수정 실패 테스트 - 존재하지 않는 권한을 수정하려고 할 경우")
+    public void UPDATE_CHARACTER_FAIL_UNKNOWN_PERMISSION_TEST(){
+        // given
+        String beforeName = "mock character";
+        CharacterDto beforeCharacter = CharacterDto.builder()
+                .characterName(beforeName)
+                .permissionDtoList(List.of(
+                        PermissionDto.builder()
+                                .name(permissionName)
+                                .status("fail")
+                                .build()
+                )).build();
+        String afterName = "hello world";
+        CharacterDto afterCharacter = CharacterDto.builder()
+                .characterName(afterName)
+                .permissionDtoList(List.of(
+                        PermissionDto.builder()
+                                .name("unknown permission")
+                                .status("fail")
+                                .build()
+                )).build();
+
+        // when
+        defaultCharacterManager.createCharacter(beforeCharacter);
+
+        // then
+        Assertions.assertThrows(UnknownPermissionException.class, ()-> defaultCharacterManager.updateCharacter(afterName, afterCharacter));
+    }
+
+    @Test
+    @DisplayName("Character 수정 실패 테스트 - 해당 권한에 해당하지 않는 permission status 로 변경하려고 시도하는 경우")
+    public void UPDATE_CHARACTER_FAIL_UNKNOWN_PERMISSION_STATUS_TEST(){
+        // given
+        String beforeName = "mock character";
+        CharacterDto beforeCharacter = CharacterDto.builder()
+                .characterName(beforeName)
+                .permissionDtoList(List.of(
+                        PermissionDto.builder()
+                                .name(permissionName)
+                                .status("fail")
+                                .build()
+                )).build();
+        String afterName = "hello world";
+        CharacterDto afterCharacter = CharacterDto.builder()
+                .characterName(afterName)
+                .permissionDtoList(List.of(
+                        PermissionDto.builder()
+                                .name(permissionName)
+                                .status("never used")
+                                .build()
+                )).build();
+
+        // when
+        defaultCharacterManager.createCharacter(beforeCharacter);
+
+        // then
+        Assertions.assertThrows(UnknownPermissionStatusException.class, ()-> defaultCharacterManager.updateCharacter(afterName, afterCharacter));
+    }
+
 }

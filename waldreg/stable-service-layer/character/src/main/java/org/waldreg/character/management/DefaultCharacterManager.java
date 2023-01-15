@@ -21,6 +21,12 @@ public class DefaultCharacterManager implements CharacterManager{
         characterRepository.createCharacter(characterDto);
     }
 
+    @Override
+    public void updateCharacter(String targetName, CharacterDto changedCharacter){
+        throwIfInvalidPermissionDetected(changedCharacter.getPermissionList());
+        characterRepository.updateCharacter(targetName, changedCharacter);
+    }
+
     private void throwIfInvalidPermissionDetected(List<PermissionDto> permissionDtoList){
         for (PermissionDto permissionDto : permissionDtoList){
             throwIfInvalidPermissionNameDetected(permissionDto);
