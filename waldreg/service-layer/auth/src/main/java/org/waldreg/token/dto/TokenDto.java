@@ -34,7 +34,7 @@ public class TokenDto{
     public static final class Builder{
 
         private int id;
-        private int expiredMilliSec;
+        private int expiredMilliSec = 3600000;
         private Date createdAt;
         private Date expiredAt;
 
