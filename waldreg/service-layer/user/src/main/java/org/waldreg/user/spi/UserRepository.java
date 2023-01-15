@@ -1,5 +1,6 @@
 package org.waldreg.user.spi;
 
+import java.util.List;
 import org.waldreg.user.dto.UserDto;
 
 public interface UserRepository{
@@ -9,5 +10,7 @@ public interface UserRepository{
     UserDto readUserById(int id);
 
     UserDto readUserByName(String name);
+
+    List<UserDto> readUserList(int stIdx, int enIdx);
 
 }
