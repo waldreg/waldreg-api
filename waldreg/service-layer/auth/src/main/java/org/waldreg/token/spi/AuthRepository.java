@@ -1,11 +1,11 @@
 package org.waldreg.token.spi;
 
-import org.waldreg.domain.user.User;
+import org.waldreg.token.dto.TokenUserDto;
 
 public interface AuthRepository {
 
-    User findUserByUserIdPw(String userId,String userPassword);
+    TokenUserDto findUserByUserIdPw(String userId, String userPassword);
 
-    User findUserById(int id);
+    TokenUserDto findUserById(int id);
 
 }

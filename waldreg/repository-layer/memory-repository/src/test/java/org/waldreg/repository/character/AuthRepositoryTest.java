@@ -12,6 +12,7 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.waldreg.domain.user.User;
 import org.waldreg.repository.MemoryUserStorage;
 import org.waldreg.repository.auth.MemoryAuthRepository;
+import org.waldreg.token.dto.TokenUserDto;
 
 @ExtendWith(SpringExtension.class)
 @ContextConfiguration(classes = {MemoryAuthRepository.class, MemoryUserStorage.class})
@@ -41,10 +42,14 @@ public class AuthRepositoryTest{
 
         //when
         memoryUserStorage.createUser(user);
-        User foundUser = memoryAuthRepository.findUserByUserIdPw(user.getUserId(),user.getUserPassword());
+        TokenUserDto foundUser = memoryAuthRepository.findUserByUserIdPw(user.getUserId(), user.getUserPassword());
 
         //then
-        Assertions.assertEquals(user,foundUser);
+        Assertions.assertAll(
+                () -> Assertions.assertEquals(user.getId(), foundUser.getId()),
+                () -> Assertions.assertEquals(user.getUserId(), foundUser.getUserId()),
+                () -> Assertions.assertEquals(user.getUserPassword(), foundUser.getUserPassword())
+        );
     }
 
     @Test
@@ -60,13 +65,15 @@ public class AuthRepositoryTest{
 
         //when
         memoryUserStorage.createUser(user);
-        User foundUser = memoryAuthRepository.findUserById(user.getId());
+        TokenUserDto foundUser = memoryAuthRepository.findUserById(user.getId());
 
         //then
-        Assertions.assertEquals(user,foundUser);
+        Assertions.assertAll(
+                () -> Assertions.assertEquals(user.getId(), foundUser.getId()),
+                () -> Assertions.assertEquals(user.getUserId(), foundUser.getUserId()),
+                () -> Assertions.assertEquals(user.getUserPassword(), foundUser.getUserPassword())
+        );
     }
-
-
 
 
 }
