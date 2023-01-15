@@ -27,7 +27,7 @@ public class PermissionVerifyAop{
     private final DecryptedTokenContextHolder decryptedTokenContextHolder;
     private final CharacterInUserReadable characterInUserReadable;
 
-    @Around("@annotation(org.waldreg.character.permission.aop.annotation.PermissionVerifying)")
+    @Around("@annotation(org.waldreg.character.aop.annotation.PermissionVerifying)")
     public Object verify(ProceedingJoinPoint proceedingJoinPoint) throws Throwable{
         PermissionVerifying permissionVerifying = annotationExtractor.extractAnnotation(proceedingJoinPoint, PermissionVerifying.class);
         CharacterDto characterDto = getCharacterDto();
