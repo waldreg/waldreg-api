@@ -7,6 +7,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.ContextConfiguration;
@@ -15,8 +16,6 @@ import org.waldreg.character.dto.CharacterDto;
 import org.waldreg.character.dto.PermissionDto;
 import org.waldreg.character.exception.UnknownPermissionException;
 import org.waldreg.character.exception.UnknownPermissionStatusException;
-import org.waldreg.character.management.CharacterManager;
-import org.waldreg.character.management.DefaultCharacterManager;
 import org.waldreg.character.permission.core.DefaultPermissionUnit;
 import org.waldreg.character.permission.core.PermissionUnit;
 import org.waldreg.character.permission.management.PermissionUnitManager;
@@ -98,6 +97,32 @@ public class DefaultCharacterManagerTest{
 
         // when & then
         Assertions.assertThrows(UnknownPermissionStatusException.class, () -> defaultCharacterManager.createCharacter(character));
+    }
+
+    @Test
+    @DisplayName("특정 Character 조회 성공 테스트")
+    public void READ_CHARACTER_SUCCESS_TEST(){
+        // given
+        String characterName = "characterName";
+        CharacterDto characterDto = CharacterDto.builder()
+                .characterName(characterName)
+                .permissionDtoList(List.of(
+                        PermissionDto.builder()
+                                .name(permissionName)
+                                .status("fail")
+                                .build()
+                )).build();
+
+        // when
+        defaultCharacterManager.createCharacter(characterDto);
+        Mockito.when(characterRepository.readCharacter(characterName)).thenReturn(characterDto);
+        CharacterDto result = defaultCharacterManager.readCharacter(characterName);
+
+        // then
+        Assertions.assertAll(
+                () -> Assertions.assertEquals(characterDto.getCharacterName(), result.getCharacterName()),
+                () -> Assertions.assertEquals(characterDto.getPermissionList().size(), result.getPermissionList().size())
+        );
     }
 
 }

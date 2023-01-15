@@ -6,4 +6,6 @@ public interface CharacterRepository{
 
     void createCharacter(CharacterDto characterDto);
 
+    CharacterDto readCharacter(String characterName);
+
 }

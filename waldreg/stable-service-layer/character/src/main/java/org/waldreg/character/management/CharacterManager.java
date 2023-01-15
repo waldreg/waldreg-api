@@ -6,4 +6,6 @@ public interface CharacterManager{
 
     void createCharacter(CharacterDto characterDto);
 
+    CharacterDto readCharacter(String characterName);
+
 }
