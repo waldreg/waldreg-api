@@ -13,4 +13,6 @@ public interface UserRepository{
 
     List<UserDto> readUserList(int stIdx, int enIdx);
 
+    int readMaxIdx();
+
 }
