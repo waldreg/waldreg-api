@@ -56,6 +56,11 @@ public class DefaultCharacterManager implements CharacterManager{
         return characterRepository.readCharacterList();
     }
 
+    @Override
+    public void deleteCharacter(String characterName){
+        characterRepository.deleteCharacter(characterName);
+    }
+
     @Autowired
     private DefaultCharacterManager(CharacterRepository characterRepository, PermissionChecker permissionChecker){
         this.characterRepository = characterRepository;

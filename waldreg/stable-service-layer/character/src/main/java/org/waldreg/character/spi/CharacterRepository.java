@@ -13,4 +13,6 @@ public interface CharacterRepository{
 
     void updateCharacter(String targetName, CharacterDto changedCharacter);
 
+    void deleteCharacter(String characterName);
+
 }
