@@ -3,6 +3,7 @@ package org.waldreg.util;
 import java.util.HashMap;
 import java.util.Map;
 import org.springframework.stereotype.Service;
+import org.waldreg.util.exception.DecryptedTokenDoesNotExistException;
 
 @Service
 public class DecryptedTokenContextHolder{
@@ -20,11 +21,14 @@ public class DecryptedTokenContextHolder{
     }
 
     public int get(){
-        return threadLocal.get().get(key);
+        try{
+            return threadLocal.get().get(key);
+        } catch (NullPointerException NPE){
+            throw new DecryptedTokenDoesNotExistException();
+        }
     }
 
     public void resolve(){
-        int id = threadLocal.get().get(key);
         threadLocal.remove();
     }
 
