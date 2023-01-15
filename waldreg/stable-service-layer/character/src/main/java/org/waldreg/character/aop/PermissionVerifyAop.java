@@ -31,7 +31,7 @@ public class PermissionVerifyAop{
     public Object verify(ProceedingJoinPoint proceedingJoinPoint) throws Throwable{
         PermissionVerifying permissionVerifying = annotationExtractor.extractAnnotation(proceedingJoinPoint, PermissionVerifying.class);
         CharacterDto characterDto = getCharacterDto();
-        if(!isUserAccessible(permissionVerifying.value(), characterDto)){
+        if (!isUserAccessible(permissionVerifying.value(), characterDto)){
             permissionVerifying.fail().behave();
         }
         try{
@@ -48,9 +48,9 @@ public class PermissionVerifyAop{
 
     private boolean isUserAccessible(String[] permissionNameArray, CharacterDto characterDto){
         Map<String, String> permissionDtoMap = permissionDtoListToMap(characterDto.getPermissionList());
-        for(String permissionName : permissionNameArray){
+        for (String permissionName : permissionNameArray){
             throwIfUnknownPermissionNameDetected(permissionName, permissionDtoMap);
-            if(!permissionVerifier.verify(permissionName, permissionDtoMap.get(permissionName))){
+            if (!permissionVerifier.verify(permissionName, permissionDtoMap.get(permissionName))){
                 return false;
             }
         }
@@ -59,15 +59,14 @@ public class PermissionVerifyAop{
 
     private Map<String, String> permissionDtoListToMap(List<PermissionDto> permissionDtoList){
         Map<String, String> permissionDtoMap = new HashMap<>();
-        for(PermissionDto permissionDto : permissionDtoList){
+        for (PermissionDto permissionDto : permissionDtoList){
             permissionDtoMap.put(permissionDto.getName(), permissionDto.getStatus());
         }
         return permissionDtoMap;
     }
 
     private void throwIfUnknownPermissionNameDetected(String permissionName, Map<String, String> permissionDtoMap){
-        if(!permissionDtoMap.containsKey(permissionName))
-            throw new NoPermissionException(permissionName);
+        if (!permissionDtoMap.containsKey(permissionName)){throw new NoPermissionException(permissionName);}
     }
 
     @Autowired
