@@ -14,16 +14,22 @@ repositories {
 }
 
 dependencyManagement {
-    imports{
+    imports {
         mavenBom SpringBootPlugin.BOM_COORDINATES
     }
 }
 
 dependencies {
+    implementation project(':core-layer:util')
+
     implementation "com.google.guava:guava:31.1-jre"
 
     implementation 'org.springframework.boot:spring-boot-starter'
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
+
+    implementation 'org.springframework.boot:spring-boot-starter-web'
+
+    implementation 'org.springframework.boot:spring-boot-starter-aop'
 
     testImplementation 'org.junit.jupiter:junit-jupiter-api:5.8.1'
     testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.8.1'
