@@ -6,26 +6,27 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
 import org.waldreg.character.permission.core.DefaultPermissionUnit;
 import org.waldreg.character.permission.core.PermissionUnit;
-import org.waldreg.character.permission.extension.DefaultPermissionExtension;
+import org.waldreg.character.permission.extension.PermissionExtension;
 
 @Configuration
 public class PermissionConfiguration{
 
-    private final DefaultPermissionExtension defaultPermissionExtension;
+    private final PermissionExtension permissionExtension;
 
     @Autowired
-    public PermissionConfiguration(DefaultPermissionExtension defaultPermissionExtension){
-        this.defaultPermissionExtension = defaultPermissionExtension;
+    public PermissionConfiguration(PermissionExtension permissionExtension){
+        this.permissionExtension = permissionExtension;
     }
 
     @PostConstruct
     public void extendCharacterManagerPermission(){
         PermissionUnit characterManagerPermission = DefaultPermissionUnit.builder()
                 .name("Character Manager")
+                .info("If set true, Permission to edit, delete, or create new characters.")
                 .permissionVerifiable((s) -> s.equals("true"))
                 .statusList(List.of("true", "false"))
                 .build();
-        defaultPermissionExtension.extend(characterManagerPermission);
+        permissionExtension.extend(characterManagerPermission);
     }
 
 }
