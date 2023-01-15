@@ -34,6 +34,11 @@ public class DefaultUserManager implements UserManager{
         return userRepository.readUserList(startIdx, endIdx);
     }
 
+    @Override
+    public void updateUser(int id, UserDto userDto){
+        userRepository.updateUser(id,userDto);
+    }
+
     private void throwIfInvalidRange(int stIdx, int enIdx, int maxIdx){
         if (stIdx > maxIdx || enIdx > maxIdx || stIdx > enIdx){
             throw new InvalidRangeException(stIdx, enIdx);

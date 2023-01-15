@@ -11,7 +11,9 @@ public interface UserRepository{
 
     UserDto readUserByName(String name);
 
-    List<UserDto> readUserList(int stIdx, int enIdx);
+    List<UserDto> readUserList(int startIdx, int endIdx);
+
+    void updateUser(int idx, UserDto userDto);
 
     int readMaxIdx();
 

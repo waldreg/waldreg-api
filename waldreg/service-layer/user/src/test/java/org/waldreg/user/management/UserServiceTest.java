@@ -179,8 +179,8 @@ public class UserServiceTest{
                 .userPassword(userPassword)
                 .phoneNumber(phoneNumber)
                 .build();
-        int stIdx = 1;
-        int enIdx = 3;
+        int startIdx = 1;
+        int endIdx = 3;
         int maxIdx = 2;
         List<UserDto> userDtoList = new ArrayList<>();
 
@@ -190,9 +190,53 @@ public class UserServiceTest{
         Mockito.when(userRepository.readMaxIdx()).thenReturn(maxIdx);
 
         //then
-        Assertions.assertThrows(InvalidRangeException.class, () -> userManager.readUserList(stIdx, enIdx));
+        Assertions.assertThrows(InvalidRangeException.class, () -> userManager.readUserList(startIdx, endIdx));
 
     }
 
+    @Test
+    @DisplayName("특정 유저 수정 성공 테스트")
+    public void UPDATE_SPECIFIC_USER_SUCCESS_TEST(){
+        //given
+        int id = 1;
+        String name = "홍길동";
+        String userId = "hello123";
+        String userPassword = "hello1234";
+        String phoneNumber = "010-1234-1234";
+        UserDto createRequest = UserDto.builder()
+                .name(name)
+                .userId(userId)
+                .userPassword(userPassword)
+                .phoneNumber(phoneNumber)
+                .build();
+        String updateName = "짱구";
+        String updatePhoneNumber = "010-4321-1234";
+        UserDto createUpdateRequest = UserDto.builder()
+                .name(updateName)
+                .phoneNumber(updatePhoneNumber)
+                .build();
+        UserDto changedRequest = UserDto.builder()
+                .name(updateName)
+                .userId(userId)
+                .userPassword(userPassword)
+                .phoneNumber(updatePhoneNumber)
+                .build();
+
+        //when
+        userManager.createUser(createRequest);
+        Mockito.when(userRepository.readUserById(Mockito.anyInt())).thenReturn(createRequest);
+        UserDto result = userManager.readUserById(id);
+        userManager.updateUser(result.getId(), createUpdateRequest);
+        Mockito.when(userRepository.readUserById(Mockito.anyInt())).thenReturn(changedRequest);
+
+        //then
+        Assertions.assertAll(
+                () -> Assertions.assertEquals(result.getId(), changedRequest.getId()),
+                () -> Assertions.assertEquals(changedRequest.getName(), updateName),
+                () -> Assertions.assertEquals(changedRequest.getPhoneNumber(), updatePhoneNumber)
+        );
+
+
+    }
 
 }
