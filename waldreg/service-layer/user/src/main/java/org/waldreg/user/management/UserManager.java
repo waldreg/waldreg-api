@@ -6,4 +6,6 @@ public interface UserManager{
 
     void createUser(UserDto userDto);
 
+    UserDto readUserById(int id);
+
 }

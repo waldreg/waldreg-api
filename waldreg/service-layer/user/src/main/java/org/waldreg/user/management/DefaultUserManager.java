@@ -15,4 +15,9 @@ public class DefaultUserManager implements UserManager{
         userRepository.createUser(userDto);
     }
 
+    @Override
+    public UserDto readUserById(int id){
+        return userRepository.readUserById(id);
+    }
+
 }
