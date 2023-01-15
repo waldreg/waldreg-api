@@ -14,8 +14,8 @@ public class AnnotationExtractor<T extends Annotation>{
 
         T ans = null;
         Method[] methods = targetClass.getMethods();
-        for(Method method : methods){
-            if(method.getName().equals(methodName)){
+        for (Method method : methods){
+            if (method.getName().equals(methodName)){
                 ans = method.getAnnotation(annotationType);
                 break;
             }
