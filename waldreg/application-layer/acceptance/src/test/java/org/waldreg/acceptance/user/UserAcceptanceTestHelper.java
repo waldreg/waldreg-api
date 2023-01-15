@@ -100,4 +100,13 @@ public class UserAcceptanceTestHelper{
                 .header("api-version", apiVersion));
     }
 
+    public static ResultActions modifyUserCharacter(MockMvc mvc, String url, String userName, String token, String content) throws Exception{
+        return mvc.perform(MockMvcRequestBuilders
+                .put(url, userName)
+                .accept(MediaType.APPLICATION_JSON)
+                .header("api-version", apiVersion)
+                .header(HttpHeaders.AUTHORIZATION, token)
+                .content(content));
+    }
+
 }
