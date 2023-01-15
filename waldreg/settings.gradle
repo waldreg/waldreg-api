@@ -14,4 +14,6 @@ include 'stable-service-layer:character'
 findProject(':stable-service-layer:character')?.name = 'character'
 include 'core-layer:util'
 findProject(':core-layer:util')?.name = 'util'
+include 'service-layer:user'
+findProject(':service-layer:user')?.name = 'user'
 
