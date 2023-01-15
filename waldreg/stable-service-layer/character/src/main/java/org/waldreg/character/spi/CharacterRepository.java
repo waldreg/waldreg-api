@@ -9,6 +9,8 @@ public interface CharacterRepository{
 
     CharacterDto readCharacter(String characterName);
 
+    CharacterDto readCharacterByUserId(int id);
+
     List<CharacterDto> readCharacterList();
 
     void updateCharacter(String targetName, CharacterDto changedCharacter);

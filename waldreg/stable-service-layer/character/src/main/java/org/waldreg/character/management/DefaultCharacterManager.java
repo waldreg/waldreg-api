@@ -52,6 +52,11 @@ public class DefaultCharacterManager implements CharacterManager{
     }
 
     @Override
+    public CharacterDto readCharacterByUserId(int id){
+        return characterRepository.readCharacterByUserId(id);
+    }
+
+    @Override
     public List<CharacterDto> readCharacterList(){
         return characterRepository.readCharacterList();
     }
