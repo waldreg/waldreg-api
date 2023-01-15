@@ -25,4 +25,8 @@ public class MemoryCharacterStorage{
         storage.clear();
     }
 
+    public Map<String, Character> readAllCharacter(){
+        return storage;
+    }
+
 }
