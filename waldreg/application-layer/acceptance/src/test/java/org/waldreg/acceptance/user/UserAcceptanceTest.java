@@ -228,8 +228,7 @@ public class UserAcceptanceTest{
                 MockMvcResultMatchers.jsonPath("$.id").isNumber(),
                 MockMvcResultMatchers.jsonPath("$.name").value(userCreateRequest.getName()),
                 MockMvcResultMatchers.jsonPath("$.user_id").value(userCreateRequest.getUserId()),
-                MockMvcResultMatchers.jsonPath("$.phone_number")
-                        .value(userCreateRequest.getPhoneNumber()),
+                MockMvcResultMatchers.jsonPath("$.phone_number").value(userCreateRequest.getPhoneNumber()),
                 MockMvcResultMatchers.jsonPath("$.character").isString(),
                 MockMvcResultMatchers.jsonPath("$.created_at").isNotEmpty(),
                 MockMvcResultMatchers.jsonPath("$.advantage").isNumber(),
@@ -565,7 +564,7 @@ public class UserAcceptanceTest{
 
     @Test
     @DisplayName("유저 수정 실패 인수 테스트 - 잘못된 토큰")
-    public void MODIFY_USER_1_VALUE_FAIL_INVALID_TOKEN_TEST() throws Exception{
+    public void MODIFY_USER_VALUE_FAIL_INVALID_TOKEN_TEST() throws Exception{
         //given
         String url = "/user";
         String name = "alcuk1";
@@ -603,7 +602,7 @@ public class UserAcceptanceTest{
 
     @Test
     @DisplayName("유저 수정 실패 인수 테스트 - 없는 토큰")
-    public void MODIFY_USER_1_VALUE_FAIL_EMPTY_TOKEN_TEST() throws Exception{
+    public void MODIFY_USER_VALUE_FAIL_EMPTY_TOKEN_TEST() throws Exception{
         //given
         String url = "/user";
         String name = "alcuk1";
@@ -736,7 +735,6 @@ public class UserAcceptanceTest{
         ).andDo(MockMvcResultHandlers.print());
     }
 
-
     @Test
     @DisplayName("유저 보안 삭제 실패 인수 테스트 - 없는 토큰")
     public void SECURED_DELETE_USER_FAIL_CAUSE_EMPTY_TOKEN_TEST() throws Exception{
@@ -851,11 +849,13 @@ public class UserAcceptanceTest{
         String subjectUserId = "subject_id";
         String subjectUserPassword = "subject_pwd";
         String subjectPhoneNumber = "010-1234-1111";
+        String subjectCharacter = "subject_character";
         UserCreateRequest subjectUserCreateRequest = UserCreateRequest.builder()
                 .name(subjectName)
                 .userId(subjectUserId)
                 .userPassword(subjectUserPassword)
                 .phoneNumber(subjectPhoneNumber)
+                .character(subjectCharacter)
                 .build();
         String objectName = "object";
         String objectUserId = "object_id";
@@ -974,6 +974,203 @@ public class UserAcceptanceTest{
         ).andDo(MockMvcResultHandlers.print());
     }
 
+    @Test
+    @DisplayName("유저 역할 수정 성공 인수 테스트")
+    public void MODIFY_USER_CHARACTER_SUCCESS_TEST() throws Exception{
+        //given
+        String createUrl = "/user";
+        String objectName = "alcuk1";
+        String objectUserId = "alcuk_id1";
+        String objectUserPassword = "alcuk_pwd1";
+        String objectPhoneNumber = "010-1234-1111";
+        UserCreateRequest objectUserCreateRequest = UserCreateRequest.builder()
+                .name(objectName)
+                .userId(objectUserId)
+                .userPassword(objectUserPassword)
+                .phoneNumber(objectPhoneNumber)
+                .build();
+        String objectCharacter = "object_character";
+        UserCreateRequest objectUserCharacterCreateRequest = UserCreateRequest.builder()
+                .character(objectCharacter)
+                .build();
+        String modifyUrl = "/user/character/{user-name}";
+        String subjectToken = "mock_token";
+        String subjectName = "alcuk2";
+        String subjectUserId = "alcuk_id2";
+        String subjectUserPassword = "alcuk_pwd2";
+        String subjectPhoneNumber = "010-1234-2222";
+        String subjectCharacter = "subject_character";
+        UserCreateRequest subjectUserCreateRequest = UserCreateRequest.builder()
+                .name(subjectName)
+                .userId(subjectUserId)
+                .userPassword(subjectUserPassword)
+                .phoneNumber(subjectPhoneNumber)
+                .character(subjectCharacter)
+                .build();
+
+        //when
+        UserAcceptanceTestHelper.createUser(mvc, createUrl, objectMapper.writeValueAsString(objectUserCreateRequest));
+        UserAcceptanceTestHelper.createUser(mvc, createUrl, objectMapper.writeValueAsString(subjectUserCreateRequest));
+        ResultActions result = UserAcceptanceTestHelper.modifyUserCharacter(mvc, modifyUrl, objectUserCreateRequest.getName(), subjectToken, objectMapper.writeValueAsString(objectUserCharacterCreateRequest));
+        userCreateRequestList.add(objectUserCreateRequest);
+        userCreateRequestList.add(subjectUserCreateRequest);
+
+        //then
+        result.andExpectAll(
+                MockMvcResultMatchers.status().isOk(),
+                MockMvcResultMatchers.header().string(HttpHeaders.CONTENT_TYPE, "application/json"),
+                MockMvcResultMatchers.header().string("api-version", apiVersion)
+        ).andDo(MockMvcResultHandlers.print());
+
+    }
+
+    @Test
+    @DisplayName("유저 역할 수정 실패 인수 테스트 - 없는 유저")
+    public void MODIFY_USER_CHARACTER_FAIL_CAUSE_UNKNOWN_USER_TEST() throws Exception{
+        //given
+        String createUrl = "/user";
+        String modifyUrl = "/user/character/{user-name}";
+        String subjectToken = "mock_token";
+        String subjectName = "alcuk2";
+        String subjectUserId = "alcuk_id2";
+        String subjectUserPassword = "alcuk_pwd2";
+        String subjectPhoneNumber = "010-1234-2222";
+        String subjectCharacter = "subject_character";
+        String objectCharacter = "object_character";
+        UserCreateRequest objectUserCharacterCreateRequest = UserCreateRequest.builder()
+                .character(objectCharacter)
+                .build();
+        String objectUser = "unknown_user";
+        UserCreateRequest subjectUserCreateRequest = UserCreateRequest.builder()
+                .name(subjectName)
+                .userId(subjectUserId)
+                .userPassword(subjectUserPassword)
+                .phoneNumber(subjectPhoneNumber)
+                .character(subjectCharacter)
+                .build();
+
+        //when
+        UserAcceptanceTestHelper.createUser(mvc, createUrl, objectMapper.writeValueAsString(subjectUserCreateRequest));
+        ResultActions result = UserAcceptanceTestHelper.modifyUserCharacter(mvc, modifyUrl, objectUser, subjectToken, objectMapper.writeValueAsString(objectUserCharacterCreateRequest));
+        userCreateRequestList.add(subjectUserCreateRequest);
+
+        //then
+        result.andExpectAll(
+                MockMvcResultMatchers.status().isBadRequest(),
+                MockMvcResultMatchers.header().string(HttpHeaders.CONTENT_TYPE, "application/json"),
+                MockMvcResultMatchers.header().string("api-version", apiVersion),
+                MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON),
+                MockMvcResultMatchers.jsonPath("$.messages").value("Unknown user name"),
+                MockMvcResultMatchers.jsonPath("$.document_url").value("docs.waldreg.org")
+        ).andDo(MockMvcResultHandlers.print());
+
+    }
+
+    @Test
+    @DisplayName("유저 역할 수정 실패 인수 테스트 - 없는 역할")
+    public void MODIFY_USER_CHARACTER_FAIL_CAUSE_UNKNOWN_CHARACTER_TEST() throws Exception{
+        //given
+        String createUrl = "/user";
+        String objectName = "alcuk1";
+        String objectUserId = "alcuk_id1";
+        String objectUserPassword = "alcuk_pwd1";
+        String objectPhoneNumber = "010-1234-1111";
+        UserCreateRequest objectUserCreateRequest = UserCreateRequest.builder()
+                .name(objectName)
+                .userId(objectUserId)
+                .userPassword(objectUserPassword)
+                .phoneNumber(objectPhoneNumber)
+                .build();
+        String objectCharacter = "";
+        UserCreateRequest objectUserCharacterCreateRequest = UserCreateRequest.builder()
+                .character(objectCharacter)
+                .build();
+        String modifyUrl = "/user/character/{user-name}";
+        String subjectToken = "mock_token";
+        String subjectName = "alcuk2";
+        String subjectUserId = "alcuk_id2";
+        String subjectUserPassword = "alcuk_pwd2";
+        String subjectPhoneNumber = "010-1234-2222";
+        String subjectCharacter = "character";
+        UserCreateRequest subjectUserCreateRequest = UserCreateRequest.builder()
+                .name(subjectName)
+                .userId(subjectUserId)
+                .userPassword(subjectUserPassword)
+                .phoneNumber(subjectPhoneNumber)
+                .character(subjectCharacter)
+                .build();
+
+        //when
+        UserAcceptanceTestHelper.createUser(mvc, createUrl, objectMapper.writeValueAsString(objectUserCreateRequest));
+        UserAcceptanceTestHelper.createUser(mvc, createUrl, objectMapper.writeValueAsString(subjectUserCreateRequest));
+        ResultActions result = UserAcceptanceTestHelper.modifyUserCharacter(mvc, modifyUrl, objectUserCreateRequest.getName(), subjectToken, objectMapper.writeValueAsString(objectUserCharacterCreateRequest));
+        userCreateRequestList.add(objectUserCreateRequest);
+        userCreateRequestList.add(subjectUserCreateRequest);
+
+        //then
+        result.andExpectAll(
+                MockMvcResultMatchers.status().isBadRequest(),
+                MockMvcResultMatchers.header().string(HttpHeaders.CONTENT_TYPE, "application/json"),
+                MockMvcResultMatchers.header().string("api-version", apiVersion),
+                MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON),
+                MockMvcResultMatchers.jsonPath("$.messages").value("Unknown character name"),
+                MockMvcResultMatchers.jsonPath("$.document_url").value("docs.waldreg.org")
+        ).andDo(MockMvcResultHandlers.print());
+
+    }
+
+    @Test
+    @DisplayName("유저 역할 수정 실패 인수 테스트 - 권한 없음")
+    public void MODIFY_USER_CHARACTER_FAIL_CAUSE_NO_PERMISSION_TEST() throws Exception{
+        //given
+        String createUrl = "/user";
+        String objectName = "alcuk1";
+        String objectUserId = "alcuk_id1";
+        String objectUserPassword = "alcuk_pwd1";
+        String objectPhoneNumber = "010-1234-1111";
+        UserCreateRequest objectUserCreateRequest = UserCreateRequest.builder()
+                .name(objectName)
+                .userId(objectUserId)
+                .userPassword(objectUserPassword)
+                .phoneNumber(objectPhoneNumber)
+                .build();
+        String modifyUrl = "/user/character/{user-name}";
+        String subjectToken = "token";
+        String subjectName = "alcuk2";
+        String subjectUserId = "alcuk_id2";
+        String subjectUserPassword = "alcuk_pwd2";
+        String subjectPhoneNumber = "010-1234-2222";
+        String objectCharacter = "character";
+        UserCreateRequest objectUserCharacterCreateRequest = UserCreateRequest.builder()
+                .character(objectCharacter)
+                .build();
+        UserCreateRequest subjectUserCreateRequest = UserCreateRequest.builder()
+                .name(subjectName)
+                .userId(subjectUserId)
+                .userPassword(subjectUserPassword)
+                .phoneNumber(subjectPhoneNumber)
+                .build();
+
+        //when
+        UserAcceptanceTestHelper.createUser(mvc, createUrl, objectMapper.writeValueAsString(objectUserCreateRequest));
+        UserAcceptanceTestHelper.createUser(mvc, createUrl, objectMapper.writeValueAsString(subjectUserCreateRequest));
+        ResultActions result = UserAcceptanceTestHelper.modifyUserCharacter(mvc, modifyUrl, objectUserCreateRequest.getName(), subjectToken, objectMapper.writeValueAsString(objectUserCharacterCreateRequest));
+        userCreateRequestList.add(objectUserCreateRequest);
+        userCreateRequestList.add(subjectUserCreateRequest);
+
+        //then
+        result.andExpectAll(
+                MockMvcResultMatchers.status().isBadRequest(),
+                MockMvcResultMatchers.header().string(HttpHeaders.CONTENT_TYPE, "application/json"),
+                MockMvcResultMatchers.header().string("api-version", apiVersion),
+                MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON),
+                MockMvcResultMatchers.jsonPath("$.messages").value("No permission"),
+                MockMvcResultMatchers.jsonPath("$.document_url").value("docs.waldreg.org")
+        ).andDo(MockMvcResultHandlers.print());
+
+    }
+
+
     private final static class UserCreateRequest{
 
         @JsonProperty("name")
@@ -984,6 +1181,8 @@ public class UserAcceptanceTest{
         private String userPassword;
         @JsonProperty("phone_number")
         private String phoneNumber;
+        @JsonProperty("character")
+        private String character;
 
         public UserCreateRequest(){}
 
@@ -992,6 +1191,7 @@ public class UserAcceptanceTest{
             this.userId = builder.userId;
             this.userPassword = builder.userPassword;
             this.phoneNumber = builder.phoneNumber;
+            this.character = builder.character;
         }
 
         public static Builder builder(){return new Builder();}
@@ -1004,6 +1204,8 @@ public class UserAcceptanceTest{
 
         public String getPhoneNumber(){return phoneNumber;}
 
+        public String getCharacter(){return character;}
+
         public void setName(String name){this.name = name;}
 
         public void setUserId(String userId){this.userId = userId;}
@@ -1012,12 +1214,15 @@ public class UserAcceptanceTest{
 
         public void setPhoneNumber(String phoneNumber){this.phoneNumber = phoneNumber;}
 
+        public void setCharacter(String character){this.character = character;}
+
         public final static class Builder{
 
             private String name;
             private String userId;
             private String userPassword;
             private String phoneNumber;
+            private String character;
 
             private Builder(){}
 
@@ -1038,6 +1243,11 @@ public class UserAcceptanceTest{
 
             public Builder phoneNumber(String phoneNumber){
                 this.phoneNumber = phoneNumber;
+                return this;
+            }
+
+            public Builder character(String character){
+                this.character = character;
                 return this;
             }
 
