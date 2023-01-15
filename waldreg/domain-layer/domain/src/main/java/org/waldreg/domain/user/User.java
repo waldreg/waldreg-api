@@ -32,6 +32,10 @@ public final class User{
         this.character = builder.character;
     }
 
+    public static Builder builder(){
+        return new Builder();
+    }
+
     public int getId(){
         return id;
     }
@@ -69,7 +73,7 @@ public final class User{
     }
 
     @SuppressWarnings("unused")
-    private final static class Builder{
+    public final static class Builder{
 
         private int id;
         private String name;
@@ -89,6 +93,11 @@ public final class User{
         private Character character;
 
         private Builder(){}
+
+        public Builder id(int id){
+            this.id = id;
+            return this;
+        }
 
         public Builder name(String name){
             this.name = name;

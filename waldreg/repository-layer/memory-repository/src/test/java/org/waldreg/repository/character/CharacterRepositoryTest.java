@@ -15,10 +15,14 @@ import org.waldreg.character.dto.PermissionDto;
 import org.waldreg.character.exception.DuplicatedCharacterException;
 import org.waldreg.character.exception.UnknownCharacterException;
 import org.waldreg.character.spi.CharacterRepository;
+import org.waldreg.domain.character.Permission;
+import org.waldreg.domain.user.User;
+import org.waldreg.domain.character.Character;
 import org.waldreg.repository.MemoryCharacterStorage;
+import org.waldreg.repository.MemoryUserStorage;
 
 @ExtendWith(SpringExtension.class)
-@ContextConfiguration(classes = {MemoryCharacterRepository.class, CharacterMapper.class, MemoryCharacterStorage.class})
+@ContextConfiguration(classes = {MemoryCharacterRepository.class, CharacterMapper.class, MemoryCharacterStorage.class, MemoryUserStorage.class})
 public class CharacterRepositoryTest{
 
     @Autowired
@@ -26,6 +30,9 @@ public class CharacterRepositoryTest{
 
     @Autowired
     private MemoryCharacterStorage memoryCharacterStorage;
+
+    @Autowired
+    private MemoryUserStorage memoryUserStorage;
 
     @BeforeEach
     @AfterEach
@@ -122,6 +129,35 @@ public class CharacterRepositoryTest{
 
         // then
         Assertions.assertEquals(3, result.size());
+    }
+
+    @Test
+    @DisplayName("유저 id로 역할 조회 성공 테스트")
+    public void READ_CHARACTER_BY_USER_NAME_TEST(){
+        // given
+        Character character = Character.builder()
+                .characterName("mock")
+                .permissionList(
+                        List.of(
+                                Permission.builder()
+                                        .name("super")
+                                        .status("false")
+                                        .build()
+                        )
+                ).build();
+        int id = 1;
+        User user = User.builder()
+                .id(id)
+                .character(character)
+                .build();
+
+        // when
+        memoryCharacterStorage.createCharacter(character);
+        memoryUserStorage.createUser(user);
+        CharacterDto characterDto = characterRepository.readCharacterByUserId(id);
+
+        // then
+        Assertions.assertEquals(characterDto.getCharacterName(), character.getCharacterName());
     }
 
 }
