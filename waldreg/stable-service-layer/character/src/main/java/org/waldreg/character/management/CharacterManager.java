@@ -13,4 +13,6 @@ public interface CharacterManager{
 
     void updateCharacter(String targetName, CharacterDto changedCharacter);
 
+    void deleteCharacter(String characterName);
+
 }

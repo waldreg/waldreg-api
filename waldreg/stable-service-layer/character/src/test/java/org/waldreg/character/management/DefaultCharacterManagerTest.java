@@ -220,7 +220,7 @@ public class DefaultCharacterManagerTest{
         defaultCharacterManager.createCharacter(beforeCharacter);
 
         // then
-        Assertions.assertThrows(UnknownPermissionException.class, ()-> defaultCharacterManager.updateCharacter(afterName, afterCharacter));
+        Assertions.assertThrows(UnknownPermissionException.class, () -> defaultCharacterManager.updateCharacter(afterName, afterCharacter));
     }
 
     @Test
@@ -250,7 +250,17 @@ public class DefaultCharacterManagerTest{
         defaultCharacterManager.createCharacter(beforeCharacter);
 
         // then
-        Assertions.assertThrows(UnknownPermissionStatusException.class, ()-> defaultCharacterManager.updateCharacter(afterName, afterCharacter));
+        Assertions.assertThrows(UnknownPermissionStatusException.class, () -> defaultCharacterManager.updateCharacter(afterName, afterCharacter));
+    }
+
+    @Test
+    @DisplayName("Character 삭제 성공 테스트")
+    public void DELETE_CHARACTER_SUCCESS_TEST(){
+        // given
+        String characterName = "characterName";
+
+        // when & then
+        Assertions.assertDoesNotThrow(() -> defaultCharacterManager.deleteCharacter(characterName));
     }
 
 }
