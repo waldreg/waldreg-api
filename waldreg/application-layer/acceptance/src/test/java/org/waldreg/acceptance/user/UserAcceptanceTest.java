@@ -849,13 +849,10 @@ public class UserAcceptanceTest{
         String subjectUserId = "subject_id";
         String subjectUserPassword = "subject_pwd";
         String subjectPhoneNumber = "010-1234-1111";
-        String subjectCharacter = "subject_character";
         UserCreateRequest subjectUserCreateRequest = UserCreateRequest.builder()
                 .name(subjectName)
                 .userId(subjectUserId)
                 .userPassword(subjectUserPassword)
-                .phoneNumber(subjectPhoneNumber)
-                .character(subjectCharacter)
                 .build();
         String objectName = "object";
         String objectUserId = "object_id";
@@ -870,15 +867,10 @@ public class UserAcceptanceTest{
         String superToken = "mock_token";
 
         //when
-        UserAcceptanceTestHelper.createUser(mvc, postUrl, objectMapper.writeValueAsString(subjectUserCreateRequest));
-        userCreateRequestList.add(subjectUserCreateRequest);
         UserAcceptanceTestHelper.createUser(mvc, postUrl, objectMapper.writeValueAsString(objectUserCreateRequest));
         userCreateRequestList.add(subjectUserCreateRequest);
-        UserResponse subjectUserResponse = objectMapper.readValue(
-                UserAcceptanceTestHelper.inquiryUserWithToken(mvc, "/user/{name}", subjectUserCreateRequest.getUserId(), superToken)
-                        .andReturn()
-                        .getResponse()
-                        .getContentAsString(), UserResponse.class);
+        UserAcceptanceTestHelper.createUser(mvc, postUrl, objectMapper.writeValueAsString(subjectUserCreateRequest));
+        userCreateRequestList.add(subjectUserCreateRequest);
         UserResponse objectUserResponse = objectMapper.readValue(
                 UserAcceptanceTestHelper.inquiryUserWithToken(mvc, "/user/{name}", objectUserCreateRequest.getUserId(), superToken)
                         .andReturn()
@@ -977,7 +969,19 @@ public class UserAcceptanceTest{
     @Test
     @DisplayName("유저 역할 수정 성공 인수 테스트")
     public void MODIFY_USER_CHARACTER_SUCCESS_TEST() throws Exception{
-        //given
+        //
+        String modifyUrl = "/user/character/{user-name}";
+        String subjectToken = "mock_token";
+        String subjectName = "alcuk2";
+        String subjectUserId = "alcuk_id2";
+        String subjectUserPassword = "alcuk_pwd2";
+        String subjectPhoneNumber = "010-1234-2222";
+        UserCreateRequest subjectUserCreateRequest = UserCreateRequest.builder()
+                .name(subjectName)
+                .userId(subjectUserId)
+                .userPassword(subjectUserPassword)
+                .phoneNumber(subjectPhoneNumber)
+                .build();
         String createUrl = "/user";
         String objectName = "alcuk1";
         String objectUserId = "alcuk_id1";
@@ -993,24 +997,10 @@ public class UserAcceptanceTest{
         UserCreateRequest objectUserCharacterCreateRequest = UserCreateRequest.builder()
                 .character(objectCharacter)
                 .build();
-        String modifyUrl = "/user/character/{user-name}";
-        String subjectToken = "mock_token";
-        String subjectName = "alcuk2";
-        String subjectUserId = "alcuk_id2";
-        String subjectUserPassword = "alcuk_pwd2";
-        String subjectPhoneNumber = "010-1234-2222";
-        String subjectCharacter = "subject_character";
-        UserCreateRequest subjectUserCreateRequest = UserCreateRequest.builder()
-                .name(subjectName)
-                .userId(subjectUserId)
-                .userPassword(subjectUserPassword)
-                .phoneNumber(subjectPhoneNumber)
-                .character(subjectCharacter)
-                .build();
 
         //when
-        UserAcceptanceTestHelper.createUser(mvc, createUrl, objectMapper.writeValueAsString(objectUserCreateRequest));
         UserAcceptanceTestHelper.createUser(mvc, createUrl, objectMapper.writeValueAsString(subjectUserCreateRequest));
+        UserAcceptanceTestHelper.createUser(mvc, createUrl, objectMapper.writeValueAsString(objectUserCreateRequest));
         ResultActions result = UserAcceptanceTestHelper.modifyUserCharacter(mvc, modifyUrl, objectUserCreateRequest.getName(), subjectToken, objectMapper.writeValueAsString(objectUserCharacterCreateRequest));
         userCreateRequestList.add(objectUserCreateRequest);
         userCreateRequestList.add(subjectUserCreateRequest);
@@ -1035,7 +1025,6 @@ public class UserAcceptanceTest{
         String subjectUserId = "alcuk_id2";
         String subjectUserPassword = "alcuk_pwd2";
         String subjectPhoneNumber = "010-1234-2222";
-        String subjectCharacter = "subject_character";
         String objectCharacter = "object_character";
         UserCreateRequest objectUserCharacterCreateRequest = UserCreateRequest.builder()
                 .character(objectCharacter)
@@ -1046,7 +1035,6 @@ public class UserAcceptanceTest{
                 .userId(subjectUserId)
                 .userPassword(subjectUserPassword)
                 .phoneNumber(subjectPhoneNumber)
-                .character(subjectCharacter)
                 .build();
 
         //when
@@ -1070,6 +1058,18 @@ public class UserAcceptanceTest{
     @DisplayName("유저 역할 수정 실패 인수 테스트 - 없는 역할")
     public void MODIFY_USER_CHARACTER_FAIL_CAUSE_UNKNOWN_CHARACTER_TEST() throws Exception{
         //given
+        String modifyUrl = "/user/character/{user-name}";
+        String subjectToken = "mock_token";
+        String subjectName = "alcuk2";
+        String subjectUserId = "alcuk_id2";
+        String subjectUserPassword = "alcuk_pwd2";
+        String subjectPhoneNumber = "010-1234-2222";
+        UserCreateRequest subjectUserCreateRequest = UserCreateRequest.builder()
+                .name(subjectName)
+                .userId(subjectUserId)
+                .userPassword(subjectUserPassword)
+                .phoneNumber(subjectPhoneNumber)
+                .build();
         String createUrl = "/user";
         String objectName = "alcuk1";
         String objectUserId = "alcuk_id1";
@@ -1084,20 +1084,6 @@ public class UserAcceptanceTest{
         String objectCharacter = "";
         UserCreateRequest objectUserCharacterCreateRequest = UserCreateRequest.builder()
                 .character(objectCharacter)
-                .build();
-        String modifyUrl = "/user/character/{user-name}";
-        String subjectToken = "mock_token";
-        String subjectName = "alcuk2";
-        String subjectUserId = "alcuk_id2";
-        String subjectUserPassword = "alcuk_pwd2";
-        String subjectPhoneNumber = "010-1234-2222";
-        String subjectCharacter = "character";
-        UserCreateRequest subjectUserCreateRequest = UserCreateRequest.builder()
-                .name(subjectName)
-                .userId(subjectUserId)
-                .userPassword(subjectUserPassword)
-                .phoneNumber(subjectPhoneNumber)
-                .character(subjectCharacter)
                 .build();
 
         //when
