@@ -13,4 +13,6 @@ public interface UserManager{
 
     List<UserDto> readUserList(int stIdx, int enIdx);
 
+    void updateUser(int idx, UserDto userDto);
+
 }
