@@ -3,6 +3,7 @@ package org.waldreg.user.management;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.waldreg.user.dto.UserDto;
+import org.waldreg.user.exception.InvalidRangeException;
 import org.waldreg.user.spi.UserRepository;
 
 public class DefaultUserManager implements UserManager{
@@ -27,8 +28,16 @@ public class DefaultUserManager implements UserManager{
     }
 
     @Override
-    public List<UserDto> readUserList(int stIdx, int enIdx){
-        return userRepository.readUserList(stIdx, enIdx);
+    public List<UserDto> readUserList(int startIdx, int endIdx){
+        int maxIdx = userRepository.readMaxIdx();
+        throwIfInvalidRange(startIdx, endIdx, maxIdx);
+        return userRepository.readUserList(startIdx, endIdx);
+    }
+
+    private void throwIfInvalidRange(int stIdx, int enIdx, int maxIdx){
+        if (stIdx > maxIdx || enIdx > maxIdx || stIdx > enIdx){
+            throw new InvalidRangeException(stIdx, enIdx);
+        }
     }
 
 
