@@ -301,7 +301,7 @@ public class UserServiceTest{
         Mockito.when(userRepository.readUserById(Mockito.anyInt())).thenReturn(createRequest);
 
         //then
-        Assertions.assertDoesNotThrow(() -> userManager.deleteOwn(createRequest.getUserPassword(), id));
+        Assertions.assertDoesNotThrow(() -> userManager.deleteById(id));
     }
 
     @Test

@@ -18,8 +18,6 @@ public interface UserManager{
 
     void updateCharacter(UserDto userDto, CharacterDto character);
 
-    void deleteOwn(String password, int id);
-
     void deleteById(int id);
 
 
