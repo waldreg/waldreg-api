@@ -8,4 +8,6 @@ public interface UserRepository{
 
     UserDto readUserById(int id);
 
+    UserDto readUserByName(String name);
+
 }

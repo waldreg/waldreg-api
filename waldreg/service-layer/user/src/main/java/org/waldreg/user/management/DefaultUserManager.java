@@ -20,4 +20,10 @@ public class DefaultUserManager implements UserManager{
         return userRepository.readUserById(id);
     }
 
+    @Override
+    public UserDto readUserByName(String name){
+        return userRepository.readUserByName(name);
+    }
+
+
 }
