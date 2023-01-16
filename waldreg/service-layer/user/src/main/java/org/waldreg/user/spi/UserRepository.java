@@ -6,4 +6,6 @@ public interface UserRepository{
 
     void createUser(UserDto userDto);
 
+    UserDto readUserById(int id);
+
 }

@@ -1,8 +1,11 @@
 package org.waldreg.user.dto;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 
 public class UserDto{
+
     private final int id;
     private final String name;
     private final String userId;
@@ -12,6 +15,11 @@ public class UserDto{
     private final int advantage;
     private final int penalty;
     private final Character character;
+    private List<String> socialLogin;
+
+    {
+        socialLogin = new ArrayList<>();
+    }
 
     private UserDto(){
         throw new UnsupportedOperationException("Can not invoke constructor \"UserDto()\"");
@@ -29,6 +37,7 @@ public class UserDto{
         this.advantage = builder.advantage;
         this.penalty = builder.penalty;
         this.character = builder.character;
+        this.socialLogin = builder.socialLogin;
     }
 
     public int getId(){
@@ -67,6 +76,8 @@ public class UserDto{
         return character;
     }
 
+    public List<String> getSocialLogin(){return socialLogin;}
+
     public final static class Builder{
 
         private int id;
@@ -77,11 +88,13 @@ public class UserDto{
         private final LocalDate createdAt;
         private final int advantage;
         private final int penalty;
+        private List<String> socialLogin;
 
         {
             createdAt = LocalDate.now();
             advantage = 0;
             penalty = 0;
+            socialLogin = new ArrayList<>();
         }
 
         private Character character;
@@ -113,9 +126,15 @@ public class UserDto{
             return this;
         }
 
+        public Builder socialLogin(List<String> socialLogin){
+            this.socialLogin = socialLogin;
+            return this;
+        }
+
         public UserDto build(){
             return new UserDto(this);
         }
 
     }
+
 }
