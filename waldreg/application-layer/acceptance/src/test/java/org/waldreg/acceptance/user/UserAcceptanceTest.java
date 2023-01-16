@@ -15,6 +15,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
+import org.waldreg.acceptance.authentication.AuthenticationAcceptanceTestHelper;
 import org.waldreg.controller.user.request.UserRequest;
 import org.waldreg.controller.user.response.UserResponse;
 
@@ -40,7 +41,7 @@ public class UserAcceptanceTest{
     @AfterEach
     public void INITIATE() throws Exception{
         String url = "/user/{id}";
-        String adminToken = "admin_token";
+        String adminToken = AuthenticationAcceptanceTestHelper.getAdminToken(mvc, objectMapper);
         for (UserRequest request : userCreateRequestList){
             UserResponse userResponse = objectMapper.readValue(UserAcceptanceTestHelper.inquiryUserWithoutToken(mvc, request.getUserId())
                     .andReturn()
@@ -53,7 +54,7 @@ public class UserAcceptanceTest{
                     MockMvcResultMatchers.header().string(HttpHeaders.CONTENT_TYPE, "application/json"),
                     MockMvcResultMatchers.header().string("api-version", apiVersion),
                     MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON),
-                    MockMvcResultMatchers.jsonPath("$.messages").value("Unknown user name"),
+                    MockMvcResultMatchers.jsonPath("$.messages").value("Unknown user id"),
                     MockMvcResultMatchers.jsonPath("$.document_url").value("docs.waldreg.org")
             ).andDo(MockMvcResultHandlers.print());
         }
@@ -66,7 +67,7 @@ public class UserAcceptanceTest{
         //given
         String name = "alcuk";
         String userId = "alcuk_id";
-        String userPassword = "alcuk_pwd";
+        String userPassword = "alcuk_pwd!!";
         String phoneNumber = "010-1234-1234";
         UserRequest userCreateRequest = UserRequest.builder()
                 .name(name)
@@ -195,7 +196,7 @@ public class UserAcceptanceTest{
     @DisplayName("특정 유저 조회 성공 인수 테스트 - 토큰 있을 때")
     public void INQUIRY_USER_WITH_TOKEN_SUCCESS_TEST() throws Exception{
         //given
-        String token = "mock_token";
+        String adminToken = AuthenticationAcceptanceTestHelper.getAdminToken(mvc, objectMapper);
 
         String name = "alcuk1";
         String userId = "alcuk_id";
@@ -211,7 +212,7 @@ public class UserAcceptanceTest{
         //when
         UserAcceptanceTestHelper.createUser(mvc, objectMapper.writeValueAsString(userCreateRequest));
         userCreateRequestList.add(userCreateRequest);
-        ResultActions result = UserAcceptanceTestHelper.inquiryUserWithToken(mvc, userCreateRequest.getUserId(), token);
+        ResultActions result = UserAcceptanceTestHelper.inquiryUserWithToken(mvc, userCreateRequest.getUserId(), adminToken);
 
         //then
         result.andExpectAll(

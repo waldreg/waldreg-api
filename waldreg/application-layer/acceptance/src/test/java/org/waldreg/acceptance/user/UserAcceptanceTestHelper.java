@@ -21,7 +21,7 @@ public class UserAcceptanceTestHelper{
 
     public static ResultActions inquiryUserWithToken(MockMvc mvc, String userId, String token) throws Exception{
         return mvc.perform(MockMvcRequestBuilders
-                .get("/user/{user_id}", userId)
+                .get("/user/{user-id}", userId)
                 .accept(MediaType.APPLICATION_JSON)
                 .header("api-version", apiVersion)
                 .header(HttpHeaders.AUTHORIZATION, token));
@@ -29,7 +29,7 @@ public class UserAcceptanceTestHelper{
 
     public static ResultActions inquiryUserWithoutToken(MockMvc mvc, String userId) throws Exception{
         return mvc.perform(MockMvcRequestBuilders
-                .get("/user/{user_id}", userId)
+                .get("/user/{user-id}", userId)
                 .accept(MediaType.APPLICATION_JSON)
                 .header("api-version", apiVersion));
     }

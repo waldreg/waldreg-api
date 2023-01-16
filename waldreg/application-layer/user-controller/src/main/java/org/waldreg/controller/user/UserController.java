@@ -2,6 +2,7 @@ package org.waldreg.controller.user;
 
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.lang.Nullable;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
@@ -46,7 +47,7 @@ public class UserController{
     @Authenticating(fail = AuthFailBehavior.PASS)
     @PermissionVerifying(value = "Read other user info permission", fail = VerifyingFailBehavior.PASS)
     @GetMapping("/user/{user-id}")
-    public UserResponse readSpecificUser(@PathVariable("user-id") String userId, PermissionVerifyState permissionVerifyState){
+    public UserResponse readSpecificUser(@PathVariable("user-id") String userId, @Nullable PermissionVerifyState permissionVerifyState){
         UserDto userDto = userManager.readUserByUserId(userId);
         if (permissionVerifyState.isVerified()){
             return controllerUserMapper.userDtoToUserResponseWithPermission(userDto);
@@ -57,7 +58,7 @@ public class UserController{
     @Authenticating(fail = AuthFailBehavior.PASS)
     @PermissionVerifying(value = "Read other user info permission", fail = VerifyingFailBehavior.PASS)
     @GetMapping("/user?from={start-id}&to={end-id}")
-    public UserListResponse readAllUser(@PathVariable("start-id") int startId, @PathVariable("end-id") int endId, PermissionVerifyState permissionVerifyState){
+    public UserListResponse readAllUser(@PathVariable("start-id") int startId, @PathVariable("end-id") int endId, @Nullable PermissionVerifyState permissionVerifyState){
         int maxIdx = userManager.readMaxIdx();
         List<UserDto> userDtoList = userManager.readUserList(startId, endId);
         if (permissionVerifyState.isVerified()){
@@ -78,7 +79,7 @@ public class UserController{
 
     @HeaderPasswordAuthenticating
     @PatchMapping("/user")
-    public void updateUser(UserRequest userRequest){
+    public void updateUser(@RequestBody UserRequest userRequest){
         int id = decryptedTokenContextGetter.get();
         UserDto update = controllerUserMapper.userRequestToUserDto(userRequest);
         userManager.updateUser(id, update);
@@ -87,7 +88,7 @@ public class UserController{
     @Authenticating
     @PermissionVerifying(value = "Fire other user permission", fail = VerifyingFailBehavior.PASS)
     @DeleteMapping("/user/{id}")
-    public void deleteUser(@PathVariable("id") int id, PermissionVerifyState permissionVerifyState){
+    public void deleteUser(@PathVariable("id") int id, @Nullable PermissionVerifyState permissionVerifyState){
         if (permissionVerifyState.isVerified()){
             userManager.deleteById(id);
         }
@@ -103,7 +104,7 @@ public class UserController{
     @Authenticating
     @PermissionVerifying(value = "Update other user's character permission", fail = VerifyingFailBehavior.PASS)
     @PutMapping("/user/character/{id}")
-    public void updateUserCharacter(@PathVariable("id") int id, String character, PermissionVerifyState permissionVerifyState){
+    public void updateUserCharacter(@PathVariable("id") int id, String character, @Nullable PermissionVerifyState permissionVerifyState){
         if (permissionVerifyState.isVerified()){
             userManager.updateCharacter(id, character);
         }
