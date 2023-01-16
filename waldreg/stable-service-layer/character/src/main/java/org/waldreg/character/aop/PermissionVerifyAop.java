@@ -14,8 +14,8 @@ import org.waldreg.character.dto.CharacterDto;
 import org.waldreg.character.dto.PermissionDto;
 import org.waldreg.character.exception.NoPermissionException;
 import org.waldreg.character.permission.verification.PermissionVerifier;
-import org.waldreg.util.AnnotationExtractor;
-import org.waldreg.util.DecryptedTokenContextHolder;
+import org.waldreg.util.annotation.AnnotationExtractor;
+import org.waldreg.util.token.DecryptedTokenContext;
 
 @Service
 @Order
@@ -24,7 +24,7 @@ public class PermissionVerifyAop{
 
     private final PermissionVerifier permissionVerifier;
     private final AnnotationExtractor<PermissionVerifying> annotationExtractor;
-    private final DecryptedTokenContextHolder decryptedTokenContextHolder;
+    private final DecryptedTokenContext decryptedTokenContext;
     private final CharacterInUserReadable characterInUserReadable;
 
     @Around("@annotation(org.waldreg.character.aop.annotation.PermissionVerifying)")
@@ -37,12 +37,12 @@ public class PermissionVerifyAop{
         try{
             return proceedingJoinPoint.proceed(proceedingJoinPoint.getArgs());
         } finally{
-            decryptedTokenContextHolder.resolve();
+            decryptedTokenContext.resolve();
         }
     }
 
     private CharacterDto getCharacterDto(){
-        int id = decryptedTokenContextHolder.get();
+        int id = decryptedTokenContext.get();
         return characterInUserReadable.readCharacterByUserId(id);
     }
 
@@ -72,11 +72,11 @@ public class PermissionVerifyAop{
     @Autowired
     public PermissionVerifyAop(PermissionVerifier permissionVerifier,
             AnnotationExtractor<PermissionVerifying> annotationExtractor,
-            DecryptedTokenContextHolder decryptedTokenContextHolder,
+            DecryptedTokenContext decryptedTokenContext,
             CharacterInUserReadable characterInUserReadable){
         this.permissionVerifier = permissionVerifier;
         this.annotationExtractor = annotationExtractor;
-        this.decryptedTokenContextHolder = decryptedTokenContextHolder;
+        this.decryptedTokenContext = decryptedTokenContext;
         this.characterInUserReadable = characterInUserReadable;
     }
 
