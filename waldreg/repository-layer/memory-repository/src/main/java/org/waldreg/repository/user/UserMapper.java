@@ -1,9 +1,12 @@
 package org.waldreg.repository.user;
 
+import java.util.ArrayList;
+import java.util.List;
 import org.waldreg.domain.user.User;
 import org.waldreg.user.dto.UserDto;
 
 public class UserMapper{
+
     public User userDtoToUserDomain(UserDto userDto){
         return User.builder()
                 .name(userDto.getName())
@@ -27,4 +30,13 @@ public class UserMapper{
                 .socialLogin(user.getSocialLogin())
                 .build();
     }
+
+    public List<UserDto> userDomainListToUserDtoList(List<User> userList){
+        List<UserDto> userDtoList = new ArrayList<>();
+        for (User user : userList){
+            userDtoList.add(userDomainToUserDto(user));
+        }
+        return userDtoList;
+    }
+
 }

@@ -42,11 +42,11 @@ public class DefaultUserManager implements UserManager{
     }
 
     @Override
-    public void updateCharacter(UserDto userDto, String character){
+    public void updateCharacter(int id, String character){
         UserDto characterUserDto = UserDto.builder()
                 .character(character)
                 .build();
-        userRepository.updateUser(userDto.getId(), characterUserDto);
+        userRepository.updateUser(id, characterUserDto);
     }
 
     @Override

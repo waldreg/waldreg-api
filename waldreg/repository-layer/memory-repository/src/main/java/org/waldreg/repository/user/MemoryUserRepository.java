@@ -1,8 +1,9 @@
 package org.waldreg.repository.user;
 
-import java.util.ArrayList;
 import java.util.List;
+import org.waldreg.character.exception.UnknownCharacterException;
 import org.waldreg.domain.user.User;
+import org.waldreg.repository.MemoryCharacterStorage;
 import org.waldreg.repository.MemoryUserStorage;
 import org.waldreg.user.dto.UserDto;
 import org.waldreg.user.exception.DuplicatedUserIdException;
@@ -14,9 +15,12 @@ public class MemoryUserRepository implements UserRepository{
 
     private final MemoryUserStorage memoryUserStorage;
 
-    public MemoryUserRepository(UserMapper userMapper, MemoryUserStorage memoryUserStorage){
+    private final MemoryCharacterStorage memoryCharacterStorage;
+
+    public MemoryUserRepository(UserMapper userMapper, MemoryUserStorage memoryUserStorage, MemoryCharacterStorage memoryCharacterStorage){
         this.userMapper = userMapper;
         this.memoryUserStorage = memoryUserStorage;
+        this.memoryCharacterStorage = memoryCharacterStorage;
     }
 
     @Override
@@ -24,6 +28,15 @@ public class MemoryUserRepository implements UserRepository{
         throwIfDuplicatedUserId(userDto.getUserId());
         User user = userMapper.userDtoToUserDomain(userDto);
         memoryUserStorage.createUser(user);
+    }
+
+    public void throwIfDuplicatedUserId(String userId){
+        try{
+            memoryUserStorage.readUserByUserId(userId);
+        } catch (RuntimeException isNotDuplicated){
+            return;
+        }
+        throw new DuplicatedUserIdException(userId);
     }
 
     @Override
@@ -39,19 +52,13 @@ public class MemoryUserRepository implements UserRepository{
 
     @Override
     public List<UserDto> readUserList(int startIdx, int endIdx){
-        List<User> userList = memoryUserStorage.readUserList(startIdx, endIdx);
-        List<UserDto> userDtoList = new ArrayList<>();
-        for (User user : userList){
-            userDtoList.add(userMapper.userDomainToUserDto(user));
-        }
-        return userDtoList;
+        return userMapper.userDomainListToUserDtoList(memoryUserStorage.readUserList(startIdx, endIdx));
     }
 
     @Override
     public void updateUser(int id, UserDto userDto){
-        String userId = memoryUserStorage.readUserById(id).getUserId();
         User user = userMapper.userDtoToUserDomain(userDto);
-        memoryUserStorage.updateUser(userId,user);
+        memoryUserStorage.updateUser(id, user);
     }
 
     @Override
@@ -64,13 +71,17 @@ public class MemoryUserRepository implements UserRepository{
 
     }
 
-    public void throwIfDuplicatedUserId(String userId){
-        try{
-            memoryUserStorage.readUserByUserId(userId);
-        } catch (RuntimeException isNotDuplicated){
-            return;
+    @Override
+    public void updateCharacter(int id, String characterName){
+        User user = memoryUserStorage.readUserById(id);
+        throwIfCharacterDoesNotExist(characterName);
+        memoryUserStorage.updateCharacterOfUser(id, characterName);
+    }
+
+    public void throwIfCharacterDoesNotExist(String characterName){
+        if (memoryCharacterStorage.readCharacterByName(characterName) == null){
+            throw new UnknownCharacterException(characterName);
         }
-        throw new DuplicatedUserIdException(userId);
     }
 
 }
