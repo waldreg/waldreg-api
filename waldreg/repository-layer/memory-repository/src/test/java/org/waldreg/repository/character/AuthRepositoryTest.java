@@ -1,14 +1,18 @@
 package org.waldreg.repository.character;
 
 
+import java.util.List;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
+import org.waldreg.domain.character.Character;
 import org.waldreg.domain.user.User;
 import org.waldreg.repository.MemoryCharacterStorage;
 import org.waldreg.repository.MemoryUserStorage;
@@ -17,7 +21,7 @@ import org.waldreg.token.dto.TokenUserDto;
 import org.waldreg.token.exception.PasswordMissMatchException;
 
 @ExtendWith(SpringExtension.class)
-@ContextConfiguration(classes = {MemoryAuthRepository.class, MemoryUserStorage.class, MemoryCharacterStorage.class})
+@ContextConfiguration(classes = {MemoryAuthRepository.class, MemoryUserStorage.class})
 public class AuthRepositoryTest{
 
     @Autowired
@@ -25,6 +29,9 @@ public class AuthRepositoryTest{
 
     @Autowired
     private MemoryUserStorage memoryUserStorage;
+
+    @MockBean
+    private MemoryCharacterStorage memoryCharacterStorage;
 
     @BeforeEach
     public void CLEAR_memoryUserStorage(){
@@ -38,11 +45,16 @@ public class AuthRepositoryTest{
         String userId = "asdfg";
         String userPassword = "12345";
         User user = User.builder()
+                .name("asdfg")
                 .userId(userId)
                 .userPassword(userPassword)
                 .build();
 
         //when
+        Mockito.when(memoryCharacterStorage.readCharacterByName("Guest")).thenReturn(Character.builder()
+                .characterName("Guest")
+                .permissionList(List.of())
+                .build());
         memoryUserStorage.createUser(user);
         TokenUserDto foundUser = memoryAuthRepository.findUserByUserIdPassword(user.getUserId(), user.getUserPassword());
 
@@ -61,6 +73,7 @@ public class AuthRepositoryTest{
         String userId = "bbb";
         String userPassword = "12345";
         User user = User.builder()
+                .name("bbb")
                 .userId(userId)
                 .userPassword(userPassword)
                 .build();
@@ -68,10 +81,14 @@ public class AuthRepositoryTest{
         String inputUserPassword = "1234";
 
         //when
+        Mockito.when(memoryCharacterStorage.readCharacterByName("Guest")).thenReturn(Character.builder()
+                .characterName("Guest")
+                .permissionList(List.of())
+                .build());
         memoryUserStorage.createUser(user);
 
         //then
-        Assertions.assertThrows(PasswordMissMatchException.class,()-> memoryAuthRepository.findUserByUserIdPassword(inputUserId, inputUserPassword));
+        Assertions.assertThrows(PasswordMissMatchException.class, () -> memoryAuthRepository.findUserByUserIdPassword(inputUserId, inputUserPassword));
     }
 
     @Test
@@ -81,11 +98,16 @@ public class AuthRepositoryTest{
         String userId = "abc";
         String userPassword = "12345";
         User user = User.builder()
+                .name("Admin")
                 .userId(userId)
                 .userPassword(userPassword)
                 .build();
 
         //when
+        Mockito.when(memoryCharacterStorage.readCharacterByName("Admin")).thenReturn(Character.builder()
+                .characterName("Admin")
+                .permissionList(List.of())
+                .build());
         memoryUserStorage.createUser(user);
         TokenUserDto foundUser = memoryAuthRepository.findUserById(user.getId());
 

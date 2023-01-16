@@ -136,7 +136,7 @@ public class CharacterRepositoryTest{
     public void READ_CHARACTER_BY_USER_NAME_TEST(){
         // given
         Character character = Character.builder()
-                .characterName("mock")
+                .characterName("Guest")
                 .permissionList(
                         List.of(
                                 Permission.builder()
@@ -147,6 +147,7 @@ public class CharacterRepositoryTest{
                 ).build();
         int id = 1;
         User user = User.builder()
+                .name("guest")
                 .id(id)
                 .character(character)
                 .build();
