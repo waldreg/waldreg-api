@@ -1,8 +1,11 @@
 package org.waldreg.character.aop;
 
+import java.lang.reflect.Method;
+import java.lang.reflect.Parameter;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
@@ -10,6 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Service;
 import org.waldreg.character.aop.annotation.PermissionVerifying;
+import org.waldreg.character.aop.parameter.PermissionVerifyState;
 import org.waldreg.character.dto.CharacterDto;
 import org.waldreg.character.dto.PermissionDto;
 import org.waldreg.character.exception.NoPermissionException;
@@ -27,18 +31,28 @@ public class PermissionVerifyAop{
     private final DecryptedTokenContext decryptedTokenContext;
     private final CharacterInUserReadable characterInUserReadable;
 
+    @Autowired
+    public PermissionVerifyAop(PermissionVerifier permissionVerifier,
+            AnnotationExtractor<PermissionVerifying> annotationExtractor,
+            DecryptedTokenContext decryptedTokenContext,
+            CharacterInUserReadable characterInUserReadable){
+        this.permissionVerifier = permissionVerifier;
+        this.annotationExtractor = annotationExtractor;
+        this.decryptedTokenContext = decryptedTokenContext;
+        this.characterInUserReadable = characterInUserReadable;
+    }
+
     @Around("@annotation(org.waldreg.character.aop.annotation.PermissionVerifying)")
     public Object verify(ProceedingJoinPoint proceedingJoinPoint) throws Throwable{
         PermissionVerifying permissionVerifying = annotationExtractor.extractAnnotation(proceedingJoinPoint, PermissionVerifying.class);
         CharacterDto characterDto = getCharacterDto();
         if (!isUserAccessible(permissionVerifying.value(), characterDto)){
             permissionVerifying.fail().behave();
+            Object[] args = setPermissionVerifyStateParameter(proceedingJoinPoint, false);
+            return proceedingJoinPoint.proceed(args);
         }
-        try{
-            return proceedingJoinPoint.proceed(proceedingJoinPoint.getArgs());
-        } finally{
-            decryptedTokenContext.resolve();
-        }
+        Object[] args = setPermissionVerifyStateParameter(proceedingJoinPoint, true);
+        return proceedingJoinPoint.proceed(args);
     }
 
     private CharacterDto getCharacterDto(){
@@ -69,15 +83,27 @@ public class PermissionVerifyAop{
         if (!permissionDtoMap.containsKey(permissionName)){throw new NoPermissionException(permissionName);}
     }
 
-    @Autowired
-    public PermissionVerifyAop(PermissionVerifier permissionVerifier,
-            AnnotationExtractor<PermissionVerifying> annotationExtractor,
-            DecryptedTokenContext decryptedTokenContext,
-            CharacterInUserReadable characterInUserReadable){
-        this.permissionVerifier = permissionVerifier;
-        this.annotationExtractor = annotationExtractor;
-        this.decryptedTokenContext = decryptedTokenContext;
-        this.characterInUserReadable = characterInUserReadable;
+    private Object[] setPermissionVerifyStateParameter(JoinPoint joinPoint, boolean state){
+        Object[] objects = joinPoint.getArgs();
+        Parameter[] parameters = extractParameters(joinPoint);
+        for (int i = 0; i < parameters.length; i++){
+            if (parameters[i].getType().equals(PermissionVerifyState.class)){
+                objects[i] = (PermissionVerifyState) (() -> state);
+            }
+        }
+        return objects;
+    }
+
+    private Parameter[] extractParameters(JoinPoint joinPoint){
+        String methodName = joinPoint.getSignature().getName();
+        Class<?> targetClass = joinPoint.getTarget().getClass();
+        Method[] methods = targetClass.getMethods();
+        for (Method method : methods){
+            if (method.getName().equals(methodName)){
+                return method.getParameters();
+            }
+        }
+        throw new IllegalStateException("Can not find method named \"" + methodName + "\"");
     }
 
 }
