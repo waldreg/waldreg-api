@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.atomic.AtomicInteger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 import org.waldreg.domain.user.User;
@@ -14,11 +15,12 @@ import org.waldreg.user.exception.UnknownUserIdException;
 public class MemoryUserStorage{
 
     private final MemoryCharacterStorage memoryCharacterStorage;
-
+    private final AtomicInteger atomicInteger;
     private final Map<String, User> storage;
 
     {
         storage = new HashMap<>();
+        atomicInteger = new AtomicInteger(1);
     }
 
     @Autowired
@@ -27,13 +29,22 @@ public class MemoryUserStorage{
     public void deleteAllUser(){storage.clear();}
 
     public void createUser(User user){
-        if (user.getCharacter() == null){
-            user.setCharacter(memoryCharacterStorage.readCharacterByName("Guest"));
-        }
+        setDefaultCharacter(user);
+        user.setId(atomicInteger.getAndIncrement());
         storage.put(user.getName(), user);
     }
 
+    private User setDefaultCharacter(User user){
+        if (user.getName().equals("Admin")){
+            user.setCharacter(memoryCharacterStorage.readCharacterByName("Admin"));
+            return user;
+        }
+        user.setCharacter(memoryCharacterStorage.readCharacterByName("Guest"));
+        return user;
+    }
+
     public User readUserById(int id){
+        System.out.println(id);
         for (Map.Entry<String, User> userEntry : storage.entrySet()){
             if (userEntry.getValue().getId() == id){
                 return userEntry.getValue();
@@ -55,7 +66,6 @@ public class MemoryUserStorage{
         int cnt = -1;
         startIdx -= 1;
         endIdx -= 1;
-        System.out.println("\n\n\n\n\n\n" + startIdx + " " + endIdx);
         List<User> userList = new ArrayList<>();
         for (Map.Entry<String, User> userEntry : storage.entrySet()){
             cnt++;
@@ -68,6 +78,16 @@ public class MemoryUserStorage{
 
     public int readMaxIdx(){
         return storage.size();
+    }
+
+    public void updateUser(String userId, User user){
+        for(Map.Entry<String, User>userEntry : storage.entrySet()){
+            if(userEntry.getValue().getUserId().equals(userId)){
+                if(user.getName()!=null)userEntry.getValue().setName(user.getName());
+                if(user.getUserPassword()!=null)userEntry.getValue().setUserPassword(user.getUserPassword());
+                if(user.getPhoneNumber()!=null)userEntry.getValue().setPhoneNumber(user.getPhoneNumber());
+            }
+        }
     }
 
 }

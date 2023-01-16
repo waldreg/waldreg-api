@@ -28,7 +28,7 @@ public class MemoryUserRepository implements UserRepository{
 
     @Override
     public UserDto readUserById(int id){
-        return null;
+        return userMapper.userDomainToUserDto(memoryUserStorage.readUserById(id));
     }
 
     @Override
@@ -48,8 +48,10 @@ public class MemoryUserRepository implements UserRepository{
     }
 
     @Override
-    public void updateUser(int idx, UserDto userDto){
-
+    public void updateUser(int id, UserDto userDto){
+        String userId = memoryUserStorage.readUserById(id).getUserId();
+        User user = userMapper.userDtoToUserDomain(userDto);
+        memoryUserStorage.updateUser(userId,user);
     }
 
     @Override

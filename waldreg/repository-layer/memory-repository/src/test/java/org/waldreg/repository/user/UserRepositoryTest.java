@@ -13,11 +13,13 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.waldreg.domain.character.Character;
+import org.waldreg.domain.user.User;
 import org.waldreg.repository.MemoryCharacterStorage;
 import org.waldreg.repository.MemoryUserStorage;
 import org.waldreg.user.dto.UserDto;
 import org.waldreg.user.exception.DuplicatedUserIdException;
 import org.waldreg.user.exception.UnknownUserIdException;
+import org.waldreg.user.management.UserManager;
 import org.waldreg.user.spi.UserRepository;
 
 @ExtendWith(SpringExtension.class)
@@ -165,5 +167,38 @@ public class UserRepositoryTest{
                 () -> Assertions.assertEquals(maxIdx, 3)
         );
     }
+
+    @Test
+    @DisplayName("유저 수정 성공 테스트")
+    public void UPDATE_USER_SUCCESS_TEST(){
+        //given
+        UserDto userDto = UserDto.builder()
+                .userId("linirini_id")
+                .name("linirini")
+                .userPassword("linirini_pwd")
+                .phoneNumber("010-1234-1234")
+                .character("Guest")
+                .build();
+        UserDto updateUserDto = UserDto.builder()
+                .name("linirini2")
+                .phoneNumber("010-0000-1111")
+                .build();
+
+        //when
+        Mockito.when(memoryCharacterStorage.readCharacterByName(Mockito.anyString()))
+                .thenReturn(Character.builder().characterName("Guest").permissionList(List.of()).build());
+        userRepository.createUser(userDto);
+        userRepository.updateUser(memoryUserStorage.readUserByUserId(userDto.getUserId()).getId(), updateUserDto);
+        UserDto result = userRepository.readUserByUserId(userDto.getUserId());
+
+        //then
+        Assertions.assertAll(
+                () -> Assertions.assertEquals(result.getName(), updateUserDto.getName()),
+                () -> Assertions.assertEquals(result.getUserPassword(), userDto.getUserPassword()),
+                () -> Assertions.assertEquals(result.getPhoneNumber(),updateUserDto.getPhoneNumber())
+        );
+
+    }
+
 
 }

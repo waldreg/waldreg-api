@@ -8,11 +8,11 @@ import org.waldreg.domain.character.Character;
 @SuppressWarnings("unused")
 public final class User{
 
-    private final int id;
-    private final String name;
+    private int id;
+    private String name;
     private final String userId;
-    private final String userPassword;
-    private final String phoneNumber;
+    private String userPassword;
+    private String phoneNumber;
     private final LocalDate createdAt;
     private final int advantage;
     private final int penalty;
@@ -46,6 +46,10 @@ public final class User{
 
     public int getId(){
         return id;
+    }
+
+    public void setId(int id){
+        this.id = id;
     }
 
     public String getName(){
@@ -83,6 +87,12 @@ public final class User{
     public List<String> getSocialLogin(){
         return socialLogin;
     }
+
+    public void setName(String name){this.name = name;}
+
+    public void setUserPassword(String userPassword){this.userPassword = userPassword;}
+
+    public void setPhoneNumber(String phoneNumber){this.phoneNumber = phoneNumber;}
 
     public void setCharacter(Character character){
         this.character = character;
