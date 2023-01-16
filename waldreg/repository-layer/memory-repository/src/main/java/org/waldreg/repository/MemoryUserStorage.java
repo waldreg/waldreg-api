@@ -27,4 +27,13 @@ public class MemoryUserStorage{
         return null;
     }
 
+    public User readUserByUserId(String userId){
+        for (Map.Entry<String, User> userEntry : storage.entrySet()){
+            if (userEntry.getValue().getUserId().equals(userId)){
+                return userEntry.getValue();
+            }
+        }
+        return null;
+    }
+
 }
