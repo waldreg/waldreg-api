@@ -4,7 +4,7 @@ import java.util.HashMap;
 import java.util.Map;
 import org.springframework.stereotype.Repository;
 import org.waldreg.domain.user.User;
-import org.waldreg.user.exception.InvalidIdException;
+import org.waldreg.user.exception.UnknownIdException;
 
 @Repository
 public class MemoryUserStorage{
@@ -25,7 +25,7 @@ public class MemoryUserStorage{
                 return userEntry.getValue();
             }
         }
-        throw new InvalidIdException(id);
+        throw new UnknownIdException(id);
     }
 
 }
