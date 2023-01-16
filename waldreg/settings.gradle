@@ -24,3 +24,6 @@ include 'service-layer:user'
 findProject(':service-layer:user')?.name = 'user'
 include 'application-layer:character-controller'
 findProject(':application-layer:character-controller')?.name = 'character-controller'
+include 'application-layer:application-configurer'
+findProject(':application-layer:application-configurer')?.name = 'application-configurer'
+
