@@ -30,4 +30,8 @@ public class MemoryCharacterStorage{
         return storage;
     }
 
+    public void deleteCharacterByName(String name){
+        storage.remove(name);
+    }
+
 }

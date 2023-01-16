@@ -20,6 +20,7 @@ dependencyManagement {
 }
 
 dependencies {
+    implementation project(':service-layer:auth')
     implementation project(':stable-service-layer:character')
     implementation project(':service-layer:user')
     implementation project(':domain-layer:domain')

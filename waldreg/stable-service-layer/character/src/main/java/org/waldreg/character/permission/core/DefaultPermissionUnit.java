@@ -6,16 +6,17 @@ import org.waldreg.character.permission.spi.PermissionVerifiable;
 public final class DefaultPermissionUnit implements PermissionUnit{
 
     private final String name;
+    private final String info;
     private final PermissionVerifiable permissionVerifiable;
     private final List<String> statusList;
 
     private DefaultPermissionUnit(){
-        throw new UnsupportedOperationException
-                ("Can not invoke constructor \"PermissionUnit()\"");
+        throw new UnsupportedOperationException("Can not invoke constructor \"PermissionUnit()\"");
     }
 
     private DefaultPermissionUnit(Builder builder){
         this.name = builder.name;
+        this.info = builder.info;
         this.permissionVerifiable = builder.permissionVerifiable;
         this.statusList = builder.statusList;
     }
@@ -27,6 +28,11 @@ public final class DefaultPermissionUnit implements PermissionUnit{
     @Override
     public String getName(){
         return this.name;
+    }
+
+    @Override
+    public String getInfo(){
+        return this.info;
     }
 
     @Override
@@ -47,6 +53,7 @@ public final class DefaultPermissionUnit implements PermissionUnit{
     public static final class Builder{
 
         private String name;
+        private String info;
         private PermissionVerifiable permissionVerifiable;
         private List<String> statusList;
 
@@ -54,6 +61,11 @@ public final class DefaultPermissionUnit implements PermissionUnit{
 
         public Builder name(String name){
             this.name = name;
+            return this;
+        }
+
+        public Builder info(String info){
+            this.info = info;
             return this;
         }
 

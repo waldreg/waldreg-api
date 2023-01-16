@@ -1,6 +1,5 @@
 package org.waldreg.acceptance.permission;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.util.ArrayList;
 import java.util.List;
@@ -17,6 +16,8 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
+import org.waldreg.controller.character.request.CharacterRequest;
+import org.waldreg.controller.character.request.PermissionRequest;
 
 @SpringBootTest
 @AutoConfigureMockMvc
@@ -34,11 +35,10 @@ public class PermissionAcceptanceTest{
     @BeforeEach
     @AfterEach
     public void INITIAL_PERMISSION() throws Exception{
-        String url = "/permission/{character-name}";
         String token = "mock_token";
         for (String characterName : deleteWaitCharacterList){
-            PermissionAcceptanceTestHelper.deleteSpecificCharacter(mvc, url, characterName, token);
-            PermissionAcceptanceTestHelper.inquirySpecificCharacter(mvc, url, characterName, token)
+            PermissionAcceptanceTestHelper.deleteSpecificCharacter(mvc, characterName, token);
+            PermissionAcceptanceTestHelper.inquirySpecificCharacter(mvc, characterName, token)
                     .andExpectAll(
                             MockMvcResultMatchers
                                     .status().isBadRequest(),
@@ -64,18 +64,17 @@ public class PermissionAcceptanceTest{
     @DisplayName("새로운 역할 추가 성공 인수 테스트")
     public void CREATE_NEW_CHARACTER_SUCCESS_ACCEPTANCE_TEST() throws Exception{
         // given
-        String url = "/character";
         String token = "mock_token";
         String characterName = "admin_character";
-        CharacterCreateRequest request = CharacterCreateRequest.builder()
+        CharacterRequest request = CharacterRequest.builder()
                 .characterName(characterName)
                 .permissionList(
                         List.of(
-                                PermissionCreateRequest.builder()
+                                PermissionRequest.builder()
                                         .name("attendance_starter")
                                         .status("true")
                                         .build(),
-                                PermissionCreateRequest.builder()
+                                PermissionRequest.builder()
                                         .name("team_manager")
                                         .status("false")
                                         .build()
@@ -84,7 +83,7 @@ public class PermissionAcceptanceTest{
 
         // when
         ResultActions result = PermissionAcceptanceTestHelper
-                .createCharacter(mvc, url, token, objectMapper.writeValueAsString(request));
+                .createCharacter(mvc, token, objectMapper.writeValueAsString(request));
         deleteWaitCharacterList.add(characterName);
 
         // then
@@ -98,18 +97,17 @@ public class PermissionAcceptanceTest{
     @DisplayName("새로운 역할 추가 실패 인수 테스트 - 최고 관리자가 아닐때")
     public void CREATE_NEW_CHARACTER_FAIL_CAUSE_NOT_ADMIN_ACCEPTANCE_TEST() throws Exception{
         // given
-        String url = "/character";
         String token = "failure_token";
         String characterName = "admin_character";
-        CharacterCreateRequest request = CharacterCreateRequest.builder()
+        CharacterRequest request = CharacterRequest.builder()
                 .characterName(characterName)
                 .permissionList(
                         List.of(
-                                PermissionCreateRequest.builder()
+                                PermissionRequest.builder()
                                         .name("attendance_starter")
                                         .status("true")
                                         .build(),
-                                PermissionCreateRequest.builder()
+                                PermissionRequest.builder()
                                         .name("team_manager")
                                         .status("false")
                                         .build()
@@ -118,7 +116,7 @@ public class PermissionAcceptanceTest{
 
         // when
         ResultActions result = PermissionAcceptanceTestHelper
-                .createCharacter(mvc, url, token, objectMapper.writeValueAsString(request));
+                .createCharacter(mvc, token, objectMapper.writeValueAsString(request));
         deleteWaitCharacterList.add(characterName);
 
         // then
@@ -137,18 +135,17 @@ public class PermissionAcceptanceTest{
     public void CREATE_NEW_CHARACTER_FAIL_INVALID_PERMISSION_NAME_ACCEPTANCE_TEST()
             throws Exception{
         // given
-        String url = "/character";
         String token = "mock_token";
         String characterName = "admin_character";
-        CharacterCreateRequest request = CharacterCreateRequest.builder()
+        CharacterRequest request = CharacterRequest.builder()
                 .characterName(characterName)
                 .permissionList(
                         List.of(
-                                PermissionCreateRequest.builder()
+                                PermissionRequest.builder()
                                         .name("invalid_permission_name")
                                         .status("true")
                                         .build(),
-                                PermissionCreateRequest.builder()
+                                PermissionRequest.builder()
                                         .name("team_manager")
                                         .status("false")
                                         .build()
@@ -157,7 +154,7 @@ public class PermissionAcceptanceTest{
 
         // when
         ResultActions result = PermissionAcceptanceTestHelper
-                .createCharacter(mvc, url, token, objectMapper.writeValueAsString(request));
+                .createCharacter(mvc, token, objectMapper.writeValueAsString(request));
         deleteWaitCharacterList.add(characterName);
 
         // then
@@ -176,18 +173,17 @@ public class PermissionAcceptanceTest{
     public void CREATE_NEW_CHARACTER_FAIL_INVALID_PERMISSION_STATUS_ACCEPTANCE_TEST()
             throws Exception{
         // given
-        String url = "/character";
         String token = "mock_token";
         String characterName = "admin_character";
-        CharacterCreateRequest request = CharacterCreateRequest.builder()
+        CharacterRequest request = CharacterRequest.builder()
                 .characterName(characterName)
                 .permissionList(
                         List.of(
-                                PermissionCreateRequest.builder()
+                                PermissionRequest.builder()
                                         .name("attendance_starter")
                                         .status("invalid_status")
                                         .build(),
-                                PermissionCreateRequest.builder()
+                                PermissionRequest.builder()
                                         .name("team_manager")
                                         .status("false")
                                         .build()
@@ -196,7 +192,7 @@ public class PermissionAcceptanceTest{
 
         // when
         ResultActions result = PermissionAcceptanceTestHelper
-                .createCharacter(mvc, url, token, objectMapper.writeValueAsString(request));
+                .createCharacter(mvc, token, objectMapper.writeValueAsString(request));
         deleteWaitCharacterList.add(characterName);
 
         // then
@@ -215,24 +211,22 @@ public class PermissionAcceptanceTest{
     public void CREATE_NEW_CHARACTER_FAIL_DUPLICATED_CHARACTER_NAME_ACCEPTANCE_TEST()
             throws Exception{
         // given
-        String url = "/character";
         String token = "mock_token";
         String characterName = "duplicate";
-        CharacterCreateRequest request = CharacterCreateRequest.builder()
+        CharacterRequest request = CharacterRequest.builder()
                 .characterName(characterName)
                 .permissionList(List.of()).build();
-        CharacterCreateRequest duplicatedRequest = CharacterCreateRequest.builder()
+        CharacterRequest duplicatedRequest = CharacterRequest.builder()
                 .characterName(characterName)
                 .permissionList(List.of()).build();
 
         // when
         PermissionAcceptanceTestHelper
-                .createCharacter(mvc, url, token, objectMapper.writeValueAsString(request));
+                .createCharacter(mvc, token, objectMapper.writeValueAsString(request));
         deleteWaitCharacterList.add(characterName);
 
         ResultActions duplicatedResult = PermissionAcceptanceTestHelper
-                .createCharacter(mvc, url, token,
-                        objectMapper.writeValueAsString(duplicatedRequest));
+                .createCharacter(mvc, token, objectMapper.writeValueAsString(duplicatedRequest));
 
         // then
         duplicatedResult.andExpectAll(
@@ -249,19 +243,18 @@ public class PermissionAcceptanceTest{
     @DisplayName("역할 목록 조회 성공 인수 테스트")
     public void INQUIRY_CHARACTER_LIST_SUCCESS_ACCEPTANCE_TEST() throws Exception{
         // given
-        String url = "/character";
         String token = "mock_token";
         String characterName = "mock_acceptance";
-        CharacterCreateRequest request = CharacterCreateRequest.builder()
+        CharacterRequest request = CharacterRequest.builder()
                 .characterName(characterName)
                 .permissionList(List.of()).build();
 
         // when
         PermissionAcceptanceTestHelper
-                .createCharacter(mvc, url, token, objectMapper.writeValueAsString(request));
+                .createCharacter(mvc, token, objectMapper.writeValueAsString(request));
         deleteWaitCharacterList.add(characterName);
 
-        ResultActions result = PermissionAcceptanceTestHelper.inquiryCharacterList(mvc, url, token);
+        ResultActions result = PermissionAcceptanceTestHelper.inquiryCharacterList(mvc, token);
 
         // then
         result.andExpectAll(
@@ -281,7 +274,7 @@ public class PermissionAcceptanceTest{
         String token = "not_admin_token";
 
         // when
-        ResultActions result = PermissionAcceptanceTestHelper.inquiryCharacterList(mvc, url, token);
+        ResultActions result = PermissionAcceptanceTestHelper.inquiryCharacterList(mvc, token);
 
         // then
         result.andExpectAll(
@@ -298,15 +291,14 @@ public class PermissionAcceptanceTest{
     @DisplayName("특정 역할 조회 성공 인수 테스트")
     public void INQUIRY_CHARACTER_BY_NAME_SUCCESS_ACCEPTANCE_TEST() throws Exception{
         // given
-        String url = "/character/{character-name}";
         String token = "mock_token";
         String characterName = "mock_character";
         String permissionName = "mock_permission";
         String permissionStatus = "mock_permission_status";
-        CharacterCreateRequest request = CharacterCreateRequest.builder()
+        CharacterRequest request = CharacterRequest.builder()
                 .characterName(characterName)
                 .permissionList(List.of(
-                        PermissionCreateRequest.builder()
+                        PermissionRequest.builder()
                                 .name(permissionName)
                                 .status(permissionStatus)
                                 .build()
@@ -315,12 +307,11 @@ public class PermissionAcceptanceTest{
 
         // when
         PermissionAcceptanceTestHelper
-                .createCharacter(mvc, "/character", token,
-                        objectMapper.writeValueAsString(request));
+                .createCharacter(mvc, token, objectMapper.writeValueAsString(request));
         deleteWaitCharacterList.add(characterName);
 
         ResultActions result = PermissionAcceptanceTestHelper
-                .inquirySpecificCharacter(mvc, url, characterName, token);
+                .inquirySpecificCharacter(mvc, characterName, token);
 
         // then
         result.andExpectAll(
@@ -340,13 +331,12 @@ public class PermissionAcceptanceTest{
     @DisplayName("특정 역할 조회 실패 인수테스트 - 최고 관리자가 아님")
     public void INQUIRY_CHARACTER_BY_NAME_FAIL_NOT_ADMIN_ACCEPTANCE_TEST() throws Exception{
         // given
-        String url = "/character/{character-name}";
         String token = "not_admin_token";
         String characterName = "mock_character_name";
 
         // when
         ResultActions result = PermissionAcceptanceTestHelper
-                .inquirySpecificCharacter(mvc, url, characterName, token);
+                .inquirySpecificCharacter(mvc, characterName, token);
 
         // then
         result.andExpectAll(
@@ -364,13 +354,12 @@ public class PermissionAcceptanceTest{
     public void INQUIRY_CHARACTER_BY_NAME_FAIL_WRONG_CHARACTER_NAME_ACCEPTANCE_TEST()
             throws Exception{
         // given
-        String url = "/character/{character-name}";
         String token = "mock_token";
         String characterName = "unknown_character_name";
 
         // when
         ResultActions result = PermissionAcceptanceTestHelper
-                .inquirySpecificCharacter(mvc, url, characterName, token);
+                .inquirySpecificCharacter(mvc, characterName, token);
 
         // then
         result.andExpectAll(
@@ -387,31 +376,34 @@ public class PermissionAcceptanceTest{
     @DisplayName("특정 역할 수정 성공 인수테스트")
     public void MODIFY_CHARACTER_BY_NAME_SUCCESS_ACCEPTANCE_TEST() throws Exception{
         // given
-        String url = "/character/{character-name}";
         String token = "mock_token";
         String characterName = "mock_character_name";
         String permissionName = "mock_permission_name";
         String permissionStatus = "mock_permission_status";
-        CharacterCreateRequest request = CharacterCreateRequest.builder()
+        CharacterRequest request = CharacterRequest.builder()
                 .characterName(characterName)
                 .permissionList(List.of(
-                        PermissionCreateRequest.builder()
+                        PermissionRequest.builder()
+                                .name(permissionName)
+                                .status(permissionStatus)
+                                .build()
+                )).build();
+
+        CharacterRequest modifiedRequest = CharacterRequest.builder()
+                .characterName("modified name")
+                .permissionList(List.of(
+                        PermissionRequest.builder()
                                 .name(permissionName)
                                 .status(permissionStatus)
                                 .build()
                 )).build();
 
         // when
-        PermissionAcceptanceTestHelper
-                .createCharacter(mvc, "/character", token,
-                        objectMapper.writeValueAsString(request));
+        PermissionAcceptanceTestHelper.createCharacter(mvc, token, objectMapper.writeValueAsString(request));
         deleteWaitCharacterList.add(characterName);
 
-        request.characterName = "modified_character_name";
-
         ResultActions result = PermissionAcceptanceTestHelper
-                .modifySpecificCharacter(mvc, url, characterName, token,
-                        objectMapper.writeValueAsString(request));
+                .modifySpecificCharacter(mvc, characterName, token, objectMapper.writeValueAsString(modifiedRequest));
 
         // then
         result.andExpectAll(
@@ -424,17 +416,15 @@ public class PermissionAcceptanceTest{
     @DisplayName("특정 역할 수정 실패 인수테스트 - 최고 관리자가 아님")
     public void MODIFY_CHARACTER_BY_NAME_FAIL_NOT_ADMIN_ACCEPTANCE_TEST() throws Exception{
         // given
-        String url = "/character/{character-name}";
         String token = "not_admin_token";
         String characterName = "mock_character_name";
-        CharacterCreateRequest request = CharacterCreateRequest.builder()
+        CharacterRequest request = CharacterRequest.builder()
                 .characterName(characterName)
                 .permissionList(List.of()).build();
 
         // when
         ResultActions result = PermissionAcceptanceTestHelper
-                .modifySpecificCharacter(mvc, url, characterName, token,
-                        objectMapper.writeValueAsString(request));
+                .modifySpecificCharacter(mvc, characterName, token, objectMapper.writeValueAsString(request));
 
         // then
         result.andExpectAll(
@@ -451,32 +441,30 @@ public class PermissionAcceptanceTest{
     @DisplayName("특정 역할 수정 실패 인수테스트 - 수정할 이름 중복")
     public void MODIFY_CHARACTER_BY_NAME_FAIL_DUPLICATED_NAME_ACCEPTANCE_TEST() throws Exception{
         // given
-        String createUrl = "/character";
-        String changeUrl = "/character/{character-name}";
         String token = "mock_token";
         String beforeCharacterName = "name_before_duplicated";
         String characterName = "duplicated_character";
-        CharacterCreateRequest request = CharacterCreateRequest.builder()
+        CharacterRequest request = CharacterRequest.builder()
                 .characterName(characterName)
                 .permissionList(List.of()).build();
-        CharacterCreateRequest request2 = CharacterCreateRequest.builder()
+        CharacterRequest request2 = CharacterRequest.builder()
                 .characterName(beforeCharacterName)
+                .permissionList(List.of()).build();
+        CharacterRequest modifedRequest = CharacterRequest.builder()
+                .characterName(characterName)
                 .permissionList(List.of()).build();
 
         // when
         PermissionAcceptanceTestHelper
-                .createCharacter(mvc, createUrl, token, objectMapper.writeValueAsString(request));
+                .createCharacter(mvc, token, objectMapper.writeValueAsString(request));
         deleteWaitCharacterList.add(characterName);
 
         PermissionAcceptanceTestHelper
-                .createCharacter(mvc, createUrl, token, objectMapper.writeValueAsString(request2));
+                .createCharacter(mvc, token, objectMapper.writeValueAsString(request2));
         deleteWaitCharacterList.add(beforeCharacterName);
 
-        request2.characterName = characterName;
-
-        ResultActions result = PermissionAcceptanceTestHelper.modifySpecificCharacter(
-                mvc, changeUrl, beforeCharacterName, token,
-                objectMapper.writeValueAsString(request2));
+        ResultActions result = PermissionAcceptanceTestHelper
+                .modifySpecificCharacter(mvc, beforeCharacterName, token, objectMapper.writeValueAsString(modifedRequest));
 
         // then
         result.andExpectAll(
@@ -493,17 +481,15 @@ public class PermissionAcceptanceTest{
     @DisplayName("특정 역할 수정 실패 인수테스트 - path-parameter 에 잘못된 character-name 으로 수정 요청")
     public void MODIFY_CHARACTER_BY_NAME_FAIL_INVALID_PATH_NAME_ACCEPTANCE_TEST() throws Exception{
         // given
-        String url = "/character/{character-name}";
         String characterName = "unknown character name";
         String token = "mock_token";
-        CharacterCreateRequest request = CharacterCreateRequest.builder()
+        CharacterRequest request = CharacterRequest.builder()
                 .characterName(characterName)
                 .permissionList(List.of()).build();
 
         // when
-        ResultActions result = PermissionAcceptanceTestHelper.modifySpecificCharacter(
-                mvc, url, characterName, token,
-                objectMapper.writeValueAsString(request));
+        ResultActions result = PermissionAcceptanceTestHelper
+                .modifySpecificCharacter(mvc, characterName, token, objectMapper.writeValueAsString(request));
 
         // then
         result.andExpectAll(
@@ -521,24 +507,22 @@ public class PermissionAcceptanceTest{
     public void MODIFY_CHARACTER_BY_NAME_FAIL_INVALID_PERMISSION_NAME_ACCEPTANCE_TEST()
             throws Exception{
         // given
-        String url = "/character/{character-name}";
-        String createUrl = "/character";
         String token = "mock_token";
         String characterName = "mock_character_name";
         String permissionName = "mock_permission_name";
         String permissionStatus = "mock_permission_status";
-        CharacterCreateRequest request = CharacterCreateRequest.builder()
+        CharacterRequest request = CharacterRequest.builder()
                 .characterName(characterName)
                 .permissionList(List.of(
-                        PermissionCreateRequest.builder()
+                        PermissionRequest.builder()
                                 .name(permissionName)
                                 .status(permissionStatus)
                                 .build()
                 )).build();
-        CharacterCreateRequest changeRequest = CharacterCreateRequest.builder()
+        CharacterRequest changeRequest = CharacterRequest.builder()
                 .characterName(characterName)
                 .permissionList(List.of(
-                        PermissionCreateRequest.builder()
+                        PermissionRequest.builder()
                                 .name("invalid_permission_name")
                                 .status(permissionStatus)
                                 .build()
@@ -546,12 +530,11 @@ public class PermissionAcceptanceTest{
 
         // when
         PermissionAcceptanceTestHelper
-                .createCharacter(mvc, createUrl, token, objectMapper.writeValueAsString(request));
+                .createCharacter(mvc, token, objectMapper.writeValueAsString(request));
         deleteWaitCharacterList.add(characterName);
 
-        ResultActions result = PermissionAcceptanceTestHelper.modifySpecificCharacter(
-                mvc, url, characterName, token,
-                objectMapper.writeValueAsString(changeRequest));
+        ResultActions result = PermissionAcceptanceTestHelper
+                .modifySpecificCharacter(mvc, characterName, token, objectMapper.writeValueAsString(changeRequest));
 
         // then
         result.andExpectAll(
@@ -569,24 +552,22 @@ public class PermissionAcceptanceTest{
     public void MODIFY_CHARACTER_BY_NAME_FAIL_INVALID_PERMISSION_STATUS_ACCEPTANCE_TEST()
             throws Exception{
         // given
-        String url = "/character/{character-name}";
-        String createUrl = "/character";
         String token = "mock_token";
         String characterName = "mock_character_name";
         String permissionName = "mock_permission_name";
         String permissionStatus = "mock_permission_status";
-        CharacterCreateRequest request = CharacterCreateRequest.builder()
+        CharacterRequest request = CharacterRequest.builder()
                 .characterName(characterName)
                 .permissionList(List.of(
-                        PermissionCreateRequest.builder()
+                        PermissionRequest.builder()
                                 .name(permissionName)
                                 .status(permissionStatus)
                                 .build()
                 )).build();
-        CharacterCreateRequest changeRequest = CharacterCreateRequest.builder()
+        CharacterRequest changeRequest = CharacterRequest.builder()
                 .characterName(characterName)
                 .permissionList(List.of(
-                        PermissionCreateRequest.builder()
+                        PermissionRequest.builder()
                                 .name(permissionName)
                                 .status("wrong_status")
                                 .build()
@@ -594,12 +575,11 @@ public class PermissionAcceptanceTest{
 
         // when
         PermissionAcceptanceTestHelper
-                .createCharacter(mvc, createUrl, token, objectMapper.writeValueAsString(request));
+                .createCharacter(mvc, token, objectMapper.writeValueAsString(request));
         deleteWaitCharacterList.add(characterName);
 
-        ResultActions result = PermissionAcceptanceTestHelper.modifySpecificCharacter(
-                mvc, url, characterName, token,
-                objectMapper.writeValueAsString(changeRequest));
+        ResultActions result = PermissionAcceptanceTestHelper
+                .modifySpecificCharacter(mvc, characterName, token, objectMapper.writeValueAsString(changeRequest));
 
         // then
         result.andExpectAll(
@@ -616,15 +596,10 @@ public class PermissionAcceptanceTest{
     @DisplayName("선택가능한 permission 목록 조회 성공 인수 테스트")
     public void INQUIRY_PERMISSION_LIST_SUCCESS_ACCEPTANCE_TEST() throws Exception{
         // given
-        String url = "/permission";
         String token = "mock_token";
 
         // when
-        ResultActions result = mvc.perform(MockMvcRequestBuilders
-                .get(url)
-                .accept(MediaType.APPLICATION_JSON)
-                .header("api-version", apiVersion)
-                .header(HttpHeaders.AUTHORIZATION, token));
+        ResultActions result = PermissionAcceptanceTestHelper.inquiryPermissionList(mvc, token);
 
         // then
         result.andExpectAll(
@@ -644,11 +619,7 @@ public class PermissionAcceptanceTest{
         String token = "not_admin_token";
 
         // when
-        ResultActions result = mvc.perform(MockMvcRequestBuilders
-                .get(url)
-                .accept(MediaType.APPLICATION_JSON)
-                .header("api-version", apiVersion)
-                .header(HttpHeaders.AUTHORIZATION, token));
+        ResultActions result = PermissionAcceptanceTestHelper.inquiryPermissionList(mvc, token);
 
         // then
         result.andExpectAll(
@@ -665,20 +636,18 @@ public class PermissionAcceptanceTest{
     @DisplayName("역할 삭제 성공 인수 테스트")
     public void DELETE_CHARACTER_SUCCESS_ACCEPTANCE_TEST() throws Exception{
         // given
-        String url = "/permission";
-        String deleteUrl = "/permission/{character-name}";
         String characterName = "mock_character";
         String token = "mock_token";
-        CharacterCreateRequest request = CharacterCreateRequest.builder()
+        CharacterRequest request = CharacterRequest.builder()
                 .characterName(characterName)
                 .permissionList(List.of()).build();
 
         // when
         PermissionAcceptanceTestHelper
-                .createCharacter(mvc, url, token, objectMapper.writeValueAsString(request));
+                .createCharacter(mvc, token, objectMapper.writeValueAsString(request));
 
         ResultActions result = PermissionAcceptanceTestHelper
-                .deleteSpecificCharacter(mvc, deleteUrl, characterName, token);
+                .deleteSpecificCharacter(mvc, characterName, token);
 
         // then
         result.andExpectAll(
@@ -692,22 +661,20 @@ public class PermissionAcceptanceTest{
     @DisplayName("역할 삭제 실패 - 최고 관리자가 아님")
     public void DELETE_CHARACTER_FAIL_NOT_ADMIN_TEST() throws Exception{
         // given
-        String url = "/permission";
-        String deleteUrl = "/permission/{character-name}";
         String characterName = "mock_character";
         String token = "mock_token";
         String notAdminToken = "not_admin_token";
-        CharacterCreateRequest request = CharacterCreateRequest.builder()
+        CharacterRequest request = CharacterRequest.builder()
                 .characterName(characterName)
                 .permissionList(List.of()).build();
 
         // when
         PermissionAcceptanceTestHelper
-                .createCharacter(mvc, url, token, objectMapper.writeValueAsString(request));
+                .createCharacter(mvc, token, objectMapper.writeValueAsString(request));
         deleteWaitCharacterList.add(characterName);
 
         ResultActions result = PermissionAcceptanceTestHelper
-                .deleteSpecificCharacter(mvc, deleteUrl, characterName, notAdminToken);
+                .deleteSpecificCharacter(mvc, characterName, notAdminToken);
 
         // then
         result.andExpectAll(
@@ -724,14 +691,12 @@ public class PermissionAcceptanceTest{
     @DisplayName("역할 삭제 실패 인수 테스트 - 없는 역할에 대한 삭제 요청")
     public void DELETE_CHARACTER_FAIL_INVALID_CHARACTER_ACCEPTANCE_TEST() throws Exception{
         // given
-        String url = "/permission";
-        String deleteUrl = "/permission/{character-name}";
         String characterName = "mock_character";
         String token = "mock_token";
 
         // when
         ResultActions result = PermissionAcceptanceTestHelper
-                .deleteSpecificCharacter(mvc, deleteUrl, characterName, token);
+                .deleteSpecificCharacter(mvc, characterName, token);
 
         // then
         result.andExpectAll(
@@ -742,124 +707,6 @@ public class PermissionAcceptanceTest{
                 MockMvcResultMatchers.jsonPath("$.messages").value("Unknown permission name"),
                 MockMvcResultMatchers.jsonPath("$.document_url").value("docs.waldreg.org")
         );
-    }
-
-    private final static class CharacterCreateRequest{
-
-        @JsonProperty("character_name")
-        private String characterName;
-        @JsonProperty("permissions")
-        private List<PermissionCreateRequest> permissionList;
-
-        public CharacterCreateRequest(){}
-
-        private CharacterCreateRequest(Builder builder){
-            this.characterName = builder.characterName;
-            this.permissionList = builder.permissionList;
-        }
-
-        public static Builder builder(){
-            return new Builder();
-        }
-
-        public String getCharacterName(){
-            return characterName;
-        }
-
-        public void setCharacterName(String characterName){
-            this.characterName = characterName;
-        }
-
-        public List<PermissionCreateRequest> getPermissionList(){
-            return permissionList;
-        }
-
-        public void setPermissionList(List<PermissionCreateRequest> permissionList){
-            this.permissionList = permissionList;
-        }
-
-        public final static class Builder{
-
-            private String characterName;
-            private List<PermissionCreateRequest> permissionList;
-
-            private Builder(){}
-
-            public Builder characterName(String characterName){
-                this.characterName = characterName;
-                return this;
-            }
-
-            public Builder permissionList(List<PermissionCreateRequest> permissionList){
-                this.permissionList = permissionList;
-                return this;
-            }
-
-            public CharacterCreateRequest build(){
-                return new CharacterCreateRequest(this);
-            }
-
-        }
-
-    }
-
-    private final static class PermissionCreateRequest{
-
-        @JsonProperty("permission_name")
-        private String name;
-        @JsonProperty("permission_status")
-        private String status;
-
-        public PermissionCreateRequest(){}
-
-        private PermissionCreateRequest(Builder builder){
-            this.name = builder.name;
-            this.status = builder.status;
-        }
-
-        public static Builder builder(){
-            return new Builder();
-        }
-
-        public String getName(){
-            return name;
-        }
-
-        public void setName(String name){
-            this.name = name;
-        }
-
-        public String getStatus(){
-            return status;
-        }
-
-        public void setStatus(String status){
-            this.status = status;
-        }
-
-        private final static class Builder{
-
-            private String name;
-            private String status;
-
-            private Builder(){}
-
-            public Builder name(String name){
-                this.name = name;
-                return this;
-            }
-
-            public Builder status(String status){
-                this.status = status;
-                return this;
-            }
-
-            public PermissionCreateRequest build(){
-                return new PermissionCreateRequest(this);
-            }
-
-        }
-
     }
 
 }
