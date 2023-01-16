@@ -20,7 +20,7 @@ public class CharacterMapper{
 
     private List<Permission> permissionDtoToDomain(List<PermissionDto> permissionDtoList){
         List<Permission> permissionList = new ArrayList<>();
-        for(PermissionDto permissionDto : permissionDtoList){
+        for (PermissionDto permissionDto : permissionDtoList){
             permissionList.add(Permission.builder()
                     .name(permissionDto.getName())
                     .status(permissionDto.getStatus())
@@ -38,7 +38,7 @@ public class CharacterMapper{
 
     private List<PermissionDto> permissionDomainToDto(List<Permission> permissionList){
         List<PermissionDto> permissionDtoList = new ArrayList<>();
-        for(Permission permission : permissionList){
+        for (Permission permission : permissionList){
             permissionDtoList.add(PermissionDto.builder()
                     .name(permission.getName())
                     .status(permission.getStatus())

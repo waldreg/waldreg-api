@@ -9,19 +9,19 @@ import org.waldreg.user.spi.UserRepository;
 
 public class MemoryUserRepository implements UserRepository{
 
+    private final UserMapper userMapper;
+
     private final MemoryUserStorage memoryUserStorage;
 
-    public MemoryUserRepository(MemoryUserStorage memoryUserStorage){this.memoryUserStorage = memoryUserStorage;}
+    public MemoryUserRepository(UserMapper userMapper, MemoryUserStorage memoryUserStorage){
+        this.userMapper = userMapper;
+        this.memoryUserStorage = memoryUserStorage;
+    }
 
     @Override
     public void createUser(UserDto userDto){
         throwIfDuplicatedUserId(userDto.getUserId());
-        User user = User.builder()
-                .name(userDto.getName())
-                .userId(userDto.getUserId())
-                .userPassword(userDto.getUserPassword())
-                .phoneNumber(userDto.getPhoneNumber())
-                .build();
+        User user = userMapper.userDtoToUserDomain(userDto);
         memoryUserStorage.createUser(user);
     }
 
@@ -32,7 +32,8 @@ public class MemoryUserRepository implements UserRepository{
 
     @Override
     public UserDto readUserByUserId(String userId){
-        return null;
+        User user = memoryUserStorage.readUserByUserId(userId);
+        return userMapper.userDomainToUserDto(user);
     }
 
     @Override

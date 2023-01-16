@@ -16,7 +16,7 @@ public interface UserManager{
 
     void updateUser(int idx, UserDto userDto);
 
-    void updateCharacter(UserDto userDto, CharacterDto character);
+    void updateCharacter(UserDto userDto, String character);
 
     void deleteById(int id);
 

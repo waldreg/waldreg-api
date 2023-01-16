@@ -9,9 +9,9 @@ import org.waldreg.character.dto.CharacterDto;
 import org.waldreg.character.exception.DuplicatedCharacterException;
 import org.waldreg.character.exception.UnknownCharacterException;
 import org.waldreg.character.spi.CharacterRepository;
+import org.waldreg.domain.character.Character;
 import org.waldreg.domain.user.User;
 import org.waldreg.repository.MemoryCharacterStorage;
-import org.waldreg.domain.character.Character;
 import org.waldreg.repository.MemoryUserStorage;
 
 @Repository
@@ -40,7 +40,7 @@ public class MemoryCharacterRepository implements CharacterRepository{
     }
 
     private void throwIfDuplicatedCharacterNameDetected(CharacterDto characterDto){
-        if(memoryCharacterStorage.readCharacterByName(characterDto.getCharacterName()) != null){
+        if (memoryCharacterStorage.readCharacterByName(characterDto.getCharacterName()) != null){
             throw new DuplicatedCharacterException(characterDto.getCharacterName());
         }
     }
@@ -60,7 +60,7 @@ public class MemoryCharacterRepository implements CharacterRepository{
     }
 
     private void throwIfCharacterDoesNotExist(String characterName){
-        if(memoryCharacterStorage.readCharacterByName(characterName) == null){
+        if (memoryCharacterStorage.readCharacterByName(characterName) == null){
             throw new UnknownCharacterException(characterName);
         }
     }
@@ -70,7 +70,7 @@ public class MemoryCharacterRepository implements CharacterRepository{
     public List<CharacterDto> readCharacterList(){
         Map<String, Character> characterMap = memoryCharacterStorage.readAllCharacter();
         List<CharacterDto> characterDtoList = new ArrayList<>();
-        for(Map.Entry<String, Character> characterEntry : characterMap.entrySet()){
+        for (Map.Entry<String, Character> characterEntry : characterMap.entrySet()){
             characterDtoList.add(characterMapper.characterDomainToDto(characterEntry.getValue()));
         }
         return characterDtoList;

@@ -9,6 +9,7 @@ import org.waldreg.domain.character.Character;
 public class MemoryCharacterStorage{
 
     private final Map<String, Character> storage;
+
     {
         storage = new HashMap<>();
     }
