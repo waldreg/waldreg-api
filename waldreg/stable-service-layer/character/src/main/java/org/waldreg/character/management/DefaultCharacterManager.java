@@ -5,6 +5,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.waldreg.character.dto.CharacterDto;
 import org.waldreg.character.dto.PermissionDto;
+import org.waldreg.character.exception.NoPermissionException;
 import org.waldreg.character.exception.UnknownPermissionException;
 import org.waldreg.character.exception.UnknownPermissionStatusException;
 import org.waldreg.character.spi.CharacterRepository;
@@ -14,6 +15,7 @@ public class DefaultCharacterManager implements CharacterManager{
 
     private final CharacterRepository characterRepository;
     private final PermissionChecker permissionChecker;
+    private final String[] deletedBlockedPermissionNames = {"Admin", "Guest"};
 
     @Override
     public void createCharacter(CharacterDto characterDto){
@@ -63,8 +65,19 @@ public class DefaultCharacterManager implements CharacterManager{
 
     @Override
     public void deleteCharacter(String characterName){
+        if(isDeleteBlockedCharacterName(characterName)){
+            throw new NoPermissionException();
+        }
         characterRepository.deleteCharacter(characterName);
     }
+
+    private boolean isDeleteBlockedCharacterName(String characterName){
+        for(String name : deletedBlockedPermissionNames){
+            if(name.equals(characterName)) return true;
+        }
+        return false;
+    }
+
 
     @Autowired
     private DefaultCharacterManager(CharacterRepository characterRepository, PermissionChecker permissionChecker){
