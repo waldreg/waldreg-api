@@ -42,7 +42,7 @@ public class AuthRepositoryTest{
 
         //when
         memoryUserStorage.createUser(user);
-        TokenUserDto foundUser = memoryAuthRepository.findUserByUserIdPw(user.getUserId(), user.getUserPassword());
+        TokenUserDto foundUser = memoryAuthRepository.findUserByUserIdPassword(user.getUserId(), user.getUserPassword());
 
         //then
         Assertions.assertAll(

@@ -19,15 +19,15 @@ public class MemoryAuthRepository implements AuthRepository{
     }
 
     @Override
-    public TokenUserDto findUserByUserIdPw(String userId, String userPassword){
+    public TokenUserDto findUserByUserIdPassword(String userId, String userPassword){
         User user = memoryUserStorage.readUserByUserId(userId);
         throwIfUserDoesNotExist(user, userPassword);
-        TokenUserDto tokenUserDto = TokenUserDto.builder()
+        return TokenUserDto.builder()
                 .id(user.getId())
+                .name(user.getName())
                 .userId(user.getUserId())
                 .userPassword(user.getUserPassword())
                 .build();
-        return tokenUserDto;
     }
 
     private void throwIfUserDoesNotExist(User user, String userPassword){
@@ -39,12 +39,12 @@ public class MemoryAuthRepository implements AuthRepository{
     @Override
     public TokenUserDto findUserById(int id){
         User user = memoryUserStorage.readUserById(id);
-        TokenUserDto tokenUserDto = TokenUserDto.builder()
+        return TokenUserDto.builder()
                 .id(user.getId())
+                .name(user.getName())
                 .userId(user.getUserId())
                 .userPassword(user.getUserPassword())
                 .build();
-        return tokenUserDto;
     }
 
 }

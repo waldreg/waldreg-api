@@ -3,11 +3,13 @@ package org.waldreg.token.dto;
 public class TokenUserDto{
 
     private final int id;
+    private final String name;
     private final String userId;
     private final String userPassword;
 
     private TokenUserDto(Builder builder){
         this.id = builder.id;
+        this.name = builder.name;
         this.userId = builder.userId;
         this.userPassword = builder.userPassword;
     }
@@ -18,6 +20,10 @@ public class TokenUserDto{
 
     public int getId(){
         return id;
+    }
+
+    public String getName(){
+        return name;
     }
 
     public String getUserId(){
@@ -31,6 +37,7 @@ public class TokenUserDto{
     public final static class Builder{
 
         private int id;
+        private String name;
         private String userId;
         private String userPassword;
 
@@ -38,6 +45,11 @@ public class TokenUserDto{
 
         public Builder id(int id){
             this.id = id;
+            return this;
+        }
+
+        public Builder name(String name){
+            this.name = name;
             return this;
         }
 
