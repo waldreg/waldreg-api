@@ -4,7 +4,6 @@ public class TokenUserDto{
 
     private final int id;
     private final String userId;
-
     private final String userPassword;
 
     private TokenUserDto(Builder builder){

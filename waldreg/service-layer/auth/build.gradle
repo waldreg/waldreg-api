@@ -20,7 +20,6 @@ dependencyManagement {
 }
 
 dependencies {
-    implementation project(':domain-layer:domain')
     implementation project(":core-layer:util")
     implementation 'io.jsonwebtoken:jjwt-api:0.11.5'
     runtimeOnly 'io.jsonwebtoken:jjwt-impl:0.11.5',

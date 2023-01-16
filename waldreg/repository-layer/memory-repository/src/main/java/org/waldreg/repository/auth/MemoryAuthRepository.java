@@ -32,7 +32,7 @@ public class MemoryAuthRepository implements AuthRepository{
 
     private void throwIfUserDoesNotExist(User user, String userPassword){
         if (!user.getUserPassword().equals(userPassword)){
-            throw new PasswordMissMatchException();
+            throw new PasswordMissMatchException(user.getUserId(),userPassword);
         }
     }
 
