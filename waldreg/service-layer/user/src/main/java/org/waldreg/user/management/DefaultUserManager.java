@@ -2,13 +2,13 @@ package org.waldreg.user.management;
 
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.waldreg.character.dto.CharacterDto;
 import org.waldreg.user.dto.UserDto;
 import org.waldreg.user.exception.InvalidRangeException;
 import org.waldreg.user.spi.UserRepository;
 
 public class DefaultUserManager implements UserManager{
 
+    private final int perPage = 20;
     private final UserRepository userRepository;
 
     public DefaultUserManager(@Autowired UserRepository userRepository){this.userRepository = userRepository;}
@@ -30,8 +30,9 @@ public class DefaultUserManager implements UserManager{
 
     @Override
     public List<UserDto> readUserList(int startIdx, int endIdx){
-        int maxIdx = userRepository.readMaxIdx();
+        int maxIdx = readMaxIdx();
         throwIfInvalidRangeDetected(startIdx, endIdx, maxIdx);
+        endIdx = adjustRange(startIdx, endIdx);
         return userRepository.readUserList(startIdx, endIdx);
     }
 
@@ -53,10 +54,22 @@ public class DefaultUserManager implements UserManager{
         userRepository.deleteById(id);
     }
 
+    @Override
+    public int readMaxIdx(){
+        return userRepository.readMaxIdx();
+    }
+
     private void throwIfInvalidRangeDetected(int startIdx, int endIdx, int maxIdx){
-        if (startIdx > maxIdx || endIdx > maxIdx || startIdx > endIdx){
+        if (endIdx > maxIdx || startIdx > endIdx){
             throw new InvalidRangeException(startIdx, endIdx);
         }
+    }
+
+    private int adjustRange(int startIdx, int endIdx){
+        if (endIdx - startIdx + 1 >= perPage){
+            return startIdx + perPage - 1;
+        }
+        return endIdx;
     }
 
 }

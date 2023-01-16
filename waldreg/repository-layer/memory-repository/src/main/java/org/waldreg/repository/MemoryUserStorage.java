@@ -1,6 +1,8 @@
 package org.waldreg.repository;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
@@ -47,6 +49,25 @@ public class MemoryUserStorage{
             }
         }
         throw new UnknownUserIdException(userId);
+    }
+
+    public List<User> readUserList(int startIdx, int endIdx){
+        int cnt = -1;
+        startIdx -= 1;
+        endIdx -= 1;
+        System.out.println("\n\n\n\n\n\n" + startIdx + " " + endIdx);
+        List<User> userList = new ArrayList<>();
+        for (Map.Entry<String, User> userEntry : storage.entrySet()){
+            cnt++;
+            if (cnt >= startIdx && cnt <= endIdx){
+                userList.add(userEntry.getValue());
+            }
+        }
+        return userList;
+    }
+
+    public int readMaxIdx(){
+        return storage.size();
     }
 
 }

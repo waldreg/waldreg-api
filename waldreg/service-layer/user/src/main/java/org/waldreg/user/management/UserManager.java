@@ -1,7 +1,6 @@
 package org.waldreg.user.management;
 
 import java.util.List;
-import org.waldreg.character.dto.CharacterDto;
 import org.waldreg.user.dto.UserDto;
 
 public interface UserManager{
@@ -19,6 +18,8 @@ public interface UserManager{
     void updateCharacter(UserDto userDto, String character);
 
     void deleteById(int id);
+
+    int readMaxIdx();
 
 
 }

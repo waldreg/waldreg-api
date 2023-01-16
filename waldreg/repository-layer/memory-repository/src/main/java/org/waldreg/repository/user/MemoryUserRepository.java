@@ -1,5 +1,6 @@
 package org.waldreg.repository.user;
 
+import java.util.ArrayList;
 import java.util.List;
 import org.waldreg.domain.user.User;
 import org.waldreg.repository.MemoryUserStorage;
@@ -38,7 +39,12 @@ public class MemoryUserRepository implements UserRepository{
 
     @Override
     public List<UserDto> readUserList(int startIdx, int endIdx){
-        return null;
+        List<User> userList = memoryUserStorage.readUserList(startIdx, endIdx);
+        List<UserDto> userDtoList = new ArrayList<>();
+        for (User user : userList){
+            userDtoList.add(userMapper.userDomainToUserDto(user));
+        }
+        return userDtoList;
     }
 
     @Override
@@ -48,7 +54,7 @@ public class MemoryUserRepository implements UserRepository{
 
     @Override
     public int readMaxIdx(){
-        return 0;
+        return memoryUserStorage.readMaxIdx();
     }
 
     @Override
