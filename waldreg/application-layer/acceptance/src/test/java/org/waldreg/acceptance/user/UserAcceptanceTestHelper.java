@@ -19,17 +19,17 @@ public class UserAcceptanceTestHelper{
                 .content(content));
     }
 
-    public static ResultActions inquiryUserWithToken(MockMvc mvc, String name, String token) throws Exception{
+    public static ResultActions inquiryUserWithToken(MockMvc mvc, String userId, String token) throws Exception{
         return mvc.perform(MockMvcRequestBuilders
-                .get("/user/{name}", name)
+                .get("/user/{user_id}", userId)
                 .accept(MediaType.APPLICATION_JSON)
                 .header("api-version", apiVersion)
                 .header(HttpHeaders.AUTHORIZATION, token));
     }
 
-    public static ResultActions inquiryUserWithoutToken(MockMvc mvc, String name) throws Exception{
+    public static ResultActions inquiryUserWithoutToken(MockMvc mvc, String userId) throws Exception{
         return mvc.perform(MockMvcRequestBuilders
-                .get("/user/{name}", name)
+                .get("/user/{user_id}", userId)
                 .accept(MediaType.APPLICATION_JSON)
                 .header("api-version", apiVersion));
     }
@@ -100,9 +100,9 @@ public class UserAcceptanceTestHelper{
                 .header("api-version", apiVersion));
     }
 
-    public static ResultActions modifyUserCharacter(MockMvc mvc, String userName, String token, String content) throws Exception{
+    public static ResultActions modifyUserCharacter(MockMvc mvc, int id, String token, String content) throws Exception{
         return mvc.perform(MockMvcRequestBuilders
-                .put("/user/character/{user-name}", userName)
+                .put("/user/character/{id}", id)
                 .accept(MediaType.APPLICATION_JSON)
                 .header("api-version", apiVersion)
                 .header(HttpHeaders.AUTHORIZATION, token)

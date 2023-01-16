@@ -1,6 +1,7 @@
 package org.waldreg.user.management;
 
 import java.util.List;
+import org.waldreg.character.dto.CharacterDto;
 import org.waldreg.user.dto.UserDto;
 
 public interface UserManager{
@@ -9,10 +10,17 @@ public interface UserManager{
 
     UserDto readUserById(int id);
 
-    UserDto readUserByName(String name);
+    UserDto readUserByUserId(String userId);
 
     List<UserDto> readUserList(int stIdx, int enIdx);
 
     void updateUser(int idx, UserDto userDto);
+
+    void updateCharacter(UserDto userDto, CharacterDto character);
+
+    void deleteOwn(String password, int id);
+
+    void deleteById(int id);
+
 
 }

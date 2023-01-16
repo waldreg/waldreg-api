@@ -3,6 +3,7 @@ package org.waldreg.user.dto;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import org.waldreg.character.dto.CharacterDto;
 
 public class UserDto{
 
@@ -14,7 +15,7 @@ public class UserDto{
     private final LocalDate createdAt;
     private final int advantage;
     private final int penalty;
-    private final Character character;
+    private final CharacterDto characterDto;
     private List<String> socialLogin;
 
     {
@@ -36,7 +37,7 @@ public class UserDto{
         this.createdAt = builder.createdAt;
         this.advantage = builder.advantage;
         this.penalty = builder.penalty;
-        this.character = builder.character;
+        this.characterDto = builder.characterDto;
         this.socialLogin = builder.socialLogin;
     }
 
@@ -72,8 +73,8 @@ public class UserDto{
         return penalty;
     }
 
-    public Character getCharacter(){
-        return character;
+    public CharacterDto getCharacterDto(){
+        return characterDto;
     }
 
     public List<String> getSocialLogin(){return socialLogin;}
@@ -97,7 +98,7 @@ public class UserDto{
             socialLogin = new ArrayList<>();
         }
 
-        private Character character;
+        private CharacterDto characterDto;
 
         private Builder(){}
 
@@ -121,8 +122,8 @@ public class UserDto{
             return this;
         }
 
-        public Builder character(Character character){
-            this.character = character;
+        public Builder character(CharacterDto characterDto){
+            this.characterDto = characterDto;
             return this;
         }
 

@@ -9,12 +9,14 @@ public interface UserRepository{
 
     UserDto readUserById(int id);
 
-    UserDto readUserByName(String name);
+    UserDto readUserByUserId(String userId);
 
     List<UserDto> readUserList(int startIdx, int endIdx);
 
     void updateUser(int idx, UserDto userDto);
 
     int readMaxIdx();
+
+    void deleteById(int id);
 
 }
