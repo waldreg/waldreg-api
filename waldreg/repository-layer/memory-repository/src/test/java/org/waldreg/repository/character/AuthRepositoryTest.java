@@ -13,6 +13,7 @@ import org.waldreg.domain.user.User;
 import org.waldreg.repository.MemoryUserStorage;
 import org.waldreg.repository.auth.MemoryAuthRepository;
 import org.waldreg.token.dto.TokenUserDto;
+import org.waldreg.token.exception.PasswordMissMatchException;
 
 @ExtendWith(SpringExtension.class)
 @ContextConfiguration(classes = {MemoryAuthRepository.class, MemoryUserStorage.class})
@@ -30,7 +31,7 @@ public class AuthRepositoryTest{
     }
 
     @Test
-    @DisplayName("유저 id, password 로 조회 테스트")
+    @DisplayName("유저 id, password 로 조회 성공 테스트")
     public void READ_USER_BY_USERID_USERPASSWORD_TEST(){
         //given
         String userId = "asdfg";
@@ -50,6 +51,26 @@ public class AuthRepositoryTest{
                 () -> Assertions.assertEquals(user.getUserId(), foundUser.getUserId()),
                 () -> Assertions.assertEquals(user.getUserPassword(), foundUser.getUserPassword())
         );
+    }
+
+    @Test
+    @DisplayName("유저 조회 실패 password 불일치 테스트")
+    public void READ_USER_BY_USERID_USERPASSWORD_FAIL_TEST(){
+        //given
+        String userId = "bbb";
+        String userPassword = "12345";
+        User user = User.builder()
+                .userId(userId)
+                .userPassword(userPassword)
+                .build();
+        String inputUserId = "bbb";
+        String inputUserPassword = "1234";
+
+        //when
+        memoryUserStorage.createUser(user);
+
+        //then
+        Assertions.assertThrows(PasswordMissMatchException.class,()-> memoryAuthRepository.findUserByUserIdPassword(inputUserId, inputUserPassword));
     }
 
     @Test
