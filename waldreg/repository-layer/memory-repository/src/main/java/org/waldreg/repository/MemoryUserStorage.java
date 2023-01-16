@@ -5,6 +5,7 @@ import java.util.Map;
 import org.springframework.stereotype.Repository;
 import org.waldreg.domain.user.User;
 import org.waldreg.user.exception.UnknownIdException;
+import org.waldreg.user.exception.UnknownUserIdException;
 
 @Repository
 public class MemoryUserStorage{
@@ -14,6 +15,8 @@ public class MemoryUserStorage{
     {
         storage = new HashMap<>();
     }
+
+    public void deleteAllUser(){storage.clear();}
 
     public void createUser(User user){
         storage.put(user.getName(), user);
@@ -26,6 +29,15 @@ public class MemoryUserStorage{
             }
         }
         throw new UnknownIdException(id);
+    }
+
+    public User readUserByUserId(String userId){
+        for(Map.Entry<String, User> userEntry : storage.entrySet()){
+            if(userEntry.getValue().getUserId().equals(userId)){
+                return userEntry.getValue();
+            }
+        }
+        throw new UnknownUserIdException(userId);
     }
 
 }
