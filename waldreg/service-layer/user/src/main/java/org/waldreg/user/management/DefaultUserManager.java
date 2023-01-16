@@ -1,5 +1,6 @@
 package org.waldreg.user.management;
 
+import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.waldreg.user.dto.UserDto;
 import org.waldreg.user.spi.UserRepository;
@@ -23,6 +24,11 @@ public class DefaultUserManager implements UserManager{
     @Override
     public UserDto readUserByName(String name){
         return userRepository.readUserByName(name);
+    }
+
+    @Override
+    public List<UserDto> readUserList(int stIdx, int enIdx){
+        return userRepository.readUserList(stIdx, enIdx);
     }
 
 
