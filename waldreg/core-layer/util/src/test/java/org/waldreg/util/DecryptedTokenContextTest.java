@@ -13,13 +13,14 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
+import org.waldreg.util.token.DecryptedTokenContext;
 
 @ExtendWith(SpringExtension.class)
-@ContextConfiguration(classes = {DecryptedTokenContextHolder.class})
-public class DecryptedTokenContextHolderTest{
+@ContextConfiguration(classes = {DecryptedTokenContext.class})
+public class DecryptedTokenContextTest{
 
     @Autowired
-    private DecryptedTokenContextHolder decryptedTokenContextHolder;
+    private DecryptedTokenContext decryptedTokenContext;
 
     @Test
     @DisplayName("UserId를 같은 스레드에서 전달 하는 테스트")
@@ -27,17 +28,17 @@ public class DecryptedTokenContextHolderTest{
         // given
         ExecutorService executorService = Executors.newFixedThreadPool(2);
         Callable<Integer> callable1 = () -> {
-            decryptedTokenContextHolder.hold(1);
+            decryptedTokenContext.hold(1);
             Thread.sleep(500);
-            int result = decryptedTokenContextHolder.get();
-            decryptedTokenContextHolder.resolve();
+            int result = decryptedTokenContext.get();
+            decryptedTokenContext.resolve();
             return result;
         };
 
         Callable<Integer> callable2 = () -> {
-            decryptedTokenContextHolder.hold(2);
-            int result = decryptedTokenContextHolder.get();
-            decryptedTokenContextHolder.resolve();
+            decryptedTokenContext.hold(2);
+            int result = decryptedTokenContext.get();
+            decryptedTokenContext.resolve();
             return result;
         };
 
@@ -60,10 +61,10 @@ public class DecryptedTokenContextHolderTest{
         for (int i = 0; i < 100; i++){
             int finalI = i;
             runnableList.add(() -> {
-                decryptedTokenContextHolder.hold(finalI);
+                decryptedTokenContext.hold(finalI);
                 Thread.sleep((int) (Math.random() * 1000));
-                Assertions.assertEquals(finalI, decryptedTokenContextHolder.get());
-                decryptedTokenContextHolder.resolve();
+                Assertions.assertEquals(finalI, decryptedTokenContext.get());
+                decryptedTokenContext.resolve();
                 return 0;
             });
         }
