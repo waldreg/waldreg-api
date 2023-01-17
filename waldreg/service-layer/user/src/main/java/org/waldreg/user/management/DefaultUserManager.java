@@ -2,10 +2,12 @@ package org.waldreg.user.management;
 
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 import org.waldreg.user.dto.UserDto;
 import org.waldreg.user.exception.InvalidRangeException;
 import org.waldreg.user.spi.UserRepository;
 
+@Service
 public class DefaultUserManager implements UserManager{
 
     private final int perPage = 20;

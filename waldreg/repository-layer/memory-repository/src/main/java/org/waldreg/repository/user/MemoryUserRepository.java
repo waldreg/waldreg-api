@@ -1,6 +1,8 @@
 package org.waldreg.repository.user;
 
 import java.util.List;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Repository;
 import org.waldreg.character.exception.UnknownCharacterException;
 import org.waldreg.domain.user.User;
 import org.waldreg.repository.MemoryCharacterStorage;
@@ -9,6 +11,7 @@ import org.waldreg.user.dto.UserDto;
 import org.waldreg.user.exception.DuplicatedUserIdException;
 import org.waldreg.user.spi.UserRepository;
 
+@Repository
 public class MemoryUserRepository implements UserRepository{
 
     private final UserMapper userMapper;
@@ -17,6 +20,7 @@ public class MemoryUserRepository implements UserRepository{
 
     private final MemoryCharacterStorage memoryCharacterStorage;
 
+    @Autowired
     public MemoryUserRepository(UserMapper userMapper, MemoryUserStorage memoryUserStorage, MemoryCharacterStorage memoryCharacterStorage){
         this.userMapper = userMapper;
         this.memoryUserStorage = memoryUserStorage;

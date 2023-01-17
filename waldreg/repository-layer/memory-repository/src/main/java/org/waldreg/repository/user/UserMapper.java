@@ -2,9 +2,11 @@ package org.waldreg.repository.user;
 
 import java.util.ArrayList;
 import java.util.List;
+import org.springframework.stereotype.Service;
 import org.waldreg.domain.user.User;
 import org.waldreg.user.dto.UserDto;
 
+@Service
 public class UserMapper{
 
     public User userDtoToUserDomain(UserDto userDto){

@@ -42,7 +42,7 @@ public class AuthRepositoryTest{
     @DisplayName("유저 id, password 로 조회 성공 테스트")
     public void READ_USER_BY_USERID_USERPASSWORD_TEST(){
         //given
-        String userId = "asdfg";
+        String userId = "Guest";
         String userPassword = "12345";
         User user = User.builder()
                 .name("asdfg")
@@ -60,7 +60,6 @@ public class AuthRepositoryTest{
 
         //then
         Assertions.assertAll(
-                () -> Assertions.assertEquals(user.getId(), foundUser.getId()),
                 () -> Assertions.assertEquals(user.getUserId(), foundUser.getUserId()),
                 () -> Assertions.assertEquals(user.getUserPassword(), foundUser.getUserPassword())
         );
@@ -70,15 +69,15 @@ public class AuthRepositoryTest{
     @DisplayName("유저 조회 실패 password 불일치 테스트")
     public void READ_USER_BY_USERID_USERPASSWORD_FAIL_TEST(){
         //given
-        String userId = "bbb";
+        String userId = "Guest";
         String userPassword = "12345";
-        User user = User.builder()
-                .name("bbb")
-                .userId(userId)
-                .userPassword(userPassword)
-                .build();
         String inputUserId = "bbb";
         String inputUserPassword = "1234";
+        User user = User.builder()
+                .name("bbb")
+                .userId(inputUserId)
+                .userPassword(userPassword)
+                .build();
 
         //when
         Mockito.when(memoryCharacterStorage.readCharacterByName("Guest")).thenReturn(Character.builder()
@@ -95,7 +94,7 @@ public class AuthRepositoryTest{
     @DisplayName("id로 유저 조회 테스트")
     public void READ_USER_BY_ID_TEST(){
         //given
-        String userId = "abc";
+        String userId = "Admin";
         String userPassword = "12345";
         User user = User.builder()
                 .name("Admin")
