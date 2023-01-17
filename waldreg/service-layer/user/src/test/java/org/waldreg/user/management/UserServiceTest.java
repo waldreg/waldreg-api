@@ -250,6 +250,7 @@ public class UserServiceTest{
         String userPassword = "hello1234";
         String phoneNumber = "010-1234-1234";
         UserDto createRequest = UserDto.builder()
+                .id(1)
                 .name(name)
                 .userId(userId)
                 .userPassword(userPassword)
@@ -268,7 +269,7 @@ public class UserServiceTest{
         userManager.createUser(createRequest);
         Mockito.when(userRepository.readUserByUserId(Mockito.anyString())).thenReturn(createRequest);
         UserDto origin = userManager.readUserByUserId(createRequest.getUserId());
-        userManager.updateCharacter(origin, updateCharacter);
+        userManager.updateCharacter(origin.getId(), updateCharacter);
         Mockito.when(userRepository.readUserByUserId(Mockito.anyString())).thenReturn(createCharacterRequest);
         UserDto result = userManager.readUserByUserId(origin.getUserId());
 

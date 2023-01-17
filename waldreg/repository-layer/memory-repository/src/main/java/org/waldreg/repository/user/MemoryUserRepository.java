@@ -1,7 +1,9 @@
 package org.waldreg.repository.user;
 
 import java.util.List;
+import org.waldreg.character.exception.UnknownCharacterException;
 import org.waldreg.domain.user.User;
+import org.waldreg.repository.MemoryCharacterStorage;
 import org.waldreg.repository.MemoryUserStorage;
 import org.waldreg.user.dto.UserDto;
 import org.waldreg.user.exception.DuplicatedUserIdException;
@@ -13,9 +15,12 @@ public class MemoryUserRepository implements UserRepository{
 
     private final MemoryUserStorage memoryUserStorage;
 
-    public MemoryUserRepository(UserMapper userMapper, MemoryUserStorage memoryUserStorage){
+    private final MemoryCharacterStorage memoryCharacterStorage;
+
+    public MemoryUserRepository(UserMapper userMapper, MemoryUserStorage memoryUserStorage, MemoryCharacterStorage memoryCharacterStorage){
         this.userMapper = userMapper;
         this.memoryUserStorage = memoryUserStorage;
+        this.memoryCharacterStorage = memoryCharacterStorage;
     }
 
     @Override
@@ -25,9 +30,18 @@ public class MemoryUserRepository implements UserRepository{
         memoryUserStorage.createUser(user);
     }
 
+    public void throwIfDuplicatedUserId(String userId){
+        try{
+            memoryUserStorage.readUserByUserId(userId);
+        } catch (RuntimeException isNotDuplicated){
+            return;
+        }
+        throw new DuplicatedUserIdException(userId);
+    }
+
     @Override
     public UserDto readUserById(int id){
-        return null;
+        return userMapper.userDomainToUserDto(memoryUserStorage.readUserById(id));
     }
 
     @Override
@@ -38,17 +52,18 @@ public class MemoryUserRepository implements UserRepository{
 
     @Override
     public List<UserDto> readUserList(int startIdx, int endIdx){
-        return null;
+        return userMapper.userDomainListToUserDtoList(memoryUserStorage.readUserList(startIdx, endIdx));
     }
 
     @Override
-    public void updateUser(int idx, UserDto userDto){
-
+    public void updateUser(int id, UserDto userDto){
+        User user = userMapper.userDtoToUserDomain(userDto);
+        memoryUserStorage.updateUser(id, user);
     }
 
     @Override
     public int readMaxIdx(){
-        return 0;
+        return memoryUserStorage.readMaxIdx();
     }
 
     @Override
@@ -56,13 +71,17 @@ public class MemoryUserRepository implements UserRepository{
 
     }
 
-    public void throwIfDuplicatedUserId(String userId){
-        try{
-            memoryUserStorage.readUserByUserId(userId);
-        } catch (RuntimeException isNotDuplicated){
-            return;
+    @Override
+    public void updateCharacter(int id, String characterName){
+        User user = memoryUserStorage.readUserById(id);
+        throwIfCharacterDoesNotExist(characterName);
+        memoryUserStorage.updateCharacterOfUser(id, characterName);
+    }
+
+    public void throwIfCharacterDoesNotExist(String characterName){
+        if (memoryCharacterStorage.readCharacterByName(characterName) == null){
+            throw new UnknownCharacterException(characterName);
         }
-        throw new DuplicatedUserIdException(userId);
     }
 
 }

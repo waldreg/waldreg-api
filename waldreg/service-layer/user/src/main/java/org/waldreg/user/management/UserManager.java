@@ -14,11 +14,13 @@ public interface UserManager{
 
     List<UserDto> readUserList(int stIdx, int enIdx);
 
-    void updateUser(int idx, UserDto userDto);
+    void updateUser(int id, UserDto userDto);
 
-    void updateCharacter(UserDto userDto, String character);
+    void updateCharacter(int id, String character);
 
     void deleteById(int id);
+
+    int readMaxIdx();
 
 
 }

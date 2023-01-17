@@ -15,6 +15,8 @@ public interface UserRepository{
 
     void updateUser(int idx, UserDto userDto);
 
+    void updateCharacter(int id, String character);
+
     int readMaxIdx();
 
     void deleteById(int id);

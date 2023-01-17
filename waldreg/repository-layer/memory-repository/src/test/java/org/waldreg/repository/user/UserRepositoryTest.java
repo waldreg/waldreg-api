@@ -17,6 +17,7 @@ import org.waldreg.repository.MemoryCharacterStorage;
 import org.waldreg.repository.MemoryUserStorage;
 import org.waldreg.user.dto.UserDto;
 import org.waldreg.user.exception.DuplicatedUserIdException;
+import org.waldreg.user.exception.UnknownIdException;
 import org.waldreg.user.exception.UnknownUserIdException;
 import org.waldreg.user.spi.UserRepository;
 
@@ -124,6 +125,127 @@ public class UserRepositoryTest{
         //then
         Assertions.assertThrows(UnknownUserIdException.class, () -> userRepository.readUserByUserId(wrongUserId));
 
+    }
+
+    @Test
+    @DisplayName("전체 유저 조회 성공 테스트")
+    public void READ_ALL_USER_SUCCESS_TEST(){
+        //given
+        UserDto userDto = UserDto.builder()
+                .userId("linirini_id")
+                .name("linirini")
+                .userPassword("linirini_pwd")
+                .phoneNumber("010-1234-1234")
+                .build();
+        UserDto userDto2 = UserDto.builder()
+                .userId("linirini_id2")
+                .name("linirini2")
+                .userPassword("linirini_pwd2")
+                .phoneNumber("010-1234-2222")
+                .build();
+        UserDto userDto3 = UserDto.builder()
+                .userId("linirini_id3")
+                .name("linirini3")
+                .userPassword("linirini_pwd3")
+                .phoneNumber("010-1234-3333")
+                .build();
+
+        //when
+        Mockito.when(memoryCharacterStorage.readCharacterByName(Mockito.anyString()))
+                .thenReturn(Character.builder().characterName("Guest").permissionList(List.of()).build());
+        userRepository.createUser(userDto);
+        userRepository.createUser(userDto2);
+        userRepository.createUser(userDto3);
+        int maxIdx = userRepository.readMaxIdx();
+        List<UserDto> result = userRepository.readUserList(1, 2);
+
+        //then
+        Assertions.assertAll(
+                () -> Assertions.assertEquals(result.get(0).getUserId(), userDto2.getUserId()),
+                () -> Assertions.assertEquals(result.get(1).getUserId(), userDto.getUserId()),
+                () -> Assertions.assertEquals(maxIdx, 3)
+        );
+    }
+
+    @Test
+    @DisplayName("유저 수정 성공 테스트")
+    public void UPDATE_USER_SUCCESS_TEST(){
+        //given
+        UserDto userDto = UserDto.builder()
+                .userId("linirini_id")
+                .name("linirini")
+                .userPassword("linirini_pwd")
+                .phoneNumber("010-1234-1234")
+                .build();
+        UserDto updateUserDto = UserDto.builder()
+                .name("linirini2")
+                .phoneNumber("010-0000-1111")
+                .build();
+
+        //when
+        Mockito.when(memoryCharacterStorage.readCharacterByName(Mockito.anyString()))
+                .thenReturn(Character.builder().characterName("Guest").permissionList(List.of()).build());
+        userRepository.createUser(userDto);
+        userRepository.updateUser(memoryUserStorage.readUserByUserId(userDto.getUserId()).getId(), updateUserDto);
+        UserDto result = userRepository.readUserByUserId(userDto.getUserId());
+
+        //then
+        Assertions.assertAll(
+                () -> Assertions.assertEquals(result.getName(), updateUserDto.getName()),
+                () -> Assertions.assertEquals(result.getUserPassword(), userDto.getUserPassword()),
+                () -> Assertions.assertEquals(result.getPhoneNumber(), updateUserDto.getPhoneNumber())
+        );
+    }
+
+    @Test
+    @DisplayName("유저 역할 수정 성공 테스트")
+    public void UPDATE_USER_CHARACTER_SUCCESS_TEST(){
+        //given
+        UserDto userDto = UserDto.builder()
+                .userId("linirini_id")
+                .name("linirini")
+                .userPassword("linirini_pwd")
+                .phoneNumber("010-1234-1234")
+                .build();
+        String updateCharacter = "updateCharacter";
+
+        //when
+        Mockito.when(memoryCharacterStorage.readCharacterByName("Guest"))
+                .thenReturn(Character.builder().characterName("Guest").permissionList(List.of()).build());
+
+        userRepository.createUser(userDto);
+        UserDto userDto1 = userRepository.readUserByUserId(userDto.getUserId());
+
+        Mockito.when(memoryCharacterStorage.readCharacterByName(updateCharacter))
+                .thenReturn(Character.builder().characterName(updateCharacter).permissionList(List.of()).build());
+
+        userRepository.updateCharacter(userDto1.getId(), updateCharacter);
+        UserDto result = userRepository.readUserByUserId(userDto1.getUserId());
+
+        //then
+        Assertions.assertEquals(updateCharacter, result.getCharacter());
+    }
+
+    @Test
+    @DisplayName("유저 역할 수정 실패 테스트 - 없는 id")
+    public void UPDATE_USER_CHARACTER_FAIL_CAUSE_UNKNOWN_ID_TEST(){
+        //given
+        UserDto userDto = UserDto.builder()
+                .userId("linirini_id")
+                .name("linirini")
+                .userPassword("linirini_pwd")
+                .phoneNumber("010-1234-1234")
+                .build();
+        String updateCharacter = "updateCharacter";
+        int id = 0;
+
+        //when
+        Mockito.when(memoryCharacterStorage.readCharacterByName(Mockito.anyString()))
+                .thenReturn(Character.builder().characterName("Guest").permissionList(List.of()).build());
+        userRepository.createUser(userDto);
+
+        //then
+        Assertions.assertThrows(UnknownIdException.class, () -> userRepository.updateCharacter(id, updateCharacter));
     }
 
 }
