@@ -17,7 +17,10 @@ public class ContextConfigurer implements WebMvcConfigurer{
     @Override
     public void addInterceptors(InterceptorRegistry registry){
         registry.addInterceptor(decryptedContextResolveInterceptor)
-                .addPathPatterns("**");
+                .addPathPatterns("**")
+                .addPathPatterns("*")
+                .addPathPatterns("/**")
+                .addPathPatterns("/*");
     }
 
 
