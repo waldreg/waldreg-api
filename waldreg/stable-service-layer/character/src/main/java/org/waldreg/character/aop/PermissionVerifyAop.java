@@ -16,10 +16,10 @@ import org.waldreg.character.aop.annotation.PermissionVerifying;
 import org.waldreg.character.aop.parameter.PermissionVerifyState;
 import org.waldreg.character.dto.CharacterDto;
 import org.waldreg.character.dto.PermissionDto;
-import org.waldreg.character.exception.NoPermissionException;
+import org.waldreg.character.exception.UnknownPermissionException;
 import org.waldreg.character.permission.verification.PermissionVerifier;
 import org.waldreg.util.annotation.AnnotationExtractor;
-import org.waldreg.util.token.DecryptedTokenContext;
+import org.waldreg.util.token.DecryptedTokenContextGetter;
 
 @Service
 @Order
@@ -28,17 +28,17 @@ public class PermissionVerifyAop{
 
     private final PermissionVerifier permissionVerifier;
     private final AnnotationExtractor<PermissionVerifying> annotationExtractor;
-    private final DecryptedTokenContext decryptedTokenContext;
+    private final DecryptedTokenContextGetter decryptedTokenContextGetter;
     private final CharacterInUserReadable characterInUserReadable;
 
     @Autowired
     public PermissionVerifyAop(PermissionVerifier permissionVerifier,
             AnnotationExtractor<PermissionVerifying> annotationExtractor,
-            DecryptedTokenContext decryptedTokenContext,
+            DecryptedTokenContextGetter decryptedTokenContextGetter,
             CharacterInUserReadable characterInUserReadable){
         this.permissionVerifier = permissionVerifier;
         this.annotationExtractor = annotationExtractor;
-        this.decryptedTokenContext = decryptedTokenContext;
+        this.decryptedTokenContextGetter = decryptedTokenContextGetter;
         this.characterInUserReadable = characterInUserReadable;
     }
 
@@ -56,7 +56,7 @@ public class PermissionVerifyAop{
     }
 
     private CharacterDto getCharacterDto(){
-        int id = decryptedTokenContext.get();
+        int id = decryptedTokenContextGetter.get();
         return characterInUserReadable.readCharacterByUserId(id);
     }
 
@@ -80,7 +80,7 @@ public class PermissionVerifyAop{
     }
 
     private void throwIfUnknownPermissionNameDetected(String permissionName, Map<String, String> permissionDtoMap){
-        if (!permissionDtoMap.containsKey(permissionName)){throw new NoPermissionException(permissionName);}
+        if (!permissionDtoMap.containsKey(permissionName)){throw new UnknownPermissionException(permissionName);}
     }
 
     private Object[] setPermissionVerifyStateParameter(JoinPoint joinPoint, boolean state){
