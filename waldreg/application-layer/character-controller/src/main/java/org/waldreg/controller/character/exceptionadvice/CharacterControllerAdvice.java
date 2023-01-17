@@ -25,7 +25,7 @@ public class CharacterControllerAdvice{
     }
 
     @ExceptionHandler({UnknownPermissionException.class, UnknownPermissionStatusException.class})
-    public ResponseEntity<ExceptionTemplate> catchUnknownPermissionExceptions(UnknownPermissionException unknownPermissionException){
+    public ResponseEntity<ExceptionTemplate> catchUnknownPermissionExceptions(RuntimeException unknownPermissionException){
         ExceptionTemplate exceptionTemplate = ExceptionTemplate.builder()
                 .message(unknownPermissionException.getMessage())
                 .documentUrl(documentUrl)
