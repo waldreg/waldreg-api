@@ -36,7 +36,6 @@ public class JwtAuthenticatorTest{
 
         //then
         Assertions.assertEquals(id,jwtTokenAuthenticator.authenticate(encryptedToken));
-
     }
 
     @Test

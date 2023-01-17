@@ -24,7 +24,6 @@ public class MemoryAuthRepository implements AuthRepository{
         throwIfUserDoesNotExist(user, userPassword);
         return TokenUserDto.builder()
                 .id(user.getId())
-                .name(user.getName())
                 .userId(user.getUserId())
                 .userPassword(user.getUserPassword())
                 .build();
@@ -41,7 +40,6 @@ public class MemoryAuthRepository implements AuthRepository{
         User user = memoryUserStorage.readUserById(id);
         return TokenUserDto.builder()
                 .id(user.getId())
-                .name(user.getName())
                 .userId(user.getUserId())
                 .userPassword(user.getUserPassword())
                 .build();
