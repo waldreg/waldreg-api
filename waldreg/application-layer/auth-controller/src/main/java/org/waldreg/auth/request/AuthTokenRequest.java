@@ -2,12 +2,15 @@ package org.waldreg.auth.request;
 
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import javax.validation.constraints.NotBlank;
 
 public class AuthTokenRequest{
 
+    @NotBlank(message = "user_id cannot be blank")
     @JsonProperty("user_id")
     private String userId;
 
+    @NotBlank(message = "user_password cannot be blank")
     @JsonProperty("user_password")
     private String userPassword;
 
