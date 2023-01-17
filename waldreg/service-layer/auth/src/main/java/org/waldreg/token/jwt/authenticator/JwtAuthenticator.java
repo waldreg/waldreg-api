@@ -10,18 +10,18 @@ import org.springframework.stereotype.Service;
 import org.waldreg.token.authenticator.TokenAuthenticator;
 import org.waldreg.token.exception.TokenExpiredException;
 import org.waldreg.token.jwt.secret.Secret;
-import org.waldreg.util.DecryptedTokenContextHolder;
+import org.waldreg.util.token.DecryptedTokenContext;
 
 @Service
 public class JwtAuthenticator implements TokenAuthenticator{
 
     private final Secret secret;
 
-    private DecryptedTokenContextHolder decryptedTokenContextHolder;
+    private DecryptedTokenContext decryptedTokenContext;
     @Autowired
-    public JwtAuthenticator(Secret secret, DecryptedTokenContextHolder decryptedTokenContextHolder){
+    public JwtAuthenticator(Secret secret, DecryptedTokenContext decryptedTokenContext){
         this.secret = secret;
-        this.decryptedTokenContextHolder = decryptedTokenContextHolder;
+        this.decryptedTokenContext = decryptedTokenContext;
     }
 
     @Override

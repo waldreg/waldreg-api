@@ -11,6 +11,8 @@
             <option value="$PROJECT_DIR$" />
             <option value="$PROJECT_DIR$/application-layer" />
             <option value="$PROJECT_DIR$/application-layer/acceptance" />
+            <option value="$PROJECT_DIR$/application-layer/application-configurer" />
+            <option value="$PROJECT_DIR$/application-layer/character-controller" />
             <option value="$PROJECT_DIR$/core-layer" />
             <option value="$PROJECT_DIR$/core-layer/util" />
             <option value="$PROJECT_DIR$/domain-layer" />
@@ -21,6 +23,7 @@
             <option value="$PROJECT_DIR$/service-layer" />
             <option value="$PROJECT_DIR$/service-layer/auth" />
             <option value="$PROJECT_DIR$/service-layer/jwt-auth" />
+            <option value="$PROJECT_DIR$/service-layer/user" />
             <option value="$PROJECT_DIR$/stable-service-layer" />
             <option value="$PROJECT_DIR$/stable-service-layer/character" />
           </set>

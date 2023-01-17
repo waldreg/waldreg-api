@@ -12,10 +12,10 @@ import org.waldreg.token.exception.TokenExpiredException;
 import org.waldreg.token.jwt.authenticator.JwtAuthenticator;
 import org.waldreg.token.jwt.publisher.JwtTokenPublisher;
 import org.waldreg.token.jwt.secret.Secret;
-import org.waldreg.util.DecryptedTokenContextHolder;
+import org.waldreg.util.token.DecryptedTokenContext;
 
 @ExtendWith(SpringExtension.class)
-@ContextConfiguration(classes = {JwtTokenPublisher.class, JwtAuthenticator.class, Secret.class, DecryptedTokenContextHolder.class})
+@ContextConfiguration(classes = {JwtTokenPublisher.class, JwtAuthenticator.class, Secret.class, DecryptedTokenContext.class})
 public class JwtAuthenticatorTest{
 
     @Autowired

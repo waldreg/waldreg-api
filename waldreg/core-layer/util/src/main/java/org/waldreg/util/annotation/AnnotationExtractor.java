@@ -1,4 +1,4 @@
-package org.waldreg.util;
+package org.waldreg.util.annotation;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;

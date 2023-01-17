@@ -1,6 +1,8 @@
 package org.waldreg.domain.user;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 import org.waldreg.domain.character.Character;
 
 @SuppressWarnings("unused")
@@ -15,6 +17,11 @@ public final class User{
     private final int advantage;
     private final int penalty;
     private final Character character;
+    private List<String> socialLogin;
+
+    {
+        socialLogin = new ArrayList<>();
+    }
 
     private User(){
         throw new UnsupportedOperationException("Can not invoke constructor \"User()\"");
@@ -30,6 +37,7 @@ public final class User{
         this.advantage = builder.advantage;
         this.penalty = builder.penalty;
         this.character = builder.character;
+        this.socialLogin = builder.socialLogin;
     }
 
     public static Builder builder(){
@@ -72,6 +80,10 @@ public final class User{
         return character;
     }
 
+    public List<String> getSocialLogin(){
+        return socialLogin;
+    }
+
     @SuppressWarnings("unused")
     public final static class Builder{
 
@@ -83,11 +95,13 @@ public final class User{
         private final LocalDate createdAt;
         private final int advantage;
         private final int penalty;
+        private List<String> socialLogin;
 
         {
             createdAt = LocalDate.now();
             advantage = 0;
             penalty = 0;
+            socialLogin = new ArrayList<>();
         }
 
         private Character character;
@@ -121,6 +135,11 @@ public final class User{
 
         public Builder character(Character character){
             this.character = character;
+            return this;
+        }
+
+        public Builder socialLogin(List<String> socialLogin){
+            this.socialLogin = socialLogin;
             return this;
         }
 
