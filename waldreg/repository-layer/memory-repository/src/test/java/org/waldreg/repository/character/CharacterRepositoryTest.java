@@ -148,6 +148,7 @@ public class CharacterRepositoryTest{
         int id = 1;
         User user = User.builder()
                 .name("guest")
+                .userId("Hello world")
                 .id(id)
                 .character(character)
                 .build();
