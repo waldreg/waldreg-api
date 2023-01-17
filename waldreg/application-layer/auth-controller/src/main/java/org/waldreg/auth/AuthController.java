@@ -1,5 +1,6 @@
 package org.waldreg.auth;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
@@ -10,19 +11,25 @@ import org.waldreg.token.dto.TokenDto;
 import org.waldreg.token.dto.TokenUserDto;
 import org.waldreg.token.publisher.TokenPublisher;
 import org.waldreg.token.spi.AuthRepository;
+import org.waldreg.token.spi.TokenUserFindUserIdAndPassword;
 
 @RestController
 public class AuthController{
 
-    private TokenAuthenticator tokenAuthenticator;
+    private final TokenPublisher tokenPublisher;
 
-    private TokenPublisher tokenPublisher;
+    private final TokenUserFindUserIdAndPassword tokenUserFindUserIdAndPassword;
 
-    private AuthRepository authRepository;
+    @Autowired
+    public AuthController(TokenPublisher tokenPublisher,
+            TokenUserFindUserIdAndPassword tokenUserFindUserIdAndPassword){
+        this.tokenPublisher = tokenPublisher;
+        this.tokenUserFindUserIdAndPassword = tokenUserFindUserIdAndPassword;
+    }
 
     @PostMapping("/token")
     public AuthTokenResponse getToken(@RequestBody AuthTokenRequest authRequest){
-        TokenUserDto tokenUserDto = authRepository.findUserByUserIdPassword(authRequest.getUserId(), authRequest.getUserPassword());
+        TokenUserDto tokenUserDto = tokenUserFindUserIdAndPassword.findUserByUserIdPassword(authRequest.getUserId(), authRequest.getUserPassword());
         TokenDto tokenDto = TokenDto.builder().id(tokenUserDto.getId()).build();
         String accessToken = tokenPublisher.publish(tokenDto);
         String tokenType = "Bearer";

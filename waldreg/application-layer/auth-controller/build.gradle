@@ -14,6 +14,7 @@ repositories {
 
 dependencies {
     implementation project(':service-layer:auth')
+    implementation project(':repository-layer:memory-repository')
 
     implementation 'org.springframework.boot:spring-boot-starter'
     implementation 'org.springframework.boot:spring-boot-starter-web'
