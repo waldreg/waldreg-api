@@ -211,7 +211,7 @@ public class UserAcceptanceTest{
         //when
         UserAcceptanceTestHelper.createUser(mvc, objectMapper.writeValueAsString(userCreateRequest));
         userCreateRequestList.add(userCreateRequest);
-        ResultActions result = UserAcceptanceTestHelper.inquiryUserWithToken(mvc, userCreateRequest.getName(), token);
+        ResultActions result = UserAcceptanceTestHelper.inquiryUserWithToken(mvc, userCreateRequest.getUserId(), token);
 
         //then
         result.andExpectAll(
@@ -251,7 +251,7 @@ public class UserAcceptanceTest{
         //when
         UserAcceptanceTestHelper.createUser(mvc, objectMapper.writeValueAsString(userCreateRequest));
         userCreateRequestList.add(userCreateRequest);
-        ResultActions result = UserAcceptanceTestHelper.inquiryUserWithoutToken(mvc, userCreateRequest.getName());
+        ResultActions result = UserAcceptanceTestHelper.inquiryUserWithoutToken(mvc, userCreateRequest.getUserId());
 
         //then
         result.andExpectAll(
@@ -272,10 +272,10 @@ public class UserAcceptanceTest{
     @DisplayName("특정 유저 조회 실패 인수 테스트 - 없는 유저")
     public void INQUIRY_USER_FAIL_CAUSE_UNKNOWN_USER_TEST() throws Exception{
         //given
-        String unknownUser = "unknown";
+        String unknownUserId = "unknown_id";
 
         //when
-        ResultActions result = UserAcceptanceTestHelper.inquiryUserWithoutToken(mvc, unknownUser);
+        ResultActions result = UserAcceptanceTestHelper.inquiryUserWithoutToken(mvc, unknownUserId);
 
         //then
         result.andExpectAll(
@@ -944,7 +944,7 @@ public class UserAcceptanceTest{
                 .userPassword(subjectUserPassword)
                 .phoneNumber(subjectPhoneNumber)
                 .build();
-        String createUrl = "/user";
+        int id=2;
         String objectName = "alcuk1";
         String objectUserId = "alcuk_id1";
         String objectUserPassword = "alcuk_pwd1";
@@ -963,7 +963,12 @@ public class UserAcceptanceTest{
         //when
         UserAcceptanceTestHelper.createUser(mvc, objectMapper.writeValueAsString(subjectUserCreateRequest));
         UserAcceptanceTestHelper.createUser(mvc, objectMapper.writeValueAsString(objectUserCreateRequest));
-        ResultActions result = UserAcceptanceTestHelper.modifyUserCharacter(mvc, objectUserCreateRequest.getName(), subjectToken, objectMapper.writeValueAsString(objectUserCharacterCreateRequest));
+        UserResponse objectUserResponse = objectMapper.readValue(
+                UserAcceptanceTestHelper.inquiryUserWithoutToken(mvc, objectUserCreateRequest.getUserId())
+                        .andReturn()
+                        .getResponse()
+                        .getContentAsString(), UserResponse.class);
+        ResultActions result = UserAcceptanceTestHelper.modifyUserCharacter(mvc, objectUserResponse.getId(), subjectToken, objectMapper.writeValueAsString(objectUserCharacterCreateRequest));
         userCreateRequestList.add(objectUserCreateRequest);
         userCreateRequestList.add(subjectUserCreateRequest);
 
@@ -977,8 +982,8 @@ public class UserAcceptanceTest{
     }
 
     @Test
-    @DisplayName("유저 역할 수정 실패 인수 테스트 - 없는 유저")
-    public void MODIFY_USER_CHARACTER_FAIL_CAUSE_UNKNOWN_USER_TEST() throws Exception{
+    @DisplayName("유저 역할 수정 실패 인수 테스트 - 없는 id")
+    public void MODIFY_USER_CHARACTER_FAIL_CAUSE_UNKNOWN_ID_TEST() throws Exception{
         //given
         String subjectToken = "mock_token";
         String subjectName = "alcuk2";
@@ -989,7 +994,7 @@ public class UserAcceptanceTest{
         UserCreateRequest objectUserCharacterCreateRequest = UserCreateRequest.builder()
                 .character(objectCharacter)
                 .build();
-        String objectUser = "unknown_user";
+        int objectId = 0;
         UserCreateRequest subjectUserCreateRequest = UserCreateRequest.builder()
                 .name(subjectName)
                 .userId(subjectUserId)
@@ -999,7 +1004,7 @@ public class UserAcceptanceTest{
 
         //when
         UserAcceptanceTestHelper.createUser(mvc, objectMapper.writeValueAsString(subjectUserCreateRequest));
-        ResultActions result = UserAcceptanceTestHelper.modifyUserCharacter(mvc, objectUser, subjectToken, objectMapper.writeValueAsString(objectUserCharacterCreateRequest));
+        ResultActions result = UserAcceptanceTestHelper.modifyUserCharacter(mvc, objectId, subjectToken, objectMapper.writeValueAsString(objectUserCharacterCreateRequest));
         userCreateRequestList.add(subjectUserCreateRequest);
 
         //then
@@ -1049,7 +1054,12 @@ public class UserAcceptanceTest{
         //when
         UserAcceptanceTestHelper.createUser(mvc, objectMapper.writeValueAsString(objectUserCreateRequest));
         UserAcceptanceTestHelper.createUser(mvc, objectMapper.writeValueAsString(subjectUserCreateRequest));
-        ResultActions result = UserAcceptanceTestHelper.modifyUserCharacter(mvc, objectUserCreateRequest.getName(), subjectToken, objectMapper.writeValueAsString(objectUserCharacterCreateRequest));
+        UserResponse objectUserResponse = objectMapper.readValue(
+                UserAcceptanceTestHelper.inquiryUserWithoutToken(mvc, objectUserCreateRequest.getUserId())
+                        .andReturn()
+                        .getResponse()
+                        .getContentAsString(), UserResponse.class);
+        ResultActions result = UserAcceptanceTestHelper.modifyUserCharacter(mvc, objectUserResponse.getId(), subjectToken, objectMapper.writeValueAsString(objectUserCharacterCreateRequest));
         userCreateRequestList.add(objectUserCreateRequest);
         userCreateRequestList.add(subjectUserCreateRequest);
 
@@ -1098,7 +1108,12 @@ public class UserAcceptanceTest{
         //when
         UserAcceptanceTestHelper.createUser(mvc, objectMapper.writeValueAsString(objectUserCreateRequest));
         UserAcceptanceTestHelper.createUser(mvc, objectMapper.writeValueAsString(subjectUserCreateRequest));
-        ResultActions result = UserAcceptanceTestHelper.modifyUserCharacter(mvc, objectUserCreateRequest.getName(), subjectToken, objectMapper.writeValueAsString(objectUserCharacterCreateRequest));
+        UserResponse objectUserResponse = objectMapper.readValue(
+                UserAcceptanceTestHelper.inquiryUserWithoutToken(mvc, objectUserCreateRequest.getUserId())
+                        .andReturn()
+                        .getResponse()
+                        .getContentAsString(), UserResponse.class);
+        ResultActions result = UserAcceptanceTestHelper.modifyUserCharacter(mvc, objectUserResponse.getId(), subjectToken, objectMapper.writeValueAsString(objectUserCharacterCreateRequest));
         userCreateRequestList.add(objectUserCreateRequest);
         userCreateRequestList.add(subjectUserCreateRequest);
 

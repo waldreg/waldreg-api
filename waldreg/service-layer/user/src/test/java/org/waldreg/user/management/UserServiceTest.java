@@ -11,6 +11,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
+import org.waldreg.character.dto.CharacterDto;
+import org.waldreg.character.management.CharacterManager;
 import org.waldreg.user.dto.UserDto;
 import org.waldreg.user.exception.InvalidRangeException;
 import org.waldreg.user.spi.UserRepository;
@@ -18,6 +20,9 @@ import org.waldreg.user.spi.UserRepository;
 @ExtendWith(SpringExtension.class)
 @ContextConfiguration(classes = {DefaultUserManager.class})
 public class UserServiceTest{
+
+    @MockBean
+    private CharacterManager characterManager;
 
     @Autowired
     private UserManager userManager;
@@ -93,8 +98,8 @@ public class UserServiceTest{
         //when
         userManager.createUser(createRequest);
 
-        Mockito.when(userRepository.readUserByName(Mockito.anyString())).thenReturn(createRequest);
-        UserDto result = userManager.readUserByName(createRequest.getName());
+        Mockito.when(userRepository.readUserByUserId(Mockito.anyString())).thenReturn(createRequest);
+        UserDto result = userManager.readUserByUserId(createRequest.getUserId());
 
         //then
         Assertions.assertAll(
@@ -235,8 +240,92 @@ public class UserServiceTest{
                 () -> Assertions.assertEquals(changedRequest.getName(), updateName),
                 () -> Assertions.assertEquals(changedRequest.getPhoneNumber(), updatePhoneNumber)
         );
+    }
 
+    @Test
+    @DisplayName("유저 역할 수정 성공 테스트")
+    public void UPDATE_USER_CHARACTER_SUCCESS_TEST(){
+        //given
+        String name = "홍길동";
+        String userId = "hello123";
+        String userPassword = "hello1234";
+        String phoneNumber = "010-1234-1234";
+        UserDto createRequest = UserDto.builder()
+                .name(name)
+                .userId(userId)
+                .userPassword(userPassword)
+                .phoneNumber(phoneNumber)
+                .build();
+        String updateCharacter = "update_character";
+        CharacterDto updatedCharacter = CharacterDto.builder()
+                .characterName(updateCharacter)
+                .build();
+        UserDto createCharacterRequest = UserDto.builder()
+                .name(name)
+                .userId(userId)
+                .userPassword(userPassword)
+                .phoneNumber(phoneNumber)
+                .character(updatedCharacter)
+                .build();
 
+        //when
+        userManager.createUser(createRequest);
+        Mockito.when(userRepository.readUserByUserId(Mockito.anyString())).thenReturn(createRequest);
+        UserDto origin = userManager.readUserByUserId(createRequest.getUserId());
+        userManager.updateCharacter(origin, updatedCharacter);
+        Mockito.when(userRepository.readUserByUserId(Mockito.anyString())).thenReturn(createCharacterRequest);
+        UserDto result = userManager.readUserByUserId(origin.getUserId());
+
+        //then
+        Assertions.assertEquals(result.getCharacterDto().getCharacterName(), updateCharacter);
+    }
+
+    @Test
+    @DisplayName("유저 셀프 삭제 성공 테스트")
+    public void DELETE_USER_OWN_SUCCESS_TEST(){
+        //given
+        int id = 1;
+        String name = "홍길동";
+        String userId = "hello123";
+        String userPassword = "hello1234";
+        String phoneNumber = "010-1234-1234";
+        UserDto createRequest = UserDto.builder()
+                .name(name)
+                .userId(userId)
+                .userPassword(userPassword)
+                .phoneNumber(phoneNumber)
+                .build();
+
+        //when
+        userManager.createUser(createRequest);
+        Mockito.when(userRepository.readUserById(Mockito.anyInt())).thenReturn(createRequest);
+
+        //then
+        Assertions.assertDoesNotThrow(() -> userManager.deleteById(id));
+    }
+
+    @Test
+    @DisplayName("유저 강제 퇴장 성공 테스트")
+    public void DELETE_OTHER_USER_SUCCESS_TEST(){
+        //given
+        int id = 1;
+        String name = "홍길동";
+        String userId = "hello123";
+        String userPassword = "hello1234";
+        String phoneNumber = "010-1234-1234";
+        UserDto createRequest = UserDto.builder()
+                .name(name)
+                .userId(userId)
+                .userPassword(userPassword)
+                .phoneNumber(phoneNumber)
+                .build();
+
+        //when
+        userManager.createUser(createRequest);
+        Mockito.when(userRepository.readUserById(Mockito.anyInt())).thenReturn(createRequest);
+
+        //then
+        Assertions.assertDoesNotThrow(() -> userManager.deleteById(id));
     }
 
 }
