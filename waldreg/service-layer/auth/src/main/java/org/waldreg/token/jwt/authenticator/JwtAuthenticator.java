@@ -16,7 +16,6 @@ import org.waldreg.util.token.DecryptedTokenContextHolder;
 public class JwtAuthenticator implements TokenAuthenticator{
 
     private final Secret secret;
-
     private final DecryptedTokenContextHolder decryptedTokenContextHolder;
     @Autowired
     public JwtAuthenticator(Secret secret, DecryptedTokenContextHolder decryptedTokenContextHolder){
