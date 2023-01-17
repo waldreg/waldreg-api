@@ -944,7 +944,7 @@ public class UserAcceptanceTest{
                 .userPassword(subjectUserPassword)
                 .phoneNumber(subjectPhoneNumber)
                 .build();
-        int id=2;
+        int id = 2;
         String objectName = "alcuk1";
         String objectUserId = "alcuk_id1";
         String objectUserPassword = "alcuk_pwd1";

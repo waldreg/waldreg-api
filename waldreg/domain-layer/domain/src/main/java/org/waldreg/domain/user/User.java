@@ -16,7 +16,7 @@ public final class User{
     private final LocalDate createdAt;
     private final int advantage;
     private final int penalty;
-    private final Character character;
+    private Character character;
     private List<String> socialLogin;
 
     {
@@ -82,6 +82,10 @@ public final class User{
 
     public List<String> getSocialLogin(){
         return socialLogin;
+    }
+
+    public void setCharacter(Character character){
+        this.character = character;
     }
 
     @SuppressWarnings("unused")

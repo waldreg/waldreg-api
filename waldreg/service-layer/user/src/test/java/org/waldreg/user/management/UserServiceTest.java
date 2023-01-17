@@ -11,7 +11,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
-import org.waldreg.character.dto.CharacterDto;
 import org.waldreg.character.management.CharacterManager;
 import org.waldreg.user.dto.UserDto;
 import org.waldreg.user.exception.InvalidRangeException;
@@ -257,27 +256,24 @@ public class UserServiceTest{
                 .phoneNumber(phoneNumber)
                 .build();
         String updateCharacter = "update_character";
-        CharacterDto updatedCharacter = CharacterDto.builder()
-                .characterName(updateCharacter)
-                .build();
         UserDto createCharacterRequest = UserDto.builder()
                 .name(name)
                 .userId(userId)
                 .userPassword(userPassword)
                 .phoneNumber(phoneNumber)
-                .character(updatedCharacter)
+                .character(updateCharacter)
                 .build();
 
         //when
         userManager.createUser(createRequest);
         Mockito.when(userRepository.readUserByUserId(Mockito.anyString())).thenReturn(createRequest);
         UserDto origin = userManager.readUserByUserId(createRequest.getUserId());
-        userManager.updateCharacter(origin, updatedCharacter);
+        userManager.updateCharacter(origin, updateCharacter);
         Mockito.when(userRepository.readUserByUserId(Mockito.anyString())).thenReturn(createCharacterRequest);
         UserDto result = userManager.readUserByUserId(origin.getUserId());
 
         //then
-        Assertions.assertEquals(result.getCharacterDto().getCharacterName(), updateCharacter);
+        Assertions.assertEquals(result.getCharacter(), updateCharacter);
     }
 
     @Test

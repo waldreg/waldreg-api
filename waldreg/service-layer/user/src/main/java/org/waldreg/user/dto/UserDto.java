@@ -3,7 +3,7 @@ package org.waldreg.user.dto;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
-import org.waldreg.character.dto.CharacterDto;
+
 
 public class UserDto{
 
@@ -15,7 +15,7 @@ public class UserDto{
     private final LocalDate createdAt;
     private final int advantage;
     private final int penalty;
-    private final CharacterDto characterDto;
+    private final String character;
     private List<String> socialLogin;
 
     {
@@ -37,7 +37,7 @@ public class UserDto{
         this.createdAt = builder.createdAt;
         this.advantage = builder.advantage;
         this.penalty = builder.penalty;
-        this.characterDto = builder.characterDto;
+        this.character = builder.character;
         this.socialLogin = builder.socialLogin;
     }
 
@@ -73,8 +73,8 @@ public class UserDto{
         return penalty;
     }
 
-    public CharacterDto getCharacterDto(){
-        return characterDto;
+    public String getCharacter(){
+        return character;
     }
 
     public List<String> getSocialLogin(){return socialLogin;}
@@ -86,9 +86,10 @@ public class UserDto{
         private String userId;
         private String userPassword;
         private String phoneNumber;
-        private final LocalDate createdAt;
-        private final int advantage;
-        private final int penalty;
+        private LocalDate createdAt;
+        private int advantage;
+        private int penalty;
+        private String character;
         private List<String> socialLogin;
 
         {
@@ -98,9 +99,12 @@ public class UserDto{
             socialLogin = new ArrayList<>();
         }
 
-        private CharacterDto characterDto;
-
         private Builder(){}
+
+        public Builder id(int id){
+            this.id = id;
+            return this;
+        }
 
         public Builder name(String name){
             this.name = name;
@@ -122,8 +126,23 @@ public class UserDto{
             return this;
         }
 
-        public Builder character(CharacterDto characterDto){
-            this.characterDto = characterDto;
+        public Builder createdAt(LocalDate createdAt){
+            this.createdAt = createdAt;
+            return this;
+        }
+
+        public Builder character(String character){
+            this.character = character;
+            return this;
+        }
+
+        public Builder advantage(int advantage){
+            this.advantage = advantage;
+            return this;
+        }
+
+        public Builder penalty(int penalty){
+            this.penalty = penalty;
             return this;
         }
 

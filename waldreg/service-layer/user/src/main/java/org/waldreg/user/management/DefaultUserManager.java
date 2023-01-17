@@ -41,9 +41,9 @@ public class DefaultUserManager implements UserManager{
     }
 
     @Override
-    public void updateCharacter(UserDto userDto, CharacterDto characterDto){
+    public void updateCharacter(UserDto userDto, String character){
         UserDto characterUserDto = UserDto.builder()
-                .character(characterDto)
+                .character(character)
                 .build();
         userRepository.updateUser(userDto.getId(), characterUserDto);
     }

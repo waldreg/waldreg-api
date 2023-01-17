@@ -10,13 +10,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.waldreg.domain.user.User;
+import org.waldreg.repository.MemoryCharacterStorage;
 import org.waldreg.repository.MemoryUserStorage;
 import org.waldreg.repository.auth.MemoryAuthRepository;
 import org.waldreg.token.dto.TokenUserDto;
 import org.waldreg.token.exception.PasswordMissMatchException;
 
 @ExtendWith(SpringExtension.class)
-@ContextConfiguration(classes = {MemoryAuthRepository.class, MemoryUserStorage.class})
+@ContextConfiguration(classes = {MemoryAuthRepository.class, MemoryUserStorage.class, MemoryCharacterStorage.class})
 public class AuthRepositoryTest{
 
     @Autowired
