@@ -108,4 +108,13 @@ public class MemoryUserStorage{
         }
     }
 
+    public void deleteById(int id){
+        for (Map.Entry<String, User> userEntry : storage.entrySet()){
+            if (userEntry.getValue().getId() == id){
+                storage.remove(userEntry.getKey(), userEntry.getValue());
+                return;
+            }
+        }
+    }
+
 }

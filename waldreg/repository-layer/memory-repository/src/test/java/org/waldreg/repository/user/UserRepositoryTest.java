@@ -52,6 +52,8 @@ public class UserRepositoryTest{
                 .build();
 
         //when&then
+        Mockito.when(memoryCharacterStorage.readCharacterByName(Mockito.anyString()))
+                .thenReturn(Character.builder().characterName("Guest").permissionList(List.of()).build());
         Assertions.assertDoesNotThrow(() -> userRepository.createUser(userDto));
     }
 
@@ -73,6 +75,8 @@ public class UserRepositoryTest{
                 .build();
 
         //when
+        Mockito.when(memoryCharacterStorage.readCharacterByName(Mockito.anyString()))
+                .thenReturn(Character.builder().characterName("Guest").permissionList(List.of()).build());
         userRepository.createUser(userDto);
 
         //then
@@ -246,6 +250,29 @@ public class UserRepositoryTest{
 
         //then
         Assertions.assertThrows(UnknownIdException.class, () -> userRepository.updateCharacter(id, updateCharacter));
+    }
+
+    @Test
+    @DisplayName("유저 삭제 테스트")
+    public void DELETE_USER_ONLINE_SUCCESS_TEST(){
+        //given
+        UserDto userDto = UserDto.builder()
+                .userId("linirini_id")
+                .name("linirini")
+                .userPassword("linirini_pwd")
+                .phoneNumber("010-1234-1234")
+                .build();
+
+        //when
+        Mockito.when(memoryCharacterStorage.readCharacterByName(Mockito.anyString()))
+                .thenReturn(Character.builder().characterName("Guest").permissionList(List.of()).build());
+        userRepository.createUser(userDto);
+        UserDto userDto1 = userRepository.readUserByUserId(userDto.getUserId());
+        userRepository.deleteById(userDto1.getId());
+
+        //then
+        Assertions.assertThrows(UnknownUserIdException.class, () -> userRepository.readUserByUserId(userDto1.getUserId()));
+
     }
 
 }

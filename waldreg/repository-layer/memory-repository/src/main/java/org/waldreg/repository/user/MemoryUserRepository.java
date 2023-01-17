@@ -68,7 +68,7 @@ public class MemoryUserRepository implements UserRepository{
 
     @Override
     public void deleteById(int id){
-
+        memoryUserStorage.deleteById(id);
     }
 
     @Override
