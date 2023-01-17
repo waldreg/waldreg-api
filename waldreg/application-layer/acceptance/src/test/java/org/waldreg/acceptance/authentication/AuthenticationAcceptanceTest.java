@@ -33,7 +33,6 @@ public class AuthenticationAcceptanceTest{
     @DisplayName("토큰 발급 요청")
     public void CREATE_TOKEN_PUBLISH_REQUEST_TEST() throws Exception{
         //given
-        String url = "/token";
         String userId = "Fixtar";
         String userPassword = "111";
 
@@ -43,19 +42,13 @@ public class AuthenticationAcceptanceTest{
                 .build();
 
         //when
-        ResultActions result = mvc.perform(
-                MockMvcRequestBuilders.post(url)
-                        .accept(MediaType.APPLICATION_JSON)
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .header("api-version", apiVersion)
-                        .content(objectMapper.writeValueAsString(tokenCreateRequest)));
-
+        ResultActions result = AuthenticationAcceptanceTestHelper.authenticateByUserIdAndUserPassword(mvc,objectMapper.writeValueAsString(tokenCreateRequest));
         //then
         result.andExpectAll(MockMvcResultMatchers.status().isOk(),
                             MockMvcResultMatchers.header().string(HttpHeaders.CONTENT_TYPE,
                                                                   "application/json"),
                             MockMvcResultMatchers.jsonPath("$.access_token").isString(),
-                            MockMvcResultMatchers.jsonPath("$.token_type").value("jwt"))
+                            MockMvcResultMatchers.jsonPath("$.token_type").value("Bearer"))
                 .andDo(MockMvcResultHandlers.print());
     }
 
@@ -63,7 +56,6 @@ public class AuthenticationAcceptanceTest{
     @DisplayName("토큰 발급 실패 잘못된 인증 정보")
     public void TOKEN_PUBLISH_FAIL_INVALID_INFORMATION() throws Exception{
         //given
-        String url = "/token";
         String userId = "";
         String userPassword = "";
         TokenCreateRequest tokenCreateRequest = TokenCreateRequest.builder()
@@ -72,13 +64,7 @@ public class AuthenticationAcceptanceTest{
                 .build();
 
         //when
-        ResultActions result = mvc.perform(
-                MockMvcRequestBuilders.post(url)
-                        .accept(MediaType.APPLICATION_JSON)
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .header("api-version", apiVersion)
-                        .content(objectMapper.writeValueAsString(tokenCreateRequest)));
-
+        ResultActions result = AuthenticationAcceptanceTestHelper.authenticateByUserIdAndUserPassword(mvc,objectMapper.writeValueAsString(tokenCreateRequest));
         //then
         result.andExpectAll(MockMvcResultMatchers.status().isBadRequest(),
                             MockMvcResultMatchers.header().string(HttpHeaders.CONTENT_TYPE,
