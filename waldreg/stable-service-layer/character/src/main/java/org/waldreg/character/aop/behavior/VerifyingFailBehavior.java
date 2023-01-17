@@ -4,8 +4,8 @@ import org.waldreg.character.exception.NoPermissionException;
 
 public enum VerifyingFailBehavior{
 
-    EXCEPTION(()-> {throw new NoPermissionException();}),
-    PASS(()->{});
+    EXCEPTION(() -> {throw new NoPermissionException();}),
+    PASS(() -> {});
 
     private final Failable failable;
 
@@ -19,7 +19,9 @@ public enum VerifyingFailBehavior{
 
     @FunctionalInterface
     private interface Failable{
+
         void fail();
+
     }
 
 }

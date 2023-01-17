@@ -35,7 +35,7 @@ public class JwtAuthenticatorTest{
         String encryptedToken = jwtTokenPublisher.publish(tokenDto);
 
         //then
-        Assertions.assertTrue(jwtTokenAuthenticator.authenticate(encryptedToken));
+        Assertions.assertEquals(id,jwtTokenAuthenticator.authenticate(encryptedToken));
 
     }
 

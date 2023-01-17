@@ -25,12 +25,12 @@ public class JwtAuthenticator implements TokenAuthenticator{
     }
 
     @Override
-    public boolean authenticate(String token) throws JwtException{
+    public int authenticate(String token) throws JwtException{
         try{
             Jws<Claims> claim = Jwts.parserBuilder().setSigningKey(secret.getSecretKey()).build().parseClaimsJws(token);
             int id = Integer.parseInt(claim.getBody().getSubject());
-            decryptedTokenContext.hold(id);
-            return true;
+            decryptedTokenContextHolder.hold(id);
+            return id;
         } catch (ExpiredJwtException EJE){
             throw new TokenExpiredException(EJE.getMessage(), EJE.getCause());
         }

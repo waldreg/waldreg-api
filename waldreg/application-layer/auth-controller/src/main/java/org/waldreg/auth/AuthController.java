@@ -1,0 +1,32 @@
+package org.waldreg.auth;
+
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RestController;
+import org.waldreg.auth.request.AuthTokenRequest;
+import org.waldreg.auth.response.AuthTokenResponse;
+import org.waldreg.token.authenticator.TokenAuthenticator;
+import org.waldreg.token.dto.TokenDto;
+import org.waldreg.token.dto.TokenUserDto;
+import org.waldreg.token.publisher.TokenPublisher;
+import org.waldreg.token.spi.AuthRepository;
+
+@RestController
+public class AuthController{
+
+    private TokenAuthenticator tokenAuthenticator;
+
+    private TokenPublisher tokenPublisher;
+
+    private AuthRepository authRepository;
+
+    @PostMapping("/token")
+    public AuthTokenResponse getToken(@RequestBody AuthTokenRequest authRequest){
+        TokenUserDto tokenUserDto = authRepository.findUserByUserIdPassword(authRequest.getUserId(), authRequest.getUserPassword());
+        TokenDto tokenDto = TokenDto.builder().id(tokenUserDto.getId()).build();
+        String accessToken = tokenPublisher.publish(tokenDto);
+        String tokenType = "Bearer";
+        return AuthTokenResponse.builder().accessToken(accessToken).tokenType(tokenType).build();
+    }
+
+}
