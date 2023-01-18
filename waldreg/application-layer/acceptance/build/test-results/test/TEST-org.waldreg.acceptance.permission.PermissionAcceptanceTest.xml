@@ -1,0 +1,431 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="org.waldreg.acceptance.permission.PermissionAcceptanceTest" tests="23" skipped="0" failures="0" errors="0" timestamp="2023-01-18T09:48:12" hostname="xb-apple.local" time="0.428">
+  <properties/>
+  <testcase name="특정 역할 조회 실패 인수테스트 - 잘못된 character-name 으로 조회" classname="org.waldreg.acceptance.permission.PermissionAcceptanceTest" time="0.226"/>
+  <testcase name="선택 가능한 permission 목록 조회 실패 인수 테스트 - 최고 관리자 아님" classname="org.waldreg.acceptance.permission.PermissionAcceptanceTest" time="0.023"/>
+  <testcase name="새로운 역할 추가 실패 인수 테스트 - 중복된 character_name 추가 요청" classname="org.waldreg.acceptance.permission.PermissionAcceptanceTest" time="0.03"/>
+  <testcase name="역할 생성 실패 테스트 - 역할 이름에 공백이 들어옴" classname="org.waldreg.acceptance.permission.PermissionAcceptanceTest" time="0.009"/>
+  <testcase name="특정 역할 수정 성공 인수테스트" classname="org.waldreg.acceptance.permission.PermissionAcceptanceTest" time="0.01"/>
+  <testcase name="특정 역할 수정 실패 인수테스트 - 수정할 이름 중복" classname="org.waldreg.acceptance.permission.PermissionAcceptanceTest" time="0.011"/>
+  <testcase name="특정 역할 수정 실패 인수테스트 - 최고 관리자가 아님" classname="org.waldreg.acceptance.permission.PermissionAcceptanceTest" time="0.008"/>
+  <testcase name="특정 역할 수정 실패 인수테스트 - 없는 permission_name 에 대해서 요청" classname="org.waldreg.acceptance.permission.PermissionAcceptanceTest" time="0.007"/>
+  <testcase name="특정 역할 수정 실패 인수테스트 - path-parameter 에 잘못된 character-name 으로 수정 요청" classname="org.waldreg.acceptance.permission.PermissionAcceptanceTest" time="0.004"/>
+  <testcase name="새로운 역할 추가 성공 인수 테스트" classname="org.waldreg.acceptance.permission.PermissionAcceptanceTest" time="0.006"/>
+  <testcase name="새로운 역할 추가 실패 인수 테스트 - 잘못된 permission_name 에 대해 요청" classname="org.waldreg.acceptance.permission.PermissionAcceptanceTest" time="0.006"/>
+  <testcase name="역할 삭제 실패 인수 테스트 - 없는 역할에 대한 삭제 요청" classname="org.waldreg.acceptance.permission.PermissionAcceptanceTest" time="0.004"/>
+  <testcase name="역할 삭제 성공 인수 테스트" classname="org.waldreg.acceptance.permission.PermissionAcceptanceTest" time="0.005"/>
+  <testcase name="새로운 역할 생성 및 조회 성공 테스트 - permission에 공백" classname="org.waldreg.acceptance.permission.PermissionAcceptanceTest" time="0.01"/>
+  <testcase name="역할 삭제 실패 - 최고 관리자가 아님" classname="org.waldreg.acceptance.permission.PermissionAcceptanceTest" time="0.01"/>
+  <testcase name="특정 역할 조회 실패 인수테스트 - 최고 관리자가 아님" classname="org.waldreg.acceptance.permission.PermissionAcceptanceTest" time="0.007"/>
+  <testcase name="역할 목록 조회 실패 인수 테스트 - 최고 관리자가 아님" classname="org.waldreg.acceptance.permission.PermissionAcceptanceTest" time="0.007"/>
+  <testcase name="새로운 역할 추가 실패 인수 테스트 - 최고 관리자가 아닐때" classname="org.waldreg.acceptance.permission.PermissionAcceptanceTest" time="0.008"/>
+  <testcase name="특정 역할 조회 성공 인수 테스트" classname="org.waldreg.acceptance.permission.PermissionAcceptanceTest" time="0.006"/>
+  <testcase name="역할 목록 조회 성공 인수 테스트" classname="org.waldreg.acceptance.permission.PermissionAcceptanceTest" time="0.006"/>
+  <testcase name="특정 역할 수정 실패 인수테스트 - 잘못된 permission_status 로 수정 요청" classname="org.waldreg.acceptance.permission.PermissionAcceptanceTest" time="0.009"/>
+  <testcase name="새로운 역할 추가 실패 인수 테스트 - 잘못된 permission_status 요청" classname="org.waldreg.acceptance.permission.PermissionAcceptanceTest" time="0.005"/>
+  <testcase name="선택가능한 permission 목록 조회 성공 인수 테스트" classname="org.waldreg.acceptance.permission.PermissionAcceptanceTest" time="0.006"/>
+  <system-out><![CDATA[18:48:11.276 [Test worker] DEBUG org.springframework.test.context.BootstrapUtils - Instantiating CacheAwareContextLoaderDelegate from class [org.springframework.test.context.cache.DefaultCacheAwareContextLoaderDelegate]
+18:48:11.282 [Test worker] DEBUG org.springframework.test.context.BootstrapUtils - Instantiating BootstrapContext using constructor [public org.springframework.test.context.support.DefaultBootstrapContext(java.lang.Class,org.springframework.test.context.CacheAwareContextLoaderDelegate)]
+18:48:11.294 [Test worker] DEBUG org.springframework.test.context.BootstrapUtils - Instantiating TestContextBootstrapper for test class [org.waldreg.acceptance.permission.PermissionAcceptanceTest] from class [org.springframework.boot.test.context.SpringBootTestContextBootstrapper]
+18:48:11.298 [Test worker] INFO org.springframework.boot.test.context.SpringBootTestContextBootstrapper - Neither @ContextConfiguration nor @ContextHierarchy found for test class [org.waldreg.acceptance.permission.PermissionAcceptanceTest], using SpringBootContextLoader
+18:48:11.300 [Test worker] DEBUG org.springframework.test.context.support.AbstractContextLoader - Did not detect default resource location for test class [org.waldreg.acceptance.permission.PermissionAcceptanceTest]: class path resource [org/waldreg/acceptance/permission/PermissionAcceptanceTest-context.xml] does not exist
+18:48:11.300 [Test worker] DEBUG org.springframework.test.context.support.AbstractContextLoader - Did not detect default resource location for test class [org.waldreg.acceptance.permission.PermissionAcceptanceTest]: class path resource [org/waldreg/acceptance/permission/PermissionAcceptanceTestContext.groovy] does not exist
+18:48:11.300 [Test worker] INFO org.springframework.test.context.support.AbstractContextLoader - Could not detect default resource locations for test class [org.waldreg.acceptance.permission.PermissionAcceptanceTest]: no resource found for suffixes {-context.xml, Context.groovy}.
+18:48:11.300 [Test worker] INFO org.springframework.test.context.support.AnnotationConfigContextLoaderUtils - Could not detect default configuration classes for test class [org.waldreg.acceptance.permission.PermissionAcceptanceTest]: PermissionAcceptanceTest does not declare any static, non-private, non-final, nested classes annotated with @Configuration.
+18:48:11.321 [Test worker] DEBUG org.springframework.test.context.support.ActiveProfilesUtils - Could not find an 'annotation declaring class' for annotation type [org.springframework.test.context.ActiveProfiles] and class [org.waldreg.acceptance.permission.PermissionAcceptanceTest]
+18:48:11.341 [Test worker] DEBUG org.springframework.context.annotation.ClassPathScanningCandidateComponentProvider - Identified candidate component class: file [/Users/devxb/develop/waldreg-api/waldreg/application-layer/acceptance/build/classes/java/main/org/waldreg/Application.class]
+18:48:11.341 [Test worker] INFO org.springframework.boot.test.context.SpringBootTestContextBootstrapper - Found @SpringBootConfiguration org.waldreg.Application for test class org.waldreg.acceptance.permission.PermissionAcceptanceTest
+18:48:11.375 [Test worker] DEBUG org.springframework.boot.test.context.SpringBootTestContextBootstrapper - @TestExecutionListeners is not present for class [org.waldreg.acceptance.permission.PermissionAcceptanceTest]: using defaults.
+18:48:11.375 [Test worker] INFO org.springframework.boot.test.context.SpringBootTestContextBootstrapper - Loaded default TestExecutionListener class names from location [META-INF/spring.factories]: [org.springframework.boot.test.autoconfigure.restdocs.RestDocsTestExecutionListener, org.springframework.boot.test.autoconfigure.web.client.MockRestServiceServerResetTestExecutionListener, org.springframework.boot.test.autoconfigure.web.servlet.MockMvcPrintOnlyOnFailureTestExecutionListener, org.springframework.boot.test.autoconfigure.web.servlet.WebDriverTestExecutionListener, org.springframework.boot.test.autoconfigure.webservices.client.MockWebServiceServerTestExecutionListener, org.springframework.boot.test.mock.mockito.MockitoTestExecutionListener, org.springframework.boot.test.mock.mockito.ResetMocksTestExecutionListener, org.springframework.test.context.web.ServletTestExecutionListener, org.springframework.test.context.support.DirtiesContextBeforeModesTestExecutionListener, org.springframework.test.context.event.ApplicationEventsTestExecutionListener, org.springframework.test.context.support.DependencyInjectionTestExecutionListener, org.springframework.test.context.support.DirtiesContextTestExecutionListener, org.springframework.test.context.transaction.TransactionalTestExecutionListener, org.springframework.test.context.jdbc.SqlScriptsTestExecutionListener, org.springframework.test.context.event.EventPublishingTestExecutionListener]
+18:48:11.379 [Test worker] DEBUG org.springframework.boot.test.context.SpringBootTestContextBootstrapper - Skipping candidate TestExecutionListener [org.springframework.test.context.transaction.TransactionalTestExecutionListener] due to a missing dependency. Specify custom listener classes or make the default listener classes and their required dependencies available. Offending class: [org/springframework/transaction/interceptor/TransactionAttributeSource]
+18:48:11.379 [Test worker] DEBUG org.springframework.boot.test.context.SpringBootTestContextBootstrapper - Skipping candidate TestExecutionListener [org.springframework.test.context.jdbc.SqlScriptsTestExecutionListener] due to a missing dependency. Specify custom listener classes or make the default listener classes and their required dependencies available. Offending class: [org/springframework/transaction/interceptor/TransactionAttribute]
+18:48:11.379 [Test worker] INFO org.springframework.boot.test.context.SpringBootTestContextBootstrapper - Using TestExecutionListeners: [org.springframework.test.context.web.ServletTestExecutionListener@7bdf6bb7, org.springframework.test.context.support.DirtiesContextBeforeModesTestExecutionListener@1bc53649, org.springframework.test.context.event.ApplicationEventsTestExecutionListener@88d6f9b, org.springframework.boot.test.mock.mockito.MockitoTestExecutionListener@47d93e0d, org.springframework.boot.test.autoconfigure.SpringBootDependencyInjectionTestExecutionListener@475b7792, org.springframework.test.context.support.DirtiesContextTestExecutionListener@751e664e, org.springframework.test.context.event.EventPublishingTestExecutionListener@160c3ec1, org.springframework.boot.test.autoconfigure.restdocs.RestDocsTestExecutionListener@182b435b, org.springframework.boot.test.autoconfigure.web.client.MockRestServiceServerResetTestExecutionListener@4d0402b, org.springframework.boot.test.autoconfigure.web.servlet.MockMvcPrintOnlyOnFailureTestExecutionListener@2fa7ae9, org.springframework.boot.test.autoconfigure.web.servlet.WebDriverTestExecutionListener@7577b641, org.springframework.boot.test.autoconfigure.webservices.client.MockWebServiceServerTestExecutionListener@3704122f, org.springframework.boot.test.mock.mockito.ResetMocksTestExecutionListener@3153ddfc]
+18:48:11.380 [Test worker] DEBUG org.springframework.test.context.support.AbstractDirtiesContextTestExecutionListener - Before test class: context [DefaultTestContext@6b85300e testClass = PermissionAcceptanceTest, testInstance = [null], testMethod = [null], testException = [null], mergedContextConfiguration = [WebMergedContextConfiguration@3aaf4f07 testClass = PermissionAcceptanceTest, locations = '{}', classes = '{class org.waldreg.Application}', contextInitializerClasses = '[]', activeProfiles = '{}', propertySourceLocations = '{}', propertySourceProperties = '{org.springframework.boot.test.context.SpringBootTestContextBootstrapper=true}', contextCustomizers = set[org.springframework.boot.test.autoconfigure.actuate.metrics.MetricsExportContextCustomizerFactory$DisableMetricExportContextCustomizer@674658f7, org.springframework.boot.test.autoconfigure.properties.PropertyMappingContextCustomizer@4b3fa0b3, org.springframework.boot.test.autoconfigure.web.servlet.WebDriverContextCustomizerFactory$Customizer@42e3ede4, [ImportsContextCustomizer@5cbf9e9f key = [org.springframework.boot.test.autoconfigure.web.servlet.MockMvcAutoConfiguration, org.springframework.boot.test.autoconfigure.web.servlet.MockMvcWebClientAutoConfiguration, org.springframework.boot.test.autoconfigure.web.servlet.MockMvcWebDriverAutoConfiguration, org.springframework.boot.autoconfigure.security.oauth2.client.servlet.OAuth2ClientAutoConfiguration, org.springframework.boot.autoconfigure.security.oauth2.resource.servlet.OAuth2ResourceServerAutoConfiguration, org.springframework.boot.autoconfigure.security.servlet.SecurityAutoConfiguration, org.springframework.boot.autoconfigure.security.servlet.SecurityFilterAutoConfiguration, org.springframework.boot.autoconfigure.security.servlet.UserDetailsServiceAutoConfiguration, org.springframework.boot.test.autoconfigure.web.servlet.MockMvcSecurityConfiguration, org.springframework.boot.test.autoconfigure.web.reactive.WebTestClientAutoConfiguration]], org.springframework.boot.test.context.filter.ExcludeFilterContextCustomizer@14c01636, org.springframework.boot.test.json.DuplicateJsonObjectContextCustomizerFactory$DuplicateJsonObjectContextCustomizer@4fc5e095, org.springframework.boot.test.mock.mockito.MockitoContextCustomizer@0, org.springframework.boot.test.web.client.TestRestTemplateContextCustomizer@5b40ceb, org.springframework.boot.test.context.SpringBootTestArgs@1, org.springframework.boot.test.context.SpringBootTestWebEnvironment@76b07f29], resourceBasePath = 'src/main/webapp', contextLoader = 'org.springframework.boot.test.context.SpringBootContextLoader', parent = [null]], attributes = map['org.springframework.test.context.web.ServletTestExecutionListener.activateListener' -> true]], class annotated with @DirtiesContext [false] with mode [null].
+
+  .   ____          _            __ _ _
+ /\\ / ___'_ __ _ _(_)_ __  __ _ \ \ \ \
+( ( )\___ | '_ | '_| | '_ \/ _` | \ \ \ \
+ \\/  ___)| |_)| | | | | || (_| |  ) ) ) )
+  '  |____| .__|_| |_|_| |_\__, | / / / /
+ =========|_|==============|___/=/_/_/_/
+ :: Spring Boot ::                (v2.7.1)
+
+2023-01-18 18:48:11.548  INFO 49923 --- [    Test worker] o.w.a.p.PermissionAcceptanceTest         : Starting PermissionAcceptanceTest using Java 11.0.15.1 on xb-apple.local with PID 49923 (started by devxb in /Users/devxb/develop/waldreg-api/waldreg/application-layer/acceptance)
+2023-01-18 18:48:11.550  INFO 49923 --- [    Test worker] o.w.a.p.PermissionAcceptanceTest         : No active profile set, falling back to 1 default profile: "default"
+2023-01-18 18:48:12.352  INFO 49923 --- [    Test worker] o.s.b.t.m.w.SpringBootMockServletContext : Initializing Spring TestDispatcherServlet ''
+2023-01-18 18:48:12.352  INFO 49923 --- [    Test worker] o.s.t.web.servlet.TestDispatcherServlet  : Initializing Servlet ''
+2023-01-18 18:48:12.352  INFO 49923 --- [    Test worker] o.s.t.web.servlet.TestDispatcherServlet  : Completed initialization in 0 ms
+2023-01-18 18:48:12.361  INFO 49923 --- [    Test worker] o.w.a.p.PermissionAcceptanceTest         : Started PermissionAcceptanceTest in 0.963 seconds (JVM running for 1.431)
+
+MockHttpServletRequest:
+      HTTP Method = GET
+      Request URI = /user/hello%20world
+       Parameters = {}
+          Headers = [Accept:"application/json", api-version:"1.0"]
+             Body = null
+    Session Attrs = {}
+
+Handler:
+             Type = org.waldreg.controller.user.UserController
+           Method = org.waldreg.controller.user.UserController#readSpecificUser(String, PermissionVerifyState)
+
+Async:
+    Async started = false
+     Async result = null
+
+Resolved Exception:
+             Type = org.waldreg.user.exception.UnknownUserIdException
+
+ModelAndView:
+        View name = null
+             View = null
+            Model = null
+
+FlashMap:
+       Attributes = null
+
+MockHttpServletResponse:
+           Status = 400
+    Error message = null
+          Headers = [Api-version:"1.0", Content-Type:"application/json"]
+     Content type = application/json
+             Body = {"messages":"Unknown user id","document_url":"docs.waldreg.org"}
+    Forwarded URL = null
+   Redirected URL = null
+          Cookies = []
+
+MockHttpServletRequest:
+      HTTP Method = POST
+      Request URI = /character
+       Parameters = {}
+          Headers = [Content-Type:"application/json;charset=UTF-8", Accept:"application/json", api-version:"1.0", Authorization:"Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIxIiwiaWF0IjoxNjc0MDM1MjkyLCJleHAiOjE2NzQwMzg4OTJ9.nPtt-sW8LuHnwbWKVylgT7qxnBd8nQ4gFRJfEPI_3mw", Content-Length:"39"]
+             Body = {"character_name":" ","permissions":[]}
+    Session Attrs = {}
+
+Handler:
+             Type = org.waldreg.controller.character.CharacterController
+           Method = org.waldreg.controller.character.CharacterController#createNewCharacter(CharacterRequest)
+
+Async:
+    Async started = false
+     Async result = null
+
+Resolved Exception:
+             Type = org.springframework.web.bind.MethodArgumentNotValidException
+
+ModelAndView:
+        View name = null
+             View = null
+            Model = null
+
+FlashMap:
+       Attributes = null
+
+MockHttpServletResponse:
+           Status = 400
+    Error message = null
+          Headers = [Api-version:"1.0", Content-Type:"application/json"]
+     Content type = application/json
+             Body = {"messages":"character_name cannot be blank","document_url":"docs.waldreg.org"}
+    Forwarded URL = null
+   Redirected URL = null
+          Cookies = []
+
+MockHttpServletRequest:
+      HTTP Method = POST
+      Request URI = /character
+       Parameters = {}
+          Headers = [Content-Type:"application/json;charset=UTF-8", Accept:"application/json", api-version:"1.0", Authorization:"Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIxIiwiaWF0IjoxNjc0MDM1MjkyLCJleHAiOjE2NzQwMzg4OTJ9.nPtt-sW8LuHnwbWKVylgT7qxnBd8nQ4gFRJfEPI_3mw", Content-Length:"123"]
+             Body = {"character_name":"mock_character_name","permissions":[{"permission_name":"Character manager","permission_status":"true"}]}
+    Session Attrs = {}
+
+Handler:
+             Type = org.waldreg.controller.character.CharacterController
+           Method = org.waldreg.controller.character.CharacterController#createNewCharacter(CharacterRequest)
+
+Async:
+    Async started = false
+     Async result = null
+
+Resolved Exception:
+             Type = null
+
+ModelAndView:
+        View name = null
+             View = null
+            Model = null
+
+FlashMap:
+       Attributes = null
+
+MockHttpServletResponse:
+           Status = 200
+    Error message = null
+          Headers = [Api-version:"1.0"]
+     Content type = null
+             Body = 
+    Forwarded URL = null
+   Redirected URL = null
+          Cookies = []
+
+MockHttpServletRequest:
+      HTTP Method = GET
+      Request URI = /user/hello%20world
+       Parameters = {}
+          Headers = [Accept:"application/json", api-version:"1.0"]
+             Body = null
+    Session Attrs = {}
+
+Handler:
+             Type = org.waldreg.controller.user.UserController
+           Method = org.waldreg.controller.user.UserController#readSpecificUser(String, PermissionVerifyState)
+
+Async:
+    Async started = false
+     Async result = null
+
+Resolved Exception:
+             Type = org.waldreg.user.exception.UnknownUserIdException
+
+ModelAndView:
+        View name = null
+             View = null
+            Model = null
+
+FlashMap:
+       Attributes = null
+
+MockHttpServletResponse:
+           Status = 400
+    Error message = null
+          Headers = [Api-version:"1.0", Content-Type:"application/json"]
+     Content type = application/json
+             Body = {"messages":"Unknown user id","document_url":"docs.waldreg.org"}
+    Forwarded URL = null
+   Redirected URL = null
+          Cookies = []
+
+MockHttpServletRequest:
+      HTTP Method = GET
+      Request URI = /character/hello%20world
+       Parameters = {}
+          Headers = [Accept:"application/json", api-version:"1.0", Authorization:"Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIxIiwiaWF0IjoxNjc0MDM1MjkyLCJleHAiOjE2NzQwMzg4OTJ9.nPtt-sW8LuHnwbWKVylgT7qxnBd8nQ4gFRJfEPI_3mw"]
+             Body = null
+    Session Attrs = {}
+
+Handler:
+             Type = org.waldreg.controller.character.CharacterController
+           Method = org.waldreg.controller.character.CharacterController#getCharacterByName(String)
+
+Async:
+    Async started = false
+     Async result = null
+
+Resolved Exception:
+             Type = null
+
+ModelAndView:
+        View name = null
+             View = null
+            Model = null
+
+FlashMap:
+       Attributes = null
+
+MockHttpServletResponse:
+           Status = 200
+    Error message = null
+          Headers = [Api-version:"1.0", Content-Type:"application/json"]
+     Content type = application/json
+             Body = {"character_name":"hello world","permissions":[{"permission_name":"Read other user info permission","permission_status":"false"},{"permission_name":"Fire other user permission","permission_status":"false"},{"permission_name":"Update other user's character permission","permission_status":"false"},{"permission_name":"Character manager","permission_status":"false"}]}
+    Forwarded URL = null
+   Redirected URL = null
+          Cookies = []
+
+MockHttpServletRequest:
+      HTTP Method = GET
+      Request URI = /user/hello%20world
+       Parameters = {}
+          Headers = [Accept:"application/json", api-version:"1.0"]
+             Body = null
+    Session Attrs = {}
+
+Handler:
+             Type = org.waldreg.controller.user.UserController
+           Method = org.waldreg.controller.user.UserController#readSpecificUser(String, PermissionVerifyState)
+
+Async:
+    Async started = false
+     Async result = null
+
+Resolved Exception:
+             Type = org.waldreg.user.exception.UnknownUserIdException
+
+ModelAndView:
+        View name = null
+             View = null
+            Model = null
+
+FlashMap:
+       Attributes = null
+
+MockHttpServletResponse:
+           Status = 400
+    Error message = null
+          Headers = [Api-version:"1.0", Content-Type:"application/json"]
+     Content type = application/json
+             Body = {"messages":"Unknown user id","document_url":"docs.waldreg.org"}
+    Forwarded URL = null
+   Redirected URL = null
+          Cookies = []
+
+MockHttpServletRequest:
+      HTTP Method = GET
+      Request URI = /user/hello%20world
+       Parameters = {}
+          Headers = [Accept:"application/json", api-version:"1.0"]
+             Body = null
+    Session Attrs = {}
+
+Handler:
+             Type = org.waldreg.controller.user.UserController
+           Method = org.waldreg.controller.user.UserController#readSpecificUser(String, PermissionVerifyState)
+
+Async:
+    Async started = false
+     Async result = null
+
+Resolved Exception:
+             Type = org.waldreg.user.exception.UnknownUserIdException
+
+ModelAndView:
+        View name = null
+             View = null
+            Model = null
+
+FlashMap:
+       Attributes = null
+
+MockHttpServletResponse:
+           Status = 400
+    Error message = null
+          Headers = [Api-version:"1.0", Content-Type:"application/json"]
+     Content type = application/json
+             Body = {"messages":"Unknown user id","document_url":"docs.waldreg.org"}
+    Forwarded URL = null
+   Redirected URL = null
+          Cookies = []
+
+MockHttpServletRequest:
+      HTTP Method = GET
+      Request URI = /user/hello%20world
+       Parameters = {}
+          Headers = [Accept:"application/json", api-version:"1.0"]
+             Body = null
+    Session Attrs = {}
+
+Handler:
+             Type = org.waldreg.controller.user.UserController
+           Method = org.waldreg.controller.user.UserController#readSpecificUser(String, PermissionVerifyState)
+
+Async:
+    Async started = false
+     Async result = null
+
+Resolved Exception:
+             Type = org.waldreg.user.exception.UnknownUserIdException
+
+ModelAndView:
+        View name = null
+             View = null
+            Model = null
+
+FlashMap:
+       Attributes = null
+
+MockHttpServletResponse:
+           Status = 400
+    Error message = null
+          Headers = [Api-version:"1.0", Content-Type:"application/json"]
+     Content type = application/json
+             Body = {"messages":"Unknown user id","document_url":"docs.waldreg.org"}
+    Forwarded URL = null
+   Redirected URL = null
+          Cookies = []
+
+MockHttpServletRequest:
+      HTTP Method = GET
+      Request URI = /user/hello%20world
+       Parameters = {}
+          Headers = [Accept:"application/json", api-version:"1.0"]
+             Body = null
+    Session Attrs = {}
+
+Handler:
+             Type = org.waldreg.controller.user.UserController
+           Method = org.waldreg.controller.user.UserController#readSpecificUser(String, PermissionVerifyState)
+
+Async:
+    Async started = false
+     Async result = null
+
+Resolved Exception:
+             Type = org.waldreg.user.exception.UnknownUserIdException
+
+ModelAndView:
+        View name = null
+             View = null
+            Model = null
+
+FlashMap:
+       Attributes = null
+
+MockHttpServletResponse:
+           Status = 400
+    Error message = null
+          Headers = [Api-version:"1.0", Content-Type:"application/json"]
+     Content type = application/json
+             Body = {"messages":"Unknown user id","document_url":"docs.waldreg.org"}
+    Forwarded URL = null
+   Redirected URL = null
+          Cookies = []
+
+MockHttpServletRequest:
+      HTTP Method = GET
+      Request URI = /permission
+       Parameters = {}
+          Headers = [Accept:"application/json", api-version:"1.0", Authorization:"Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIxIiwiaWF0IjoxNjc0MDM1MjkyLCJleHAiOjE2NzQwMzg4OTJ9.nPtt-sW8LuHnwbWKVylgT7qxnBd8nQ4gFRJfEPI_3mw"]
+             Body = null
+    Session Attrs = {}
+
+Handler:
+             Type = org.waldreg.controller.character.CharacterController
+           Method = org.waldreg.controller.character.CharacterController#getAllPermissions()
+
+Async:
+    Async started = false
+     Async result = null
+
+Resolved Exception:
+             Type = null
+
+ModelAndView:
+        View name = null
+             View = null
+            Model = null
+
+FlashMap:
+       Attributes = null
+
+MockHttpServletResponse:
+           Status = 200
+    Error message = null
+          Headers = [Api-version:"1.0", Content-Type:"application/json"]
+     Content type = application/json
+             Body = {"permissions":[{"permission_name":"Read other user info permission","permission_info":"If set true, can read other user's information","permission_status":["true","false"]},{"permission_name":"Fire other user permission","permission_info":"If set true, can fire other user","permission_status":["true","false"]},{"permission_name":"Update other user's character permission","permission_info":"If set true, can update user's character","permission_status":["true","false"]},{"permission_name":"Character manager","permission_info":"If set true, Permission to edit, delete, or create new characters.","permission_status":["true","false"]}]}
+    Forwarded URL = null
+   Redirected URL = null
+          Cookies = []
+]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>
