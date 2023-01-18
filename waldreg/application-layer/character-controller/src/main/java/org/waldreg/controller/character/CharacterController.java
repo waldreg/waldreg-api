@@ -43,7 +43,7 @@ public class CharacterController{
     }
 
     @Authenticating
-    @PermissionVerifying("Character Manager")
+    @PermissionVerifying("Character manager")
     @GetMapping("/permission")
     public Map<String, List<PermissionResponse>> getAllPermissions(){
         List<PermissionUnit> permissionUnits = permissionUnitListReadable.getPermissionUnitList();
@@ -52,7 +52,7 @@ public class CharacterController{
     }
 
     @Authenticating
-    @PermissionVerifying("Character Manager")
+    @PermissionVerifying("Character manager")
     @GetMapping("/character")
     public Map<String, List<String>> getAllCharacters(){
         List<String> characterNameList = controllerCharacterMapper.characterDtoListToCharacterNameList(characterManager.readCharacterList());
@@ -60,7 +60,7 @@ public class CharacterController{
     }
 
     @Authenticating
-    @PermissionVerifying("Character Manager")
+    @PermissionVerifying("Character manager")
     @PostMapping("/character")
     public void createNewCharacter(@RequestBody @Validated CharacterRequest characterRequest){
         CharacterDto characterDto = controllerCharacterMapper.characterRequestToCharacterDto(characterRequest);
@@ -68,7 +68,7 @@ public class CharacterController{
     }
 
     @Authenticating
-    @PermissionVerifying("Character Manager")
+    @PermissionVerifying("Character manager")
     @GetMapping("/character/{character-name}")
     public CharacterResponse getCharacterByName(@PathVariable("character-name") String characterName){
         CharacterDto characterDto = characterManager.readCharacter(characterName);
@@ -76,14 +76,14 @@ public class CharacterController{
     }
 
     @Authenticating
-    @PermissionVerifying("Character Manager")
+    @PermissionVerifying("Character manager")
     @PatchMapping("/character/{character-name}")
     public void updateCharacter(@PathVariable("character-name") String characterName, @RequestBody CharacterRequest characterRequest){
         characterManager.updateCharacter(characterName, controllerCharacterMapper.characterRequestToCharacterDto(characterRequest));
     }
 
     @Authenticating
-    @PermissionVerifying("Character Manager")
+    @PermissionVerifying("Character manager")
     @DeleteMapping("/character/{character-name}")
     public void deleteCharacter(@PathVariable("character-name") String characterName){
         characterManager.deleteCharacter(characterName);
