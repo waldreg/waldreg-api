@@ -14,6 +14,7 @@
             <option value="$PROJECT_DIR$/application-layer/application-configurer" />
             <option value="$PROJECT_DIR$/application-layer/auth-controller" />
             <option value="$PROJECT_DIR$/application-layer/character-controller" />
+            <option value="$PROJECT_DIR$/application-layer/user-controller" />
             <option value="$PROJECT_DIR$/core-layer" />
             <option value="$PROJECT_DIR$/core-layer/util" />
             <option value="$PROJECT_DIR$/domain-layer" />

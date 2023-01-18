@@ -10,6 +10,8 @@ public class AuthTokenResponse{
     @JsonProperty("token_type")
     private String tokenType;
 
+    public AuthTokenResponse(){}
+
     private AuthTokenResponse(Builder builder){
         this.accessToken = builder.accessToken;
         this.tokenType = builder.tokenType;
