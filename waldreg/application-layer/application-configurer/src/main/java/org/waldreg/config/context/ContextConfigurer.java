@@ -10,6 +10,7 @@ public class ContextConfigurer implements WebMvcConfigurer{
 
     private final DecryptedContextResolveInterceptor decryptedContextResolveInterceptor;
 
+    @Autowired
     public ContextConfigurer(DecryptedContextResolveInterceptor decryptedContextResolveInterceptor){
         this.decryptedContextResolveInterceptor = decryptedContextResolveInterceptor;
     }

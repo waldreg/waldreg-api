@@ -39,7 +39,7 @@ public class MemoryUserStorage{
     }
 
     private void setDefaultCharacter(User user){
-        if (user.getName().equals("Admin")){
+        if (user.getUserId().equals("Admin")){
             throwIfUnknownCharacter("Admin");
             user.setCharacter(memoryCharacterStorage.readCharacterByName("Admin"));
             return;

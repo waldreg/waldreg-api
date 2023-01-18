@@ -5,6 +5,7 @@ import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.annotation.Order;
 import org.springframework.http.HttpHeaders;
 import org.springframework.stereotype.Service;
 import org.waldreg.token.aop.annotation.Authenticating;
@@ -18,6 +19,7 @@ import org.waldreg.token.exception.UserIdMissMatchException;
 import org.waldreg.util.annotation.AnnotationExtractor;
 
 @Aspect
+@Order(100000)
 @Service
 public class AuthenticateAop{
 
