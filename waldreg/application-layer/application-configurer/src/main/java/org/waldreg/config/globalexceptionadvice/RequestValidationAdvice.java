@@ -14,7 +14,7 @@ public class RequestValidationAdvice{
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<ExceptionTemplate> catchValidationException(MethodArgumentNotValidException methodArgumentNotValidException){
         ExceptionTemplate exceptionTemplate = ExceptionTemplate.builder()
-                .message(methodArgumentNotValidException.getMessage())
+                .message(methodArgumentNotValidException.getBindingResult().getAllErrors().get(0).getDefaultMessage())
                 .documentUrl(documentUrl)
                 .build();
         return new ResponseEntity<>(exceptionTemplate, HttpStatus.BAD_REQUEST);

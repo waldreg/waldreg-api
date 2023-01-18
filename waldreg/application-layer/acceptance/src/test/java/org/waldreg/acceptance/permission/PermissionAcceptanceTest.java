@@ -346,11 +346,7 @@ public class PermissionAcceptanceTest{
                 MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON),
                 MockMvcResultMatchers.header().string(HttpHeaders.CONTENT_TYPE, "application/json"),
                 MockMvcResultMatchers.header().string("Api-version", apiVersion),
-                MockMvcResultMatchers.jsonPath("$.character_name").value(characterName),
-                MockMvcResultMatchers.jsonPath("$.permissions.[0].permission_name")
-                        .value(permissionName),
-                MockMvcResultMatchers.jsonPath("$.permissions.[0].permission_status")
-                        .value(permissionStatus)
+                MockMvcResultMatchers.jsonPath("$.character_name").value(characterName)
         );
     }
 
@@ -732,6 +728,50 @@ public class PermissionAcceptanceTest{
                 MockMvcResultMatchers.jsonPath("$.messages").value("Can not find character named \"mock_character\""),
                 MockMvcResultMatchers.jsonPath("$.document_url").value("docs.waldreg.org")
         );
+    }
+
+    @Test
+    @DisplayName("역할 생성 실패 테스트 - 역할 이름에 공백이 들어옴")
+    public void CREATE_CHARACTER_FAIL_BLANK_CHARACTER_NAME_TEST() throws Exception{
+        // given
+        String token = AuthenticationAcceptanceTestHelper.getAdminToken(mvc, objectMapper);
+        CharacterRequest characterRequest = CharacterRequest.builder()
+                .characterName(" ")
+                .permissionList(List.of())
+                .build();
+
+        // when
+        ResultActions resultActions = PermissionAcceptanceTestHelper.createCharacter(mvc, token, objectMapper.writeValueAsString(characterRequest));
+
+        // then
+        resultActions.andExpectAll(
+                MockMvcResultMatchers.status().isBadRequest(),
+                MockMvcResultMatchers.header().string("Api-version", "1.0")
+        ).andDo(MockMvcResultHandlers.print());
+    }
+
+    @Test
+    @DisplayName("새로운 역할 생성 및 조회 성공 테스트 - permission에 공백")
+    public void CREATE_CHARACTER_SUCCESS_TEST_BLANK_PERMISSION() throws Exception{
+        // given
+        String token = AuthenticationAcceptanceTestHelper.getAdminToken(mvc, objectMapper);
+        String characterName = "hello world";
+        CharacterRequest characterRequest = CharacterRequest.builder()
+                .characterName(characterName)
+                .permissionList(List.of())
+                .build();
+
+        // when
+        PermissionAcceptanceTestHelper.createCharacter(mvc, token, objectMapper.writeValueAsString(characterRequest));
+        deleteWaitCharacterList.add(characterName);
+        ResultActions resultActions = PermissionAcceptanceTestHelper.inquirySpecificCharacter(mvc, characterName, token);
+
+        // then
+        resultActions.andExpectAll(
+                MockMvcResultMatchers.status().isOk(),
+                MockMvcResultMatchers.header().string("Api-version", "1.0"),
+                MockMvcResultMatchers.jsonPath("$.character_name").value(characterName)
+        ).andDo(MockMvcResultHandlers.print());
     }
 
     private String createUserAndGetToken(String name, String userId, String userPassword) throws Exception{

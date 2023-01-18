@@ -1,6 +1,9 @@
 package org.waldreg.character.management;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.waldreg.character.dto.CharacterDto;
@@ -8,6 +11,8 @@ import org.waldreg.character.dto.PermissionDto;
 import org.waldreg.character.exception.NoPermissionException;
 import org.waldreg.character.exception.UnknownPermissionException;
 import org.waldreg.character.exception.UnknownPermissionStatusException;
+import org.waldreg.character.permission.core.PermissionUnit;
+import org.waldreg.character.permission.management.PermissionUnitListReadable;
 import org.waldreg.character.spi.CharacterRepository;
 
 @Service
@@ -15,12 +20,14 @@ public class DefaultCharacterManager implements CharacterManager{
 
     private final CharacterRepository characterRepository;
     private final PermissionChecker permissionChecker;
+    private final PermissionUnitListReadable permissionUnitListReadable;
     private final String[] deletedBlockedPermissionNames = {"Admin", "Guest"};
 
     @Override
     public void createCharacter(CharacterDto characterDto){
         throwIfInvalidPermissionDetected(characterDto.getPermissionList());
-        characterRepository.createCharacter(characterDto);
+        CharacterDto filledCharacterDto = fillAbsentPermissionToCharacterDto(characterDto);
+        characterRepository.createCharacter(filledCharacterDto);
     }
 
     @Override
@@ -46,6 +53,51 @@ public class DefaultCharacterManager implements CharacterManager{
         if (!permissionChecker.isPossiblePermissionStatus(permissionDto.getName(), permissionDto.getStatus())){
             throw new UnknownPermissionStatusException(permissionDto.getName(), permissionDto.getStatus());
         }
+    }
+
+    private CharacterDto fillAbsentPermissionToCharacterDto(CharacterDto characterDto){
+        Map<String, PermissionDto> permissionDtoMap = convertListToMap(characterDto.getPermissionList());
+        fillAbsentPermissions(permissionDtoMap, false);
+        return CharacterDto.builder()
+                .characterName(characterDto.getCharacterName())
+                .permissionDtoList(convertMapToList(permissionDtoMap))
+                .build();
+    }
+
+    private Map<String, PermissionDto> convertListToMap(List<PermissionDto> permissionDtoList){
+        Map<String, PermissionDto> permissionDtoMap = new HashMap<>();
+        for(PermissionDto permissionDto : permissionDtoList){
+            permissionDtoMap.put(permissionDto.getName(), permissionDto);
+        }
+        return permissionDtoMap;
+    }
+
+    private void fillAbsentPermissions(Map<String, PermissionDto> permissionDtoMap, boolean absentStatus){
+        List<PermissionUnit> permissionUnitList = permissionUnitListReadable.getPermissionUnitList();
+        for(PermissionUnit permissionUnit : permissionUnitList){
+            if(!permissionDtoMap.containsKey(permissionUnit.getName())){
+                PermissionDto permissionDto = PermissionDto.builder()
+                        .name(permissionUnit.getName())
+                        .status(getStatusOfPermissionUnit(permissionUnit, absentStatus))
+                        .build();
+                permissionDtoMap.put(permissionUnit.getName(), permissionDto);
+            }
+        }
+    }
+
+    private String getStatusOfPermissionUnit(PermissionUnit permissionUnit, boolean targetStatus){
+        for(String status : permissionUnit.getStatusList()){
+            if(permissionUnit.verify(status) == targetStatus) return status;
+        }
+        throw new IllegalStateException("Can not find verifiable status of permission named \"" + permissionUnit.getName() + "\"");
+    }
+
+    private List<PermissionDto> convertMapToList(Map<String, PermissionDto> permissionDtoMap){
+        List<PermissionDto> permissionDtoList = new ArrayList<>();
+        for(Map.Entry<String, PermissionDto> entry : permissionDtoMap.entrySet()){
+            permissionDtoList.add(entry.getValue());
+        }
+        return permissionDtoList;
     }
 
     @Override
@@ -78,11 +130,13 @@ public class DefaultCharacterManager implements CharacterManager{
         return false;
     }
 
-
     @Autowired
-    private DefaultCharacterManager(CharacterRepository characterRepository, PermissionChecker permissionChecker){
+    private DefaultCharacterManager(CharacterRepository characterRepository,
+            PermissionChecker permissionChecker,
+            PermissionUnitListReadable permissionUnitListReadable){
         this.characterRepository = characterRepository;
         this.permissionChecker = permissionChecker;
+        this.permissionUnitListReadable = permissionUnitListReadable;
     }
 
 }
