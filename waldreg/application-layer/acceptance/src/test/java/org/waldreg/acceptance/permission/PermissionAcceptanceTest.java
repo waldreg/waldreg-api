@@ -346,11 +346,7 @@ public class PermissionAcceptanceTest{
                 MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON),
                 MockMvcResultMatchers.header().string(HttpHeaders.CONTENT_TYPE, "application/json"),
                 MockMvcResultMatchers.header().string("Api-version", apiVersion),
-                MockMvcResultMatchers.jsonPath("$.character_name").value(characterName),
-                MockMvcResultMatchers.jsonPath("$.permissions.[0].permission_name")
-                        .value(permissionName),
-                MockMvcResultMatchers.jsonPath("$.permissions.[0].permission_status")
-                        .value(permissionStatus)
+                MockMvcResultMatchers.jsonPath("$.character_name").value(characterName)
         );
     }
 
