@@ -44,7 +44,7 @@ public class UserControllerAdvice{
     @ExceptionHandler({UnknownUserIdException.class})
     public ResponseEntity<ExceptionTemplate> catchUnknownUserIdException(UnknownUserIdException unknownUserIdException){
         ExceptionTemplate exceptionTemplate = ExceptionTemplate.builder()
-                .message("Duplicated user id")
+                .message("Unknown user id")
                 .documentUrl(documentUrl)
                 .build();
         return new ResponseEntity<>(exceptionTemplate, HttpStatus.BAD_REQUEST);
