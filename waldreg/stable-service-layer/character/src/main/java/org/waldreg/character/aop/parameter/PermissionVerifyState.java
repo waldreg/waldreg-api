@@ -1,8 +1,16 @@
 package org.waldreg.character.aop.parameter;
 
-@FunctionalInterface
-public interface PermissionVerifyState{
+public final class PermissionVerifyState{
 
-    boolean isVerified();
+    private boolean isVerified;
+
+    public PermissionVerifyState(){}
+
+    public PermissionVerifyState(boolean status){
+        isVerified = status;
+    }
+    public boolean isVerified(){
+        return isVerified;
+    }
 
 }
