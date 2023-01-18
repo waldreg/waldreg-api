@@ -1,6 +1,5 @@
 package org.waldreg.acceptance.permission;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.util.ArrayList;
 import java.util.List;
@@ -15,10 +14,9 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
+import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import org.waldreg.acceptance.authentication.AuthenticationAcceptanceTestHelper;
-import org.waldreg.auth.request.AuthTokenRequest;
-import org.waldreg.auth.response.AuthTokenResponse;
 import org.waldreg.controller.character.request.CharacterRequest;
 import org.waldreg.controller.character.request.PermissionRequest;
 
@@ -39,7 +37,7 @@ public class PermissionAcceptanceTest{
     @BeforeEach
     @AfterEach
     public void INITIAL_PERMISSION() throws Exception{
-        String token = getAdminToken();
+        String token = AuthenticationAcceptanceTestHelper.getAdminToken(mvc, objectMapper);
         for (String characterName : deleteWaitCharacterList){
             PermissionAcceptanceTestHelper.deleteSpecificCharacter(mvc, characterName, token);
             PermissionAcceptanceTestHelper.inquirySpecificCharacter(mvc, characterName, token)
@@ -55,7 +53,7 @@ public class PermissionAcceptanceTest{
                                     .header().string("api-version", apiVersion),
                             MockMvcResultMatchers
                                     .jsonPath("$.messages")
-                                    .value("Unknown character name"),
+                                    .value("Can not find character named \"" + characterName + "\""),
                             MockMvcResultMatchers
                                     .jsonPath("$.document_url")
                                     .value("docs.waldreg.org")
@@ -68,7 +66,7 @@ public class PermissionAcceptanceTest{
     @DisplayName("새로운 역할 추가 성공 인수 테스트")
     public void CREATE_NEW_CHARACTER_SUCCESS_ACCEPTANCE_TEST() throws Exception{
         // given
-        String token = getAdminToken();
+        String token = AuthenticationAcceptanceTestHelper.getAdminToken(mvc, objectMapper);
         String characterName = "new character";
         CharacterRequest request = CharacterRequest.builder()
                 .characterName(characterName)
@@ -247,7 +245,7 @@ public class PermissionAcceptanceTest{
     @DisplayName("역할 목록 조회 성공 인수 테스트")
     public void INQUIRY_CHARACTER_LIST_SUCCESS_ACCEPTANCE_TEST() throws Exception{
         // given
-        String token = "mock_token";
+        String token = AuthenticationAcceptanceTestHelper.getAdminToken(mvc, objectMapper);
         String characterName = "mock_acceptance";
         CharacterRequest request = CharacterRequest.builder()
                 .characterName(characterName)
@@ -600,7 +598,7 @@ public class PermissionAcceptanceTest{
     @DisplayName("선택가능한 permission 목록 조회 성공 인수 테스트")
     public void INQUIRY_PERMISSION_LIST_SUCCESS_ACCEPTANCE_TEST() throws Exception{
         // given
-        String token = "mock_token";
+        String token = AuthenticationAcceptanceTestHelper.getAdminToken(mvc, objectMapper);
 
         // when
         ResultActions result = PermissionAcceptanceTestHelper.inquiryPermissionList(mvc, token);
@@ -610,9 +608,9 @@ public class PermissionAcceptanceTest{
                 MockMvcResultMatchers.status().isOk(),
                 MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON),
                 MockMvcResultMatchers.header().string(HttpHeaders.CONTENT_TYPE, "application/json"),
-                MockMvcResultMatchers.header().string("api-version", apiVersion),
+                MockMvcResultMatchers.header().string("Api-version", apiVersion),
                 MockMvcResultMatchers.jsonPath("$.permissions").isArray()
-        );
+        ).andDo(MockMvcResultHandlers.print());
     }
 
     @Test
@@ -711,20 +709,6 @@ public class PermissionAcceptanceTest{
                 MockMvcResultMatchers.jsonPath("$.messages").value("Unknown permission name"),
                 MockMvcResultMatchers.jsonPath("$.document_url").value("docs.waldreg.org")
         );
-    }
-
-    private String getAdminToken() throws Exception{
-        AuthTokenRequest authTokenRequest = AuthTokenRequest.builder()
-                .userId(adminId)
-                .userPassword(adminPassword)
-                .build();
-        String content = AuthenticationAcceptanceTestHelper
-                .authenticateByUserIdAndUserPassword(mvc, objectMapper.writeValueAsString(authTokenRequest))
-                .andReturn()
-                .getResponse()
-                .getContentAsString();
-        AuthTokenResponse response = objectMapper.readValue(content, AuthTokenResponse.class);
-        return response.getTokenType() + " " + response.getAccessToken();
     }
 
 }

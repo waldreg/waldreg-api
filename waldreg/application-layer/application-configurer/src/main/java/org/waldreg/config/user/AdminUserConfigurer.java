@@ -24,7 +24,6 @@ public class AdminUserConfigurer{
 
     @EventListener(AdminCharacterCreatedEvent.class)
     public void initialAdminUser(){
-        System.out.println("\n\n\n initialAdminUser() \n\n\n");
         try{
             userManager.readUserByUserId(adminUserId);
         } catch (UnknownUserIdException UUIE){
