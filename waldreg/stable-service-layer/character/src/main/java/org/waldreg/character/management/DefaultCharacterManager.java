@@ -33,6 +33,9 @@ public class DefaultCharacterManager implements CharacterManager{
     @Override
     public void updateCharacter(String targetName, CharacterDto changedCharacter){
         throwIfInvalidPermissionDetected(changedCharacter.getPermissionList());
+        if(isBlockedCharacterName(targetName)){
+            throw new NoPermissionException();
+        }
         characterRepository.updateCharacter(targetName, changedCharacter);
     }
 
@@ -117,13 +120,13 @@ public class DefaultCharacterManager implements CharacterManager{
 
     @Override
     public void deleteCharacter(String characterName){
-        if(isDeleteBlockedCharacterName(characterName)){
+        if(isBlockedCharacterName(characterName)){
             throw new NoPermissionException();
         }
         characterRepository.deleteCharacter(characterName);
     }
 
-    private boolean isDeleteBlockedCharacterName(String characterName){
+    private boolean isBlockedCharacterName(String characterName){
         for(String name : deletedBlockedPermissionNames){
             if(name.equals(characterName)) return true;
         }
