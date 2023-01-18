@@ -120,7 +120,7 @@ public class PermissionVerifyAopTest{
     @DisplayName("권한 체크 성공 및 \"PermissionVerifyState\" 파라미터 전달 테스트")
     public void PERMISSION_CHECK_SUCCESS_AND_PASS_PARAMETER_TEST(){
         // given
-        Mockito.when(permissionVerifierClient.state(Mockito.any(), Mockito.any(PermissionVerifyState.class))).thenReturn(() -> true);
+        Mockito.when(permissionVerifierClient.state(Mockito.any(), Mockito.any(PermissionVerifyState.class))).thenReturn(new PermissionVerifyState(true));
         AspectJProxyFactory aspectJProxyFactory = new AspectJProxyFactory(permissionVerifierClient);
         aspectJProxyFactory.addAspect(permissionVerifyAop);
         PermissionVerifierClient permissionVerifierClient = aspectJProxyFactory.getProxy();
@@ -136,7 +136,7 @@ public class PermissionVerifyAopTest{
     @DisplayName("권한 체크 실패 및 \"PermissionVerifyState\" 파라미터 전달 테스트 - VerifyingFailBehavior.PASS")
     public void PERMISSION_CHECK_FAIL_AND_PASS_PARAMETER_TEST(){
         // given
-        Mockito.when(permissionVerifierClient.failState(Mockito.anyInt(), Mockito.any(PermissionVerifyState.class))).thenReturn(() -> false);
+        Mockito.when(permissionVerifierClient.failState(Mockito.anyInt(), Mockito.any(PermissionVerifyState.class))).thenReturn(new PermissionVerifyState(false));
         AspectJProxyFactory aspectJProxyFactory = new AspectJProxyFactory(permissionVerifierClient);
         aspectJProxyFactory.addAspect(permissionVerifyAop);
         PermissionVerifierClient permissionVerifierClient = aspectJProxyFactory.getProxy();

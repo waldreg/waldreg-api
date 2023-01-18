@@ -88,7 +88,7 @@ public class PermissionVerifyAop{
         Parameter[] parameters = extractParameters(joinPoint);
         for (int i = 0; i < parameters.length; i++){
             if (parameters[i].getType().equals(PermissionVerifyState.class)){
-                objects[i] = (PermissionVerifyState) (() -> state);
+                objects[i] = (PermissionVerifyState) (new PermissionVerifyState(state));
             }
         }
         return objects;
