@@ -19,6 +19,7 @@ import org.waldreg.character.dto.PermissionDto;
 import org.waldreg.character.exception.UnknownPermissionException;
 import org.waldreg.character.permission.verification.PermissionVerifier;
 import org.waldreg.util.annotation.AnnotationExtractor;
+import org.waldreg.util.exception.DecryptedTokenDoesNotExistException;
 import org.waldreg.util.token.DecryptedTokenContextGetter;
 
 @Service
@@ -45,14 +46,24 @@ public class PermissionVerifyAop{
     @Around("@annotation(org.waldreg.character.aop.annotation.PermissionVerifying)")
     public Object verify(ProceedingJoinPoint proceedingJoinPoint) throws Throwable{
         PermissionVerifying permissionVerifying = annotationExtractor.extractAnnotation(proceedingJoinPoint, PermissionVerifying.class);
+        if(!isDecryptedTokenExist()){
+            return proceedFail(permissionVerifying, proceedingJoinPoint);
+        }
         CharacterDto characterDto = getCharacterDto();
         if (!isUserAccessible(permissionVerifying.value(), characterDto)){
-            permissionVerifying.fail().behave();
-            Object[] args = setPermissionVerifyStateParameter(proceedingJoinPoint, false);
-            return proceedingJoinPoint.proceed(args);
+            return proceedFail(permissionVerifying, proceedingJoinPoint);
         }
         Object[] args = setPermissionVerifyStateParameter(proceedingJoinPoint, true);
         return proceedingJoinPoint.proceed(args);
+    }
+
+    private boolean isDecryptedTokenExist(){
+        try{
+            decryptedTokenContextGetter.get();
+        } catch (DecryptedTokenDoesNotExistException E){
+            return false;
+        }
+        return true;
     }
 
     private CharacterDto getCharacterDto(){
@@ -81,6 +92,12 @@ public class PermissionVerifyAop{
 
     private void throwIfUnknownPermissionNameDetected(String permissionName, Map<String, String> permissionDtoMap){
         if (!permissionDtoMap.containsKey(permissionName)){throw new UnknownPermissionException(permissionName);}
+    }
+
+    private Object proceedFail(PermissionVerifying permissionVerifying, ProceedingJoinPoint proceedingJoinPoint) throws Throwable{
+        permissionVerifying.fail().behave();
+        Object[] args = setPermissionVerifyStateParameter(proceedingJoinPoint, false);
+        return proceedingJoinPoint.proceed(args);
     }
 
     private Object[] setPermissionVerifyStateParameter(JoinPoint joinPoint, boolean state){
