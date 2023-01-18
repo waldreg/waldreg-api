@@ -12,16 +12,6 @@ public class AuthenticationAcceptanceTestHelper{
 
     private final static String apiVersion = "1.0";
 
-    public static ResultActions authenticateByUserIdAndUserPassword(MockMvc mvc, String content) throws Exception{
-        return mvc.perform(MockMvcRequestBuilders
-                                   .post("/token")
-                                   .accept(MediaType.APPLICATION_JSON)
-                                   .contentType(MediaType.APPLICATION_JSON)
-                                   .header("api-version",apiVersion)
-                                   .content(content)
-                );
-    }
-
     public static String getAdminToken(MockMvc mvc, ObjectMapper objectMapper) throws Exception{
         AuthTokenRequest authTokenRequest = AuthTokenRequest.builder()
                 .userId("Admin")
@@ -34,6 +24,26 @@ public class AuthenticationAcceptanceTestHelper{
                 .getContentAsString();
         AuthTokenResponse response = objectMapper.readValue(content, AuthTokenResponse.class);
         return response.getTokenType() + " " + response.getAccessToken();
+    }
+
+    public static String getToken(MockMvc mvc, ObjectMapper objectMapper, AuthTokenRequest authTokenRequest) throws Exception{
+        String content = AuthenticationAcceptanceTestHelper
+                .authenticateByUserIdAndUserPassword(mvc, objectMapper.writeValueAsString(authTokenRequest))
+                .andReturn()
+                .getResponse()
+                .getContentAsString();
+        AuthTokenResponse response = objectMapper.readValue(content, AuthTokenResponse.class);
+        return response.getTokenType() + " " + response.getAccessToken();
+    }
+
+    public static ResultActions authenticateByUserIdAndUserPassword(MockMvc mvc, String content) throws Exception{
+        return mvc.perform(MockMvcRequestBuilders
+                                   .post("/token")
+                                   .accept(MediaType.APPLICATION_JSON)
+                                   .contentType(MediaType.APPLICATION_JSON)
+                                   .header("api-version",apiVersion)
+                                   .content(content)
+                );
     }
 
 }

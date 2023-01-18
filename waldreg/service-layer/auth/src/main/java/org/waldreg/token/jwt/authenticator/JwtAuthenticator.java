@@ -33,7 +33,6 @@ public class JwtAuthenticator implements TokenAuthenticator{
             decryptedTokenContextHolder.hold(id);
             return id;
         } catch (ExpiredJwtException EJE){
-            System.out.println(EJE.getMessage());
             throw new TokenExpiredException(EJE.getMessage(), EJE.getCause());
         }
     }
