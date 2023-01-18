@@ -9,12 +9,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.HttpHeaders;
-import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
-import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
+import org.waldreg.acceptance.user.UserAcceptanceTestHelper;
+import org.waldreg.controller.user.request.UserRequest;
 
 @SpringBootTest
 @AutoConfigureMockMvc
@@ -30,19 +30,31 @@ public class AuthenticationAcceptanceTest{
 
 
     @Test
-    @DisplayName("토큰 발급 요청")
+    @DisplayName("토큰 발급 요청 성공")
     public void CREATE_TOKEN_PUBLISH_REQUEST_TEST() throws Exception{
         //given
         String userId = "Fixtar";
-        String userPassword = "111";
-
+        String userPassword = "1234abcd@";
         TokenCreateRequest tokenCreateRequest = TokenCreateRequest.builder()
                 .userId(userId)
                 .userPassword(userPassword)
                 .build();
 
+        String name2 = "alcuk";
+        String userId2 = "Fixtar";
+        String userPassword2 = "1234abcd@";
+        String phoneNumber2 = "010-1234-1111";
+        UserRequest userRequest = UserRequest.builder()
+                .name(name2)
+                .userId(userId2)
+                .userPassword(userPassword2)
+                .phoneNumber(phoneNumber2)
+                .build();
+        UserAcceptanceTestHelper.createUser(mvc, objectMapper.writeValueAsString(userRequest));
+
         //when
         ResultActions result = AuthenticationAcceptanceTestHelper.authenticateByUserIdAndUserPassword(mvc,objectMapper.writeValueAsString(tokenCreateRequest));
+
         //then
         result.andExpectAll(MockMvcResultMatchers.status().isOk(),
                             MockMvcResultMatchers.header().string(HttpHeaders.CONTENT_TYPE,
@@ -53,16 +65,51 @@ public class AuthenticationAcceptanceTest{
     }
 
     @Test
-    @DisplayName("토큰 발급 실패 잘못된 인증 정보")
-    public void TOKEN_PUBLISH_FAIL_INVALID_INFORMATION() throws Exception{
+    @DisplayName("없는 유저 토큰 발급 요청 실패")
+    public void CREATE_TOKEN_PUBLISH_REQUEST_NOT_MATCHED_USER_TEST() throws Exception{
         //given
-        String userId = "";
-        String userPassword = "";
+        String userId = "nbafsda";
+        String userPassword = "1234abcd@";
         TokenCreateRequest tokenCreateRequest = TokenCreateRequest.builder()
                 .userId(userId)
                 .userPassword(userPassword)
                 .build();
 
+        //when
+        ResultActions result = AuthenticationAcceptanceTestHelper.authenticateByUserIdAndUserPassword(mvc,objectMapper.writeValueAsString(tokenCreateRequest));
+
+        //then
+        result.andExpectAll(MockMvcResultMatchers.status().isBadRequest(),
+                            MockMvcResultMatchers.header().string(HttpHeaders.CONTENT_TYPE,
+                                                                  "application/json"),
+                            MockMvcResultMatchers.jsonPath("$.messages").value("Unknown user id"),
+                            MockMvcResultMatchers.jsonPath("$.document_url").value("docs.waldreg.org"))
+                .andDo(MockMvcResultHandlers.print());
+    }
+
+    @Test
+    @DisplayName("토큰 발급 실패 잘못된 인증 정보 (잘못된 비밀번호)")
+    public void TOKEN_PUBLISH_FAIL_INVALID_INFORMATION() throws Exception{
+        //given
+        String userId = "alcuk";
+        String userPassword = "1234bfre@";
+        TokenCreateRequest tokenCreateRequest = TokenCreateRequest.builder()
+                .userId(userId)
+                .userPassword(userPassword)
+                .build();
+
+
+        String name2 = "alcuk2";
+        String userId2 = "alcuk";
+        String userPassword2 = "1234abcd@";
+        String phoneNumber2 = "010-1234-1111";
+        UserRequest userRequest = UserRequest.builder()
+                .name(name2)
+                .userId(userId2)
+                .userPassword(userPassword2)
+                .phoneNumber(phoneNumber2)
+                .build();
+        UserAcceptanceTestHelper.createUser(mvc, objectMapper.writeValueAsString(userRequest));
         //when
         ResultActions result = AuthenticationAcceptanceTestHelper.authenticateByUserIdAndUserPassword(mvc,objectMapper.writeValueAsString(tokenCreateRequest));
         //then
