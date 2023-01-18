@@ -9,7 +9,7 @@ public class AuthenticationAcceptanceTestHelper{
 
     private final static String apiVersion = "1.0";
 
-    public static ResultActions authenticateByUserIdAndUserPassword(MockMvc mvc,String content) throws Exception{
+    public static ResultActions authenticateByUserIdAndUserPassword(MockMvc mvc, String content) throws Exception{
         return mvc.perform(MockMvcRequestBuilders
                                    .post("/token")
                                    .accept(MediaType.APPLICATION_JSON)

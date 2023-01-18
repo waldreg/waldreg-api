@@ -18,6 +18,14 @@ public class DecryptedContextResolveInterceptor implements HandlerInterceptor{
     }
 
     @Override
+    public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler)
+            throws Exception {
+        decryptedTokenContextResolver.resolve();
+        return true;
+    }
+
+
+    @Override
     public void afterCompletion(HttpServletRequest request, HttpServletResponse response, Object handler, Exception ex){
         decryptedTokenContextResolver.resolve();
     }

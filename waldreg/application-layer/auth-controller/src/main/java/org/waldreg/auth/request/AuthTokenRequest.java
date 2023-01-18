@@ -3,6 +3,7 @@ package org.waldreg.auth.request;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import javax.validation.constraints.NotBlank;
+import org.waldreg.auth.response.AuthTokenResponse;
 
 public class AuthTokenRequest{
 
@@ -13,6 +14,10 @@ public class AuthTokenRequest{
     @NotBlank(message = "user_password cannot be blank")
     @JsonProperty("user_password")
     private String userPassword;
+
+    public AuthTokenRequest(){
+
+    }
 
     private AuthTokenRequest(Builder builder){
         this.userId = builder.userId;
@@ -29,6 +34,14 @@ public class AuthTokenRequest{
 
     public String getUserPassword(){
         return userPassword;
+    }
+
+    public void setUserId(String userId){
+        this.userId = userId;
+    }
+
+    public void setUserPassword(String userPassword){
+        this.userPassword = userPassword;
     }
 
     public static final class Builder{

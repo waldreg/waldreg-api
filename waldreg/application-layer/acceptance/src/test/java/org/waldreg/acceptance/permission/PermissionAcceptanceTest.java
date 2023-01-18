@@ -1,5 +1,6 @@
 package org.waldreg.acceptance.permission;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.util.ArrayList;
 import java.util.List;
@@ -14,8 +15,10 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
-import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
+import org.waldreg.acceptance.authentication.AuthenticationAcceptanceTestHelper;
+import org.waldreg.auth.request.AuthTokenRequest;
+import org.waldreg.auth.response.AuthTokenResponse;
 import org.waldreg.controller.character.request.CharacterRequest;
 import org.waldreg.controller.character.request.PermissionRequest;
 
@@ -28,14 +31,15 @@ public class PermissionAcceptanceTest{
 
     @Autowired
     private ObjectMapper objectMapper;
-
+    private final String adminId = "Admin";
+    private final String adminPassword = "0000";
     private final String apiVersion = "1.0";
     private final List<String> deleteWaitCharacterList = new ArrayList<>();
 
     @BeforeEach
     @AfterEach
     public void INITIAL_PERMISSION() throws Exception{
-        String token = "mock_token";
+        String token = getAdminToken();
         for (String characterName : deleteWaitCharacterList){
             PermissionAcceptanceTestHelper.deleteSpecificCharacter(mvc, characterName, token);
             PermissionAcceptanceTestHelper.inquirySpecificCharacter(mvc, characterName, token)
@@ -64,18 +68,18 @@ public class PermissionAcceptanceTest{
     @DisplayName("새로운 역할 추가 성공 인수 테스트")
     public void CREATE_NEW_CHARACTER_SUCCESS_ACCEPTANCE_TEST() throws Exception{
         // given
-        String token = "mock_token";
-        String characterName = "admin_character";
+        String token = getAdminToken();
+        String characterName = "new character";
         CharacterRequest request = CharacterRequest.builder()
                 .characterName(characterName)
                 .permissionList(
                         List.of(
                                 PermissionRequest.builder()
-                                        .name("attendance_starter")
+                                        .name("Character manager")
                                         .status("true")
                                         .build(),
                                 PermissionRequest.builder()
-                                        .name("team_manager")
+                                        .name("Fire other user permission")
                                         .status("false")
                                         .build()
                         )
@@ -89,7 +93,7 @@ public class PermissionAcceptanceTest{
         // then
         result.andExpectAll(
                 MockMvcResultMatchers.status().isOk(),
-                MockMvcResultMatchers.header().string("api-version", apiVersion)
+                MockMvcResultMatchers.header().string("Api-version", apiVersion)
         );
     }
 
@@ -707,6 +711,20 @@ public class PermissionAcceptanceTest{
                 MockMvcResultMatchers.jsonPath("$.messages").value("Unknown permission name"),
                 MockMvcResultMatchers.jsonPath("$.document_url").value("docs.waldreg.org")
         );
+    }
+
+    private String getAdminToken() throws Exception{
+        AuthTokenRequest authTokenRequest = AuthTokenRequest.builder()
+                .userId(adminId)
+                .userPassword(adminPassword)
+                .build();
+        String content = AuthenticationAcceptanceTestHelper
+                .authenticateByUserIdAndUserPassword(mvc, objectMapper.writeValueAsString(authTokenRequest))
+                .andReturn()
+                .getResponse()
+                .getContentAsString();
+        AuthTokenResponse response = objectMapper.readValue(content, AuthTokenResponse.class);
+        return response.getTokenType() + " " + response.getAccessToken();
     }
 
 }

@@ -2,11 +2,13 @@ package org.waldreg.controller.user.mapper;
 
 import java.util.ArrayList;
 import java.util.List;
+import org.springframework.stereotype.Service;
 import org.waldreg.controller.user.response.UserListResponse;
 import org.waldreg.user.dto.UserDto;
 import org.waldreg.controller.user.request.UserRequest;
 import org.waldreg.controller.user.response.UserResponse;
 
+@Service
 public class ControllerUserMapper{
 
     public UserDto userRequestToUserDto(UserRequest createRequest){

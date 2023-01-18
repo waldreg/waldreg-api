@@ -35,7 +35,7 @@ public class JwtAuthenticatorTest{
         String encryptedToken = jwtTokenPublisher.publish(tokenDto);
 
         //then
-        Assertions.assertEquals(id,jwtTokenAuthenticator.authenticate(encryptedToken));
+        Assertions.assertEquals(id, jwtTokenAuthenticator.authenticate("Bearer " + encryptedToken));
     }
 
     @Test
@@ -51,7 +51,7 @@ public class JwtAuthenticatorTest{
         String expiredToken = jwtTokenPublisher.publish(tokenDto);
 
         //then
-        Assertions.assertThrows(TokenExpiredException.class, ()->jwtTokenAuthenticator.authenticate(expiredToken));
+        Assertions.assertThrows(TokenExpiredException.class, ()->jwtTokenAuthenticator.authenticate("Bearer " + expiredToken));
     }
 
 }

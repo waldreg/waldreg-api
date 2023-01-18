@@ -4,6 +4,8 @@ import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.Jws;
 import io.jsonwebtoken.JwtException;
+import io.jsonwebtoken.JwtParser;
+import io.jsonwebtoken.JwtParserBuilder;
 import io.jsonwebtoken.Jwts;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -26,11 +28,12 @@ public class JwtAuthenticator implements TokenAuthenticator{
     @Override
     public int authenticate(String token) throws JwtException{
         try{
-            Jws<Claims> claim = Jwts.parserBuilder().setSigningKey(secret.getSecretKey()).build().parseClaimsJws(token);
+            Jws<Claims> claim = Jwts.parserBuilder().setSigningKey(secret.getSecretKey()).build().parseClaimsJws(token.split(" ")[1]);
             int id = Integer.parseInt(claim.getBody().getSubject());
             decryptedTokenContextHolder.hold(id);
             return id;
         } catch (ExpiredJwtException EJE){
+            System.out.println(EJE.getMessage());
             throw new TokenExpiredException(EJE.getMessage(), EJE.getCause());
         }
     }
