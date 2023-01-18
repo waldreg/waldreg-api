@@ -123,6 +123,29 @@ public class AuthenticationAcceptanceTest{
     }
 
     @Test
+    @DisplayName("유저 아이디가 공백 토큰 발급 요청 실패")
+    public void CREATE_TOKEN_PUBLISH_REQUEST_EMPTY_USERID_TEST() throws Exception{
+        //given
+        String userId = "";
+        String userPassword = "1234abcd@";
+        TokenCreateRequest tokenCreateRequest = TokenCreateRequest.builder()
+                .userId(userId)
+                .userPassword(userPassword)
+                .build();
+
+        //when
+        ResultActions result = AuthenticationAcceptanceTestHelper.authenticateByUserIdAndUserPassword(mvc,objectMapper.writeValueAsString(tokenCreateRequest));
+
+        //then
+        result.andExpectAll(MockMvcResultMatchers.status().isBadRequest(),
+                            MockMvcResultMatchers.header().string(HttpHeaders.CONTENT_TYPE,
+                                                                  "application/json"),
+                            MockMvcResultMatchers.jsonPath("$.messages").value("Unknown user id"),
+                            MockMvcResultMatchers.jsonPath("$.document_url").value("docs.waldreg.org"))
+                .andDo(MockMvcResultHandlers.print());
+    }
+
+    @Test
     @DisplayName("토큰 발급 실패 잘못된 인증 정보 (잘못된 비밀번호)")
     public void TOKEN_PUBLISH_FAIL_INVALID_INFORMATION() throws Exception{
         //given
