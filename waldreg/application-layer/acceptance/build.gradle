@@ -14,6 +14,7 @@ repositories {
 
 dependencies {
     implementation project(':application-layer:character-controller')
+    implementation project(':application-layer:user-controller')
     implementation project(':application-layer:application-configurer')
 
     implementation 'org.springframework.boot:spring-boot-starter'
