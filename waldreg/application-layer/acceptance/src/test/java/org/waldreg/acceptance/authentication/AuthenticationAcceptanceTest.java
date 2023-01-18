@@ -3,18 +3,23 @@ package org.waldreg.acceptance.authentication;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import java.util.ArrayList;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import org.waldreg.acceptance.user.UserAcceptanceTestHelper;
 import org.waldreg.controller.user.request.UserRequest;
+import org.waldreg.controller.user.response.UserResponse;
 
 @SpringBootTest
 @AutoConfigureMockMvc
@@ -28,6 +33,35 @@ public class AuthenticationAcceptanceTest{
 
     private final String apiVersion = "1.0";
 
+    private ArrayList<UserRequest> userCreateRequestList;
+
+    {
+        userCreateRequestList = new ArrayList<>();
+    }
+
+    @BeforeEach
+    @AfterEach
+    public void INITIATE() throws Exception{
+        String url = "/user/{id}";
+        String adminToken = AuthenticationAcceptanceTestHelper.getAdminToken(mvc, objectMapper);
+        for (UserRequest request : userCreateRequestList){
+            UserResponse userResponse = objectMapper.readValue(UserAcceptanceTestHelper.inquiryUserWithoutToken(mvc, request.getUserId())
+                                                                       .andReturn()
+                                                                       .getResponse()
+                                                                       .getContentAsString(), UserResponse.class);
+            UserAcceptanceTestHelper.forcedDeleteUserWithToken(mvc, userResponse.getId(), adminToken);
+            ResultActions result = UserAcceptanceTestHelper.inquiryUserWithoutToken(mvc, request.getUserId());
+            result.andExpectAll(
+                    MockMvcResultMatchers.status().isBadRequest(),
+                    MockMvcResultMatchers.header().string(HttpHeaders.CONTENT_TYPE, "application/json"),
+                    MockMvcResultMatchers.header().string("api-version", apiVersion),
+                    MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON),
+                    MockMvcResultMatchers.jsonPath("$.messages").value("Unknown user id"),
+                    MockMvcResultMatchers.jsonPath("$.document_url").value("docs.waldreg.org")
+            ).andDo(MockMvcResultHandlers.print());
+        }
+        userCreateRequestList.clear();
+    }
 
     @Test
     @DisplayName("토큰 발급 요청 성공")
@@ -51,6 +85,7 @@ public class AuthenticationAcceptanceTest{
                 .phoneNumber(phoneNumber2)
                 .build();
         UserAcceptanceTestHelper.createUser(mvc, objectMapper.writeValueAsString(userRequest));
+        userCreateRequestList.add(userRequest);
 
         //when
         ResultActions result = AuthenticationAcceptanceTestHelper.authenticateByUserIdAndUserPassword(mvc,objectMapper.writeValueAsString(tokenCreateRequest));
@@ -69,6 +104,29 @@ public class AuthenticationAcceptanceTest{
     public void CREATE_TOKEN_PUBLISH_REQUEST_NOT_MATCHED_USER_TEST() throws Exception{
         //given
         String userId = "nbafsda";
+        String userPassword = "1234abcd@";
+        TokenCreateRequest tokenCreateRequest = TokenCreateRequest.builder()
+                .userId(userId)
+                .userPassword(userPassword)
+                .build();
+
+        //when
+        ResultActions result = AuthenticationAcceptanceTestHelper.authenticateByUserIdAndUserPassword(mvc,objectMapper.writeValueAsString(tokenCreateRequest));
+
+        //then
+        result.andExpectAll(MockMvcResultMatchers.status().isBadRequest(),
+                            MockMvcResultMatchers.header().string(HttpHeaders.CONTENT_TYPE,
+                                                                  "application/json"),
+                            MockMvcResultMatchers.jsonPath("$.messages").value("Unknown user id"),
+                            MockMvcResultMatchers.jsonPath("$.document_url").value("docs.waldreg.org"))
+                .andDo(MockMvcResultHandlers.print());
+    }
+
+    @Test
+    @DisplayName("유저 아이디가 공백 토큰 발급 요청 실패")
+    public void CREATE_TOKEN_PUBLISH_REQUEST_EMPTY_USERID_TEST() throws Exception{
+        //given
+        String userId = "";
         String userPassword = "1234abcd@";
         TokenCreateRequest tokenCreateRequest = TokenCreateRequest.builder()
                 .userId(userId)
@@ -110,6 +168,7 @@ public class AuthenticationAcceptanceTest{
                 .phoneNumber(phoneNumber2)
                 .build();
         UserAcceptanceTestHelper.createUser(mvc, objectMapper.writeValueAsString(userRequest));
+        userCreateRequestList.add(userRequest);
         //when
         ResultActions result = AuthenticationAcceptanceTestHelper.authenticateByUserIdAndUserPassword(mvc,objectMapper.writeValueAsString(tokenCreateRequest));
         //then
