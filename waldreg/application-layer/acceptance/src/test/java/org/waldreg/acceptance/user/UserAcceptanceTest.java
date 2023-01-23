@@ -6,7 +6,10 @@ import java.util.List;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.MethodOrderer;
+import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.TestMethodOrder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -27,6 +30,7 @@ import org.waldreg.controller.user.response.UserResponse;
 
 @SpringBootTest
 @AutoConfigureMockMvc
+@TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 public class UserAcceptanceTest{
 
     @Autowired
@@ -482,6 +486,47 @@ public class UserAcceptanceTest{
                 MockMvcResultMatchers.status().isOk(),
                 MockMvcResultMatchers.header().string("api-version", apiVersion)
         ).andDo(MockMvcResultHandlers.print());
+    }
+
+    @Test
+    @Order(Integer.MAX_VALUE)
+    @DisplayName("관리자 수정 성공 인수 테스트")
+    public void MODIFY_ADMIN_SUCCESS_TEST() throws Exception{
+        //given
+        String adminToken = AuthenticationAcceptanceTestHelper.getAdminToken(mvc, objectMapper);
+        String adminPassword = "0000";
+        String modifiedName = "Admin";
+        String modifiedUserPassword = "alcuk2234!";
+        String modifiedPhoneNumber = "010-0000-0000";
+        UpdateUserRequest modifyUserCreateRequest = UpdateUserRequest.builder()
+                .name(modifiedName)
+                .userPassword(modifiedUserPassword)
+                .phoneNumber(modifiedPhoneNumber)
+                .build();
+        String modifiedName2 = "Admin";
+        String modifiedUserPassword2 = "alcuk2233!";
+        String modifiedPhoneNumber2 = "010-0000-0000";
+        UpdateUserRequest modifyUserCreateRequest2 = UpdateUserRequest.builder()
+                .name(modifiedName2)
+                .userPassword(modifiedUserPassword2)
+                .phoneNumber(modifiedPhoneNumber2)
+                .build();
+
+        //when
+        ResultActions result = UserAcceptanceTestHelper.modifyUserWithToken(mvc, adminToken, adminPassword, objectMapper.writeValueAsString(modifyUserCreateRequest));
+        ResultActions result2 = UserAcceptanceTestHelper.modifyUserWithToken(mvc, adminToken, modifiedUserPassword, objectMapper.writeValueAsString(modifyUserCreateRequest2));
+
+        //then
+        result.andExpectAll(
+                MockMvcResultMatchers.status().isOk(),
+                MockMvcResultMatchers.header().string("api-version", apiVersion)
+        ).andDo(MockMvcResultHandlers.print());
+
+        result2.andExpectAll(
+                MockMvcResultMatchers.status().isOk(),
+                MockMvcResultMatchers.header().string("api-version", apiVersion)
+        ).andDo(MockMvcResultHandlers.print());
+
     }
 
     @Test
@@ -988,12 +1033,92 @@ public class UserAcceptanceTest{
                         .andReturn()
                         .getResponse()
                         .getContentAsString(), UserResponse.class);
-        ResultActions result = UserAcceptanceTestHelper.modifyUserCharacter(mvc, objectUserResponse.getId(), adminToken, objectMapper.writeValueAsString(characterRequest));
+        UserAcceptanceTestHelper.modifyUserCharacter(mvc, objectUserResponse.getId(), adminToken, objectMapper.writeValueAsString(characterRequest));
+        ResultActions result = UserAcceptanceTestHelper.inquiryUserWithoutToken(mvc, objectUserCreateRequest.getUserId());
 
         //then
         result.andExpectAll(
                 MockMvcResultMatchers.status().isOk(),
                 MockMvcResultMatchers.header().string("api-version", apiVersion)
+        ).andDo(MockMvcResultHandlers.print());
+
+    }
+
+    @Test
+    @DisplayName("유저 역할 수정 시 동기화 성공 인수 테스트")
+    public void MODIFY_USER_CHARACTER_AND_SYNCHRONIZE_SUCCESS_TEST() throws Exception{
+        //given
+        String adminToken = AuthenticationAcceptanceTestHelper.getAdminToken(mvc, objectMapper);
+        String name1 = "alcuk1";
+        String userId1 = "alcuk_id1";
+        String userPassword1 = "alcuk_pwd1!";
+        String phoneNumber1 = "010-1234-1111";
+        UserRequest userCreateRequest1 = UserRequest.builder()
+                .name(name1)
+                .userId(userId1)
+                .userPassword(userPassword1)
+                .phoneNumber(phoneNumber1)
+                .build();
+        String name2 = "alcuk2";
+        String userId2 = "alcuk_id2";
+        String userPassword2 = "alcuk_pwd2!";
+        String phoneNumber2 = "010-1234-2222";
+        UserRequest userCreateRequest2 = UserRequest.builder()
+                .name(name2)
+                .userId(userId2)
+                .userPassword(userPassword2)
+                .phoneNumber(phoneNumber2)
+                .build();
+        String objectCharacter = "object_character";
+        CharacterRequest characterRequest = new CharacterRequest();
+        characterRequest.setCharacter(objectCharacter);
+        org.waldreg.controller.character.request.CharacterRequest request = org.waldreg.controller.character.request.CharacterRequest.builder()
+                .characterName(objectCharacter)
+                .permissionList(List.of()).build();
+        String objectCharacter2 = "object_character2";
+        CharacterRequest characterRequest2 = new CharacterRequest();
+        characterRequest.setCharacter(objectCharacter2);
+        org.waldreg.controller.character.request.CharacterRequest request2 = org.waldreg.controller.character.request.CharacterRequest.builder()
+                .characterName(objectCharacter2)
+                .permissionList(List.of()).build();
+
+        //when
+        UserAcceptanceTestHelper.createUser(mvc, objectMapper.writeValueAsString(userCreateRequest1));
+        UserAcceptanceTestHelper.createUser(mvc, objectMapper.writeValueAsString(userCreateRequest2));
+        userCreateRequestList.add(userCreateRequest1);
+        userCreateRequestList.add(userCreateRequest2);
+        PermissionAcceptanceTestHelper
+                .createCharacter(mvc, adminToken, objectMapper.writeValueAsString(request));
+        PermissionAcceptanceTestHelper
+                .createCharacter(mvc, adminToken, objectMapper.writeValueAsString(request2));
+        deleteWaitCharacterList.add(objectCharacter);
+        deleteWaitCharacterList.add(objectCharacter2);
+        UserResponse objectUserResponse = objectMapper.readValue(
+                UserAcceptanceTestHelper.inquiryUserWithoutToken(mvc, userCreateRequest1.getUserId())
+                        .andReturn()
+                        .getResponse()
+                        .getContentAsString(), UserResponse.class);
+        UserResponse objectUserResponse2 = objectMapper.readValue(
+                UserAcceptanceTestHelper.inquiryUserWithoutToken(mvc, userCreateRequest2.getUserId())
+                        .andReturn()
+                        .getResponse()
+                        .getContentAsString(), UserResponse.class);
+        UserAcceptanceTestHelper.modifyUserCharacter(mvc, objectUserResponse.getId(), adminToken, objectMapper.writeValueAsString(characterRequest));
+        UserAcceptanceTestHelper.modifyUserCharacter(mvc, objectUserResponse2.getId(), adminToken, objectMapper.writeValueAsString(characterRequest));
+        UserAcceptanceTestHelper.modifyUserCharacter(mvc, objectUserResponse2.getId(), adminToken, objectMapper.writeValueAsString(characterRequest2));
+        ResultActions result = UserAcceptanceTestHelper.inquiryUserWithoutToken(mvc, userCreateRequest1.getUserId());
+
+        //then
+        result.andExpectAll(
+                MockMvcResultMatchers.status().isOk(),
+                MockMvcResultMatchers.header().string(HttpHeaders.CONTENT_TYPE, "application/json"),
+                MockMvcResultMatchers.header().string("api-version", apiVersion),
+                MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON),
+                MockMvcResultMatchers.jsonPath("$.id").isNumber(),
+                MockMvcResultMatchers.jsonPath("$.name").value(userCreateRequest1.getName()),
+                MockMvcResultMatchers.jsonPath("$.user_id").value(userCreateRequest1.getUserId()),
+                MockMvcResultMatchers.jsonPath("$.character").value(request2.getCharacterName()),
+                MockMvcResultMatchers.jsonPath("$.created_at").isNotEmpty()
         ).andDo(MockMvcResultHandlers.print());
 
     }
@@ -1063,12 +1188,12 @@ public class UserAcceptanceTest{
         //when
         UserAcceptanceTestHelper.createUser(mvc, objectMapper.writeValueAsString(subjectUserCreateRequest));
         userCreateRequestList.add(subjectUserCreateRequest);
-        UserResponse subbjectUserResponse = objectMapper.readValue(
+        UserResponse subjectUserResponse = objectMapper.readValue(
                 UserAcceptanceTestHelper.inquiryUserWithoutToken(mvc, subjectUserCreateRequest.getUserId())
                         .andReturn()
                         .getResponse()
                         .getContentAsString(), UserResponse.class);
-        ResultActions result = UserAcceptanceTestHelper.modifyUserCharacter(mvc, subbjectUserResponse.getId(), adminToken, objectMapper.writeValueAsString(characterRequest));
+        ResultActions result = UserAcceptanceTestHelper.modifyUserCharacter(mvc, subjectUserResponse.getId(), adminToken, objectMapper.writeValueAsString(characterRequest));
 
         //then
         result.andExpectAll(
