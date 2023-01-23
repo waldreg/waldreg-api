@@ -86,7 +86,7 @@ public class PermissionAcceptanceTest{
                     MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON),
                     MockMvcResultMatchers.jsonPath("$.messages").value("Unknown user id"),
                     MockMvcResultMatchers.jsonPath("$.document_url").value("docs.waldreg.org")
-            ).andDo(MockMvcResultHandlers.print());
+            );
         }
         userCreateRequestList.clear();
     }
@@ -774,6 +774,32 @@ public class PermissionAcceptanceTest{
         ).andDo(MockMvcResultHandlers.print());
     }
 
+    @Test
+    @DisplayName("역할 수정 실패 테스트 - Guest 와 Admin 역할 수정 불가")
+    public void UPDATE_CHARACTER_FAIL_TEST_TRY_MODIFY_GUEST_AND_ADMIN_CHARACTER() throws Exception{
+        // given
+        String token = AuthenticationAcceptanceTestHelper.getAdminToken(mvc, objectMapper);
+        String characterName = "Guest";
+        CharacterRequest characterChangeRequest = CharacterRequest.builder()
+                .characterName("Hello world")
+                .permissionList(List.of())
+                .build();
+
+        // when
+        ResultActions result = PermissionAcceptanceTestHelper
+                .modifySpecificCharacter(mvc, characterName, token, objectMapper.writeValueAsString(characterChangeRequest));
+
+        // then
+        result.andExpectAll(
+                MockMvcResultMatchers.status().isForbidden(),
+                MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON),
+                MockMvcResultMatchers.header().string(HttpHeaders.CONTENT_TYPE, "application/json"),
+                MockMvcResultMatchers.header().string("Api-version", apiVersion),
+                MockMvcResultMatchers.jsonPath("$.messages").value("No permission"),
+                MockMvcResultMatchers.jsonPath("$.document_url").value("docs.waldreg.org")
+        );
+    }
+
     private String createUserAndGetToken(String name, String userId, String userPassword) throws Exception{
         UserRequest userRequest = UserRequest.builder()
                 .name(name)
@@ -781,7 +807,7 @@ public class PermissionAcceptanceTest{
                 .userPassword(userPassword)
                 .phoneNumber("123-1234-1234")
                 .build();
-        UserAcceptanceTestHelper.createUser(mvc, objectMapper.writeValueAsString(userRequest));
+        UserAcceptanceTestHelper.createUser(mvc, objectMapper.writeValueAsString(userRequest)).andDo(MockMvcResultHandlers.print());
         userCreateRequestList.add(userRequest);
 
         return AuthenticationAcceptanceTestHelper.getToken(mvc, objectMapper, AuthTokenRequest.builder()
