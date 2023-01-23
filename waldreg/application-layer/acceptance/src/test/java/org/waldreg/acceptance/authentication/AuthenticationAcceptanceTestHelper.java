@@ -32,7 +32,7 @@ public class AuthenticationAcceptanceTestHelper{
                 .andReturn()
                 .getResponse()
                 .getContentAsString();
-        System.out.println("content - " + content);
+        
         AuthTokenResponse response = objectMapper.readValue(content, AuthTokenResponse.class);
         return response.getTokenType() + " " + response.getAccessToken();
     }
