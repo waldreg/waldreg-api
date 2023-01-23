@@ -43,7 +43,7 @@ public class CharacterController{
         this.controllerCharacterMapper = controllerCharacterMapper;
     }
 
-    @Authenticating(fail = AuthFailBehavior.PASS)
+    @Authenticating()
     @PermissionVerifying("Character manager")
     @GetMapping("/permission")
     public Map<String, List<PermissionResponse>> getAllPermissions(){
@@ -52,7 +52,7 @@ public class CharacterController{
         return Map.of("permissions", permissionResponseDtoList);
     }
 
-    @Authenticating(fail = AuthFailBehavior.PASS)
+    @Authenticating()
     @PermissionVerifying("Character manager")
     @GetMapping("/character")
     public Map<String, List<String>> getAllCharacters(){
@@ -60,7 +60,7 @@ public class CharacterController{
         return Map.of("character_name", characterNameList);
     }
 
-    @Authenticating(fail = AuthFailBehavior.PASS)
+    @Authenticating()
     @PermissionVerifying("Character manager")
     @PostMapping("/character")
     public void createNewCharacter(@RequestBody @Validated CharacterRequest characterRequest){
@@ -68,7 +68,7 @@ public class CharacterController{
         characterManager.createCharacter(characterDto);
     }
 
-    @Authenticating(fail = AuthFailBehavior.PASS)
+    @Authenticating()
     @PermissionVerifying("Character manager")
     @GetMapping("/character/{character-name}")
     public CharacterResponse getCharacterByName(@PathVariable("character-name") String characterName){
@@ -76,14 +76,14 @@ public class CharacterController{
         return controllerCharacterMapper.characterDtoToCharacterResponse(characterDto);
     }
 
-    @Authenticating(fail = AuthFailBehavior.PASS)
+    @Authenticating()
     @PermissionVerifying("Character manager")
     @PatchMapping("/character/{character-name}")
     public void updateCharacter(@PathVariable("character-name") String characterName, @RequestBody CharacterRequest characterRequest){
         characterManager.updateCharacter(characterName, controllerCharacterMapper.characterRequestToCharacterDto(characterRequest));
     }
 
-    @Authenticating(fail = AuthFailBehavior.PASS)
+    @Authenticating()
     @PermissionVerifying("Character manager")
     @DeleteMapping("/character/{character-name}")
     public void deleteCharacter(@PathVariable("character-name") String characterName){
