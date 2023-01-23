@@ -22,6 +22,7 @@ import org.waldreg.controller.character.request.CharacterRequest;
 import org.waldreg.controller.character.response.CharacterResponse;
 import org.waldreg.controller.character.response.PermissionResponse;
 import org.waldreg.token.aop.annotation.Authenticating;
+import org.waldreg.token.aop.behavior.AuthFailBehavior;
 
 @RestController
 public class CharacterController{
@@ -42,7 +43,7 @@ public class CharacterController{
         this.controllerCharacterMapper = controllerCharacterMapper;
     }
 
-    @Authenticating
+    @Authenticating()
     @PermissionVerifying("Character manager")
     @GetMapping("/permission")
     public Map<String, List<PermissionResponse>> getAllPermissions(){
@@ -51,7 +52,7 @@ public class CharacterController{
         return Map.of("permissions", permissionResponseDtoList);
     }
 
-    @Authenticating
+    @Authenticating()
     @PermissionVerifying("Character manager")
     @GetMapping("/character")
     public Map<String, List<String>> getAllCharacters(){
@@ -59,7 +60,7 @@ public class CharacterController{
         return Map.of("character_name", characterNameList);
     }
 
-    @Authenticating
+    @Authenticating()
     @PermissionVerifying("Character manager")
     @PostMapping("/character")
     public void createNewCharacter(@RequestBody @Validated CharacterRequest characterRequest){
@@ -67,7 +68,7 @@ public class CharacterController{
         characterManager.createCharacter(characterDto);
     }
 
-    @Authenticating
+    @Authenticating()
     @PermissionVerifying("Character manager")
     @GetMapping("/character/{character-name}")
     public CharacterResponse getCharacterByName(@PathVariable("character-name") String characterName){
@@ -75,14 +76,14 @@ public class CharacterController{
         return controllerCharacterMapper.characterDtoToCharacterResponse(characterDto);
     }
 
-    @Authenticating
+    @Authenticating()
     @PermissionVerifying("Character manager")
     @PatchMapping("/character/{character-name}")
     public void updateCharacter(@PathVariable("character-name") String characterName, @RequestBody CharacterRequest characterRequest){
         characterManager.updateCharacter(characterName, controllerCharacterMapper.characterRequestToCharacterDto(characterRequest));
     }
 
-    @Authenticating
+    @Authenticating()
     @PermissionVerifying("Character manager")
     @DeleteMapping("/character/{character-name}")
     public void deleteCharacter(@PathVariable("character-name") String characterName){

@@ -46,9 +46,9 @@ public class AuthenticationAcceptanceTest{
         String adminToken = AuthenticationAcceptanceTestHelper.getAdminToken(mvc, objectMapper);
         for (UserRequest request : userCreateRequestList){
             UserResponse userResponse = objectMapper.readValue(UserAcceptanceTestHelper.inquiryUserWithoutToken(mvc, request.getUserId())
-                                                                       .andReturn()
-                                                                       .getResponse()
-                                                                       .getContentAsString(), UserResponse.class);
+                    .andReturn()
+                    .getResponse()
+                    .getContentAsString(), UserResponse.class);
             UserAcceptanceTestHelper.forcedDeleteUserWithToken(mvc, userResponse.getId(), adminToken);
             ResultActions result = UserAcceptanceTestHelper.inquiryUserWithoutToken(mvc, request.getUserId());
             result.andExpectAll(
@@ -56,7 +56,7 @@ public class AuthenticationAcceptanceTest{
                     MockMvcResultMatchers.header().string(HttpHeaders.CONTENT_TYPE, "application/json"),
                     MockMvcResultMatchers.header().string("api-version", apiVersion),
                     MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON),
-                    MockMvcResultMatchers.jsonPath("$.messages").value("Unknown user id"),
+                    MockMvcResultMatchers.jsonPath("$.messages").value("Unknown user_id"),
                     MockMvcResultMatchers.jsonPath("$.document_url").value("docs.waldreg.org")
             ).andDo(MockMvcResultHandlers.print());
         }
@@ -88,14 +88,14 @@ public class AuthenticationAcceptanceTest{
         userCreateRequestList.add(userRequest);
 
         //when
-        ResultActions result = AuthenticationAcceptanceTestHelper.authenticateByUserIdAndUserPassword(mvc,objectMapper.writeValueAsString(tokenCreateRequest));
+        ResultActions result = AuthenticationAcceptanceTestHelper.authenticateByUserIdAndUserPassword(mvc, objectMapper.writeValueAsString(tokenCreateRequest));
 
         //then
         result.andExpectAll(MockMvcResultMatchers.status().isOk(),
-                            MockMvcResultMatchers.header().string(HttpHeaders.CONTENT_TYPE,
-                                                                  "application/json"),
-                            MockMvcResultMatchers.jsonPath("$.access_token").isString(),
-                            MockMvcResultMatchers.jsonPath("$.token_type").value("Bearer"))
+                        MockMvcResultMatchers.header().string(HttpHeaders.CONTENT_TYPE,
+                                "application/json"),
+                        MockMvcResultMatchers.jsonPath("$.access_token").isString(),
+                        MockMvcResultMatchers.jsonPath("$.token_type").value("Bearer"))
                 .andDo(MockMvcResultHandlers.print());
     }
 
@@ -111,14 +111,14 @@ public class AuthenticationAcceptanceTest{
                 .build();
 
         //when
-        ResultActions result = AuthenticationAcceptanceTestHelper.authenticateByUserIdAndUserPassword(mvc,objectMapper.writeValueAsString(tokenCreateRequest));
+        ResultActions result = AuthenticationAcceptanceTestHelper.authenticateByUserIdAndUserPassword(mvc, objectMapper.writeValueAsString(tokenCreateRequest));
 
         //then
         result.andExpectAll(MockMvcResultMatchers.status().isBadRequest(),
-                            MockMvcResultMatchers.header().string(HttpHeaders.CONTENT_TYPE,
-                                                                  "application/json"),
-                            MockMvcResultMatchers.jsonPath("$.messages").value("Unknown user id"),
-                            MockMvcResultMatchers.jsonPath("$.document_url").value("docs.waldreg.org"))
+                        MockMvcResultMatchers.header().string(HttpHeaders.CONTENT_TYPE,
+                                "application/json"),
+                        MockMvcResultMatchers.jsonPath("$.messages").value("Unknown user_id"),
+                        MockMvcResultMatchers.jsonPath("$.document_url").value("docs.waldreg.org"))
                 .andDo(MockMvcResultHandlers.print());
     }
 
@@ -134,14 +134,14 @@ public class AuthenticationAcceptanceTest{
                 .build();
 
         //when
-        ResultActions result = AuthenticationAcceptanceTestHelper.authenticateByUserIdAndUserPassword(mvc,objectMapper.writeValueAsString(tokenCreateRequest));
+        ResultActions result = AuthenticationAcceptanceTestHelper.authenticateByUserIdAndUserPassword(mvc, objectMapper.writeValueAsString(tokenCreateRequest));
 
         //then
         result.andExpectAll(MockMvcResultMatchers.status().isBadRequest(),
-                            MockMvcResultMatchers.header().string(HttpHeaders.CONTENT_TYPE,
-                                                                  "application/json"),
-                            MockMvcResultMatchers.jsonPath("$.messages").value("Unknown user id"),
-                            MockMvcResultMatchers.jsonPath("$.document_url").value("docs.waldreg.org"))
+                        MockMvcResultMatchers.header().string(HttpHeaders.CONTENT_TYPE,
+                                "application/json"),
+                        MockMvcResultMatchers.jsonPath("$.messages").value("Unknown user_id"),
+                        MockMvcResultMatchers.jsonPath("$.document_url").value("docs.waldreg.org"))
                 .andDo(MockMvcResultHandlers.print());
     }
 
@@ -156,7 +156,6 @@ public class AuthenticationAcceptanceTest{
                 .userPassword(userPassword)
                 .build();
 
-
         String name2 = "alcuk2";
         String userId2 = "alcuk";
         String userPassword2 = "1234abcd@";
@@ -170,16 +169,16 @@ public class AuthenticationAcceptanceTest{
         UserAcceptanceTestHelper.createUser(mvc, objectMapper.writeValueAsString(userRequest));
         userCreateRequestList.add(userRequest);
         //when
-        ResultActions result = AuthenticationAcceptanceTestHelper.authenticateByUserIdAndUserPassword(mvc,objectMapper.writeValueAsString(tokenCreateRequest));
+        ResultActions result = AuthenticationAcceptanceTestHelper.authenticateByUserIdAndUserPassword(mvc, objectMapper.writeValueAsString(tokenCreateRequest));
         //then
         result.andExpectAll(MockMvcResultMatchers.status().isBadRequest(),
-                            MockMvcResultMatchers.header().string(HttpHeaders.CONTENT_TYPE,
-                                                                  "application/json"),
-                            MockMvcResultMatchers.header().string("api-version", apiVersion),
-                            MockMvcResultMatchers.jsonPath("$.messages").value(
-                                    "Invalid authentication information"),
-                            MockMvcResultMatchers.jsonPath("$.document_url").value(
-                                    "docs.waldreg.org"))
+                        MockMvcResultMatchers.header().string(HttpHeaders.CONTENT_TYPE,
+                                "application/json"),
+                        MockMvcResultMatchers.header().string("api-version", apiVersion),
+                        MockMvcResultMatchers.jsonPath("$.messages").value(
+                                "Invalid authentication information"),
+                        MockMvcResultMatchers.jsonPath("$.document_url").value(
+                                "docs.waldreg.org"))
                 .andDo(MockMvcResultHandlers.print());
 
     }

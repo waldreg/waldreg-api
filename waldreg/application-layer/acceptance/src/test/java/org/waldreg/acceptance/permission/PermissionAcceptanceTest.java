@@ -84,7 +84,7 @@ public class PermissionAcceptanceTest{
                     MockMvcResultMatchers.header().string(HttpHeaders.CONTENT_TYPE, "application/json"),
                     MockMvcResultMatchers.header().string("api-version", apiVersion),
                     MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON),
-                    MockMvcResultMatchers.jsonPath("$.messages").value("Unknown user id"),
+                    MockMvcResultMatchers.jsonPath("$.messages").value("Unknown user_id"),
                     MockMvcResultMatchers.jsonPath("$.document_url").value("docs.waldreg.org")
             ).andDo(MockMvcResultHandlers.print());
         }
@@ -128,7 +128,7 @@ public class PermissionAcceptanceTest{
     @DisplayName("새로운 역할 추가 실패 인수 테스트 - 최고 관리자가 아닐때")
     public void CREATE_NEW_CHARACTER_FAIL_CAUSE_NOT_ADMIN_ACCEPTANCE_TEST() throws Exception{
         // given
-        String token = createUserAndGetToken("hong gil dong", "hello world", "1234");
+        String token = createUserAndGetToken("hong gil dong", "hello world", "abc1234!!!");
         String characterName = "something new character";
         CharacterRequest request = CharacterRequest.builder()
                 .characterName(characterName)
@@ -299,7 +299,7 @@ public class PermissionAcceptanceTest{
     @DisplayName("역할 목록 조회 실패 인수 테스트 - 최고 관리자가 아님")
     public void INQUIRY_CHARACTER_LIST_FAIL_NOT_ADMIN_ACCEPTANCE_TEST() throws Exception{
         // given
-        String token = createUserAndGetToken("helloow", "hello world", "1234");
+        String token = createUserAndGetToken("helloow", "hello world", "1234abcd!");
         String url = "/character";
 
         // when
@@ -354,7 +354,7 @@ public class PermissionAcceptanceTest{
     @DisplayName("특정 역할 조회 실패 인수테스트 - 최고 관리자가 아님")
     public void INQUIRY_CHARACTER_BY_NAME_FAIL_NOT_ADMIN_ACCEPTANCE_TEST() throws Exception{
         // given
-        String token = createUserAndGetToken("helloow", "hello world", "1234");
+        String token = createUserAndGetToken("helloow", "hello world", "1ABV234!");
         String characterName = "Character manager";
 
         // when
@@ -439,7 +439,7 @@ public class PermissionAcceptanceTest{
     @DisplayName("특정 역할 수정 실패 인수테스트 - 최고 관리자가 아님")
     public void MODIFY_CHARACTER_BY_NAME_FAIL_NOT_ADMIN_ACCEPTANCE_TEST() throws Exception{
         // given
-        String token = createUserAndGetToken("hello", "hello world", "1234");
+        String token = createUserAndGetToken("hello", "hello world", "1234abc!");
         String characterName = "Character manager";
         CharacterRequest request = CharacterRequest.builder()
                 .characterName(characterName)
@@ -639,7 +639,7 @@ public class PermissionAcceptanceTest{
     public void INQUIRY_PERMISSION_LIST_FAIL_NOT_ADMIN_ACCEPTANCE_TEST() throws Exception{
         // given
         String url = "/permission";
-        String token = createUserAndGetToken("hello", "hello world", "1234");
+        String token = createUserAndGetToken("hello", "hello world", "abc1234!");
 
         // when
         ResultActions result = PermissionAcceptanceTestHelper.inquiryPermissionList(mvc, token);
@@ -685,7 +685,7 @@ public class PermissionAcceptanceTest{
         // given
         String characterName = "mock_character";
         String token = AuthenticationAcceptanceTestHelper.getAdminToken(mvc, objectMapper);
-        String notAdminToken = createUserAndGetToken("hello", "hello world", "1234");
+        String notAdminToken = createUserAndGetToken("hello", "hello world", "abc!1234");
         CharacterRequest request = CharacterRequest.builder()
                 .characterName(characterName)
                 .permissionList(List.of()).build();
@@ -779,7 +779,7 @@ public class PermissionAcceptanceTest{
                 .name(name)
                 .userId(userId)
                 .userPassword(userPassword)
-                .phoneNumber("123-1234-1234")
+                .phoneNumber("010-1234-1234")
                 .build();
         UserAcceptanceTestHelper.createUser(mvc, objectMapper.writeValueAsString(userRequest));
         userCreateRequestList.add(userRequest);

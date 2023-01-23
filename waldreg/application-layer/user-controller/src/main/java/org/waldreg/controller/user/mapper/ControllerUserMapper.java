@@ -3,6 +3,7 @@ package org.waldreg.controller.user.mapper;
 import java.util.ArrayList;
 import java.util.List;
 import org.springframework.stereotype.Service;
+import org.waldreg.controller.user.request.UpdateUserRequest;
 import org.waldreg.controller.user.response.UserListResponse;
 import org.waldreg.user.dto.UserDto;
 import org.waldreg.controller.user.request.UserRequest;
@@ -17,6 +18,14 @@ public class ControllerUserMapper{
                 .name(createRequest.getName())
                 .userPassword(createRequest.getUserPassword())
                 .phoneNumber(createRequest.getPhoneNumber())
+                .build();
+    }
+
+    public UserDto updateUserRequestToUserDto(UpdateUserRequest updateUserRequest){
+        return UserDto.builder()
+                .name(updateUserRequest.getName())
+                .userPassword(updateUserRequest.getUserPassword())
+                .phoneNumber(updateUserRequest.getPhoneNumber())
                 .build();
     }
 

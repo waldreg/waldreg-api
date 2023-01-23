@@ -51,9 +51,10 @@ public class UserAcceptanceTestHelper{
 
     public static ResultActions modifyUserWithToken(MockMvc mvc, String token, String password, String content) throws Exception{
         return mvc.perform(MockMvcRequestBuilders
-                .patch("/user", content)
+                .put("/user")
                 .accept(MediaType.APPLICATION_JSON)
                 .header("api-version", apiVersion)
+                .contentType(MediaType.APPLICATION_JSON)
                 .header(HttpHeaders.AUTHORIZATION, token)
                 .header("password", password)
                 .content(content));
@@ -61,9 +62,10 @@ public class UserAcceptanceTestHelper{
 
     public static ResultActions modifyUserWithoutToken(MockMvc mvc, String password, String content) throws Exception{
         return mvc.perform(MockMvcRequestBuilders
-                .patch("/user", content)
+                .put("/user")
                 .accept(MediaType.APPLICATION_JSON)
                 .header("api-version", apiVersion)
+                .contentType(MediaType.APPLICATION_JSON)
                 .header("password", password)
                 .content(content));
     }
@@ -106,20 +108,21 @@ public class UserAcceptanceTestHelper{
                 .accept(MediaType.APPLICATION_JSON)
                 .header("api-version", apiVersion)
                 .header(HttpHeaders.AUTHORIZATION, token)
+                .contentType(MediaType.APPLICATION_JSON)
                 .content(content));
     }
 
-    public static ResultActions inquiryAllUserWithToken(MockMvc mvc, int startIdx, int endIdx, String token) throws Exception{
+    public static ResultActions inquiryAllUserWithToken(MockMvc mvc, int startId, int endId, String token) throws Exception{
         return mvc.perform(MockMvcRequestBuilders
-                .get("/user?from={start-idx}&to={end-idx}", startIdx, endIdx)
+                .get("/users").param("from", Integer.toString(startId)).param("to", Integer.toString(endId))
                 .accept(MediaType.APPLICATION_JSON)
                 .header("api-version", apiVersion)
                 .header(HttpHeaders.AUTHORIZATION, token));
     }
 
-    public static ResultActions inquiryAllUserWithoutToken(MockMvc mvc, int startIdx, int endIdx) throws Exception{
+    public static ResultActions inquiryAllUserWithoutToken(MockMvc mvc, int startId, int endId) throws Exception{
         return mvc.perform(MockMvcRequestBuilders
-                .get("/user?from={start-idx}&to={end-idx}", startIdx, endIdx)
+                .get("/users").param("from", Integer.toString(startId)).param("to", Integer.toString(endId))
                 .accept(MediaType.APPLICATION_JSON)
                 .header("api-version", apiVersion));
     }

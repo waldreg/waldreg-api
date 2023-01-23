@@ -39,7 +39,7 @@ public class AuthExceptionAdvice{
                 .messages(tokenExpiredException.getMessage())
                 .documetUrl(documentUrl)
                 .build();
-        return new ResponseEntity<>(authExceptionTemplate, HttpStatus.BAD_REQUEST);
+        return new ResponseEntity<>(authExceptionTemplate, HttpStatus.UNAUTHORIZED);
     }
 
     @ExceptionHandler({AuthenticateFailException.class})
@@ -48,6 +48,6 @@ public class AuthExceptionAdvice{
                 .messages(authenticateFailException.getMessage())
                 .documetUrl(documentUrl)
                 .build();
-        return new ResponseEntity<>(authExceptionTemplate, HttpStatus.BAD_REQUEST);
+        return new ResponseEntity<>(authExceptionTemplate, HttpStatus.UNAUTHORIZED);
     }
 }

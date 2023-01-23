@@ -82,8 +82,8 @@ public class MemoryUserStorage{
 
     public List<User> readUserList(int startIdx, int endIdx){
         int cnt = startIndex;
-        startIdx -= 1;
-        endIdx -= 1;
+        startIdx--;
+        endIdx--;
         List<User> userList = new ArrayList<>();
         for (Map.Entry<String, User> userEntry : storage.entrySet()){
             if (cnt >= startIdx && cnt <= endIdx){
@@ -94,16 +94,14 @@ public class MemoryUserStorage{
         return userList;
     }
 
-    public int readMaxIdx(){
-        return storage.size();
-    }
+    public int readMaxIdx(){return storage.size();}
 
     public void updateUser(int id, User user){
         for (Map.Entry<String, User> userEntry : storage.entrySet()){
             if (userEntry.getValue().getId() == id){
-                if (user.getName() != null){userEntry.getValue().setName(user.getName());}
-                if (user.getUserPassword() != null){userEntry.getValue().setUserPassword(user.getUserPassword());}
-                if (user.getPhoneNumber() != null){userEntry.getValue().setPhoneNumber(user.getPhoneNumber());}
+                userEntry.getValue().setName(user.getName());
+                userEntry.getValue().setUserPassword(user.getUserPassword());
+                userEntry.getValue().setPhoneNumber(user.getPhoneNumber());
             }
         }
     }
@@ -115,6 +113,7 @@ public class MemoryUserStorage{
                 return;
             }
         }
+        throw new UnknownIdException(id);
     }
 
 }
