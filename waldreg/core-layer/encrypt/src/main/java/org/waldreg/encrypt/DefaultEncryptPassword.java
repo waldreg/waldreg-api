@@ -28,18 +28,20 @@ public class DefaultEncryptPassword implements EncryptPassword{
         try{
             MessageDigest messageDigest = MessageDigest.getInstance("SHA-256");
             messageDigest.update((password + salt).getBytes());
-            byte[] passwordSalt = messageDigest.digest();
-
-            StringBuffer buffer = new StringBuffer();
-            for (byte b : passwordSalt){
-                buffer.append(String.format("%02x", b));
-            }
-            result = buffer.toString();
-
+            byte[] encryptedPassword = messageDigest.digest();
+            result = byteToString(encryptedPassword);
         } catch (NoSuchAlgorithmException NSAE){
             throw new RuntimeException(NSAE);
         }
         return result;
+    }
+
+    private String byteToString(byte[] passwordSalt){
+        StringBuffer buffer = new StringBuffer();
+        for (byte b : passwordSalt){
+            buffer.append(String.format("%02x", b));
+        }
+        return buffer.toString();
     }
 
 }
