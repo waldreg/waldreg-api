@@ -30,4 +30,6 @@ include 'application-layer:application-configurer'
 findProject(':application-layer:application-configurer')?.name = 'application-configurer'
 include 'application-layer:user-controller'
 findProject(':application-layer:user-controller')?.name = 'user-controller'
+include 'core-layer:encrypt'
+findProject(':core-layer:encrypt')?.name = 'encrypt'
 
