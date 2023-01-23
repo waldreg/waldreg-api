@@ -6,13 +6,11 @@ import java.util.List;
 public class UserListResponse{
 
     @JsonProperty("max_idx")
-    private final int maxIdx;
+    private int maxIdx;
     @JsonProperty("users")
-    private final List<UserResponse> userList;
+    private List<UserResponse> userList;
 
-    private UserListResponse(){
-        throw new UnsupportedOperationException("Can not invoke constructor \"UserListResponse()\"");
-    }
+    public UserListResponse(){}
 
     private UserListResponse(Builder builder){
         this.maxIdx = builder.maxIdx;
@@ -24,6 +22,11 @@ public class UserListResponse{
     public int getMaxIdx(){return maxIdx;}
 
     public List<UserResponse> getUserList(){return userList;}
+
+    public void setMaxIdx(int maxIdx){this.maxIdx = maxIdx;}
+
+    public void setUserList(List<UserResponse> userList){this.userList = userList;}
+
 
     public final static class Builder{
 

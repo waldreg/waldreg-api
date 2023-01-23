@@ -50,7 +50,7 @@ public class AuthenticateAop{
         Authenticating authenticating = authenticatingAnnotationExtractor.extractAnnotation(proceedingJoinPoint, Authenticating.class);
         try{
             int id = getDecryptedId(getToken());
-            tokenUserFindById.findUserById(id);
+            TokenUserDto tokenUserDto = tokenUserFindById.findUserById(id);
         }catch(Exception E){
             authenticating.fail().behave();
         }

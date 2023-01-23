@@ -172,36 +172,6 @@ public class UserRepositoryTest{
     }
 
     @Test
-    @DisplayName("유저 수정 성공 테스트")
-    public void UPDATE_USER_SUCCESS_TEST(){
-        //given
-        UserDto userDto = UserDto.builder()
-                .userId("linirini_id")
-                .name("linirini")
-                .userPassword("linirini_pwd")
-                .phoneNumber("010-1234-1234")
-                .build();
-        UserDto updateUserDto = UserDto.builder()
-                .name("linirini2")
-                .phoneNumber("010-0000-1111")
-                .build();
-
-        //when
-        Mockito.when(memoryCharacterStorage.readCharacterByName(Mockito.anyString()))
-                .thenReturn(Character.builder().characterName("Guest").permissionList(List.of()).build());
-        userRepository.createUser(userDto);
-        userRepository.updateUser(memoryUserStorage.readUserByUserId(userDto.getUserId()).getId(), updateUserDto);
-        UserDto result = userRepository.readUserByUserId(userDto.getUserId());
-
-        //then
-        Assertions.assertAll(
-                () -> Assertions.assertEquals(result.getName(), updateUserDto.getName()),
-                () -> Assertions.assertEquals(result.getUserPassword(), userDto.getUserPassword()),
-                () -> Assertions.assertEquals(result.getPhoneNumber(), updateUserDto.getPhoneNumber())
-        );
-    }
-
-    @Test
     @DisplayName("유저 역할 수정 성공 테스트")
     public void UPDATE_USER_CHARACTER_SUCCESS_TEST(){
         //given

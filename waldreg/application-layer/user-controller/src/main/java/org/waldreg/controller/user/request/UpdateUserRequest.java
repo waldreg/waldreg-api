@@ -5,14 +5,12 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
 
-public class UserRequest{
+public class UpdateUserRequest{
 
     @NotBlank(message = "Invalid name input")
     @JsonProperty("name")
     private String name;
-    @NotBlank(message = "Invalid user_id input")
-    @JsonProperty("user_id")
-    private String userId;
+
     @NotBlank(message = "Unsecured user_password input")
     @Pattern(regexp = "(?=.*[0-9])(?=.*[a-zA-Z])(?=.*\\W)(?=\\S+$).{8,16}", message = "Unsecured user_password input")
     @JsonProperty("user_password")
@@ -23,11 +21,10 @@ public class UserRequest{
     @JsonProperty("phone_number")
     private String phoneNumber;
 
-    public UserRequest(){}
+    public UpdateUserRequest(){}
 
-    private UserRequest(Builder builder){
+    private UpdateUserRequest(Builder builder){
         this.name = builder.name;
-        this.userId = builder.userId;
         this.userPassword = builder.userPassword;
         this.phoneNumber = builder.phoneNumber;
     }
@@ -36,15 +33,11 @@ public class UserRequest{
 
     public String getName(){return name;}
 
-    public String getUserId(){return userId;}
-
     public String getUserPassword(){return userPassword;}
 
     public String getPhoneNumber(){return phoneNumber;}
 
     public void setName(String name){this.name = name;}
-
-    public void setUserId(String userId){this.userId = userId;}
 
     public void setUserPassword(String userPassword){this.userPassword = userPassword;}
 
@@ -55,7 +48,6 @@ public class UserRequest{
     public final static class Builder{
 
         private String name;
-        private String userId;
         private String userPassword;
         private String phoneNumber;
 
@@ -63,11 +55,6 @@ public class UserRequest{
 
         public Builder name(String name){
             this.name = name;
-            return this;
-        }
-
-        public Builder userId(String userId){
-            this.userId = userId;
             return this;
         }
 
@@ -82,7 +69,7 @@ public class UserRequest{
         }
 
 
-        public UserRequest build(){return new UserRequest(this);}
+        public UpdateUserRequest build(){return new UpdateUserRequest(this);}
 
     }
 

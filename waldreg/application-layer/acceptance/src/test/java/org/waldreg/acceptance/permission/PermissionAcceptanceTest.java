@@ -84,7 +84,7 @@ public class PermissionAcceptanceTest{
                     MockMvcResultMatchers.header().string(HttpHeaders.CONTENT_TYPE, "application/json"),
                     MockMvcResultMatchers.header().string("api-version", apiVersion),
                     MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON),
-                    MockMvcResultMatchers.jsonPath("$.messages").value("Unknown user id"),
+                    MockMvcResultMatchers.jsonPath("$.messages").value("Unknown user_id"),
                     MockMvcResultMatchers.jsonPath("$.document_url").value("docs.waldreg.org")
             ).andDo(MockMvcResultHandlers.print());
         }
@@ -128,7 +128,7 @@ public class PermissionAcceptanceTest{
     @DisplayName("새로운 역할 추가 실패 인수 테스트 - 최고 관리자가 아닐때")
     public void CREATE_NEW_CHARACTER_FAIL_CAUSE_NOT_ADMIN_ACCEPTANCE_TEST() throws Exception{
         // given
-        String token = createUserAndGetToken("hong gil dong", "hello world", "1234");
+        String token = createUserAndGetToken("hong gil dong", "hello world", "abc1234!!!");
         String characterName = "something new character";
         CharacterRequest request = CharacterRequest.builder()
                 .characterName(characterName)
@@ -299,7 +299,7 @@ public class PermissionAcceptanceTest{
     @DisplayName("역할 목록 조회 실패 인수 테스트 - 최고 관리자가 아님")
     public void INQUIRY_CHARACTER_LIST_FAIL_NOT_ADMIN_ACCEPTANCE_TEST() throws Exception{
         // given
-        String token = createUserAndGetToken("helloow", "hello world", "1234");
+        String token = createUserAndGetToken("helloow", "hello world", "1234ab!");
         String url = "/character";
 
         // when
