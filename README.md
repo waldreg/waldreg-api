@@ -1,5 +1,5 @@
 
-![Wald](https://user-images.githubusercontent.com/62425964/214485760-209749e1-fddd-44ea-9c21-a689a4add5cc.svg) __ api__
+![Wald](https://user-images.githubusercontent.com/62425964/214485760-209749e1-fddd-44ea-9c21-a689a4add5cc.svg) __api__
 ---
 [License](https://github.com/)      
 [See waldreg home page](https://waldreg.org)   
