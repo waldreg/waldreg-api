@@ -1,9 +1,13 @@
 package org.waldreg.domain.user;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import org.waldreg.domain.character.Character;
+import org.waldreg.domain.point.Advantage;
+import org.waldreg.domain.point.Penalty;
+import org.waldreg.domain.point.Point;
 
 @SuppressWarnings("unused")
 public final class User{
@@ -14,8 +18,8 @@ public final class User{
     private String userPassword;
     private String phoneNumber;
     private final LocalDate createdAt;
-    private final int advantage;
-    private final int penalty;
+    private final Point advantage;
+    private final Point penalty;
     private Character character;
     private List<String> socialLogin;
 
@@ -72,11 +76,11 @@ public final class User{
         return createdAt;
     }
 
-    public int getAdvantage(){
+    public Point getAdvantage(){
         return advantage;
     }
 
-    public int getPenalty(){
+    public Point getPenalty(){
         return penalty;
     }
 
@@ -98,7 +102,6 @@ public final class User{
         this.character = character;
     }
 
-    @SuppressWarnings("unused")
     public final static class Builder{
 
         private int id;
@@ -107,14 +110,22 @@ public final class User{
         private String userPassword;
         private String phoneNumber;
         private final LocalDate createdAt;
-        private final int advantage;
-        private final int penalty;
+        private final Point advantage;
+        private final Point penalty;
         private List<String> socialLogin;
 
         {
             createdAt = LocalDate.now();
-            advantage = 0;
-            penalty = 0;
+            advantage = Advantage.builder()
+                    .point(0)
+                    .info("")
+                    .presentedAt(LocalDateTime.now())
+                    .build();
+            penalty = Penalty.builder()
+                    .point(0)
+                    .info("")
+                    .presentedAt(LocalDateTime.now())
+                    .build();
             socialLogin = new ArrayList<>();
         }
 

@@ -2,9 +2,35 @@ package org.waldreg.domain.point;
 
 import java.time.LocalDateTime;
 
-public interface Point{
+public abstract class Point{
 
-    abstract class PointBuilder<R extends Point>{
+    private final String pointInfo;
+    private final LocalDateTime pointPresentedAt;
+    private final int point;
+
+    Point(){
+        throw new UnsupportedOperationException("Can not invoke constructor \"Point()\"");
+    }
+
+    public Point(PointBuilder<? extends Point> builder){
+        this.pointInfo = builder.info;
+        this.pointPresentedAt = builder.presentedAt;
+        this.point = builder.point;
+    }
+
+    public String getPointInfo(){
+        return this.pointInfo;
+    }
+
+    public LocalDateTime getPointPresentedAt(){
+        return this.pointPresentedAt;
+    }
+
+    public int getPoint(){
+        return this.point;
+    }
+
+    public abstract static class PointBuilder<R extends Point>{
 
         String info;
         LocalDateTime presentedAt;

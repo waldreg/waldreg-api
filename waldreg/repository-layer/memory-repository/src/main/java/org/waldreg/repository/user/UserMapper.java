@@ -26,8 +26,8 @@ public class UserMapper{
                 .userPassword(user.getUserPassword())
                 .phoneNumber(user.getPhoneNumber())
                 .createdAt(user.getCreatedAt())
-                .advantage(user.getAdvantage())
-                .penalty(user.getPenalty())
+                .advantage(user.getAdvantage().getPoint())
+                .penalty(user.getPenalty().getPoint())
                 .character(user.getCharacter().getCharacterName())
                 .socialLogin(user.getSocialLogin())
                 .build();
