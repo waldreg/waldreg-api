@@ -2,20 +2,14 @@ package org.waldreg.domain.point;
 
 import java.time.LocalDateTime;
 
-public final class Advantage implements Point{
-
-    private final String advantageInfo;
-    private final LocalDateTime advantagePresentedAt;
-    private final int advantagePoint;
+public final class Advantage extends Point{
 
     private Advantage(){
         throw new UnsupportedOperationException("Can not invoke constructor \"Advantage()\"");
     }
 
     public Advantage(PointBuilder<Advantage> builder){
-        this.advantageInfo = builder.info;
-        this.advantagePresentedAt = builder.presentedAt;
-        this.advantagePoint = builder.point;
+        super(builder);
     }
 
     public static PointBuilder<Advantage> builder(){
@@ -25,18 +19,6 @@ public final class Advantage implements Point{
                 return new Advantage(this);
             }
         };
-    }
-
-    public String getAdvantageInfo(){
-        return advantageInfo;
-    }
-
-    public LocalDateTime getAdvantagePresentedAt(){
-        return advantagePresentedAt;
-    }
-
-    public int getAdvantagePoint(){
-        return advantagePoint;
     }
 
 }
