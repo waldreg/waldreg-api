@@ -13,8 +13,7 @@ public class UserDto{
     private final String userPassword;
     private final String phoneNumber;
     private final LocalDate createdAt;
-    private final int advantage;
-    private final int penalty;
+    private final int rewardPoint;
     private final String character;
     private List<String> socialLogin;
 
@@ -35,8 +34,7 @@ public class UserDto{
         this.userPassword = builder.userPassword;
         this.phoneNumber = builder.phoneNumber;
         this.createdAt = builder.createdAt;
-        this.advantage = builder.advantage;
-        this.penalty = builder.penalty;
+        this.rewardPoint = builder.rewardPoint;
         this.character = builder.character;
         this.socialLogin = builder.socialLogin;
     }
@@ -65,12 +63,8 @@ public class UserDto{
         return createdAt;
     }
 
-    public int getAdvantage(){
-        return advantage;
-    }
-
-    public int getPenalty(){
-        return penalty;
+    public int getRewardPoint(){
+        return rewardPoint;
     }
 
     public String getCharacter(){
@@ -87,15 +81,13 @@ public class UserDto{
         private String userPassword;
         private String phoneNumber;
         private LocalDate createdAt;
-        private int advantage;
-        private int penalty;
+        private int rewardPoint;
         private String character;
         private List<String> socialLogin;
 
         {
             createdAt = LocalDate.now();
-            advantage = 0;
-            penalty = 0;
+            rewardPoint = 0;
             socialLogin = new ArrayList<>();
         }
 
@@ -136,13 +128,8 @@ public class UserDto{
             return this;
         }
 
-        public Builder advantage(int advantage){
-            this.advantage = advantage;
-            return this;
-        }
-
-        public Builder penalty(int penalty){
-            this.penalty = penalty;
+        public Builder rewardPoint(int rewardPoint){
+            this.rewardPoint = rewardPoint;
             return this;
         }
 
