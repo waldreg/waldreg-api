@@ -1168,6 +1168,94 @@ public class ScheduleAcceptanceTest{
 
     }
 
+    @Test
+    @DisplayName("일정 삭제 성공 테스트")
+    public void DELETE_SCHEDULE_SUCCESS_TEST() throws Exception{
+        //given
+        String adminToken = AuthenticationAcceptanceTestHelper.getAdminToken(mvc, objectMapper);
+
+        String scheduleTitle = "seminar";
+        String scheduleContent = "BFS";
+        String StartedAt = "2023-01-24T20:52";
+        String finishAt = "2023-01-31T23:59";
+        int cycle = 123;
+        String repeatFinishAt = "2023-12-31T23:59";
+        RepeatScheduleRequest repeatScheduleRequest = RepeatScheduleRequest.builder()
+                .cycle(cycle)
+                .repeatFinishAt(repeatFinishAt)
+                .build();
+        ScheduleRequest scheduleRequest = ScheduleRequest.builder()
+                .scheduleTitle(scheduleTitle)
+                .scheduleContent(scheduleContent)
+                .startedAt(StartedAt)
+                .finishAt(finishAt)
+                .repeat(repeatScheduleRequest)
+                .build();
+
+        //when
+        ScheduleAcceptanceTestHelper.createNewSchedule(mvc, adminToken, objectMapper.writeValueAsString(scheduleRequest));
+        ScheduleListResponse scheduleListResponse = objectMapper.readValue(
+                ScheduleAcceptanceTestHelper.inquiryScheduleListByTerm(mvc, 2023, 1, adminToken)
+                        .andReturn()
+                        .getResponse()
+                        .getContentAsString(), ScheduleListResponse.class);
+        ResultActions result = ScheduleAcceptanceTestHelper.deleteSpecificSchedule(mvc, scheduleListResponse.getScheduleList().get(0).getId(), adminToken);
+
+        //then
+        result.andExpectAll(
+                MockMvcResultMatchers.status().isOk(),
+                MockMvcResultMatchers.header().string("Api-version", apiVersion),
+                MockMvcResultMatchers.header().string(HttpHeaders.CONTENT_TYPE, "application/json")
+        ).andDo(MockMvcResultHandlers.print());
+
+    }
+
+    @Test
+    @DisplayName("일정 삭제 실패 테스트 - 권한 없음")
+    public void DELETE_SCHEDULE_FAIL_CAUSE_NO_PERMISSION_TEST() throws Exception{
+        //given
+        String adminToken = AuthenticationAcceptanceTestHelper.getAdminToken(mvc, objectMapper);
+        String wrongToken = "";
+
+        String scheduleTitle = "seminar";
+        String scheduleContent = "BFS";
+        String StartedAt = "2023-01-24T20:52";
+        String finishAt = "2023-01-31T23:59";
+        int cycle = 123;
+        String repeatFinishAt = "2023-12-31T23:59";
+        RepeatScheduleRequest repeatScheduleRequest = RepeatScheduleRequest.builder()
+                .cycle(cycle)
+                .repeatFinishAt(repeatFinishAt)
+                .build();
+        ScheduleRequest scheduleRequest = ScheduleRequest.builder()
+                .scheduleTitle(scheduleTitle)
+                .scheduleContent(scheduleContent)
+                .startedAt(StartedAt)
+                .finishAt(finishAt)
+                .repeat(repeatScheduleRequest)
+                .build();
+
+        //when
+        ScheduleAcceptanceTestHelper.createNewSchedule(mvc, adminToken, objectMapper.writeValueAsString(scheduleRequest));
+        ScheduleListResponse scheduleListResponse = objectMapper.readValue(
+                ScheduleAcceptanceTestHelper.inquiryScheduleListByTerm(mvc, 2023, 1, adminToken)
+                        .andReturn()
+                        .getResponse()
+                        .getContentAsString(), ScheduleListResponse.class);
+        ResultActions result = ScheduleAcceptanceTestHelper.deleteSpecificSchedule(mvc, scheduleListResponse.getScheduleList().get(0).getId(), wrongToken);
+
+        //then
+        result.andExpectAll(
+                MockMvcResultMatchers.status().isBadRequest(),
+                MockMvcResultMatchers.header().string(HttpHeaders.CONTENT_TYPE, "application/json"),
+                MockMvcResultMatchers.header().string("api-version", apiVersion),
+                MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON),
+                MockMvcResultMatchers.jsonPath("$.messages").value("No permission"),
+                MockMvcResultMatchers.jsonPath("$.document_url").value("docs.waldreg.org")
+        ).andDo(MockMvcResultHandlers.print());
+
+    }
+
     private String createOverflow(){
         String content = "";
         for (int i = 0; i < 1005; i++){
