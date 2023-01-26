@@ -44,4 +44,12 @@ public class ScheduleAcceptanceTestHelper{
                 .content(content));
     }
 
+    public static ResultActions deleteSpecificSchedule(MockMvc mvc, int id, String token) throws Exception{
+        return mvc.perform(MockMvcRequestBuilders
+                .delete("/schedule/{schedule-id}", id)
+                .accept(MediaType.APPLICATION_JSON)
+                .header("Api-version", apiVersion)
+                .header(HttpHeaders.AUTHORIZATION, token));
+    }
+
 }
