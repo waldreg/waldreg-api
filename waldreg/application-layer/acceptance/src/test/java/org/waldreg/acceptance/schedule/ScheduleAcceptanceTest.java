@@ -3,6 +3,7 @@ package org.waldreg.acceptance.schedule;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import java.util.List;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -249,7 +250,7 @@ public class ScheduleAcceptanceTest{
     }
 
     @Test
-    @DisplayName("새로운 일정 생성 실패 테스트 - 빈 schedule test")
+    @DisplayName("새로운 일정 생성 실패 테스트 - 빈 schedule title")
     public void CREATE_NEW_SCHEDULE_FAIL_CAUSE_BLANK_SCHEDULE_TITLE_TEST() throws Exception{
         //given
         String adminToken = AuthenticationAcceptanceTestHelper.getAdminToken(mvc, objectMapper);
@@ -371,7 +372,7 @@ public class ScheduleAcceptanceTest{
         //given
         String adminToken = AuthenticationAcceptanceTestHelper.getAdminToken(mvc, objectMapper);
 
-        String blankScheduleTitle = "";
+        String scheduleTitle = "seminar";
         String scheduleContent = createOverflow();
         String StartedAt = "2023-01-24T20:52";
         String finishAt = "2023-01-31T23:59";
@@ -382,7 +383,7 @@ public class ScheduleAcceptanceTest{
                 .repeatFinishAt(repeatFinishAt)
                 .build();
         ScheduleRequest scheduleRequest = ScheduleRequest.builder()
-                .scheduleTitle(blankScheduleTitle)
+                .scheduleTitle(scheduleTitle)
                 .scheduleContent(scheduleContent)
                 .startedAt(StartedAt)
                 .finishAt(finishAt)
@@ -410,7 +411,6 @@ public class ScheduleAcceptanceTest{
         //given
         String adminToken = AuthenticationAcceptanceTestHelper.getAdminToken(mvc, objectMapper);
 
-        int id = 1;
         String scheduleTitle = "seminar";
         String scheduleContent = "BFS";
         String StartedAt = "2023-01-24T20:52";
@@ -431,7 +431,12 @@ public class ScheduleAcceptanceTest{
 
         //when
         ScheduleAcceptanceTestHelper.createNewSchedule(mvc, adminToken, objectMapper.writeValueAsString(scheduleRequest));
-        ResultActions result = ScheduleAcceptanceTestHelper.inquirySpecificSchedule(mvc, id, adminToken);
+        ScheduleListResponse scheduleListResponse = objectMapper.readValue(
+                ScheduleAcceptanceTestHelper.inquiryScheduleListByTerm(mvc, 2023, 1, adminToken)
+                        .andReturn()
+                        .getResponse()
+                        .getContentAsString(), ScheduleListResponse.class);
+        ResultActions result = ScheduleAcceptanceTestHelper.inquirySpecificSchedule(mvc, scheduleListResponse.getScheduleList().get(0).getId(), adminToken);
 
         //then
         result.andExpectAll(
@@ -455,7 +460,7 @@ public class ScheduleAcceptanceTest{
     public void INQUIRY_SPECIFIC_SCHEDULE_FAIL_CAUSE_UNKNOWN_SCHEDULE() throws Exception{
         //given
         String adminToken = AuthenticationAcceptanceTestHelper.getAdminToken(mvc, objectMapper);
-        int id = 1;
+        int id = 0;
 
         //when
         ResultActions result = ScheduleAcceptanceTestHelper.inquirySpecificSchedule(mvc, id, adminToken);
@@ -521,7 +526,7 @@ public class ScheduleAcceptanceTest{
         ScheduleAcceptanceTestHelper.createNewSchedule(mvc, adminToken, objectMapper.writeValueAsString(scheduleRequest));
         ScheduleAcceptanceTestHelper.createNewSchedule(mvc, adminToken, objectMapper.writeValueAsString(scheduleRequest2));
         ScheduleAcceptanceTestHelper.createNewSchedule(mvc, adminToken, objectMapper.writeValueAsString(scheduleRequest3));
-        ResultActions result = ScheduleAcceptanceTestHelper.inquiryScheduleByTerm(mvc, year, month, adminToken);
+        ResultActions result = ScheduleAcceptanceTestHelper.inquiryScheduleListByTerm(mvc, year, month, adminToken);
 
         //then
         result.andExpectAll(
@@ -594,7 +599,7 @@ public class ScheduleAcceptanceTest{
         ScheduleAcceptanceTestHelper.createNewSchedule(mvc, adminToken, objectMapper.writeValueAsString(scheduleRequest));
         ScheduleAcceptanceTestHelper.createNewSchedule(mvc, adminToken, objectMapper.writeValueAsString(scheduleRequest2));
         ScheduleAcceptanceTestHelper.createNewSchedule(mvc, adminToken, objectMapper.writeValueAsString(scheduleRequest3));
-        ResultActions result = ScheduleAcceptanceTestHelper.inquiryScheduleByTerm(mvc, year, wrongMonth, adminToken);
+        ResultActions result = ScheduleAcceptanceTestHelper.inquiryScheduleListByTerm(mvc, year, wrongMonth, adminToken);
 
         //then
         result.andExpectAll(
@@ -657,7 +662,7 @@ public class ScheduleAcceptanceTest{
         ScheduleAcceptanceTestHelper.createNewSchedule(mvc, adminToken, objectMapper.writeValueAsString(scheduleRequest));
         ScheduleAcceptanceTestHelper.createNewSchedule(mvc, adminToken, objectMapper.writeValueAsString(scheduleRequest2));
         ScheduleAcceptanceTestHelper.createNewSchedule(mvc, adminToken, objectMapper.writeValueAsString(scheduleRequest3));
-        ResultActions result = ScheduleAcceptanceTestHelper.inquiryScheduleByTerm(mvc, wrongYear, Month, adminToken);
+        ResultActions result = ScheduleAcceptanceTestHelper.inquiryScheduleListByTerm(mvc, wrongYear, Month, adminToken);
 
         //then
         result.andExpectAll(
@@ -666,6 +671,498 @@ public class ScheduleAcceptanceTest{
                 MockMvcResultMatchers.header().string("api-version", apiVersion),
                 MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON),
                 MockMvcResultMatchers.jsonPath("$.messages").value("Invalid year"),
+                MockMvcResultMatchers.jsonPath("$.document_url").value("docs.waldreg.org")
+        ).andDo(MockMvcResultHandlers.print());
+
+    }
+
+    @Test
+    @DisplayName("일정 수정 성공 테스트")
+    public void MODIFY_SCHEDULE_SUCCESS_TEST() throws Exception{
+        //given
+        String adminToken = AuthenticationAcceptanceTestHelper.getAdminToken(mvc, objectMapper);
+
+        String scheduleTitle = "seminar";
+        String scheduleContent = "BFS";
+        String StartedAt = "2023-01-24T20:52";
+        String finishAt = "2023-01-31T23:59";
+        ScheduleRequest scheduleRequest = ScheduleRequest.builder()
+                .scheduleTitle(scheduleTitle)
+                .scheduleContent(scheduleContent)
+                .startedAt(StartedAt)
+                .finishAt(finishAt)
+                .build();
+        String modifiedScheduleTitle = "seminar";
+        String modifiedScheduleContent = "DFS";
+        String modifiedStartedAt = "2023-01-24T20:52";
+        String modifiedfinishAt = "2023-01-31T23:59";
+        int modifiedCycle = 7;
+        String modifiedRepeatFinishAt = "2023-12-31T23:59";
+        RepeatScheduleRequest repeatScheduleRequest = RepeatScheduleRequest.builder()
+                .cycle(modifiedCycle)
+                .repeatFinishAt(modifiedRepeatFinishAt)
+                .build();
+        ScheduleRequest modifiedScheduleRequest = ScheduleRequest.builder()
+                .scheduleTitle(modifiedScheduleTitle)
+                .scheduleContent(modifiedScheduleContent)
+                .startedAt(modifiedStartedAt)
+                .finishAt(modifiedfinishAt)
+                .repeat(repeatScheduleRequest)
+                .build();
+
+        //when
+        ScheduleAcceptanceTestHelper.createNewSchedule(mvc, adminToken, objectMapper.writeValueAsString(scheduleRequest));
+        ScheduleListResponse scheduleListResponse = objectMapper.readValue(
+                ScheduleAcceptanceTestHelper.inquiryScheduleListByTerm(mvc, 2023, 1, adminToken)
+                        .andReturn()
+                        .getResponse()
+                        .getContentAsString(), ScheduleListResponse.class);
+        ResultActions result = ScheduleAcceptanceTestHelper.modifySchedule(mvc, scheduleListResponse.getScheduleList().get(0).getId(), adminToken, objectMapper.writeValueAsString(modifiedScheduleRequest));
+
+        //then
+        result.andExpectAll(
+                MockMvcResultMatchers.status().isOk(),
+                MockMvcResultMatchers.header().string("Api-version", apiVersion),
+                MockMvcResultMatchers.header().string(HttpHeaders.CONTENT_TYPE, "application/json")
+        ).andDo(MockMvcResultHandlers.print());
+
+    }
+
+    @Test
+    @DisplayName("일정 수정 실패 테스트 - 잘못된 month")
+    public void MODIFY_SCHEDULE_CAUSE_INVALID_MONTH_TEST() throws Exception{
+        //given
+        String adminToken = AuthenticationAcceptanceTestHelper.getAdminToken(mvc, objectMapper);
+
+        String scheduleTitle = "seminar";
+        String scheduleContent = "BFS";
+        String StartedAt = "2023-01-24T20:52";
+        String finishAt = "2023-01-31T23:59";
+        ScheduleRequest scheduleRequest = ScheduleRequest.builder()
+                .scheduleTitle(scheduleTitle)
+                .scheduleContent(scheduleContent)
+                .startedAt(StartedAt)
+                .finishAt(finishAt)
+                .build();
+        String modifiedScheduleTitle = "seminar";
+        String modifiedScheduleContent = "DFS";
+        String wrongModifiedStartedAt = "2023-13-24T20:52";
+        String modifiedfinishAt = "2023-01-31T23:59";
+        int modifiedCycle = 7;
+        String modifiedRepeatFinishAt = "2023-12-31T23:59";
+        RepeatScheduleRequest repeatScheduleRequest = RepeatScheduleRequest.builder()
+                .cycle(modifiedCycle)
+                .repeatFinishAt(modifiedRepeatFinishAt)
+                .build();
+        ScheduleRequest modifiedScheduleRequest = ScheduleRequest.builder()
+                .scheduleTitle(modifiedScheduleTitle)
+                .scheduleContent(modifiedScheduleContent)
+                .startedAt(wrongModifiedStartedAt)
+                .finishAt(modifiedfinishAt)
+                .repeat(repeatScheduleRequest)
+                .build();
+
+        //when
+        ScheduleAcceptanceTestHelper.createNewSchedule(mvc, adminToken, objectMapper.writeValueAsString(scheduleRequest));
+        ScheduleListResponse scheduleListResponse = objectMapper.readValue(
+                ScheduleAcceptanceTestHelper.inquiryScheduleListByTerm(mvc, 2023, 1, adminToken)
+                        .andReturn()
+                        .getResponse()
+                        .getContentAsString(), ScheduleListResponse.class);
+        ResultActions result = ScheduleAcceptanceTestHelper.modifySchedule(mvc, scheduleListResponse.getScheduleList().get(0).getId(), adminToken, objectMapper.writeValueAsString(modifiedScheduleRequest));
+
+        //then
+        result.andExpectAll(
+                MockMvcResultMatchers.status().isBadRequest(),
+                MockMvcResultMatchers.header().string(HttpHeaders.CONTENT_TYPE, "application/json"),
+                MockMvcResultMatchers.header().string("api-version", apiVersion),
+                MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON),
+                MockMvcResultMatchers.jsonPath("$.messages").value("Invalid month"),
+                MockMvcResultMatchers.jsonPath("$.document_url").value("docs.waldreg.org")
+        ).andDo(MockMvcResultHandlers.print());
+
+    }
+
+    @Test
+    @DisplayName("일정 수정 실패 테스트 - 잘못된 year")
+    public void MODIFY_SCHEDULE_FAIL_CAUSE_INVALID_YEAR_TEST() throws Exception{
+        //given
+        String adminToken = AuthenticationAcceptanceTestHelper.getAdminToken(mvc, objectMapper);
+
+        String scheduleTitle = "seminar";
+        String scheduleContent = "BFS";
+        String StartedAt = "2023-01-24T20:52";
+        String finishAt = "2023-01-31T23:59";
+        ScheduleRequest scheduleRequest = ScheduleRequest.builder()
+                .scheduleTitle(scheduleTitle)
+                .scheduleContent(scheduleContent)
+                .startedAt(StartedAt)
+                .finishAt(finishAt)
+                .build();
+        String modifiedScheduleTitle = "seminar";
+        String modifiedScheduleContent = "DFS";
+        String wrongModifiedStartedAt = "1999-01-24T20:52";
+        String modifiedfinishAt = "2023-01-31T23:59";
+        int modifiedCycle = 7;
+        String modifiedRepeatFinishAt = "2023-12-31T23:59";
+        RepeatScheduleRequest repeatScheduleRequest = RepeatScheduleRequest.builder()
+                .cycle(modifiedCycle)
+                .repeatFinishAt(modifiedRepeatFinishAt)
+                .build();
+        ScheduleRequest modifiedScheduleRequest = ScheduleRequest.builder()
+                .scheduleTitle(modifiedScheduleTitle)
+                .scheduleContent(modifiedScheduleContent)
+                .startedAt(wrongModifiedStartedAt)
+                .finishAt(modifiedfinishAt)
+                .repeat(repeatScheduleRequest)
+                .build();
+
+        //when
+        ScheduleAcceptanceTestHelper.createNewSchedule(mvc, adminToken, objectMapper.writeValueAsString(scheduleRequest));
+        ScheduleListResponse scheduleListResponse = objectMapper.readValue(
+                ScheduleAcceptanceTestHelper.inquiryScheduleListByTerm(mvc, 2023, 1, adminToken)
+                        .andReturn()
+                        .getResponse()
+                        .getContentAsString(), ScheduleListResponse.class);
+        ResultActions result = ScheduleAcceptanceTestHelper.modifySchedule(mvc, scheduleListResponse.getScheduleList().get(0).getId(), adminToken, objectMapper.writeValueAsString(modifiedScheduleRequest));
+
+        //then
+        result.andExpectAll(
+                MockMvcResultMatchers.status().isBadRequest(),
+                MockMvcResultMatchers.header().string(HttpHeaders.CONTENT_TYPE, "application/json"),
+                MockMvcResultMatchers.header().string("api-version", apiVersion),
+                MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON),
+                MockMvcResultMatchers.jsonPath("$.messages").value("Invalid year"),
+                MockMvcResultMatchers.jsonPath("$.document_url").value("docs.waldreg.org")
+        ).andDo(MockMvcResultHandlers.print());
+
+    }
+
+    @Test
+    @DisplayName("일정 수정 실패 테스트 - 잘못된 cycle")
+    public void MODIFY_SCHEDULE_FAIL_CAUSE_INVALID_CYCLE_TEST() throws Exception{
+        //given
+        String adminToken = AuthenticationAcceptanceTestHelper.getAdminToken(mvc, objectMapper);
+
+        String scheduleTitle = "seminar";
+        String scheduleContent = "BFS";
+        String StartedAt = "2023-01-24T20:52";
+        String finishAt = "2023-01-31T23:59";
+        ScheduleRequest scheduleRequest = ScheduleRequest.builder()
+                .scheduleTitle(scheduleTitle)
+                .scheduleContent(scheduleContent)
+                .startedAt(StartedAt)
+                .finishAt(finishAt)
+                .build();
+        String modifiedScheduleTitle = "seminar";
+        String modifiedScheduleContent = "DFS";
+        String modifiedStartedAt = "2023-01-24T20:52";
+        String modifiedfinishAt = "2023-01-31T23:59";
+        int wrongModifiedCycle = 0;
+        String modifiedRepeatFinishAt = "2023-12-31T23:59";
+        RepeatScheduleRequest repeatScheduleRequest = RepeatScheduleRequest.builder()
+                .cycle(wrongModifiedCycle)
+                .repeatFinishAt(modifiedRepeatFinishAt)
+                .build();
+        ScheduleRequest modifiedScheduleRequest = ScheduleRequest.builder()
+                .scheduleTitle(modifiedScheduleTitle)
+                .scheduleContent(modifiedScheduleContent)
+                .startedAt(modifiedStartedAt)
+                .finishAt(modifiedfinishAt)
+                .repeat(repeatScheduleRequest)
+                .build();
+
+        //when
+        ScheduleListResponse scheduleListResponse = objectMapper.readValue(
+                ScheduleAcceptanceTestHelper.inquiryScheduleListByTerm(mvc, 2023, 1, adminToken)
+                        .andReturn()
+                        .getResponse()
+                        .getContentAsString(), ScheduleListResponse.class);
+        ResultActions result = ScheduleAcceptanceTestHelper.modifySchedule(mvc, scheduleListResponse.getScheduleList().get(0).getId(), adminToken, objectMapper.writeValueAsString(modifiedScheduleRequest));
+
+        //then
+        result.andExpectAll(
+                MockMvcResultMatchers.status().isBadRequest(),
+                MockMvcResultMatchers.header().string(HttpHeaders.CONTENT_TYPE, "application/json"),
+                MockMvcResultMatchers.header().string("api-version", apiVersion),
+                MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON),
+                MockMvcResultMatchers.jsonPath("$.messages").value("Invalid cycle"),
+                MockMvcResultMatchers.jsonPath("$.document_url").value("docs.waldreg.org")
+        ).andDo(MockMvcResultHandlers.print());
+
+    }
+
+    @Test
+    @DisplayName("일정 수정 실패 테스트 - 잘못된 반복 종료 날짜")
+    public void MODIFY_SCHEDULE_FAIL_CAUSE_INVALID_REPEAT_FINISH_DATE_TEST() throws Exception{
+        //given
+        String adminToken = AuthenticationAcceptanceTestHelper.getAdminToken(mvc, objectMapper);
+
+        String scheduleTitle = "seminar";
+        String scheduleContent = "BFS";
+        String StartedAt = "2023-01-24T20:52";
+        String finishAt = "2023-01-31T23:59";
+        ScheduleRequest scheduleRequest = ScheduleRequest.builder()
+                .scheduleTitle(scheduleTitle)
+                .scheduleContent(scheduleContent)
+                .startedAt(StartedAt)
+                .finishAt(finishAt)
+                .build();
+        String modifiedScheduleTitle = "seminar";
+        String modifiedScheduleContent = "DFS";
+        String modifiedStartedAt = "2023-01-24T20:52";
+        String modifiedfinishAt = "2023-01-31T23:59";
+        int modifiedCycle = 7;
+        String wrongModifiedRepeatFinishAt = "2023-01-28T23:59";
+        RepeatScheduleRequest repeatScheduleRequest = RepeatScheduleRequest.builder()
+                .cycle(modifiedCycle)
+                .repeatFinishAt(wrongModifiedRepeatFinishAt)
+                .build();
+        ScheduleRequest modifiedScheduleRequest = ScheduleRequest.builder()
+                .scheduleTitle(modifiedScheduleTitle)
+                .scheduleContent(modifiedScheduleContent)
+                .startedAt(modifiedStartedAt)
+                .finishAt(modifiedfinishAt)
+                .repeat(repeatScheduleRequest)
+                .build();
+
+        //when
+        ScheduleAcceptanceTestHelper.createNewSchedule(mvc, adminToken, objectMapper.writeValueAsString(scheduleRequest));
+        ScheduleListResponse scheduleListResponse = objectMapper.readValue(
+                ScheduleAcceptanceTestHelper.inquiryScheduleListByTerm(mvc, 2023, 1, adminToken)
+                        .andReturn()
+                        .getResponse()
+                        .getContentAsString(), ScheduleListResponse.class);
+        ResultActions result = ScheduleAcceptanceTestHelper.modifySchedule(mvc, scheduleListResponse.getScheduleList().get(0).getId(), adminToken, objectMapper.writeValueAsString(modifiedScheduleRequest));
+
+        //then
+        result.andExpectAll(
+                MockMvcResultMatchers.status().isBadRequest(),
+                MockMvcResultMatchers.header().string(HttpHeaders.CONTENT_TYPE, "application/json"),
+                MockMvcResultMatchers.header().string("api-version", apiVersion),
+                MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON),
+                MockMvcResultMatchers.jsonPath("$.messages").value("Invalid repeat finish date"),
+                MockMvcResultMatchers.jsonPath("$.document_url").value("docs.waldreg.org")
+        ).andDo(MockMvcResultHandlers.print());
+
+    }
+
+    @Test
+    @DisplayName("일정 수정 실패 테스트 - 빈 schedule title")
+    public void MODIFY_SCHEDULE_FAIL_CAUSE_BLANK_SCHEDULE_TITLE_TEST() throws Exception{
+        //given
+        String adminToken = AuthenticationAcceptanceTestHelper.getAdminToken(mvc, objectMapper);
+
+        String scheduleTitle = "seminar";
+        String scheduleContent = "BFS";
+        String StartedAt = "2023-01-24T20:52";
+        String finishAt = "2023-01-31T23:59";
+        ScheduleRequest scheduleRequest = ScheduleRequest.builder()
+                .scheduleTitle(scheduleTitle)
+                .scheduleContent(scheduleContent)
+                .startedAt(StartedAt)
+                .finishAt(finishAt)
+                .build();
+        String wrongModifiedScheduleTitle = "";
+        String modifiedScheduleContent = "DFS";
+        String modifiedStartedAt = "2023-01-24T20:52";
+        String modifiedfinishAt = "2023-01-31T23:59";
+        int modifiedCycle = 7;
+        String modifiedRepeatFinishAt = "2023-12-31T23:59";
+        RepeatScheduleRequest repeatScheduleRequest = RepeatScheduleRequest.builder()
+                .cycle(modifiedCycle)
+                .repeatFinishAt(modifiedRepeatFinishAt)
+                .build();
+        ScheduleRequest modifiedScheduleRequest = ScheduleRequest.builder()
+                .scheduleTitle(wrongModifiedScheduleTitle)
+                .scheduleContent(modifiedScheduleContent)
+                .startedAt(modifiedStartedAt)
+                .finishAt(modifiedfinishAt)
+                .repeat(repeatScheduleRequest)
+                .build();
+
+        //when
+        ScheduleAcceptanceTestHelper.createNewSchedule(mvc, adminToken, objectMapper.writeValueAsString(scheduleRequest));
+        ScheduleListResponse scheduleListResponse = objectMapper.readValue(
+                ScheduleAcceptanceTestHelper.inquiryScheduleListByTerm(mvc, 2023, 1, adminToken)
+                        .andReturn()
+                        .getResponse()
+                        .getContentAsString(), ScheduleListResponse.class);
+        ResultActions result = ScheduleAcceptanceTestHelper.modifySchedule(mvc, scheduleListResponse.getScheduleList().get(0).getId(), adminToken, objectMapper.writeValueAsString(modifiedScheduleRequest));
+
+        //then
+        result.andExpectAll(
+                MockMvcResultMatchers.status().isBadRequest(),
+                MockMvcResultMatchers.header().string(HttpHeaders.CONTENT_TYPE, "application/json"),
+                MockMvcResultMatchers.header().string("api-version", apiVersion),
+                MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON),
+                MockMvcResultMatchers.jsonPath("$.messages").value("Schedule title cannot be blank"),
+                MockMvcResultMatchers.jsonPath("$.document_url").value("docs.waldreg.org")
+        ).andDo(MockMvcResultHandlers.print());
+
+    }
+
+    @Test
+    @DisplayName("일정 수정 실패 테스트 - 일정 종료 날짜가 시작 날짜보다 앞서거나 같음")
+    public void MODIFY_SCHEDULE_FAIL_CAUSE_END_DATE_PRECEDE_START_DATE_TEST() throws Exception{
+        //given
+        String adminToken = AuthenticationAcceptanceTestHelper.getAdminToken(mvc, objectMapper);
+
+        String scheduleTitle = "seminar";
+        String scheduleContent = "BFS";
+        String StartedAt = "2023-01-24T20:52";
+        String finishAt = "2023-01-31T23:59";
+        ScheduleRequest scheduleRequest = ScheduleRequest.builder()
+                .scheduleTitle(scheduleTitle)
+                .scheduleContent(scheduleContent)
+                .startedAt(StartedAt)
+                .finishAt(finishAt)
+                .build();
+        String modifiedScheduleTitle = "seminar";
+        String modifiedScheduleContent = "DFS";
+        String modifiedStartedAt = "2023-01-24T20:52";
+        String modifiedfinishAt = "2023-01-31T23:59";
+        int modifiedCycle = 7;
+        String modifiedRepeatFinishAt = "2023-12-31T23:59";
+        RepeatScheduleRequest repeatScheduleRequest = RepeatScheduleRequest.builder()
+                .cycle(modifiedCycle)
+                .repeatFinishAt(modifiedRepeatFinishAt)
+                .build();
+        ScheduleRequest modifiedScheduleRequest = ScheduleRequest.builder()
+                .scheduleTitle(modifiedScheduleTitle)
+                .scheduleContent(modifiedScheduleContent)
+                .startedAt(modifiedfinishAt)
+                .finishAt(modifiedStartedAt)
+                .repeat(repeatScheduleRequest)
+                .build();
+
+        //when
+        ScheduleAcceptanceTestHelper.createNewSchedule(mvc, adminToken, objectMapper.writeValueAsString(scheduleRequest));
+        ScheduleListResponse scheduleListResponse = objectMapper.readValue(
+                ScheduleAcceptanceTestHelper.inquiryScheduleListByTerm(mvc, 2023, 1, adminToken)
+                        .andReturn()
+                        .getResponse()
+                        .getContentAsString(), ScheduleListResponse.class);
+        ResultActions result = ScheduleAcceptanceTestHelper.modifySchedule(mvc, scheduleListResponse.getScheduleList().get(0).getId(), adminToken, objectMapper.writeValueAsString(modifiedScheduleRequest));
+
+        //then
+        result.andExpectAll(
+                MockMvcResultMatchers.status().isBadRequest(),
+                MockMvcResultMatchers.header().string(HttpHeaders.CONTENT_TYPE, "application/json"),
+                MockMvcResultMatchers.header().string("api-version", apiVersion),
+                MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON),
+                MockMvcResultMatchers.jsonPath("$.messages").value("The end date of a Schedule cannot precede the start date."),
+                MockMvcResultMatchers.jsonPath("$.document_url").value("docs.waldreg.org")
+        ).andDo(MockMvcResultHandlers.print());
+
+    }
+
+    @Test
+    @DisplayName("일정 수정 실패 테스트 - 권한 없음")
+    public void MODIFY_SCHEDULE_FAIL_CAUSE_NO_PERMISSION_TEST() throws Exception{
+        //given
+        String adminToken = AuthenticationAcceptanceTestHelper.getAdminToken(mvc, objectMapper);
+        String wrongToken = "";
+
+        String scheduleTitle = "seminar";
+        String scheduleContent = "BFS";
+        String StartedAt = "2023-01-24T20:52";
+        String finishAt = "2023-01-31T23:59";
+        ScheduleRequest scheduleRequest = ScheduleRequest.builder()
+                .scheduleTitle(scheduleTitle)
+                .scheduleContent(scheduleContent)
+                .startedAt(StartedAt)
+                .finishAt(finishAt)
+                .build();
+        String modifiedScheduleTitle = "seminar";
+        String modifiedScheduleContent = "DFS";
+        String modifiedStartedAt = "2023-01-24T20:52";
+        String modifiedfinishAt = "2023-01-31T23:59";
+        int modifiedCycle = 7;
+        String modifiedRepeatFinishAt = "2023-12-31T23:59";
+        RepeatScheduleRequest repeatScheduleRequest = RepeatScheduleRequest.builder()
+                .cycle(modifiedCycle)
+                .repeatFinishAt(modifiedRepeatFinishAt)
+                .build();
+        ScheduleRequest modifiedScheduleRequest = ScheduleRequest.builder()
+                .scheduleTitle(modifiedScheduleTitle)
+                .scheduleContent(modifiedScheduleContent)
+                .startedAt(modifiedStartedAt)
+                .finishAt(modifiedfinishAt)
+                .repeat(repeatScheduleRequest)
+                .build();
+
+        //when
+        ScheduleAcceptanceTestHelper.createNewSchedule(mvc, adminToken, objectMapper.writeValueAsString(scheduleRequest));
+        ScheduleListResponse scheduleListResponse = objectMapper.readValue(
+                ScheduleAcceptanceTestHelper.inquiryScheduleListByTerm(mvc, 2023, 1, adminToken)
+                        .andReturn()
+                        .getResponse()
+                        .getContentAsString(), ScheduleListResponse.class);
+        ResultActions result = ScheduleAcceptanceTestHelper.modifySchedule(mvc, scheduleListResponse.getScheduleList().get(0).getId(), adminToken, objectMapper.writeValueAsString(modifiedScheduleRequest));
+
+        //then
+        result.andExpectAll(
+                MockMvcResultMatchers.status().isBadRequest(),
+                MockMvcResultMatchers.header().string(HttpHeaders.CONTENT_TYPE, "application/json"),
+                MockMvcResultMatchers.header().string("api-version", apiVersion),
+                MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON),
+                MockMvcResultMatchers.jsonPath("$.messages").value("No permission"),
+                MockMvcResultMatchers.jsonPath("$.document_url").value("docs.waldreg.org")
+        ).andDo(MockMvcResultHandlers.print());
+
+    }
+
+    @Test
+    @DisplayName("일정 수정 실패 테스트 - schedule content 글자 제한 초과")
+    public void MODIFY_SCHEDULE_FAIL_CAUSE_CONTENT_OVERFLOW_TEST() throws Exception{
+        //given
+        String adminToken = AuthenticationAcceptanceTestHelper.getAdminToken(mvc, objectMapper);
+
+        String scheduleTitle = "seminar";
+        String scheduleContent = "BFS";
+        String StartedAt = "2023-01-24T20:52";
+        String finishAt = "2023-01-31T23:59";
+        ScheduleRequest scheduleRequest = ScheduleRequest.builder()
+                .scheduleTitle(scheduleTitle)
+                .scheduleContent(scheduleContent)
+                .startedAt(StartedAt)
+                .finishAt(finishAt)
+                .build();
+        String modifiedScheduleTitle = "seminar";
+        String wrongModifiedScheduleContent = createOverflow();
+        String modifiedStartedAt = "2023-01-24T20:52";
+        String modifiedfinishAt = "2023-01-31T23:59";
+        int modifiedCycle = 7;
+        String modifiedRepeatFinishAt = "2023-12-31T23:59";
+        RepeatScheduleRequest repeatScheduleRequest = RepeatScheduleRequest.builder()
+                .cycle(modifiedCycle)
+                .repeatFinishAt(modifiedRepeatFinishAt)
+                .build();
+        ScheduleRequest modifiedScheduleRequest = ScheduleRequest.builder()
+                .scheduleTitle(modifiedScheduleTitle)
+                .scheduleContent(wrongModifiedScheduleContent)
+                .startedAt(modifiedStartedAt)
+                .finishAt(modifiedfinishAt)
+                .repeat(repeatScheduleRequest)
+                .build();
+
+        //when
+        ScheduleAcceptanceTestHelper.createNewSchedule(mvc, adminToken, objectMapper.writeValueAsString(scheduleRequest));
+        ScheduleListResponse scheduleListResponse = objectMapper.readValue(
+                ScheduleAcceptanceTestHelper.inquiryScheduleListByTerm(mvc, 2023, 1, adminToken)
+                        .andReturn()
+                        .getResponse()
+                        .getContentAsString(), ScheduleListResponse.class);
+        ResultActions result = ScheduleAcceptanceTestHelper.modifySchedule(mvc, scheduleListResponse.getScheduleList().get(0).getId(), adminToken, objectMapper.writeValueAsString(modifiedScheduleRequest));
+
+        //then
+        result.andExpectAll(
+                MockMvcResultMatchers.status().isBadRequest(),
+                MockMvcResultMatchers.header().string(HttpHeaders.CONTENT_TYPE, "application/json"),
+                MockMvcResultMatchers.header().string("api-version", apiVersion),
+                MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON),
+                MockMvcResultMatchers.jsonPath("$.messages").value("Overflow content"),
                 MockMvcResultMatchers.jsonPath("$.document_url").value("docs.waldreg.org")
         ).andDo(MockMvcResultHandlers.print());
 
@@ -1008,6 +1505,38 @@ public class ScheduleAcceptanceTest{
             }
 
             public RepeatScheduleResponse build(){return new RepeatScheduleResponse(this);}
+
+        }
+
+    }
+
+    public static class ScheduleListResponse{
+
+        @JsonProperty("schedules")
+        private List<ScheduleResponse> scheduleList;
+
+        public ScheduleListResponse(){}
+
+        private ScheduleListResponse(Builder builder){
+            this.scheduleList = builder.scheduleList;
+        }
+
+        public static Builder builder(){return new Builder();}
+
+        public List<ScheduleResponse> getScheduleList(){return scheduleList;}
+
+        public final static class Builder{
+
+            private List<ScheduleResponse> scheduleList;
+
+            private Builder(){}
+
+            public Builder ScheduleList(List<ScheduleResponse> scheduleList){
+                this.scheduleList = scheduleList;
+                return this;
+            }
+
+            public ScheduleListResponse build(){return new ScheduleListResponse(this);}
 
         }
 
