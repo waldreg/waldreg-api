@@ -52,7 +52,7 @@ public class ScheduleAcceptanceTest{
         result.andExpectAll(
                 MockMvcResultMatchers.status().isOk(),
                 MockMvcResultMatchers.header().string("Api-version", apiVersion)
-        );
+        ).andDo(MockMvcResultHandlers.print());
 
 
     }
@@ -88,7 +88,7 @@ public class ScheduleAcceptanceTest{
         result.andExpectAll(
                 MockMvcResultMatchers.status().isOk(),
                 MockMvcResultMatchers.header().string("Api-version", apiVersion)
-        );
+        ).andDo(MockMvcResultHandlers.print());
 
     }
 
@@ -404,6 +404,74 @@ public class ScheduleAcceptanceTest{
 
     }
 
+    @Test
+    @DisplayName("특정 일정 조회 성공 테스트")
+    public void INQUIRY_SPECIFIC_SCHEDULE_SUCCESS_TEST() throws Exception{
+        //given
+        String adminToken = AuthenticationAcceptanceTestHelper.getAdminToken(mvc, objectMapper);
+
+        int id = 1;
+        String scheduleTitle = "seminar";
+        String scheduleContent = "BFS";
+        String StartedAt = "2023-01-24T20:52";
+        String finishAt = "2023-01-31T23:59";
+        int cycle = 123;
+        String repeatFinishAt = "2023-12-31T23:59";
+        RepeatScheduleRequest repeatScheduleRequest = RepeatScheduleRequest.builder()
+                .cycle(cycle)
+                .repeatFinishAt(repeatFinishAt)
+                .build();
+        ScheduleRequest scheduleRequest = ScheduleRequest.builder()
+                .scheduleTitle(scheduleTitle)
+                .scheduleContent(scheduleContent)
+                .startedAt(StartedAt)
+                .finishAt(finishAt)
+                .repeat(repeatScheduleRequest)
+                .build();
+
+        //when
+        ScheduleAcceptanceTestHelper.createNewSchedule(mvc, adminToken, objectMapper.writeValueAsString(scheduleRequest));
+        ResultActions result = ScheduleAcceptanceTestHelper.inquirySpecificSchedule(mvc, id, adminToken);
+
+        //then
+        result.andExpectAll(
+                MockMvcResultMatchers.status().isOk(),
+                MockMvcResultMatchers.header().string("Api-version", apiVersion),
+                MockMvcResultMatchers.header().string(HttpHeaders.CONTENT_TYPE, "application/json"),
+                MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON),
+                MockMvcResultMatchers.jsonPath("$.id").isNumber(),
+                MockMvcResultMatchers.jsonPath("$.schedule_title").value(scheduleRequest.getScheduleTitle()),
+                MockMvcResultMatchers.jsonPath("$.schedule_content").value(scheduleRequest.getScheduleContent()),
+                MockMvcResultMatchers.jsonPath("$.started_at").value(scheduleRequest.getStartedAt()),
+                MockMvcResultMatchers.jsonPath("$.finish_at").value(scheduleRequest.getFinishAt()),
+                MockMvcResultMatchers.jsonPath("$.repeat.cycle").value(scheduleRequest.getRepeat().getCycle()),
+                MockMvcResultMatchers.jsonPath("#.repeat.repeat_finish_at").value(scheduleRequest.getRepeat().getRepeatFinishAt())
+        ).andDo(MockMvcResultHandlers.print());
+
+    }
+
+    @Test
+    @DisplayName("특정 일정 조회 실패 테스트 - 없는 schedule id")
+    public void INQUIRY_SPECIFIC_SCHEDULE_FAIL_CAUSE_UNKNOWN_SCHEDULE() throws Exception{
+        //given
+        String adminToken = AuthenticationAcceptanceTestHelper.getAdminToken(mvc, objectMapper);
+        int id = 1;
+
+        //when
+        ResultActions result = ScheduleAcceptanceTestHelper.inquirySpecificSchedule(mvc, id, adminToken);
+
+        //then
+        result.andExpectAll(
+                MockMvcResultMatchers.status().isBadRequest(),
+                MockMvcResultMatchers.header().string(HttpHeaders.CONTENT_TYPE, "application/json"),
+                MockMvcResultMatchers.header().string("api-version", apiVersion),
+                MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON),
+                MockMvcResultMatchers.jsonPath("$.messages").value("Unknown schedule"),
+                MockMvcResultMatchers.jsonPath("$.document_url").value("docs.waldreg.org")
+        ).andDo(MockMvcResultHandlers.print());
+
+    }
+
     private String createOverflow(){
         String content = "";
         for (int i = 0; i < 1005; i++){
@@ -516,7 +584,6 @@ public class ScheduleAcceptanceTest{
 
         }
 
-
     }
 
     public static class RepeatScheduleRequest{
@@ -569,6 +636,179 @@ public class ScheduleAcceptanceTest{
             }
 
             public RepeatScheduleRequest build(){return new RepeatScheduleRequest(this);}
+
+        }
+
+    }
+
+    public static class ScheduleResponse{
+
+        @JsonProperty("id")
+        private int id;
+        @JsonProperty("schedule_title")
+        private String scheduleTitle;
+        @JsonProperty("scheduleContent")
+        private String scheduleContent;
+        @JsonProperty("startedAt")
+        private String startedAt;
+        @JsonProperty("finishAt")
+        private String finishAt;
+        @JsonProperty("repeat")
+        private RepeatScheduleResponse repeat = null;
+
+        private ScheduleResponse(){}
+
+        private ScheduleResponse(Builder builder){
+            this.scheduleTitle = builder.scheduleTitle;
+            this.scheduleContent = builder.scheduleContent;
+            this.startedAt = builder.startedAt;
+            this.finishAt = builder.finishAt;
+            this.repeat = builder.repeat;
+        }
+
+        public static Builder builder(){return new Builder();}
+
+        public int getId(){
+            return id;
+        }
+
+        public void setId(int id){
+            this.id = id;
+        }
+
+        public String getScheduleTitle(){
+            return scheduleTitle;
+        }
+
+        public void setScheduleTitle(String scheduleTitle){
+            this.scheduleTitle = scheduleTitle;
+        }
+
+        public String getScheduleContent(){
+            return scheduleContent;
+        }
+
+        public void setScheduleContent(String scheduleContent){
+            this.scheduleContent = scheduleContent;
+        }
+
+        public String getStartedAt(){
+            return startedAt;
+        }
+
+        public void setStartedAt(String startedAt){
+            this.startedAt = startedAt;
+        }
+
+        public String getFinishAt(){
+            return finishAt;
+        }
+
+        public void setFinishAt(String finishAt){
+            this.finishAt = finishAt;
+        }
+
+        public RepeatScheduleResponse getRepeat(){
+            return repeat;
+        }
+
+        public void setRepeat(RepeatScheduleResponse repeat){
+            this.repeat = repeat;
+        }
+
+        public final static class Builder{
+
+            private int id;
+            private String scheduleTitle;
+            private String scheduleContent;
+            private String startedAt;
+            private String finishAt;
+            private RepeatScheduleResponse repeat;
+
+            private Builder(){}
+
+            public Builder scheduleTitle(String scheduleTitle){
+                this.scheduleTitle = scheduleTitle;
+                return this;
+            }
+
+            public Builder scheduleContent(String scheduleContent){
+                this.scheduleContent = scheduleContent;
+                return this;
+            }
+
+            public Builder startedAt(String startedAt){
+                this.startedAt = startedAt;
+                return this;
+            }
+
+            public Builder finishAt(String finishAt){
+                this.finishAt = finishAt;
+                return this;
+            }
+
+            public Builder repeat(RepeatScheduleResponse repeat){
+                this.repeat = repeat;
+                return this;
+            }
+
+            public ScheduleResponse build(){return new ScheduleResponse(this);}
+
+        }
+
+
+    }
+
+    public static class RepeatScheduleResponse{
+
+        @JsonProperty("cycle")
+        private int cycle;
+        @JsonProperty("repeat_finish_at")
+        private String repeatFinishAt;
+
+        public RepeatScheduleResponse(){}
+
+        private RepeatScheduleResponse(Builder builder){
+            this.cycle = builder.cycle;
+            this.repeatFinishAt = builder.repeatFinishAt;
+        }
+
+        public static Builder builder(){return new Builder();}
+
+        public int getCycle(){
+            return cycle;
+        }
+
+        public void setCycle(int cycle){
+            this.cycle = cycle;
+        }
+
+        public String getRepeatFinishAt(){
+            return repeatFinishAt;
+        }
+
+        public void setRepeatFinishAt(String repeatFinishAt){
+            this.repeatFinishAt = repeatFinishAt;
+        }
+
+        public final static class Builder{
+
+            private int cycle;
+            private String repeatFinishAt;
+
+            private Builder(){}
+
+            public Builder cycle(int cycle){
+                this.cycle = cycle;
+                return this;
+            }
+
+            public Builder repeatFinishAt(String repeatFinishAt){
+                this.repeatFinishAt = repeatFinishAt;
+                return this;
+            }
+
+            public RepeatScheduleResponse build(){return new RepeatScheduleResponse(this);}
 
         }
 

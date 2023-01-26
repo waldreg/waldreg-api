@@ -19,4 +19,12 @@ public class ScheduleAcceptanceTestHelper{
                 .content(content));
     }
 
+    public static ResultActions inquirySpecificSchedule(MockMvc mvc, int id, String token) throws Exception{
+        return mvc.perform(MockMvcRequestBuilders
+                .get("/schedule/{schedule-id}", id)
+                .accept(MediaType.APPLICATION_JSON)
+                .header("Api-version", apiVersion)
+                .header(HttpHeaders.AUTHORIZATION, token));
+    }
+
 }
