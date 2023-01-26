@@ -19,7 +19,7 @@ This document introduces how to run waldreg api server with Docker.
 git clone https://github.com/waldreg/waldreg-api.git
 ```
 
-2. Go to the folder path where the Dockerfile is located
+2. Go to the path where the Dockerfile is located
 ``` textile
 cd waldreg-api
 ```
