@@ -4,6 +4,8 @@ package org.waldreg.acceptance.schedule;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.util.List;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,6 +30,30 @@ public class ScheduleAcceptanceTest{
     private ObjectMapper objectMapper;
 
     private final String apiVersion = "1.0";
+
+    @BeforeEach
+    @AfterEach
+    public void INITIATE() throws Exception{
+        String adminToken = AuthenticationAcceptanceTestHelper.getAdminToken(mvc, objectMapper);
+        for (int month = 1; month <= 12; month++){
+            ScheduleListResponse scheduleListResponse = objectMapper.readValue(
+                    ScheduleAcceptanceTestHelper.inquiryScheduleListByTerm(mvc, 2023, month, adminToken)
+                            .andReturn()
+                            .getResponse()
+                            .getContentAsString(), ScheduleListResponse.class);
+            for (ScheduleResponse scheduleResponse : scheduleListResponse.getScheduleList()){
+                ResultActions result = ScheduleAcceptanceTestHelper.deleteSpecificSchedule(mvc, scheduleResponse.getId(), adminToken);
+                result.andExpectAll(
+                        MockMvcResultMatchers.status().isBadRequest(),
+                        MockMvcResultMatchers.header().string(HttpHeaders.CONTENT_TYPE, "application/json"),
+                        MockMvcResultMatchers.header().string("api-version", apiVersion),
+                        MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON),
+                        MockMvcResultMatchers.jsonPath("$.messages").value("Unknown schedule"),
+                        MockMvcResultMatchers.jsonPath("$.document_url").value("docs.waldreg.org")
+                );
+            }
+        }
+    }
 
     @Test
     @DisplayName("새로운 일정 생성 성공 테스트 - 반복 없음")
