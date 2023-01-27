@@ -47,12 +47,6 @@ public class DefaultScheduleManager implements ScheduleManager{
         return scheduleRepository.readScheduleById(id);
     }
 
-    private void throwIfScheduleIdDoesNotExist(int id){
-        if (!scheduleIdExistChecker.isExistScheduleId(id)){
-            throw new UnknownScheduleException("Cannot find schedule with id \"" + id + "\"");
-        }
-    }
-
     @Override
     public List<ScheduleDto> readScheduleByTerm(int year, int month){
         throwIfDateFormat(year, month);
@@ -78,6 +72,7 @@ public class DefaultScheduleManager implements ScheduleManager{
 
     @Override
     public void updateScheduleById(int id, ScheduleDto scheduleDto){
+        throwIfScheduleIdDoesNotExist(id);
         try{
             LocalDateTime startedAt = LocalDateTime.parse(scheduleDto.getStartedAt());
             LocalDateTime finishAt = LocalDateTime.parse(scheduleDto.getFinishAt());
@@ -88,6 +83,12 @@ public class DefaultScheduleManager implements ScheduleManager{
             scheduleRepository.updateScheduleById(id, scheduleDto);
         } catch (DateTimeParseException DTPE){
             throw new InvalidDateFormatException("Invalid date format detected : Schedule start date \"" + scheduleDto.getStartedAt() + "\" Schedule finish date \"" + scheduleDto.getFinishAt() + "\"");
+        }
+    }
+
+    private void throwIfScheduleIdDoesNotExist(int id){
+        if (!scheduleIdExistChecker.isExistScheduleId(id)){
+            throw new UnknownScheduleException("Cannot find schedule with id \"" + id + "\"");
         }
     }
 
