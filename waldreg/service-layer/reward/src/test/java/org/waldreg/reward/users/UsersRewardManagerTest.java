@@ -10,21 +10,21 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
-import org.wadlreg.reward.users.DefaultUsersRewardTagManager;
-import org.wadlreg.reward.users.UsersRewardTagManager;
+import org.wadlreg.reward.users.DefaultUsersRewardManager;
+import org.wadlreg.reward.users.UsersRewardManager;
 import org.wadlreg.reward.users.dto.UsersRewardDto;
 import org.wadlreg.reward.users.dto.UsersRewardTagDto;
-import org.wadlreg.reward.users.spi.UsersRewardTagManagerRepository;
+import org.wadlreg.reward.users.spi.UsersRewardManagerRepository;
 
 @ExtendWith(SpringExtension.class)
-@ContextConfiguration(classes = DefaultUsersRewardTagManager.class)
-public class UsersRewardTagManagerTest{
+@ContextConfiguration(classes = DefaultUsersRewardManager.class)
+public class UsersRewardManagerTest{
 
     @Autowired
-    private UsersRewardTagManager usersRewardTagManager;
+    private UsersRewardManager usersRewardManager;
 
     @MockBean
-    private UsersRewardTagManagerRepository usersRewardTagManagerRepository;
+    private UsersRewardManagerRepository usersRewardManagerRepository;
 
     @Test
     @DisplayName("특정 유저에게 상점 부여 성공 테스트")
@@ -34,7 +34,7 @@ public class UsersRewardTagManagerTest{
         int rewardTagId = 1;
 
         // when & then
-        Assertions.assertDoesNotThrow(() -> usersRewardTagManager.assignRewardTagToUser(id, rewardTagId));
+        Assertions.assertDoesNotThrow(() -> usersRewardManager.assignRewardToUser(id, rewardTagId));
     }
 
     @Test
@@ -58,8 +58,8 @@ public class UsersRewardTagManagerTest{
                 .build();
 
         // when
-        Mockito.when(usersRewardTagManagerRepository.readSpecifyUsersReward(1)).thenReturn(usersRewardDto);
-        UsersRewardDto result = usersRewardTagManager.readSpecifyUsersReward(1);
+        Mockito.when(usersRewardManagerRepository.readSpecifyUsersReward(1)).thenReturn(usersRewardDto);
+        UsersRewardDto result = usersRewardManager.readSpecifyUsersReward(1);
 
         // then
         Assertions.assertEquals(id, result.getId());
@@ -73,14 +73,14 @@ public class UsersRewardTagManagerTest{
         int rewardId = 1;
 
         // when & then
-        Assertions.assertDoesNotThrow(() -> usersRewardTagManager.deleteRewardToUser(id, rewardId));
+        Assertions.assertDoesNotThrow(() -> usersRewardManager.deleteRewardToUser(id, rewardId));
     }
 
     @Test
     @DisplayName("모든 유저의 상점 초기화 성공 테스트")
     public void RESET_ALL_USERS_REWARD_SUCCESS_TEST(){
         // when & then
-        Assertions.assertDoesNotThrow(()-usersRewardTagManager.resetAllUsersReward())
+        Assertions.assertDoesNotThrow(() -> usersRewardManager.resetAllUsersReward());
     }
 
 }
