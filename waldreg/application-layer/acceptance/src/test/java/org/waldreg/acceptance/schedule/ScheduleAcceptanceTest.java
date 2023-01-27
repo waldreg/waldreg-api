@@ -205,7 +205,7 @@ public class ScheduleAcceptanceTest{
 
         String scheduleTitle = "seminar";
         String scheduleContent = "BFS";
-        String StartedAt = "2023-01-24T20:52";
+        String startedAt = "2023-01-24T20:52";
         String finishAt = "2023-01-31T23:59";
         int wrongCycle = 0;
         String repeatFinishAt = "2023-12-31T23:59";
@@ -216,7 +216,7 @@ public class ScheduleAcceptanceTest{
         ScheduleRequest scheduleRequest = ScheduleRequest.builder()
                 .scheduleTitle(scheduleTitle)
                 .scheduleContent(scheduleContent)
-                .startedAt(StartedAt)
+                .startedAt(startedAt)
                 .finishAt(finishAt)
                 .repeat(repeatScheduleRequest)
                 .build();
@@ -244,7 +244,7 @@ public class ScheduleAcceptanceTest{
 
         String scheduleTitle = "seminar";
         String scheduleContent = "BFS";
-        String StartedAt = "2023-01-24T20:52";
+        String startedAt = "2023-01-24T20:52";
         String finishAt = "2023-01-31T23:59";
         int cycle = 123;
         String wrongRepeatFinishAt = "2023-01-28T23:59";
@@ -255,7 +255,7 @@ public class ScheduleAcceptanceTest{
         ScheduleRequest scheduleRequest = ScheduleRequest.builder()
                 .scheduleTitle(scheduleTitle)
                 .scheduleContent(scheduleContent)
-                .startedAt(StartedAt)
+                .startedAt(startedAt)
                 .finishAt(finishAt)
                 .repeat(repeatScheduleRequest)
                 .build();
@@ -283,7 +283,7 @@ public class ScheduleAcceptanceTest{
 
         String blankScheduleTitle = "";
         String scheduleContent = "BFS";
-        String StartedAt = "2023-01-24T20:52";
+        String startedAt = "2023-01-24T20:52";
         String finishAt = "2023-01-31T23:59";
         int cycle = 123;
         String repeatFinishAt = "2023-12-31T23:59";
@@ -294,7 +294,7 @@ public class ScheduleAcceptanceTest{
         ScheduleRequest scheduleRequest = ScheduleRequest.builder()
                 .scheduleTitle(blankScheduleTitle)
                 .scheduleContent(scheduleContent)
-                .startedAt(StartedAt)
+                .startedAt(startedAt)
                 .finishAt(finishAt)
                 .repeat(repeatScheduleRequest)
                 .build();
@@ -322,7 +322,7 @@ public class ScheduleAcceptanceTest{
 
         String scheduleTitle = "seminar";
         String scheduleContent = "BFS";
-        String StartedAt = "2023-01-24T20:52";
+        String startedAt = "2023-01-24T20:52";
         String finishAt = "2023-01-31T23:59";
         int cycle = 123;
         String repeatFinishAt = "2023-12-31T23:59";
@@ -334,7 +334,7 @@ public class ScheduleAcceptanceTest{
                 .scheduleTitle(scheduleTitle)
                 .scheduleContent(scheduleContent)
                 .startedAt(finishAt)
-                .finishAt(StartedAt)
+                .finishAt(startedAt)
                 .repeat(repeatScheduleRequest)
                 .build();
 
@@ -361,7 +361,7 @@ public class ScheduleAcceptanceTest{
 
         String scheduleTitle = "seminar";
         String scheduleContent = "BFS";
-        String StartedAt = "2023-01-24T20:52";
+        String startedAt = "2023-01-24T20:52";
         String finishAt = "2023-01-31T23:59";
         int cycle = 123;
         String repeatFinishAt = "2023-12-31T23:59";
@@ -372,7 +372,7 @@ public class ScheduleAcceptanceTest{
         ScheduleRequest scheduleRequest = ScheduleRequest.builder()
                 .scheduleTitle(scheduleTitle)
                 .scheduleContent(scheduleContent)
-                .startedAt(StartedAt)
+                .startedAt(startedAt)
                 .finishAt(finishAt)
                 .repeat(repeatScheduleRequest)
                 .build();
@@ -400,7 +400,7 @@ public class ScheduleAcceptanceTest{
 
         String scheduleTitle = "seminar";
         String scheduleContent = createOverflow();
-        String StartedAt = "2023-01-24T20:52";
+        String startedAt = "2023-01-24T20:52";
         String finishAt = "2023-01-31T23:59";
         int cycle = 123;
         String repeatFinishAt = "2023-12-31T23:59";
@@ -411,7 +411,7 @@ public class ScheduleAcceptanceTest{
         ScheduleRequest scheduleRequest = ScheduleRequest.builder()
                 .scheduleTitle(scheduleTitle)
                 .scheduleContent(scheduleContent)
-                .startedAt(StartedAt)
+                .startedAt(startedAt)
                 .finishAt(finishAt)
                 .repeat(repeatScheduleRequest)
                 .build();
@@ -439,7 +439,7 @@ public class ScheduleAcceptanceTest{
 
         String scheduleTitle = "seminar";
         String scheduleContent = "BFS";
-        String StartedAt = "2023-01-24T20:52";
+        String startedAt = "2023-01-24T20:52";
         String finishAt = "2023-01-31T23:59";
         int cycle = 123;
         String repeatFinishAt = "2023-12-31T23:59";
@@ -450,7 +450,7 @@ public class ScheduleAcceptanceTest{
         ScheduleRequest scheduleRequest = ScheduleRequest.builder()
                 .scheduleTitle(scheduleTitle)
                 .scheduleContent(scheduleContent)
-                .startedAt(StartedAt)
+                .startedAt(startedAt)
                 .finishAt(finishAt)
                 .repeat(repeatScheduleRequest)
                 .build();
@@ -510,27 +510,27 @@ public class ScheduleAcceptanceTest{
         String adminToken = AuthenticationAcceptanceTestHelper.getAdminToken(mvc, objectMapper);
         String scheduleTitle = "seminar";
         String scheduleContent = "BFS";
-        String StartedAt = "2023-01-24T20:52";
+        String startedAt = "2023-01-24T20:52";
         String finishAt = "2023-01-31T23:59";
         ScheduleRequest scheduleRequest = ScheduleRequest.builder()
                 .scheduleTitle(scheduleTitle)
                 .scheduleContent(scheduleContent)
-                .startedAt(StartedAt)
+                .startedAt(startedAt)
                 .finishAt(finishAt)
                 .build();
         String scheduleTitle2 = "seminar2";
         String scheduleContent2 = "DFS";
-        String StartedAt2 = "2023-02-01T20:52";
+        String startedAt2 = "2023-02-01T20:52";
         String finishAt2 = "2023-02-07T23:59";
         ScheduleRequest scheduleRequest2 = ScheduleRequest.builder()
                 .scheduleTitle(scheduleTitle2)
                 .scheduleContent(scheduleContent2)
-                .startedAt(StartedAt2)
+                .startedAt(startedAt2)
                 .finishAt(finishAt2)
                 .build();
         String scheduleTitle3 = "Mentoring Day";
         String scheduleContent3 = "Graduate Mentoring";
-        String StartedAt3 = "2023-01-17T20:52";
+        String startedAt3 = "2023-01-17T20:52";
         String finishAt3 = "2023-01-17T23:59";
         int cycle = 7;
         String repeatFinishAt = "2023-12-31T23:59";
@@ -541,7 +541,7 @@ public class ScheduleAcceptanceTest{
         ScheduleRequest scheduleRequest3 = ScheduleRequest.builder()
                 .scheduleTitle(scheduleTitle3)
                 .scheduleContent(scheduleContent3)
-                .startedAt(StartedAt3)
+                .startedAt(startedAt3)
                 .repeat(repeatScheduleRequest)
                 .finishAt(finishAt3)
                 .build();
@@ -646,27 +646,27 @@ public class ScheduleAcceptanceTest{
         String adminToken = AuthenticationAcceptanceTestHelper.getAdminToken(mvc, objectMapper);
         String scheduleTitle = "seminar";
         String scheduleContent = "BFS";
-        String StartedAt = "2023-01-24T20:52";
+        String startedAt = "2023-01-24T20:52";
         String finishAt = "2023-01-31T23:59";
         ScheduleRequest scheduleRequest = ScheduleRequest.builder()
                 .scheduleTitle(scheduleTitle)
                 .scheduleContent(scheduleContent)
-                .startedAt(StartedAt)
+                .startedAt(startedAt)
                 .finishAt(finishAt)
                 .build();
         String scheduleTitle2 = "seminar2";
         String scheduleContent2 = "DFS";
-        String StartedAt2 = "2023-02-01T20:52";
+        String startedAt2 = "2023-02-01T20:52";
         String finishAt2 = "2023-02-07T23:59";
         ScheduleRequest scheduleRequest2 = ScheduleRequest.builder()
                 .scheduleTitle(scheduleTitle2)
                 .scheduleContent(scheduleContent2)
-                .startedAt(StartedAt2)
+                .startedAt(startedAt2)
                 .finishAt(finishAt2)
                 .build();
         String scheduleTitle3 = "Mentoring Day";
         String scheduleContent3 = "Graduate Mentoring";
-        String StartedAt3 = "2023-01-17T20:52";
+        String startedAt3 = "2023-01-17T20:52";
         String finishAt3 = "2023-01-17T23:59";
         int cycle = 7;
         String repeatFinishAt = "2023-12-31T23:59";
@@ -677,7 +677,7 @@ public class ScheduleAcceptanceTest{
         ScheduleRequest scheduleRequest3 = ScheduleRequest.builder()
                 .scheduleTitle(scheduleTitle3)
                 .scheduleContent(scheduleContent3)
-                .startedAt(StartedAt3)
+                .startedAt(startedAt3)
                 .repeat(repeatScheduleRequest)
                 .finishAt(finishAt3)
                 .build();
@@ -710,12 +710,12 @@ public class ScheduleAcceptanceTest{
 
         String scheduleTitle = "seminar";
         String scheduleContent = "BFS";
-        String StartedAt = "2023-01-24T20:52";
+        String startedAt = "2023-01-24T20:52";
         String finishAt = "2023-01-31T23:59";
         ScheduleRequest scheduleRequest = ScheduleRequest.builder()
                 .scheduleTitle(scheduleTitle)
                 .scheduleContent(scheduleContent)
-                .startedAt(StartedAt)
+                .startedAt(startedAt)
                 .finishAt(finishAt)
                 .build();
         String modifiedScheduleTitle = "seminar";
@@ -762,12 +762,12 @@ public class ScheduleAcceptanceTest{
 
         String scheduleTitle = "seminar";
         String scheduleContent = "BFS";
-        String StartedAt = "2023-01-24T20:52";
+        String startedAt = "2023-01-24T20:52";
         String finishAt = "2023-01-31T23:59";
         ScheduleRequest scheduleRequest = ScheduleRequest.builder()
                 .scheduleTitle(scheduleTitle)
                 .scheduleContent(scheduleContent)
-                .startedAt(StartedAt)
+                .startedAt(startedAt)
                 .finishAt(finishAt)
                 .build();
         String modifiedScheduleTitle = "seminar";
@@ -817,12 +817,12 @@ public class ScheduleAcceptanceTest{
 
         String scheduleTitle = "seminar";
         String scheduleContent = "BFS";
-        String StartedAt = "2023-01-24T20:52";
+        String startedAt = "2023-01-24T20:52";
         String finishAt = "2023-01-31T23:59";
         ScheduleRequest scheduleRequest = ScheduleRequest.builder()
                 .scheduleTitle(scheduleTitle)
                 .scheduleContent(scheduleContent)
-                .startedAt(StartedAt)
+                .startedAt(startedAt)
                 .finishAt(finishAt)
                 .build();
         String modifiedScheduleTitle = "seminar";
@@ -872,12 +872,12 @@ public class ScheduleAcceptanceTest{
 
         String scheduleTitle = "seminar";
         String scheduleContent = "BFS";
-        String StartedAt = "2023-01-24T20:52";
+        String startedAt = "2023-01-24T20:52";
         String finishAt = "2023-01-31T23:59";
         ScheduleRequest scheduleRequest = ScheduleRequest.builder()
                 .scheduleTitle(scheduleTitle)
                 .scheduleContent(scheduleContent)
-                .startedAt(StartedAt)
+                .startedAt(startedAt)
                 .finishAt(finishAt)
                 .build();
         String modifiedScheduleTitle = "seminar";
@@ -926,12 +926,12 @@ public class ScheduleAcceptanceTest{
 
         String scheduleTitle = "seminar";
         String scheduleContent = "BFS";
-        String StartedAt = "2023-01-24T20:52";
+        String startedAt = "2023-01-24T20:52";
         String finishAt = "2023-01-31T23:59";
         ScheduleRequest scheduleRequest = ScheduleRequest.builder()
                 .scheduleTitle(scheduleTitle)
                 .scheduleContent(scheduleContent)
-                .startedAt(StartedAt)
+                .startedAt(startedAt)
                 .finishAt(finishAt)
                 .build();
         String modifiedScheduleTitle = "seminar";
@@ -981,12 +981,12 @@ public class ScheduleAcceptanceTest{
 
         String scheduleTitle = "seminar";
         String scheduleContent = "BFS";
-        String StartedAt = "2023-01-24T20:52";
+        String startedAt = "2023-01-24T20:52";
         String finishAt = "2023-01-31T23:59";
         ScheduleRequest scheduleRequest = ScheduleRequest.builder()
                 .scheduleTitle(scheduleTitle)
                 .scheduleContent(scheduleContent)
-                .startedAt(StartedAt)
+                .startedAt(startedAt)
                 .finishAt(finishAt)
                 .build();
         String wrongModifiedScheduleTitle = "";
@@ -1036,12 +1036,12 @@ public class ScheduleAcceptanceTest{
 
         String scheduleTitle = "seminar";
         String scheduleContent = "BFS";
-        String StartedAt = "2023-01-24T20:52";
+        String startedAt = "2023-01-24T20:52";
         String finishAt = "2023-01-31T23:59";
         ScheduleRequest scheduleRequest = ScheduleRequest.builder()
                 .scheduleTitle(scheduleTitle)
                 .scheduleContent(scheduleContent)
-                .startedAt(StartedAt)
+                .startedAt(startedAt)
                 .finishAt(finishAt)
                 .build();
         String modifiedScheduleTitle = "seminar";
@@ -1092,12 +1092,12 @@ public class ScheduleAcceptanceTest{
 
         String scheduleTitle = "seminar";
         String scheduleContent = "BFS";
-        String StartedAt = "2023-01-24T20:52";
+        String startedAt = "2023-01-24T20:52";
         String finishAt = "2023-01-31T23:59";
         ScheduleRequest scheduleRequest = ScheduleRequest.builder()
                 .scheduleTitle(scheduleTitle)
                 .scheduleContent(scheduleContent)
-                .startedAt(StartedAt)
+                .startedAt(startedAt)
                 .finishAt(finishAt)
                 .build();
         String modifiedScheduleTitle = "seminar";
@@ -1147,12 +1147,12 @@ public class ScheduleAcceptanceTest{
 
         String scheduleTitle = "seminar";
         String scheduleContent = "BFS";
-        String StartedAt = "2023-01-24T20:52";
+        String startedAt = "2023-01-24T20:52";
         String finishAt = "2023-01-31T23:59";
         ScheduleRequest scheduleRequest = ScheduleRequest.builder()
                 .scheduleTitle(scheduleTitle)
                 .scheduleContent(scheduleContent)
-                .startedAt(StartedAt)
+                .startedAt(startedAt)
                 .finishAt(finishAt)
                 .build();
         String modifiedScheduleTitle = "seminar";
@@ -1202,7 +1202,7 @@ public class ScheduleAcceptanceTest{
 
         String scheduleTitle = "seminar";
         String scheduleContent = "BFS";
-        String StartedAt = "2023-01-24T20:52";
+        String startedAt = "2023-01-24T20:52";
         String finishAt = "2023-01-31T23:59";
         int cycle = 123;
         String repeatFinishAt = "2023-12-31T23:59";
@@ -1213,7 +1213,7 @@ public class ScheduleAcceptanceTest{
         ScheduleRequest scheduleRequest = ScheduleRequest.builder()
                 .scheduleTitle(scheduleTitle)
                 .scheduleContent(scheduleContent)
-                .startedAt(StartedAt)
+                .startedAt(startedAt)
                 .finishAt(finishAt)
                 .repeat(repeatScheduleRequest)
                 .build();
@@ -1245,7 +1245,7 @@ public class ScheduleAcceptanceTest{
 
         String scheduleTitle = "seminar";
         String scheduleContent = "BFS";
-        String StartedAt = "2023-01-24T20:52";
+        String startedAt = "2023-01-24T20:52";
         String finishAt = "2023-01-31T23:59";
         int cycle = 123;
         String repeatFinishAt = "2023-12-31T23:59";
@@ -1256,7 +1256,7 @@ public class ScheduleAcceptanceTest{
         ScheduleRequest scheduleRequest = ScheduleRequest.builder()
                 .scheduleTitle(scheduleTitle)
                 .scheduleContent(scheduleContent)
-                .startedAt(StartedAt)
+                .startedAt(startedAt)
                 .finishAt(finishAt)
                 .repeat(repeatScheduleRequest)
                 .build();

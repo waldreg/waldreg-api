@@ -248,7 +248,7 @@ public class ScheduleServiceTest{
         //given
         String scheduleTitle = "seminar";
         String scheduleContent = "BFS";
-        String StartedAt = "2023-01-24T20:52";
+        String startedAt = "2023-01-24T20:52";
         String finishAt = "2023-01-31T23:59";
         int cycle = 123;
         String repeatFinishAt = "2023-12-31T23:59";
@@ -259,7 +259,7 @@ public class ScheduleServiceTest{
         ScheduleDto scheduleRequest = ScheduleDto.builder()
                 .scheduleTitle(scheduleTitle)
                 .scheduleContent(scheduleContent)
-                .startedAt(StartedAt)
+                .startedAt(startedAt)
                 .finishAt(finishAt)
                 .repeatDto(repeatScheduleRequest)
                 .build();
@@ -301,7 +301,7 @@ public class ScheduleServiceTest{
         //given
         String scheduleTitle = "seminar";
         String scheduleContent = "BFS";
-        String StartedAt = "2023-01-24T20:52";
+        String startedAt = "2023-01-24T20:52";
         String finishAt = "2023-01-31T23:59";
         int cycle = 123;
         String repeatFinishAt = "2023-12-31T23:59";
@@ -312,13 +312,13 @@ public class ScheduleServiceTest{
         ScheduleDto scheduleRequest = ScheduleDto.builder()
                 .scheduleTitle(scheduleTitle)
                 .scheduleContent(scheduleContent)
-                .startedAt(StartedAt)
+                .startedAt(startedAt)
                 .finishAt(finishAt)
                 .repeatDto(repeatScheduleRequest)
                 .build();
         String scheduleTitle2 = "seminar";
         String scheduleContent2 = "DFS";
-        String StartedAt2 = "2023-02-01T20:52";
+        String startedAt2 = "2023-02-01T20:52";
         String finishAt2 = "2023-02-07T23:59";
         int cycle2 = 12;
         String repeatFinishAt2 = "2023-10-31T23:59";
@@ -329,7 +329,7 @@ public class ScheduleServiceTest{
         ScheduleDto scheduleRequest2 = ScheduleDto.builder()
                 .scheduleTitle(scheduleTitle2)
                 .scheduleContent(scheduleContent2)
-                .startedAt(StartedAt2)
+                .startedAt(startedAt2)
                 .finishAt(finishAt2)
                 .repeatDto(repeatScheduleRequest2)
                 .build();
@@ -361,7 +361,7 @@ public class ScheduleServiceTest{
         //given
         String scheduleTitle = "seminar";
         String scheduleContent = "BFS";
-        String StartedAt = "2023-01-24T20:52";
+        String startedAt = "2023-01-24T20:52";
         String finishAt = "2023-01-31T23:59";
         int cycle = 123;
         String repeatFinishAt = "2023-12-31T23:59";
@@ -372,13 +372,13 @@ public class ScheduleServiceTest{
         ScheduleDto scheduleRequest = ScheduleDto.builder()
                 .scheduleTitle(scheduleTitle)
                 .scheduleContent(scheduleContent)
-                .startedAt(StartedAt)
+                .startedAt(startedAt)
                 .finishAt(finishAt)
                 .repeatDto(repeatScheduleRequest)
                 .build();
         String scheduleTitle2 = "seminar";
         String scheduleContent2 = "DFS";
-        String StartedAt2 = "2023-02-01T20:52";
+        String startedAt2 = "2023-02-01T20:52";
         String finishAt2 = "2023-02-07T23:59";
         int cycle2 = 12;
         String repeatFinishAt2 = "2023-10-31T23:59";
@@ -389,7 +389,7 @@ public class ScheduleServiceTest{
         ScheduleDto scheduleRequest2 = ScheduleDto.builder()
                 .scheduleTitle(scheduleTitle2)
                 .scheduleContent(scheduleContent2)
-                .startedAt(StartedAt2)
+                .startedAt(startedAt2)
                 .finishAt(finishAt2)
                 .repeatDto(repeatScheduleRequest2)
                 .build();
@@ -412,7 +412,7 @@ public class ScheduleServiceTest{
         //given
         String scheduleTitle = "seminar";
         String scheduleContent = "BFS";
-        String StartedAt = "2023-01-24T20:52";
+        String startedAt = "2023-01-24T20:52";
         String finishAt = "2023-01-31T23:59";
         int cycle = 123;
         String repeatFinishAt = "2023-12-31T23:59";
@@ -423,13 +423,13 @@ public class ScheduleServiceTest{
         ScheduleDto scheduleRequest = ScheduleDto.builder()
                 .scheduleTitle(scheduleTitle)
                 .scheduleContent(scheduleContent)
-                .startedAt(StartedAt)
+                .startedAt(startedAt)
                 .finishAt(finishAt)
                 .repeatDto(repeatScheduleRequest)
                 .build();
         String scheduleTitle2 = "seminar";
         String scheduleContent2 = "BFS";
-        String StartedAt2 = "2023-02-01T20:52";
+        String startedAt2 = "2023-02-01T20:52";
         String finishAt2 = "2023-02-07T23:59";
         int cycle2 = 100;
         String repeatFinishAt2 = "2023-12-31T23:59";
@@ -440,7 +440,7 @@ public class ScheduleServiceTest{
         ScheduleDto scheduleRequest2 = ScheduleDto.builder()
                 .scheduleTitle(scheduleTitle2)
                 .scheduleContent(scheduleContent2)
-                .startedAt(StartedAt2)
+                .startedAt(startedAt2)
                 .finishAt(finishAt2)
                 .repeatDto(repeatScheduleRequest2)
                 .build();
@@ -470,7 +470,7 @@ public class ScheduleServiceTest{
         //given
         String scheduleTitle = "seminar";
         String scheduleContent = "BFS";
-        String StartedAt = "2023-01-24T20:52";
+        String startedAt = "2023-01-24T20:52";
         String finishAt = "2023-01-31T23:59";
         int cycle = 123;
         String repeatFinishAt = "2023-12-31T23:59";
@@ -481,13 +481,13 @@ public class ScheduleServiceTest{
         ScheduleDto scheduleRequest = ScheduleDto.builder()
                 .scheduleTitle(scheduleTitle)
                 .scheduleContent(scheduleContent)
-                .startedAt(StartedAt)
+                .startedAt(startedAt)
                 .finishAt(finishAt)
                 .repeatDto(repeatScheduleRequest)
                 .build();
         String scheduleTitle2 = "seminar";
         String scheduleContent2 = "BFS";
-        String StartedAt2 = "2023-02-01T20:52";
+        String startedAt2 = "2023-02-01T20:52";
         String finishAt2 = "2023-02-29T23:59";
         int cycle2 = 100;
         String repeatFinishAt2 = "2023-12-31T23:59";
@@ -498,7 +498,7 @@ public class ScheduleServiceTest{
         ScheduleDto scheduleRequest2 = ScheduleDto.builder()
                 .scheduleTitle(scheduleTitle2)
                 .scheduleContent(scheduleContent2)
-                .startedAt(StartedAt2)
+                .startedAt(startedAt2)
                 .finishAt(finishAt2)
                 .repeatDto(repeatScheduleRequest2)
                 .build();
@@ -519,7 +519,7 @@ public class ScheduleServiceTest{
         //given
         String scheduleTitle = "seminar";
         String scheduleContent = "BFS";
-        String StartedAt = "2023-01-24T20:52";
+        String startedAt = "2023-01-24T20:52";
         String finishAt = "2023-01-31T23:59";
         int cycle = 123;
         String repeatFinishAt = "2023-12-31T23:59";
@@ -530,13 +530,13 @@ public class ScheduleServiceTest{
         ScheduleDto scheduleRequest = ScheduleDto.builder()
                 .scheduleTitle(scheduleTitle)
                 .scheduleContent(scheduleContent)
-                .startedAt(StartedAt)
+                .startedAt(startedAt)
                 .finishAt(finishAt)
                 .repeatDto(repeatScheduleRequest)
                 .build();
         String scheduleTitle2 = "seminar";
         String scheduleContent2 = "BFS";
-        String StartedAt2 = "1999-02-01T20:52";
+        String startedAt2 = "1999-02-01T20:52";
         String finishAt2 = "2023-02-28T23:59";
         int cycle2 = 100;
         String repeatFinishAt2 = "2023-12-31T23:59";
@@ -547,7 +547,154 @@ public class ScheduleServiceTest{
         ScheduleDto scheduleRequest2 = ScheduleDto.builder()
                 .scheduleTitle(scheduleTitle2)
                 .scheduleContent(scheduleContent2)
-                .startedAt(StartedAt2)
+                .startedAt(startedAt2)
+                .finishAt(finishAt2)
+                .repeatDto(repeatScheduleRequest2)
+                .build();
+
+        //when
+        scheduleManager.createSchedule(scheduleRequest);
+        Mockito.when(scheduleIdExistChecker.isExistScheduleId(Mockito.anyInt())).thenReturn(true);
+        Mockito.when(scheduleRepository.readScheduleById(Mockito.anyInt())).thenReturn(scheduleRequest2);
+
+        //then
+        Assertions.assertThrows(InvalidDateFormatException.class, () -> scheduleManager.updateScheduleById(1, scheduleRequest2));
+
+    }
+
+    @Test
+    @DisplayName("일정 수정 실패 테스트 - 잘못된 cycle")
+    public void UPDATE_SCHEDULE_FAIL_CAUSE_INVALID_CYCLE_TEST(){
+        //given
+        String scheduleTitle = "seminar";
+        String scheduleContent = "BFS";
+        String startedAt = "2023-01-24T20:52";
+        String finishAt = "2023-01-31T23:59";
+        int cycle = 123;
+        String repeatFinishAt = "2023-12-31T23:59";
+        RepeatDto repeatScheduleRequest = RepeatDto.builder()
+                .cycle(cycle)
+                .repeatFinishAt(repeatFinishAt)
+                .build();
+        ScheduleDto scheduleRequest = ScheduleDto.builder()
+                .scheduleTitle(scheduleTitle)
+                .scheduleContent(scheduleContent)
+                .startedAt(startedAt)
+                .finishAt(finishAt)
+                .repeatDto(repeatScheduleRequest)
+                .build();
+        String scheduleTitle2 = "seminar";
+        String scheduleContent2 = "BFS";
+        String startedAt2 = "2023-02-01T20:52";
+        String finishAt2 = "2023-02-28T23:59";
+        int cycle2 = -1;
+        String repeatFinishAt2 = "2023-12-31T23:59";
+        RepeatDto repeatScheduleRequest2 = RepeatDto.builder()
+                .cycle(cycle2)
+                .repeatFinishAt(repeatFinishAt2)
+                .build();
+        ScheduleDto scheduleRequest2 = ScheduleDto.builder()
+                .scheduleTitle(scheduleTitle2)
+                .scheduleContent(scheduleContent2)
+                .startedAt(startedAt2)
+                .finishAt(finishAt2)
+                .repeatDto(repeatScheduleRequest2)
+                .build();
+
+        //when
+        scheduleManager.createSchedule(scheduleRequest);
+        Mockito.when(scheduleIdExistChecker.isExistScheduleId(Mockito.anyInt())).thenReturn(true);
+        Mockito.when(scheduleRepository.readScheduleById(Mockito.anyInt())).thenReturn(scheduleRequest2);
+
+        //then
+        Assertions.assertThrows(InvalidRepeatException.class, () -> scheduleManager.updateScheduleById(1, scheduleRequest2));
+
+    }
+
+    @Test
+    @DisplayName("일정 수정 실패 테스트 - 반복 종료 날짜가 일정 시작 날짜 혹은 끝 날짜보다 앞설 때")
+    public void UPDATE_SCHEDULE_FAIL_CAUSE_REPEAT_FINISH_AT_PRECEDE_SCHEDULE_TERM_TEST(){
+        //given
+        String scheduleTitle = "seminar";
+        String scheduleContent = "BFS";
+        String startedAt = "2023-01-24T20:52";
+        String finishAt = "2023-01-31T23:59";
+        int cycle = 123;
+        String repeatFinishAt = "2023-12-31T23:59";
+        RepeatDto repeatScheduleRequest = RepeatDto.builder()
+                .cycle(cycle)
+                .repeatFinishAt(repeatFinishAt)
+                .build();
+        ScheduleDto scheduleRequest = ScheduleDto.builder()
+                .scheduleTitle(scheduleTitle)
+                .scheduleContent(scheduleContent)
+                .startedAt(startedAt)
+                .finishAt(finishAt)
+                .repeatDto(repeatScheduleRequest)
+                .build();
+        String scheduleTitle2 = "seminar";
+        String scheduleContent2 = "BFS";
+        String startedAt2 = "2023-02-01T20:52";
+        String finishAt2 = "2023-02-28T23:59";
+        int cycle2 = 10;
+        String repeatFinishAt2 = "2023-02-27T23:59";
+        RepeatDto repeatScheduleRequest2 = RepeatDto.builder()
+                .cycle(cycle2)
+                .repeatFinishAt(repeatFinishAt2)
+                .build();
+        ScheduleDto scheduleRequest2 = ScheduleDto.builder()
+                .scheduleTitle(scheduleTitle2)
+                .scheduleContent(scheduleContent2)
+                .startedAt(startedAt2)
+                .finishAt(finishAt2)
+                .repeatDto(repeatScheduleRequest2)
+                .build();
+
+        //when
+        scheduleManager.createSchedule(scheduleRequest);
+        Mockito.when(scheduleIdExistChecker.isExistScheduleId(Mockito.anyInt())).thenReturn(true);
+        Mockito.when(scheduleRepository.readScheduleById(Mockito.anyInt())).thenReturn(scheduleRequest2);
+
+        //then
+        Assertions.assertThrows(InvalidRepeatException.class, () -> scheduleManager.updateScheduleById(1, scheduleRequest2));
+
+    }
+
+    @Test
+    @DisplayName("일정 수정 실패 테스트 - 반복 종료 날짜가 잘못된 형식일 때")
+    public void UPDATE_SCHEDULE_FAIL_CAUSE_INVALID_REPEAT_FINISH_AT_TEST(){
+        //given
+        String scheduleTitle = "seminar";
+        String scheduleContent = "BFS";
+        String startedAt = "2023-01-24T20:52";
+        String finishAt = "2023-01-31T23:59";
+        int cycle = 123;
+        String repeatFinishAt = "2023-12-31T23:59";
+        RepeatDto repeatScheduleRequest = RepeatDto.builder()
+                .cycle(cycle)
+                .repeatFinishAt(repeatFinishAt)
+                .build();
+        ScheduleDto scheduleRequest = ScheduleDto.builder()
+                .scheduleTitle(scheduleTitle)
+                .scheduleContent(scheduleContent)
+                .startedAt(startedAt)
+                .finishAt(finishAt)
+                .repeatDto(repeatScheduleRequest)
+                .build();
+        String scheduleTitle2 = "seminar";
+        String scheduleContent2 = "BFS";
+        String startedAt2 = "2023-02-01T20:52";
+        String finishAt2 = "2023-02-28T23:59";
+        int cycle2 = 100;
+        String repeatFinishAt2 = "2023-12-32T23:59";
+        RepeatDto repeatScheduleRequest2 = RepeatDto.builder()
+                .cycle(cycle2)
+                .repeatFinishAt(repeatFinishAt2)
+                .build();
+        ScheduleDto scheduleRequest2 = ScheduleDto.builder()
+                .scheduleTitle(scheduleTitle2)
+                .scheduleContent(scheduleContent2)
+                .startedAt(startedAt2)
                 .finishAt(finishAt2)
                 .repeatDto(repeatScheduleRequest2)
                 .build();
@@ -568,7 +715,7 @@ public class ScheduleServiceTest{
         //given
         String scheduleTitle = "seminar";
         String scheduleContent = "BFS";
-        String StartedAt = "2023-01-24T20:52";
+        String startedAt = "2023-01-24T20:52";
         String finishAt = "2023-01-31T23:59";
         int cycle = 123;
         String repeatFinishAt = "2023-12-31T23:59";
@@ -579,7 +726,7 @@ public class ScheduleServiceTest{
         ScheduleDto scheduleRequest = ScheduleDto.builder()
                 .scheduleTitle(scheduleTitle)
                 .scheduleContent(scheduleContent)
-                .startedAt(StartedAt)
+                .startedAt(startedAt)
                 .finishAt(finishAt)
                 .repeatDto(repeatScheduleRequest)
                 .build();
