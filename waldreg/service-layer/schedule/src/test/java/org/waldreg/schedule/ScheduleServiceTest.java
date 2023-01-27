@@ -393,6 +393,37 @@ public class ScheduleServiceTest{
 
     }
 
+    @Test
+    @DisplayName("일정 삭제 성공 테스트")
+    public void DELETE_SCHEDULE_BY_ID_SUCCESS_TEST(){
+        //given
+        String scheduleTitle = "seminar";
+        String scheduleContent = "BFS";
+        String StartedAt = "2023-01-24T20:52";
+        String finishAt = "2023-01-31T23:59";
+        int cycle = 123;
+        String repeatFinishAt = "2023-12-31T23:59";
+        RepeatDto repeatScheduleRequest = RepeatDto.builder()
+                .cycle(cycle)
+                .repeatFinishAt(repeatFinishAt)
+                .build();
+        ScheduleDto scheduleRequest = ScheduleDto.builder()
+                .scheduleTitle(scheduleTitle)
+                .scheduleContent(scheduleContent)
+                .startedAt(StartedAt)
+                .finishAt(finishAt)
+                .repeatDto(repeatScheduleRequest)
+                .build();
+
+        //when
+        scheduleManager.createSchedule(scheduleRequest);
+        Mockito.when(scheduleRepository.readScheduleById(Mockito.anyInt())).thenReturn(scheduleRequest);
+
+        //then
+        Assertions.assertDoesNotThrow(()->scheduleManager.deleteScheduleById(1));
+
+    }
+
 
     private String createOverflow(){
         String content = "";
