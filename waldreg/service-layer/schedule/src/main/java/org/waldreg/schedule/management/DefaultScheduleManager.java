@@ -86,12 +86,6 @@ public class DefaultScheduleManager implements ScheduleManager{
         }
     }
 
-    private void throwIfScheduleIdDoesNotExist(int id){
-        if (!scheduleIdExistChecker.isExistScheduleId(id)){
-            throw new UnknownScheduleException("Cannot find schedule with id \"" + id + "\"");
-        }
-    }
-
     private void throwIfUnderYearLimit(int startedYear, int finishYear){
         if (startedYear < 2000 || finishYear < 2000){
             throw new InvalidDateFormatException("Year cannot be under 2000 : current Schedule start year \"" + startedYear + "\" finish year \"" + finishYear + "\"");
@@ -145,7 +139,14 @@ public class DefaultScheduleManager implements ScheduleManager{
 
     @Override
     public void deleteScheduleById(int id){
+        throwIfScheduleIdDoesNotExist(id);
         scheduleRepository.deleteScheduleById(id);
+    }
+
+    private void throwIfScheduleIdDoesNotExist(int id){
+        if (!scheduleIdExistChecker.isExistScheduleId(id)){
+            throw new UnknownScheduleException("Cannot find schedule with id \"" + id + "\"");
+        }
     }
 
 }

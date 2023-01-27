@@ -862,6 +862,7 @@ public class ScheduleServiceTest{
 
         //when
         scheduleManager.createSchedule(scheduleRequest);
+        Mockito.when(scheduleIdExistChecker.isExistScheduleId(Mockito.anyInt())).thenReturn(true);
         Mockito.when(scheduleRepository.readScheduleById(Mockito.anyInt())).thenReturn(scheduleRequest);
 
         //then
@@ -869,6 +870,37 @@ public class ScheduleServiceTest{
 
     }
 
+    @Test
+    @DisplayName("일정 삭제 실패 테스트 - 잘못된 id")
+    public void DELETE_SCHEDULE_BY_ID_FAIL_CAUSE_UNKNOWN_SCHEDULE_TEST(){
+        //given
+        String scheduleTitle = "seminar";
+        String scheduleContent = "BFS";
+        String startedAt = "2023-01-24T20:52";
+        String finishAt = "2023-01-31T23:59";
+        int cycle = 123;
+        String repeatFinishAt = "2023-12-31T23:59";
+        RepeatDto repeatScheduleRequest = RepeatDto.builder()
+                .cycle(cycle)
+                .repeatFinishAt(repeatFinishAt)
+                .build();
+        ScheduleDto scheduleRequest = ScheduleDto.builder()
+                .scheduleTitle(scheduleTitle)
+                .scheduleContent(scheduleContent)
+                .startedAt(startedAt)
+                .finishAt(finishAt)
+                .repeatDto(repeatScheduleRequest)
+                .build();
+
+        //when
+        scheduleManager.createSchedule(scheduleRequest);
+        Mockito.when(scheduleIdExistChecker.isExistScheduleId(Mockito.anyInt())).thenReturn(false);
+        Mockito.when(scheduleRepository.readScheduleById(Mockito.anyInt())).thenReturn(scheduleRequest);
+
+        //then
+        Assertions.assertThrows(UnknownScheduleException.class, () -> scheduleManager.deleteScheduleById(1));
+
+    }
 
     private String createOverflow(){
         String content = "";
