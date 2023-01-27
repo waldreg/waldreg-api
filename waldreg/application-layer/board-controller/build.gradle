@@ -1,33 +1,34 @@
+import org.springframework.boot.gradle.plugin.SpringBootPlugin
+
 plugins {
-    id 'org.springframework.boot' version '2.7.1'
+    id 'org.springframework.boot' version '2.7.1' apply false
     id 'io.spring.dependency-management' version '1.1.0'
     id 'java'
 }
 
-sourceCompatibility = '11'
-targetCompatibility = '11'
-
 group 'org.waldreg'
 version '1.0-SNAPSHOT'
 
-jar {
-    enabled = false;
-}
+sourceCompatibility = '11'
+targetCompatibility = '11'
 
 repositories {
     mavenCentral()
 }
 
+dependencyManagement {
+    imports {
+        mavenBom SpringBootPlugin.BOM_COORDINATES
+    }
+}
+
 dependencies {
-    implementation project(':application-layer:board-controller')
-    implementation project(':application-layer:character-controller')
-    implementation project(':application-layer:user-controller')
-    implementation project(':application-layer:auth-controller')
-    implementation project(':application-layer:application-configurer')
 
     implementation 'org.springframework.boot:spring-boot-starter'
     implementation 'org.springframework.boot:spring-boot-starter-web'
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
+
+    implementation 'org.springframework.boot:spring-boot-starter-validation'
 
     testImplementation 'org.junit.jupiter:junit-jupiter-api:5.8.1'
     testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.8.1'
