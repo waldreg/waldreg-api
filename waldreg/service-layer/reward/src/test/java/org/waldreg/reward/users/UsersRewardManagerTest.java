@@ -76,4 +76,11 @@ public class UsersRewardTagManagerTest{
         Assertions.assertDoesNotThrow(() -> usersRewardTagManager.deleteRewardToUser(id, rewardId));
     }
 
+    @Test
+    @DisplayName("모든 유저의 상점 초기화 성공 테스트")
+    public void RESET_ALL_USERS_REWARD_SUCCESS_TEST(){
+        // when & then
+        Assertions.assertDoesNotThrow(()-usersRewardTagManager.resetAllUsersReward())
+    }
+
 }
