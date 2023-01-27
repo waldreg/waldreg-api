@@ -1,4 +1,4 @@
-package org.wadlreg.reward.tag.exception;
+package org.wadlreg.reward.exception;
 
 public class UnknownRewardTagException extends RuntimeException{
 

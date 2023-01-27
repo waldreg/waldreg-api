@@ -10,11 +10,15 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
+import org.wadlreg.reward.exception.UnknownRewardAssignTargetException;
+import org.wadlreg.reward.exception.UnknownRewardTagException;
 import org.wadlreg.reward.users.DefaultUsersRewardManager;
 import org.wadlreg.reward.users.UsersRewardManager;
 import org.wadlreg.reward.users.dto.UsersRewardDto;
 import org.wadlreg.reward.users.dto.UsersRewardTagDto;
-import org.wadlreg.reward.users.spi.UsersRewardManagerRepository;
+import org.wadlreg.reward.users.spi.repository.UserExistChecker;
+import org.wadlreg.reward.users.spi.repository.UsersRewardManagerRepository;
+import org.wadlreg.reward.users.spi.tag.RewardTagExistChecker;
 
 @ExtendWith(SpringExtension.class)
 @ContextConfiguration(classes = DefaultUsersRewardManager.class)
@@ -26,6 +30,12 @@ public class UsersRewardManagerTest{
     @MockBean
     private UsersRewardManagerRepository usersRewardManagerRepository;
 
+    @MockBean
+    private RewardTagExistChecker rewardTagExistChecker;
+
+    @MockBean
+    private UserExistChecker userExistChecker;
+
     @Test
     @DisplayName("특정 유저에게 상점 부여 성공 테스트")
     public void ASSIGN_REWARD_TO_USER_TEST(){
@@ -33,8 +43,42 @@ public class UsersRewardManagerTest{
         int id = 1;
         int rewardTagId = 1;
 
-        // when & then
+        // when
+        Mockito.when(userExistChecker.isUserExist(Mockito.anyInt())).thenReturn(true);
+        Mockito.when(rewardTagExistChecker.isRewardTagExist(Mockito.anyInt())).thenReturn(true);
+
+        // then
         Assertions.assertDoesNotThrow(() -> usersRewardManager.assignRewardToUser(id, rewardTagId));
+    }
+
+    @Test
+    @DisplayName("특정 유저에게 상점 부여 실패 테스트 - reward tag id를 찾을 수 없음")
+    public void ASSIGN_REWARD_TO_USER_FAIL_CANNOT_FIND_REWARD_TAG_ID_TEST(){
+        // given
+        int id = 1;
+        int rewardTagId = 1;
+
+        // when
+        Mockito.when(userExistChecker.isUserExist(Mockito.anyInt())).thenReturn(true);
+        Mockito.when(rewardTagExistChecker.isRewardTagExist(Mockito.anyInt())).thenReturn(false);
+
+        // then
+        Assertions.assertThrows(UnknownRewardTagException.class, () -> usersRewardManager.assignRewardToUser(id, rewardTagId));
+    }
+
+    @Test
+    @DisplayName("특정 유저에게 상점 부여 실패 테스트 - id에 해당하는 유저를 찾을 수 없음")
+    public void ASSIGN_REWARD_TO_USER_FAIL_CANNOT_FIND_USER_BY_ID_TEST(){
+        // given
+        int id = 1;
+        int rewardTagId = 1;
+
+        // when
+        Mockito.when(userExistChecker.isUserExist(Mockito.anyInt())).thenReturn(false);
+        Mockito.when(rewardTagExistChecker.isRewardTagExist(Mockito.anyInt())).thenReturn(true);
+
+        // then
+        Assertions.assertThrows(UnknownRewardAssignTargetException.class, () -> usersRewardManager.assignRewardToUser(id, rewardTagId));
     }
 
     @Test
