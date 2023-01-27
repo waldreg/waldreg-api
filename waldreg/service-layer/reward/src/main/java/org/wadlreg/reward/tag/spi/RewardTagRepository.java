@@ -1,5 +1,6 @@
 package org.wadlreg.reward.tag.spi;
 
+import java.util.List;
 import org.wadlreg.reward.tag.dto.RewardTagDto;
 
 public interface RewardTagRepository{
@@ -9,5 +10,7 @@ public interface RewardTagRepository{
     void updateRewardTag(int rewardTagId, RewardTagDto rewardTagDto);
 
     void deleteRewardTag(int rewardTagId);
+
+    List<RewardTagDto> readRewardTagList();
 
 }
