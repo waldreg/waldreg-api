@@ -10,7 +10,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
-import org.wadlreg.reward.exception.UnknownRewardAssignTargetException;
+import org.wadlreg.reward.exception.UnknownRewardException;
+import org.wadlreg.reward.exception.UnknownRewardTargetException;
 import org.wadlreg.reward.exception.UnknownRewardTagException;
 import org.wadlreg.reward.users.DefaultUsersRewardManager;
 import org.wadlreg.reward.users.UsersRewardManager;
@@ -78,7 +79,7 @@ public class UsersRewardManagerTest{
         Mockito.when(rewardTagExistChecker.isRewardTagExist(Mockito.anyInt())).thenReturn(true);
 
         // then
-        Assertions.assertThrows(UnknownRewardAssignTargetException.class, () -> usersRewardManager.assignRewardToUser(id, rewardTagId));
+        Assertions.assertThrows(UnknownRewardTargetException.class, () -> usersRewardManager.assignRewardToUser(id, rewardTagId));
     }
 
     @Test
@@ -120,7 +121,7 @@ public class UsersRewardManagerTest{
         Mockito.when(userExistChecker.isUserExist(Mockito.anyInt())).thenReturn(false);
 
         // then
-        Assertions.assertThrows(UnknownRewardAssignTargetException.class, ()-> usersRewardManager.readSpecifyUsersReward(id));
+        Assertions.assertThrows(UnknownRewardTargetException.class, ()-> usersRewardManager.readSpecifyUsersReward(id));
     }
 
     @Test
@@ -130,8 +131,42 @@ public class UsersRewardManagerTest{
         int id = 1;
         int rewardId = 1;
 
-        // when & then
+        // when
+        Mockito.when(usersRewardManagerRepository.isRewardIdExist(Mockito.anyInt(), Mockito.anyInt())).thenReturn(true);
+        Mockito.when(userExistChecker.isUserExist(Mockito.anyInt())).thenReturn(true);
+
+        // then
         Assertions.assertDoesNotThrow(() -> usersRewardManager.deleteRewardToUser(id, rewardId));
+    }
+
+    @Test
+    @DisplayName("특정 유저에게 부여된 상 벌점 삭제 실패 테스트 - 상점을 삭제할 대상 유저를 찾을 수 없음")
+    public void DELETE_REWARD_TAG_ASSIGNED_TO_SPECIFY_USERS_FAIL_CANNOT_FIND_USER_TEST(){
+        // given
+        int id = 1;
+        int rewardId = 1;
+
+        // when
+        Mockito.when(usersRewardManagerRepository.isRewardIdExist(Mockito.anyInt(), Mockito.anyInt())).thenReturn(true);
+        Mockito.when(userExistChecker.isUserExist(Mockito.anyInt())).thenReturn(false);
+
+        // then
+        Assertions.assertThrows(UnknownRewardTargetException.class, () -> usersRewardManager.deleteRewardToUser(id, rewardId));
+    }
+
+    @Test
+    @DisplayName("특정 유저에게 부여된 상 벌점 삭제 실패 테스트 - 유저가 reward id에 해당하는 상점을 갖고있지 않음")
+    public void DELETE_REWARD_TAG_ASSIGNED_TO_SPECIFY_USERS_FAIL_CANNOT_NOT_FINA_REWARD_TEST(){
+        // given
+        int id = 1;
+        int rewardId = 1;
+
+        // when
+        Mockito.when(usersRewardManagerRepository.isRewardIdExist(Mockito.anyInt(), Mockito.anyInt())).thenReturn(false);
+        Mockito.when(userExistChecker.isUserExist(Mockito.anyInt())).thenReturn(true);
+
+        // then
+        Assertions.assertThrows(UnknownRewardException.class, () -> usersRewardManager.deleteRewardToUser(id, rewardId));
     }
 
     @Test

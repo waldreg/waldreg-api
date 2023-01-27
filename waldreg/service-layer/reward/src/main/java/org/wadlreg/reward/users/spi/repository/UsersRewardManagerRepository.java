@@ -12,6 +12,6 @@ public interface UsersRewardManagerRepository{
 
     void resetAllUsersReward();
 
-    boolean isRewardTagExist(int rewardTagId);
+    boolean isRewardIdExist(int id, int rewardId);
 
 }

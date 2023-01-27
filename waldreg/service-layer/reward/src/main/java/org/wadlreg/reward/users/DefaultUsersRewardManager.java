@@ -2,7 +2,8 @@ package org.wadlreg.reward.users;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.wadlreg.reward.exception.UnknownRewardAssignTargetException;
+import org.wadlreg.reward.exception.UnknownRewardException;
+import org.wadlreg.reward.exception.UnknownRewardTargetException;
 import org.wadlreg.reward.exception.UnknownRewardTagException;
 import org.wadlreg.reward.users.dto.UsersRewardDto;
 import org.wadlreg.reward.users.spi.repository.UserExistChecker;
@@ -38,9 +39,16 @@ public class DefaultUsersRewardManager implements UsersRewardManager{
         return usersRewardManagerRepository.readSpecifyUsersReward(id);
     }
 
+    @Override
+    public void deleteRewardToUser(int id, int rewardId){
+        throwIfCannotFindUserById(id);
+        throwIfCannotFindRewardOnUser(id, rewardId);
+        usersRewardManagerRepository.deleteRewardToUser(id, rewardId);
+    }
+
     private void throwIfCannotFindUserById(int id){
         if(!userExistChecker.isUserExist(id)){
-            throw new UnknownRewardAssignTargetException(id);
+            throw new UnknownRewardTargetException(id);
         }
     }
 
@@ -50,9 +58,10 @@ public class DefaultUsersRewardManager implements UsersRewardManager{
         }
     }
 
-    @Override
-    public void deleteRewardToUser(int id, int rewardId){
-        usersRewardManagerRepository.deleteRewardToUser(id, rewardId);
+    private void throwIfCannotFindRewardOnUser(int id, int rewardId){
+        if(!usersRewardManagerRepository.isRewardIdExist(id, rewardId)){
+            throw new UnknownRewardException(rewardId);
+        }
     }
 
     @Override
