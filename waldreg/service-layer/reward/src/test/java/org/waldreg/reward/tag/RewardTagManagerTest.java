@@ -13,10 +13,11 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.wadlreg.reward.tag.DefaultRewardTagManager;
 import org.wadlreg.reward.tag.RewardTagManager;
 import org.wadlreg.reward.tag.dto.RewardTagDto;
+import org.wadlreg.reward.tag.lib.TagExceedClipper;
 import org.wadlreg.reward.tag.spi.RewardTagRepository;
 
 @ExtendWith(SpringExtension.class)
-@ContextConfiguration(classes = {DefaultRewardTagManager.class})
+@ContextConfiguration(classes = {DefaultRewardTagManager.class, TagExceedClipper.class})
 public class RewardTagManagerTest{
 
     @Autowired
@@ -31,6 +32,21 @@ public class RewardTagManagerTest{
         // given
         String rewardTagTitle = "hello reward";
         int rewardPoint = 10;
+        RewardTagDto rewardTagDto = RewardTagDto.builder()
+                .rewardTagTitle(rewardTagTitle)
+                .rewardPoint(rewardPoint)
+                .build();
+
+        // when & then
+        Assertions.assertDoesNotThrow(() -> rewardTagManager.createRewardTag(rewardTagDto));
+    }
+
+    @Test
+    @DisplayName("새로운 RewardTag 생성 성공 테스트 - 경계 강제 조정")
+    public void CREATE_NEW_REWARD_TAG_SUCCESS_MODIFY_EXCEED_BORDER_TEST(){
+        // given
+        String rewardTagTitle = "123456789 123456789 123456789 123456789 123456789 123456789 123456789 123456789 123456789 123456789 123456789 ";
+        int rewardPoint = 10000;
         RewardTagDto rewardTagDto = RewardTagDto.builder()
                 .rewardTagTitle(rewardTagTitle)
                 .rewardPoint(rewardPoint)
