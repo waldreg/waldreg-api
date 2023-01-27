@@ -13,6 +13,7 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.wadlreg.reward.tag.DefaultRewardTagManager;
 import org.wadlreg.reward.tag.RewardTagManager;
 import org.wadlreg.reward.tag.dto.RewardTagDto;
+import org.wadlreg.reward.tag.exception.UnknownRewardTagException;
 import org.wadlreg.reward.tag.lib.TagExceedClipper;
 import org.wadlreg.reward.tag.spi.RewardTagRepository;
 
@@ -116,8 +117,21 @@ public class RewardTagManagerTest{
         // given
         int rewardTagId = 1;
 
-        // when & then
+        // when
+        Mockito.when(rewardTagRepository.readRewardTagList()).thenReturn(List.of(RewardTagDto.builder().rewardTagId(1).build()));
+
+        // then
         Assertions.assertDoesNotThrow(() -> rewardTagManager.deleteRewardTag(rewardTagId));
+    }
+
+    @Test
+    @DisplayName("RewardTag 삭제 실패 테스트 - rewardTagId에 해당하는 rewardTag를 찾을 수 없음")
+    public void DELETE_REWARD_TAG_FAIL_UNKNOWN_REWARD_TAG_TEST(){
+        // given
+        int rewardTagId = 1;
+
+        // when & then
+        Assertions.assertThrows(UnknownRewardTagException.class, () -> rewardTagManager.deleteRewardTag(rewardTagId));
     }
 
     @Test

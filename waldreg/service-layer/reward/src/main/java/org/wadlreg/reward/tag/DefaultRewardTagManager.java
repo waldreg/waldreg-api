@@ -41,6 +41,12 @@ public class DefaultRewardTagManager implements RewardTagManager{
         rewardTagRepository.updateRewardTag(rewardTagId, rewardTagDto);
     }
 
+    @Override
+    public void deleteRewardTag(int rewardTagId){
+        throwIfCannotFindRewardByRewardTagId(rewardTagId);
+        rewardTagRepository.deleteRewardTag(rewardTagId);
+    }
+
     private void throwIfCannotFindRewardByRewardTagId(int rewardTagId){
         List<RewardTagDto> rewardTagDtoList = rewardTagRepository.readRewardTagList();
         for(RewardTagDto rewardTagDto : rewardTagDtoList){
@@ -74,11 +80,6 @@ public class DefaultRewardTagManager implements RewardTagManager{
             || rewardTagDto.getRewardPoint() > this.maxTagPoint){
             throw new IllegalStateException("Reward Tag Dto's point exceed range \"" + rewardTagDto.getRewardPoint() + "\"");
         }
-    }
-
-    @Override
-    public void deleteRewardTag(int rewardTagId){
-        rewardTagRepository.deleteRewardTag(rewardTagId);
     }
 
     @Override
