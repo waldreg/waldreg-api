@@ -1,4 +1,4 @@
-package org.waldreg.schedule.spi;
+package org.waldreg.schedule.spi.repository;
 
 import java.util.List;
 import org.waldreg.schedule.dto.ScheduleDto;

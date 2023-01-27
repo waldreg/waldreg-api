@@ -10,15 +10,20 @@ import org.waldreg.schedule.exception.ContentOverflowException;
 import org.waldreg.schedule.exception.InvalidDateFormatException;
 import org.waldreg.schedule.exception.InvalidRepeatException;
 import org.waldreg.schedule.exception.InvalidSchedulePeriodException;
-import org.waldreg.schedule.spi.ScheduleRepository;
+import org.waldreg.schedule.exception.UnknownScheduleException;
+import org.waldreg.schedule.spi.repository.ScheduleRepository;
+import org.waldreg.schedule.spi.schedule.ScheduleIdExistChecker;
 
 @Service
 public class DefaultScheduleManager implements ScheduleManager{
 
     private final ScheduleRepository scheduleRepository;
 
-    public DefaultScheduleManager(ScheduleRepository scheduleRepository){
+    private final ScheduleIdExistChecker scheduleIdExistChecker;
+
+    public DefaultScheduleManager(ScheduleRepository scheduleRepository, ScheduleIdExistChecker scheduleIdExistChecker){
         this.scheduleRepository = scheduleRepository;
+        this.scheduleIdExistChecker = scheduleIdExistChecker;
     }
 
     @Override
@@ -93,7 +98,14 @@ public class DefaultScheduleManager implements ScheduleManager{
 
     @Override
     public ScheduleDto readScheduleById(int id){
+        throwIfScheduleIdDoesNotExist(id);
         return scheduleRepository.readScheduleById(id);
+    }
+
+    private void throwIfScheduleIdDoesNotExist(int id){
+        if (!scheduleIdExistChecker.checkIfIdExists(id)){
+            throw new UnknownScheduleException("Cannot find schedule with id \"" + id + "\"");
+        }
     }
 
     @Override

@@ -17,9 +17,11 @@ import org.waldreg.schedule.exception.ContentOverflowException;
 import org.waldreg.schedule.exception.InvalidDateFormatException;
 import org.waldreg.schedule.exception.InvalidRepeatException;
 import org.waldreg.schedule.exception.InvalidSchedulePeriodException;
+import org.waldreg.schedule.exception.UnknownScheduleException;
 import org.waldreg.schedule.management.DefaultScheduleManager;
 import org.waldreg.schedule.management.ScheduleManager;
-import org.waldreg.schedule.spi.ScheduleRepository;
+import org.waldreg.schedule.spi.repository.ScheduleRepository;
+import org.waldreg.schedule.spi.schedule.ScheduleIdExistChecker;
 
 @ExtendWith(SpringExtension.class)
 @ContextConfiguration(classes = {DefaultScheduleManager.class})
@@ -30,6 +32,9 @@ public class ScheduleServiceTest{
 
     @MockBean
     private ScheduleRepository scheduleRepository;
+
+    @MockBean
+    private ScheduleIdExistChecker scheduleIdExistChecker;
 
     @Test
     @DisplayName("새로운 일정 생성 성공 테스트 - 반복 있을 때")
@@ -277,6 +282,19 @@ public class ScheduleServiceTest{
     }
 
     @Test
+    @DisplayName("특정 일정 조회 실패 테스트 - 없는 schedule")
+    public void READ_SPECIFIC_SCHEDULE_FAIL_CAUSE_UNKNOWN_SCHEDULE_TEST(){
+        //given
+
+        //when
+        Mockito.when(scheduleIdExistChecker.checkIfIdExists(Mockito.anyInt())).thenReturn(false);
+
+        //then
+        Assertions.assertThrows(UnknownScheduleException.class, () -> scheduleManager.readScheduleById(1));
+
+    }
+
+    @Test
     @DisplayName("일정 조회 성공 테스트")
     public void READ_SCHEDULE_BY_TERM_SUCCESS_TEST(){
         //given
@@ -420,7 +438,7 @@ public class ScheduleServiceTest{
         Mockito.when(scheduleRepository.readScheduleById(Mockito.anyInt())).thenReturn(scheduleRequest);
 
         //then
-        Assertions.assertDoesNotThrow(()->scheduleManager.deleteScheduleById(1));
+        Assertions.assertDoesNotThrow(() -> scheduleManager.deleteScheduleById(1));
 
     }
 
