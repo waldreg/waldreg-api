@@ -1,9 +1,9 @@
 package org.wadlreg.reward.exception;
 
-public class CannotFindRewardInUserException{
+public class UnknownRewardException extends RuntimeException{
 
-    public CannotFindRewardInUserException(){
-
+    public UnknownRewardException(int id){
+        super("Unknown reward id \"" + id + "\"");
     }
 
 }

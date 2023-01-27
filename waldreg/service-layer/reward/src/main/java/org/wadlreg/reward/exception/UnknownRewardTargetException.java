@@ -1,8 +1,8 @@
 package org.wadlreg.reward.exception;
 
-public class UnknownRewardAssignTargetException extends RuntimeException{
+public class UnknownRewardTargetException extends RuntimeException{
 
-    public UnknownRewardAssignTargetException(int id){
+    public UnknownRewardTargetException(int id){
         super("Unknown user id \"" + id + "\"");
     }
 
