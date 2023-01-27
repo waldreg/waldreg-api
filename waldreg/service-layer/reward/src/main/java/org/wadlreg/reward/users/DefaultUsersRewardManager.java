@@ -32,6 +32,12 @@ public class DefaultUsersRewardManager implements UsersRewardManager{
         usersRewardManagerRepository.assignRewardToUser(id, rewardTagId);
     }
 
+    @Override
+    public UsersRewardDto readSpecifyUsersReward(int id){
+        throwIfCannotFindUserById(id);
+        return usersRewardManagerRepository.readSpecifyUsersReward(id);
+    }
+
     private void throwIfCannotFindUserById(int id){
         if(!userExistChecker.isUserExist(id)){
             throw new UnknownRewardAssignTargetException(id);
@@ -42,11 +48,6 @@ public class DefaultUsersRewardManager implements UsersRewardManager{
         if(!rewardTagExistChecker.isRewardTagExist(rewardTagId)){
             throw new UnknownRewardTagException(rewardTagId);
         }
-    }
-
-    @Override
-    public UsersRewardDto readSpecifyUsersReward(int id){
-        return usersRewardManagerRepository.readSpecifyUsersReward(id);
     }
 
     @Override

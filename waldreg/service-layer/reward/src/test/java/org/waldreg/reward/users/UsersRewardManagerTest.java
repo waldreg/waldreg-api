@@ -82,7 +82,7 @@ public class UsersRewardManagerTest{
     }
 
     @Test
-    @DisplayName("특정 유저의 상점 태그목록 조회 성공 테스트")
+    @DisplayName("특정 유저의 상점 목록 조회 성공 테스트")
     public void READ_SPECIFY_USERS_REWARD_TAG_SUCCESS_TEST(){
         // given
         int id = 1;
@@ -102,11 +102,25 @@ public class UsersRewardManagerTest{
                 .build();
 
         // when
+        Mockito.when(userExistChecker.isUserExist(Mockito.anyInt())).thenReturn(true);
         Mockito.when(usersRewardManagerRepository.readSpecifyUsersReward(1)).thenReturn(usersRewardDto);
         UsersRewardDto result = usersRewardManager.readSpecifyUsersReward(1);
 
         // then
         Assertions.assertEquals(id, result.getId());
+    }
+
+    @Test
+    @DisplayName("특정 유저의 상점 목록 조회 실패 테스트 - 유저를 찾을 수 없음")
+    public void READ_SPECIFY_USERS_REWARD_TAG_FAIL_CANNOT_FIND_USER_TEST(){
+        // given
+        int id = 1;
+
+        // when
+        Mockito.when(userExistChecker.isUserExist(Mockito.anyInt())).thenReturn(false);
+
+        // then
+        Assertions.assertThrows(UnknownRewardAssignTargetException.class, ()-> usersRewardManager.readSpecifyUsersReward(id));
     }
 
     @Test
