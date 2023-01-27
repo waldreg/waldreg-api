@@ -25,7 +25,7 @@ public class RewardTagManagerTest{
 
     @Test
     @DisplayName("새로운 RewardTag 생성 성공 테스트")
-    public void CREATE_NEW_REWARD_TAG_TEST(){
+    public void CREATE_NEW_REWARD_TAG_SUCCESS_TEST(){
         // given
         String rewardTagTitle = "hello reward";
         int rewardPoint = 10;
@@ -36,6 +36,31 @@ public class RewardTagManagerTest{
 
         // when & then
         Assertions.assertDoesNotThrow(() -> rewardTagManager.createRewardTag(rewardTagDto));
+    }
+
+    @Test
+    @DisplayName("RewardTag 업데이트 성공 테스트")
+    public void UPDATE_REWARD_TAG_SUCCESS_TEST(){
+        // given
+        String rewardTagTitle = "hello reward";
+        int rewardPoint = 10;
+        RewardTagDto rewardTagDto = RewardTagDto.builder()
+                .rewardTagTitle(rewardTagTitle)
+                .rewardPoint(rewardPoint)
+                .build();
+
+        // when & then
+        Assertions.assertDoesNotThrow(() -> rewardTagManager.updateRewardTag(1, rewardTagDto));
+    }
+
+    @Test
+    @DisplayName("RewardTag 삭제 삭제 성공 테스트")
+    public void DELETE_REWARD_TAG_SUCCESS_TEST(){
+        // given
+        int rewardTagId = 1;
+
+        // when & then
+        Assertions.assertDoesNotThrow(()->rewardTagManager.deleteRewardTag(rewardTagId));
     }
 
 }

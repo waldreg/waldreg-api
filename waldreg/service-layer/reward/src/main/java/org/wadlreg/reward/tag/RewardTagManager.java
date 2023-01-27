@@ -6,4 +6,8 @@ public interface RewardTagManager{
 
     void createRewardTag(RewardTagDto rewardTagDto);
 
+    void updateRewardTag(int rewardTagId, RewardTagDto rewardTagDto);
+
+    void deleteRewardTag(int rewardTagId);
+
 }
