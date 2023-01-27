@@ -4,6 +4,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.wadlreg.reward.tag.dto.RewardTagDto;
+import org.wadlreg.reward.tag.exception.UnknownRewardTagException;
 import org.wadlreg.reward.tag.lib.TagExceedClipper;
 import org.wadlreg.reward.tag.spi.RewardTagRepository;
 
@@ -34,9 +35,20 @@ public class DefaultRewardTagManager implements RewardTagManager{
 
     @Override
     public void updateRewardTag(int rewardTagId, RewardTagDto rewardTagDto){
+        throwIfCannotFindRewardByRewardTagId(rewardTagId);
         rewardTagDto = clipRewardTagDto(rewardTagDto);
         throwIfRewardTagDtoExceedRange(rewardTagDto);
         rewardTagRepository.updateRewardTag(rewardTagId, rewardTagDto);
+    }
+
+    private void throwIfCannotFindRewardByRewardTagId(int rewardTagId){
+        List<RewardTagDto> rewardTagDtoList = rewardTagRepository.readRewardTagList();
+        for(RewardTagDto rewardTagDto : rewardTagDtoList){
+            if(rewardTagDto.getRewardTagId() == rewardTagId) {
+                return;
+            }
+        }
+        throw new UnknownRewardTagException(rewardTagId);
     }
 
     private RewardTagDto clipRewardTagDto(RewardTagDto rewardTagDto){

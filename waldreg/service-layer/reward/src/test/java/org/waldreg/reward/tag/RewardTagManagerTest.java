@@ -67,7 +67,10 @@ public class RewardTagManagerTest{
                 .rewardPoint(rewardPoint)
                 .build();
 
-        // when & then
+        // when
+        Mockito.when(rewardTagRepository.readRewardTagList()).thenReturn(List.of(RewardTagDto.builder().rewardTagId(1).build()));
+
+        // then
         Assertions.assertDoesNotThrow(() -> rewardTagManager.updateRewardTag(1, rewardTagDto));
     }
 
@@ -82,7 +85,28 @@ public class RewardTagManagerTest{
                 .rewardPoint(rewardPoint)
                 .build();
 
-        // when & then
+        // when
+        Mockito.when(rewardTagRepository.readRewardTagList()).thenReturn(List.of(RewardTagDto.builder().rewardTagId(1).build()));
+
+        // then
+        Assertions.assertDoesNotThrow(() -> rewardTagManager.updateRewardTag(1, rewardTagDto));
+    }
+
+    @Test
+    @DisplayName("RewardTag 업데이트 실패 테스트 - reward tag id에 해당하는 reward tag를 찾을 수 없음")
+    public void UPDATE_REWARD_TAG_FAIL_UNKNOWN_REWARD_TAG_ID_TEST(){
+        // given
+        String rewardTagTitle = "hello reward";
+        int rewardPoint = 10;
+        RewardTagDto rewardTagDto = RewardTagDto.builder()
+                .rewardTagTitle(rewardTagTitle)
+                .rewardPoint(rewardPoint)
+                .build();
+
+        // when
+        Mockito.when(rewardTagRepository.readRewardTagList()).thenReturn(List.of(RewardTagDto.builder().rewardTagId(1).build()));
+
+        // then
         Assertions.assertDoesNotThrow(() -> rewardTagManager.updateRewardTag(1, rewardTagDto));
     }
 
@@ -93,7 +117,7 @@ public class RewardTagManagerTest{
         int rewardTagId = 1;
 
         // when & then
-        Assertions.assertDoesNotThrow(()->rewardTagManager.deleteRewardTag(rewardTagId));
+        Assertions.assertDoesNotThrow(() -> rewardTagManager.deleteRewardTag(rewardTagId));
     }
 
     @Test
@@ -114,17 +138,16 @@ public class RewardTagManagerTest{
                 .rewardPoint(rewardPoint2)
                 .build();
 
-
         // when
         Mockito.when(rewardTagRepository.readRewardTagList()).thenReturn(List.of(rewardTagDto, rewardTagDto2));
         List<RewardTagDto> rewardTagDtoList = rewardTagRepository.readRewardTagList();
 
         // then
         Assertions.assertAll(
-                ()-> Assertions.assertEquals(rewardTagDtoList.get(0).getRewardTagTitle(), rewardTagTitle),
-                ()-> Assertions.assertEquals(rewardTagDtoList.get(0).getRewardPoint(), rewardPoint),
-                ()-> Assertions.assertEquals(rewardTagDtoList.get(1).getRewardTagTitle(), rewardTagTitle2),
-                ()-> Assertions.assertEquals(rewardTagDtoList.get(1).getRewardPoint(), rewardPoint2)
+                () -> Assertions.assertEquals(rewardTagDtoList.get(0).getRewardTagTitle(), rewardTagTitle),
+                () -> Assertions.assertEquals(rewardTagDtoList.get(0).getRewardPoint(), rewardPoint),
+                () -> Assertions.assertEquals(rewardTagDtoList.get(1).getRewardTagTitle(), rewardTagTitle2),
+                () -> Assertions.assertEquals(rewardTagDtoList.get(1).getRewardPoint(), rewardPoint2)
         );
     }
 
