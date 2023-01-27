@@ -37,7 +37,7 @@ public class ScheduleServiceTest{
         String startedAt = "2023-01-31T20:52";
         String finishAt = "2023-02-23T23:59";
         int cycle = 123;
-        String repeatFinishAt = "2023-12-31T23:59";
+        String repeatFinishAt = "2023-12-28T23:59";
         RepeatDto repeatRequest = RepeatDto.builder()
                 .cycle(cycle)
                 .repeatFinishAt(repeatFinishAt)
@@ -133,8 +133,8 @@ public class ScheduleServiceTest{
         //given
         String scheduleTitle = "seminar";
         String scheduleContent = "BFS";
-        String startedAt = "2023-01-31T20:52";
-        String finishAt = "2023-02-04T23:59";
+        String startedAt = "2023-02-04T23:59";
+        String finishAt = "2023-01-31T20:52";
         int cycle = 123;
         String repeatFinishAt = "2023-12-31T23:59";
         RepeatDto repeatRequest = RepeatDto.builder()
@@ -144,8 +144,8 @@ public class ScheduleServiceTest{
         ScheduleDto scheduleRequest = ScheduleDto.builder()
                 .scheduleTitle(scheduleTitle)
                 .scheduleContent(scheduleContent)
-                .startedAt(finishAt)
-                .finishAt(startedAt)
+                .startedAt(startedAt)
+                .finishAt(finishAt)
                 .repeatDto(repeatRequest)
                 .build();
 

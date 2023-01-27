@@ -6,7 +6,7 @@ public class RepeatDto{
     private final String repeatFinishAt;
 
     private RepeatDto(){
-        throw new UnsupportedOperationException("Can not invoke constructor \"ScheduleRepeat()\"");
+        throw new UnsupportedOperationException("Can not invoke constructor \"RepeatDto()\"");
     }
 
     private RepeatDto(Builder builder){
