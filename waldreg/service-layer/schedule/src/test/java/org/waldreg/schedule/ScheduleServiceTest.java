@@ -266,6 +266,7 @@ public class ScheduleServiceTest{
 
         //when
         scheduleManager.createSchedule(scheduleRequest);
+        Mockito.when(scheduleIdExistChecker.isExistScheduleId(Mockito.anyInt())).thenReturn(true);
         Mockito.when(scheduleRepository.readScheduleById(Mockito.anyInt())).thenReturn(scheduleRequest);
         ScheduleDto result = scheduleManager.readScheduleById(1);
 
@@ -287,7 +288,7 @@ public class ScheduleServiceTest{
         //given
 
         //when
-        Mockito.when(scheduleIdExistChecker.checkIfIdExists(Mockito.anyInt())).thenReturn(false);
+        Mockito.when(scheduleIdExistChecker.isExistScheduleId(Mockito.anyInt())).thenReturn(false);
 
         //then
         Assertions.assertThrows(UnknownScheduleException.class, () -> scheduleManager.readScheduleById(1));
@@ -396,6 +397,7 @@ public class ScheduleServiceTest{
         //when
         scheduleManager.createSchedule(scheduleRequest);
         scheduleManager.updateScheduleById(1, scheduleRequest2);
+        Mockito.when(scheduleIdExistChecker.isExistScheduleId(Mockito.anyInt())).thenReturn(true);
         Mockito.when(scheduleRepository.readScheduleById(Mockito.anyInt())).thenReturn(scheduleRequest2);
         ScheduleDto result = scheduleManager.readScheduleById(1);
 
