@@ -1,5 +1,6 @@
 package org.wadlreg.reward.tag;
 
+import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.wadlreg.reward.tag.dto.RewardTagDto;
@@ -28,6 +29,11 @@ public class DefaultRewardTagManager implements RewardTagManager{
     @Override
     public void deleteRewardTag(int rewardTagId){
         rewardTagRepository.deleteRewardTag(rewardTagId);
+    }
+
+    @Override
+    public List<RewardTagDto> readRewardTagList(){
+        return rewardTagRepository.readRewardTagList();
     }
 
 }
