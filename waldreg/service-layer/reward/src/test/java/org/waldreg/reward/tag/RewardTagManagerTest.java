@@ -72,6 +72,21 @@ public class RewardTagManagerTest{
     }
 
     @Test
+    @DisplayName("RewardTag 업데이트 성공 테스트 - 경계 강제 조정")
+    public void UPDATE_REWARD_TAG_SUCCESS_MODIFY_EXCEED_BORDER_TEST(){
+        // given
+        String rewardTagTitle = "123456789 123456789 123456789 123456789 123456789 123456789 123456789 123456789 123456789 123456789 123456789 ";
+        int rewardPoint = 10000;
+        RewardTagDto rewardTagDto = RewardTagDto.builder()
+                .rewardTagTitle(rewardTagTitle)
+                .rewardPoint(rewardPoint)
+                .build();
+
+        // when & then
+        Assertions.assertDoesNotThrow(() -> rewardTagManager.updateRewardTag(1, rewardTagDto));
+    }
+
+    @Test
     @DisplayName("RewardTag 삭제 삭제 성공 테스트")
     public void DELETE_REWARD_TAG_SUCCESS_TEST(){
         // given

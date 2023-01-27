@@ -34,6 +34,8 @@ public class DefaultRewardTagManager implements RewardTagManager{
 
     @Override
     public void updateRewardTag(int rewardTagId, RewardTagDto rewardTagDto){
+        rewardTagDto = clipRewardTagDto(rewardTagDto);
+        throwIfRewardTagDtoExceedRange(rewardTagDto);
         rewardTagRepository.updateRewardTag(rewardTagId, rewardTagDto);
     }
 
