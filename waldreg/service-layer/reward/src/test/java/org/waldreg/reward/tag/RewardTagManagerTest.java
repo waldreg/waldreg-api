@@ -53,4 +53,14 @@ public class RewardTagManagerTest{
         Assertions.assertDoesNotThrow(() -> rewardTagManager.updateRewardTag(1, rewardTagDto));
     }
 
+    @Test
+    @DisplayName("RewardTag 삭제 삭제 성공 테스트")
+    public void DELETE_REWARD_TAG_SUCCESS_TEST(){
+        // given
+        int rewardTagId = 1;
+
+        // when & then
+        Assertions.assertDoesNotThrow(()->rewardTagManager.deleteRewardTag(rewardTagId));
+    }
+
 }

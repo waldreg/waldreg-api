@@ -25,4 +25,9 @@ public class DefaultRewardTagManager implements RewardTagManager{
         rewardTagRepository.updateRewardTag(rewardTagId, rewardTagDto);
     }
 
+    @Override
+    public void deleteRewardTag(int rewardTagId){
+        rewardTagRepository.deleteRewardTag(rewardTagId);
+    }
+
 }

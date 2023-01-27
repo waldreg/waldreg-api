@@ -8,4 +8,6 @@ public interface RewardTagRepository{
 
     void updateRewardTag(int rewardTagId, RewardTagDto rewardTagDto);
 
+    void deleteRewardTag(int rewardTagId);
+
 }
