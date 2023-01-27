@@ -37,8 +37,7 @@ public class ControllerUserMapper{
                 .phoneNumber(userDto.getPhoneNumber())
                 .character(userDto.getCharacter())
                 .createdAt(userDto.getCreatedAt())
-                .advantage(userDto.getAdvantage())
-                .penalty(userDto.getPenalty())
+                .rewardPoint(userDto.getRewardPoint())
                 .socialLogin(userDto.getSocialLogin())
                 .build();
     }
@@ -63,8 +62,7 @@ public class ControllerUserMapper{
                     .phoneNumber(userDto.getPhoneNumber())
                     .character(userDto.getCharacter())
                     .createdAt(userDto.getCreatedAt())
-                    .advantage(userDto.getAdvantage())
-                    .penalty(userDto.getPenalty())
+                    .rewardPoint(userDto.getRewardPoint())
                     .socialLogin(userDto.getSocialLogin())
                     .build());
         }

@@ -320,8 +320,7 @@ public class UserAcceptanceTest{
                 MockMvcResultMatchers.jsonPath("$.phone_number").value(userCreateRequest.getPhoneNumber()),
                 MockMvcResultMatchers.jsonPath("$.character").isString(),
                 MockMvcResultMatchers.jsonPath("$.created_at").isNotEmpty(),
-                MockMvcResultMatchers.jsonPath("$.advantage").isNumber(),
-                MockMvcResultMatchers.jsonPath("$.penalty").isNumber(),
+                MockMvcResultMatchers.jsonPath("$.reward_point").isNumber(),
                 MockMvcResultMatchers.jsonPath("$.social_login").isArray()
         ).andDo(MockMvcResultHandlers.print());
 
@@ -405,8 +404,7 @@ public class UserAcceptanceTest{
                 MockMvcResultMatchers.jsonPath("$.phone_number").isString(),
                 MockMvcResultMatchers.jsonPath("$.character").isString(),
                 MockMvcResultMatchers.jsonPath("$.created_at").isNotEmpty(),
-                MockMvcResultMatchers.jsonPath("$.advantage").isNumber(),
-                MockMvcResultMatchers.jsonPath("$.penalty").isNumber(),
+                MockMvcResultMatchers.jsonPath("$.reward_point").isNumber(),
                 MockMvcResultMatchers.jsonPath("$.social_login").isArray()
         ).andDo(MockMvcResultHandlers.print());
 
@@ -1315,8 +1313,7 @@ public class UserAcceptanceTest{
                 MockMvcResultMatchers.jsonPath("$.users.[0].phone_number").value(userCreateRequest2.getPhoneNumber()),
                 MockMvcResultMatchers.jsonPath("$.users.[0].character").isString(),
                 MockMvcResultMatchers.jsonPath("$.users.[0].created_at").isNotEmpty(),
-                MockMvcResultMatchers.jsonPath("$.users.[0].advantage").isNumber(),
-                MockMvcResultMatchers.jsonPath("$.users.[0].penalty").isNumber(),
+                MockMvcResultMatchers.jsonPath("$.users.[0].reward_point").isNumber(),
                 MockMvcResultMatchers.jsonPath("$.users.[0].social_login").isArray(),
                 MockMvcResultMatchers.jsonPath("$.users.[1].id").isNumber(),
                 MockMvcResultMatchers.jsonPath("$.users.[1].name").value(userCreateRequest3.getName()),
@@ -1324,16 +1321,14 @@ public class UserAcceptanceTest{
                 MockMvcResultMatchers.jsonPath("$.users.[1].phone_number").value(userCreateRequest3.getPhoneNumber()),
                 MockMvcResultMatchers.jsonPath("$.users.[1].character").isString(),
                 MockMvcResultMatchers.jsonPath("$.users.[1].created_at").isNotEmpty(),
-                MockMvcResultMatchers.jsonPath("$.users.[1].advantage").isNumber(),
-                MockMvcResultMatchers.jsonPath("$.users.[1].penalty").isNumber(),
+                MockMvcResultMatchers.jsonPath("$.users.[1].reward_point").isNumber(),
                 MockMvcResultMatchers.jsonPath("$.users.[1].social_login").isArray(),
                 MockMvcResultMatchers.jsonPath("$.users.[2].name").value(userCreateRequest1.getName()),
                 MockMvcResultMatchers.jsonPath("$.users.[2].user_id").value(userCreateRequest1.getUserId()),
                 MockMvcResultMatchers.jsonPath("$.users.[2].phone_number").value(userCreateRequest1.getPhoneNumber()),
                 MockMvcResultMatchers.jsonPath("$.users.[2].character").isString(),
                 MockMvcResultMatchers.jsonPath("$.users.[2].created_at").isNotEmpty(),
-                MockMvcResultMatchers.jsonPath("$.users.[2].advantage").isNumber(),
-                MockMvcResultMatchers.jsonPath("$.users.[2].penalty").isNumber(),
+                MockMvcResultMatchers.jsonPath("$.users.[2].reward_point").isNumber(),
                 MockMvcResultMatchers.jsonPath("$.users.[2].social_login").isArray()
         ).andDo(MockMvcResultHandlers.print());
 

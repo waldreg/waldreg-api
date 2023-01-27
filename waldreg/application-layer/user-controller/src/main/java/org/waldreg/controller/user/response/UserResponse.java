@@ -21,10 +21,8 @@ public class UserResponse{
     private LocalDate createdAt;
     @JsonProperty("character")
     private String character;
-    @JsonProperty("advantage")
-    private int advantage;
-    @JsonProperty("penalty")
-    private int penalty;
+    @JsonProperty("reward_point")
+    private int rewardPoint;
     @JsonProperty("social_login")
     private List<String> socialLogin;
 
@@ -43,8 +41,7 @@ public class UserResponse{
         this.createdAt = builder.createdAt;
         this.phoneNumber = builder.phoneNumber;
         this.character = builder.character;
-        this.advantage = builder.advantage;
-        this.penalty = builder.penalty;
+        this.rewardPoint = builder.rewardPoint;
         this.socialLogin = builder.socialLogin;
     }
 
@@ -102,20 +99,12 @@ public class UserResponse{
         this.character = character;
     }
 
-    public int getAdvantage(){
-        return advantage;
+    public int getRewardPoint(){
+        return rewardPoint;
     }
 
-    public void setAdvantage(int advantage){
-        this.advantage = advantage;
-    }
-
-    public int getPenalty(){
-        return penalty;
-    }
-
-    public void setPenalty(int penalty){
-        this.penalty = penalty;
+    public void setRewardPoint(int advantage){
+        this.rewardPoint = rewardPoint;
     }
 
     public List<String> getSocialLogin(){
@@ -135,8 +124,7 @@ public class UserResponse{
         private String phoneNumber;
         private LocalDate createdAt;
         private String character;
-        private int advantage;
-        private int penalty;
+        private int rewardPoint;
         private List<String> socialLogin;
 
         {
@@ -180,13 +168,8 @@ public class UserResponse{
             return this;
         }
 
-        public Builder advantage(int advantage){
-            this.advantage = advantage;
-            return this;
-        }
-
-        public Builder penalty(int penalty){
-            this.penalty = penalty;
+        public Builder rewardPoint(int rewardPoint){
+            this.rewardPoint = rewardPoint;
             return this;
         }
 
