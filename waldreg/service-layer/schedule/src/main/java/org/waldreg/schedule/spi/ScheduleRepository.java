@@ -11,4 +11,6 @@ public interface ScheduleRepository{
 
     List<ScheduleDto> readScheduleByTerm(int year, int month);
 
+    void updateScheduleById(int id, ScheduleDto scheduleDto);
+
 }
