@@ -7,7 +7,7 @@ public final class RewardTagDto{
     private final int rewardPoint;
 
     private RewardTagDto(){
-        throw new UnsupportedOperationException("Can not invoke constructor \"RewardTag()\"");
+        throw new UnsupportedOperationException("Can not invoke constructor \"RewardTagDto()\"");
     }
 
     private RewardTagDto(Builder builder){
