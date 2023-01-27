@@ -6,4 +6,6 @@ public interface ScheduleRepository{
 
     void createSchedule(ScheduleDto scheduleDto);
 
+    ScheduleDto readScheduleById(int id);
+
 }

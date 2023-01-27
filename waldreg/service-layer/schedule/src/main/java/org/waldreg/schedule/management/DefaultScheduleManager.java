@@ -28,13 +28,16 @@ public class DefaultScheduleManager implements ScheduleManager{
             throwIfDateFormatException(startedAt, finishAt);
             throwIfContentOverflowException(scheduleDto.getScheduleContent());
             throwIfStartedAtIsAfterFinishAtException(startedAt, finishAt);
-            if (repeatDtoExist(scheduleDto)){
-                throwIfInvalidRepeatException(startedAt, finishAt, scheduleDto.getRepeatDto());
-            }
+            throwIfRepeatExist(startedAt, finishAt, scheduleDto.getRepeatDto());
             scheduleRepository.createSchedule(scheduleDto);
         } catch (DateTimeParseException DTPE){
             throw new InvalidDateFormatException("Invalid date format detected : Schedule start date \"" + scheduleDto.getStartedAt() + "\" Schedule finish date \"" + scheduleDto.getFinishAt() + "\"");
         }
+    }
+
+    @Override
+    public ScheduleDto readScheduleById(int id){
+        return scheduleRepository.readScheduleById(id);
     }
 
     private void throwIfDateFormatException(LocalDateTime startedAt, LocalDateTime finishAt){
@@ -60,8 +63,14 @@ public class DefaultScheduleManager implements ScheduleManager{
         }
     }
 
-    private boolean repeatDtoExist(ScheduleDto scheduleDto){
-        return scheduleDto.getRepeatDto() != null;
+    private void throwIfRepeatExist(LocalDateTime startedAt, LocalDateTime finishAt, RepeatDto repeatDto){
+        if (repeatDtoExist(repeatDto)){
+            throwIfInvalidRepeatException(startedAt, finishAt, repeatDto);
+        }
+    }
+
+    private boolean repeatDtoExist(RepeatDto repeatDto){
+        return repeatDto != null;
     }
 
     private void throwIfInvalidRepeatException(LocalDateTime startedAt, LocalDateTime finishAt, RepeatDto repeatDto){

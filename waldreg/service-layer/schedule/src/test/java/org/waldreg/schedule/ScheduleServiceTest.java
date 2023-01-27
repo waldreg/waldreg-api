@@ -4,6 +4,7 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.ContextConfiguration;
@@ -233,6 +234,47 @@ public class ScheduleServiceTest{
         Assertions.assertThrows(ContentOverflowException.class, () -> scheduleManager.createSchedule(scheduleRequest));
 
     }
+
+    @Test
+    @DisplayName("특정 일정 조회 성공 테스트")
+    public void READ_SPECIFIC_SCHEDULE_SUCCESS_TEST(){
+        //given
+        String scheduleTitle = "seminar";
+        String scheduleContent = "BFS";
+        String StartedAt = "2023-01-24T20:52";
+        String finishAt = "2023-01-31T23:59";
+        int cycle = 123;
+        String repeatFinishAt = "2023-12-31T23:59";
+        RepeatDto repeatScheduleRequest = RepeatDto.builder()
+                .cycle(cycle)
+                .repeatFinishAt(repeatFinishAt)
+                .build();
+        ScheduleDto scheduleRequest = ScheduleDto.builder()
+                .scheduleTitle(scheduleTitle)
+                .scheduleContent(scheduleContent)
+                .startedAt(StartedAt)
+                .finishAt(finishAt)
+                .repeatDto(repeatScheduleRequest)
+                .build();
+
+        //when
+        scheduleManager.createSchedule(scheduleRequest);
+        Mockito.when(scheduleRepository.readScheduleById(Mockito.anyInt())).thenReturn(scheduleRequest);
+        ScheduleDto result = scheduleManager.readScheduleById(1);
+
+        //then
+        Assertions.assertAll(
+                ()->Assertions.assertEquals(scheduleRequest.getScheduleTitle(),result.getScheduleTitle()),
+                ()->Assertions.assertEquals(scheduleRequest.getScheduleContent(),result.getScheduleContent()),
+                ()->Assertions.assertEquals(scheduleRequest.getStartedAt(),result.getStartedAt()),
+                ()->Assertions.assertEquals(scheduleRequest.getFinishAt(),result.getFinishAt()),
+                ()->Assertions.assertEquals(scheduleRequest.getRepeatDto().getCycle(),result.getRepeatDto().getCycle()),
+                ()->Assertions.assertEquals(scheduleRequest.getRepeatDto().getRepeatFinishAt(),result.getRepeatDto().getRepeatFinishAt())
+        );
+
+    }
+
+
 
     private String createOverflow(){
         String content = "";

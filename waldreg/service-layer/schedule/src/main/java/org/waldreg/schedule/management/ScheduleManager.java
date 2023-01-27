@@ -6,4 +6,6 @@ public interface ScheduleManager{
 
     void createSchedule(ScheduleDto scheduleDto);
 
+    ScheduleDto readScheduleById(int id);
+
 }
