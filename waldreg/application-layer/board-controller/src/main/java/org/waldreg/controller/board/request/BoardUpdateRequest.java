@@ -1,20 +1,27 @@
 package org.waldreg.controller.board.request;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import java.util.ArrayList;
 import javax.validation.constraints.NotBlank;
+import org.waldreg.controller.board.request.BoardCreateRequest.Builder;
 
-public class BoardCreateRequest{
+public class BoardUpdateRequest{
 
     @NotBlank(message = "Can not be blank title")
     private String title;
     private String content;
-    
+
     private int categoryId;
     @JsonProperty("member_tier")
     private String memberTier;
 
-    public BoardCreateRequest(){}
-    private BoardCreateRequest(Builder builder){
+    @JsonProperty("delete_image_id")
+    private ArrayList<Integer> deleteImageId;
+    @JsonProperty("delete_file_id")
+    private ArrayList<Integer> deleteFileId;
+
+    public BoardUpdateRequest(){}
+    private BoardUpdateRequest(Builder builder){
         this.title = builder.title;
         this.content = builder.content;
         this.categoryId = builder.categoryId;
@@ -25,6 +32,7 @@ public class BoardCreateRequest{
         return new Builder();
     }
 
+
     public String getTitle(){
         return title;
     }
@@ -33,12 +41,20 @@ public class BoardCreateRequest{
         return content;
     }
 
-    public int getCategory(){
+    public String getMemberTier(){
+        return memberTier;
+    }
+
+    public int getCategoryId(){
         return categoryId;
     }
 
-    public String getMemberTier(){
-        return memberTier;
+    public ArrayList<Integer> getDeleteImageId(){
+        return deleteImageId;
+    }
+
+    public ArrayList<Integer> getDeleteFileId(){
+        return deleteFileId;
     }
 
     public final static class Builder{
@@ -47,8 +63,13 @@ public class BoardCreateRequest{
         private int categoryId;
         private String memberTier;
 
+        private ArrayList<Integer> deleteImageId;
+        private ArrayList<Integer>  deleteFileId;
+
         {
             categoryId = 0;
+            deleteImageId = new ArrayList<>();
+            deleteFileId = new ArrayList<>();
         }
 
         private Builder(){};
@@ -70,10 +91,17 @@ public class BoardCreateRequest{
             this.memberTier = memberTier;
             return this;
         }
-        public BoardCreateRequest build(){
-            return new BoardCreateRequest(this);
+        public Builder deleteImageId( ArrayList<Integer> deleteImageId){
+            this.deleteImageId = deleteImageId;
+            return this;
+        }
+        public Builder deleteFileId( ArrayList<Integer> deleteFileId){
+            this.deleteFileId = deleteFileId;
+            return this;
+        }
+        public BoardUpdateRequest build(){
+            return new BoardUpdateRequest(this);
         }
 
     }
-
 }

@@ -2,7 +2,7 @@ package org.waldreg.controller.board.request;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-public class CategoryCreateRequest{
+public class CategoryRequest{
 
     @JsonProperty("category_name")
     private String categoryName;
@@ -10,9 +10,9 @@ public class CategoryCreateRequest{
     @JsonProperty("member_tier")
     private String memberTier;
 
-    public CategoryCreateRequest(){}
+    public CategoryRequest(){}
 
-    private CategoryCreateRequest(Builder builder){
+    private CategoryRequest(Builder builder){
         this.categoryName = builder.categoryName;
         this.memberTier = builder.memberTier;
     }
@@ -46,8 +46,6 @@ public class CategoryCreateRequest{
 
         private Builder(){}
 
-        ;
-
         public Builder categoryName(String categoryName){
             this.categoryName = categoryName;
             return this;
@@ -58,8 +56,8 @@ public class CategoryCreateRequest{
             return this;
         }
 
-        public CategoryCreateRequest build(){
-            return new CategoryCreateRequest(this);
+        public CategoryRequest build(){
+            return new CategoryRequest(this);
         }
 
     }
