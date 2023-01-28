@@ -10,16 +10,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
-import org.wadlreg.reward.exception.UnknownRewardException;
-import org.wadlreg.reward.exception.UnknownRewardTargetException;
-import org.wadlreg.reward.exception.UnknownRewardTagException;
-import org.wadlreg.reward.users.DefaultUsersRewardManager;
-import org.wadlreg.reward.users.UsersRewardManager;
-import org.wadlreg.reward.users.dto.UsersRewardDto;
-import org.wadlreg.reward.users.dto.UsersRewardTagDto;
-import org.wadlreg.reward.users.spi.repository.UserExistChecker;
-import org.wadlreg.reward.users.spi.repository.UsersRewardManagerRepository;
-import org.wadlreg.reward.users.spi.tag.RewardTagExistChecker;
+import org.waldreg.reward.exception.UnknownRewardException;
+import org.waldreg.reward.exception.UnknownRewardTargetException;
+import org.waldreg.reward.exception.UnknownRewardTagException;
+import org.waldreg.reward.users.dto.UsersRewardDto;
+import org.waldreg.reward.users.dto.UsersRewardTagDto;
+import org.waldreg.reward.users.spi.repository.UserExistChecker;
+import org.waldreg.reward.users.spi.repository.UsersRewardRepository;
+import org.waldreg.reward.users.spi.tag.RewardTagExistChecker;
 
 @ExtendWith(SpringExtension.class)
 @ContextConfiguration(classes = DefaultUsersRewardManager.class)
@@ -29,7 +27,7 @@ public class UsersRewardManagerTest{
     private UsersRewardManager usersRewardManager;
 
     @MockBean
-    private UsersRewardManagerRepository usersRewardManagerRepository;
+    private UsersRewardRepository usersRewardRepository;
 
     @MockBean
     private RewardTagExistChecker rewardTagExistChecker;
@@ -104,7 +102,7 @@ public class UsersRewardManagerTest{
 
         // when
         Mockito.when(userExistChecker.isUserExist(Mockito.anyInt())).thenReturn(true);
-        Mockito.when(usersRewardManagerRepository.readSpecifyUsersReward(1)).thenReturn(usersRewardDto);
+        Mockito.when(usersRewardRepository.readSpecifyUsersReward(1)).thenReturn(usersRewardDto);
         UsersRewardDto result = usersRewardManager.readSpecifyUsersReward(1);
 
         // then
@@ -132,7 +130,7 @@ public class UsersRewardManagerTest{
         int rewardId = 1;
 
         // when
-        Mockito.when(usersRewardManagerRepository.isRewardIdExist(Mockito.anyInt(), Mockito.anyInt())).thenReturn(true);
+        Mockito.when(usersRewardRepository.isRewardIdExist(Mockito.anyInt(), Mockito.anyInt())).thenReturn(true);
         Mockito.when(userExistChecker.isUserExist(Mockito.anyInt())).thenReturn(true);
 
         // then
@@ -147,7 +145,7 @@ public class UsersRewardManagerTest{
         int rewardId = 1;
 
         // when
-        Mockito.when(usersRewardManagerRepository.isRewardIdExist(Mockito.anyInt(), Mockito.anyInt())).thenReturn(true);
+        Mockito.when(usersRewardRepository.isRewardIdExist(Mockito.anyInt(), Mockito.anyInt())).thenReturn(true);
         Mockito.when(userExistChecker.isUserExist(Mockito.anyInt())).thenReturn(false);
 
         // then
@@ -162,7 +160,7 @@ public class UsersRewardManagerTest{
         int rewardId = 1;
 
         // when
-        Mockito.when(usersRewardManagerRepository.isRewardIdExist(Mockito.anyInt(), Mockito.anyInt())).thenReturn(false);
+        Mockito.when(usersRewardRepository.isRewardIdExist(Mockito.anyInt(), Mockito.anyInt())).thenReturn(false);
         Mockito.when(userExistChecker.isUserExist(Mockito.anyInt())).thenReturn(true);
 
         // then

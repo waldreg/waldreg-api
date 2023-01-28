@@ -36,4 +36,5 @@ include 'service-layer:reward'
 findProject(':service-layer:reward')?.name = 'reward'
 include 'application-layer:schedule-controller'
 findProject(':application-layer:schedule-controller')?.name = 'schedule-controller'
-
+include 'application-layer:reward-controller'
+findProject(':application-layer:reward-controller')?.name = 'reward-controller'
