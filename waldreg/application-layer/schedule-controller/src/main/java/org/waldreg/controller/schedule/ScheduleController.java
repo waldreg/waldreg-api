@@ -32,7 +32,7 @@ public class ScheduleController{
     }
 
     @Authenticating
-    @PermissionVerifying(value = "Create new schedule")
+    @PermissionVerifying(value = "Schedule create manager")
     @PostMapping("/schedule")
     public void createSchedule(@RequestBody @Validated ScheduleRequest scheduleRequest){
         ScheduleDto scheduleDto = controllerScheduleMapper.scheduleRequestToScheduleDto(scheduleRequest);
@@ -51,6 +51,8 @@ public class ScheduleController{
         return controllerScheduleMapper.scheduleDtoToScheduleResponse(scheduleDto);
     }
 
+    @Authenticating
+    @PermissionVerifying(value = "Schedule update manager")
     @PutMapping("/schedule/{schedule-id}")
     public void updateSchedule(@PathVariable("schedule-id") int id, @RequestBody ScheduleRequest scheduleRequest){
         ScheduleDto scheduleDto = controllerScheduleMapper.scheduleRequestToScheduleDto(scheduleRequest);
