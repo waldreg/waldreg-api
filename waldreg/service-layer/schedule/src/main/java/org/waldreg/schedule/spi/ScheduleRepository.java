@@ -1,4 +1,4 @@
-package org.waldreg.schedule.spi.repository;
+package org.waldreg.schedule.spi;
 
 import java.util.List;
 import org.waldreg.schedule.dto.ScheduleDto;
@@ -14,5 +14,7 @@ public interface ScheduleRepository{
     void updateScheduleById(int id, ScheduleDto scheduleDto);
 
     void deleteScheduleById(int id);
+
+    boolean isExistScheduleId(int id);
 
 }

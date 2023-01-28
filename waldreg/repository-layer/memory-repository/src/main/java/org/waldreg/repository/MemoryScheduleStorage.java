@@ -39,4 +39,12 @@ public class MemoryScheduleStorage{
         return (schedule.getStartedAt().getYear() == year && schedule.getStartedAt().getMonthValue() == month) || (schedule.getFinishAt().getYear() == year && schedule.getFinishAt().getMonthValue() == month);
     }
 
+    public Schedule readScheduleById(int id){
+        return storage.get(id);
+    }
+
+    public void deleteAllSchedule(){
+        storage.clear();
+    }
+
 }

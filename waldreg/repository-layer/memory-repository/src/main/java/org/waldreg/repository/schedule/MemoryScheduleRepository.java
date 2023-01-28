@@ -6,7 +6,7 @@ import org.springframework.stereotype.Repository;
 import org.waldreg.domain.calendar.Schedule;
 import org.waldreg.repository.MemoryScheduleStorage;
 import org.waldreg.schedule.dto.ScheduleDto;
-import org.waldreg.schedule.spi.repository.ScheduleRepository;
+import org.waldreg.schedule.spi.ScheduleRepository;
 
 @Repository
 public class MemoryScheduleRepository implements ScheduleRepository{
@@ -27,14 +27,15 @@ public class MemoryScheduleRepository implements ScheduleRepository{
 
     @Override
     public ScheduleDto readScheduleById(int id){
-        return null;
+        Schedule schedule = memoryScheduleStorage.readScheduleById(id);
+        return scheduleMapper.scheduleDomainToScheduleDto(schedule);
     }
 
     @Override
     public List<ScheduleDto> readScheduleByTerm(int year, int month){
-        List<Schedule> scheduleList = memoryScheduleStorage.readScheduleByTerm(year,month);
+        List<Schedule> scheduleList = memoryScheduleStorage.readScheduleByTerm(year, month);
         List<ScheduleDto> scheduleDtoList = new ArrayList<>();
-        for(Schedule schedule : scheduleList){
+        for (Schedule schedule : scheduleList){
             scheduleDtoList.add(scheduleMapper.scheduleDomainToScheduleDto(schedule));
         }
         return scheduleDtoList;
@@ -48,6 +49,11 @@ public class MemoryScheduleRepository implements ScheduleRepository{
     @Override
     public void deleteScheduleById(int id){
 
+    }
+
+    @Override
+    public boolean isExistScheduleId(int id){
+        return memoryScheduleStorage.readScheduleById(id) != null;
     }
 
 }

@@ -20,8 +20,7 @@ import org.waldreg.schedule.exception.InvalidSchedulePeriodException;
 import org.waldreg.schedule.exception.UnknownScheduleException;
 import org.waldreg.schedule.management.DefaultScheduleManager;
 import org.waldreg.schedule.management.ScheduleManager;
-import org.waldreg.schedule.spi.repository.ScheduleRepository;
-import org.waldreg.schedule.spi.schedule.ScheduleIdExistChecker;
+import org.waldreg.schedule.spi.ScheduleRepository;
 
 @ExtendWith(SpringExtension.class)
 @ContextConfiguration(classes = {DefaultScheduleManager.class})
@@ -32,9 +31,6 @@ public class ScheduleServiceTest{
 
     @MockBean
     private ScheduleRepository scheduleRepository;
-
-    @MockBean
-    private ScheduleIdExistChecker scheduleIdExistChecker;
 
     @Test
     @DisplayName("새로운 일정 생성 성공 테스트 - 반복 있을 때")
@@ -266,7 +262,7 @@ public class ScheduleServiceTest{
 
         //when
         scheduleManager.createSchedule(scheduleRequest);
-        Mockito.when(scheduleIdExistChecker.isExistScheduleId(Mockito.anyInt())).thenReturn(true);
+        Mockito.when(scheduleRepository.isExistScheduleId(Mockito.anyInt())).thenReturn(true);
         Mockito.when(scheduleRepository.readScheduleById(Mockito.anyInt())).thenReturn(scheduleRequest);
         ScheduleDto result = scheduleManager.readScheduleById(1);
 
@@ -288,7 +284,7 @@ public class ScheduleServiceTest{
         //given
 
         //when
-        Mockito.when(scheduleIdExistChecker.isExistScheduleId(Mockito.anyInt())).thenReturn(false);
+        Mockito.when(scheduleRepository.isExistScheduleId(Mockito.anyInt())).thenReturn(false);
 
         //then
         Assertions.assertThrows(UnknownScheduleException.class, () -> scheduleManager.readScheduleById(1));
@@ -447,7 +443,7 @@ public class ScheduleServiceTest{
 
         //when
         scheduleManager.createSchedule(scheduleRequest);
-        Mockito.when(scheduleIdExistChecker.isExistScheduleId(Mockito.anyInt())).thenReturn(true);
+        Mockito.when(scheduleRepository.isExistScheduleId(Mockito.anyInt())).thenReturn(true);
         Mockito.when(scheduleRepository.readScheduleById(Mockito.anyInt())).thenReturn(scheduleRequest2);
         scheduleManager.updateScheduleById(1, scheduleRequest2);
         ScheduleDto result = scheduleManager.readScheduleById(1);
@@ -505,7 +501,7 @@ public class ScheduleServiceTest{
 
         //when
         scheduleManager.createSchedule(scheduleRequest);
-        Mockito.when(scheduleIdExistChecker.isExistScheduleId(Mockito.anyInt())).thenReturn(true);
+        Mockito.when(scheduleRepository.isExistScheduleId(Mockito.anyInt())).thenReturn(true);
         Mockito.when(scheduleRepository.readScheduleById(Mockito.anyInt())).thenReturn(scheduleRequest2);
 
         //then
@@ -554,7 +550,7 @@ public class ScheduleServiceTest{
 
         //when
         scheduleManager.createSchedule(scheduleRequest);
-        Mockito.when(scheduleIdExistChecker.isExistScheduleId(Mockito.anyInt())).thenReturn(true);
+        Mockito.when(scheduleRepository.isExistScheduleId(Mockito.anyInt())).thenReturn(true);
         Mockito.when(scheduleRepository.readScheduleById(Mockito.anyInt())).thenReturn(scheduleRequest2);
 
         //then
@@ -603,7 +599,7 @@ public class ScheduleServiceTest{
 
         //when
         scheduleManager.createSchedule(scheduleRequest);
-        Mockito.when(scheduleIdExistChecker.isExistScheduleId(Mockito.anyInt())).thenReturn(true);
+        Mockito.when(scheduleRepository.isExistScheduleId(Mockito.anyInt())).thenReturn(true);
         Mockito.when(scheduleRepository.readScheduleById(Mockito.anyInt())).thenReturn(scheduleRequest2);
 
         //then
@@ -652,7 +648,7 @@ public class ScheduleServiceTest{
 
         //when
         scheduleManager.createSchedule(scheduleRequest);
-        Mockito.when(scheduleIdExistChecker.isExistScheduleId(Mockito.anyInt())).thenReturn(true);
+        Mockito.when(scheduleRepository.isExistScheduleId(Mockito.anyInt())).thenReturn(true);
         Mockito.when(scheduleRepository.readScheduleById(Mockito.anyInt())).thenReturn(scheduleRequest2);
 
         //then
@@ -701,7 +697,7 @@ public class ScheduleServiceTest{
 
         //when
         scheduleManager.createSchedule(scheduleRequest);
-        Mockito.when(scheduleIdExistChecker.isExistScheduleId(Mockito.anyInt())).thenReturn(true);
+        Mockito.when(scheduleRepository.isExistScheduleId(Mockito.anyInt())).thenReturn(true);
         Mockito.when(scheduleRepository.readScheduleById(Mockito.anyInt())).thenReturn(scheduleRequest2);
 
         //then
@@ -750,7 +746,7 @@ public class ScheduleServiceTest{
 
         //when
         scheduleManager.createSchedule(scheduleRequest);
-        Mockito.when(scheduleIdExistChecker.isExistScheduleId(Mockito.anyInt())).thenReturn(true);
+        Mockito.when(scheduleRepository.isExistScheduleId(Mockito.anyInt())).thenReturn(true);
         Mockito.when(scheduleRepository.readScheduleById(Mockito.anyInt())).thenReturn(scheduleRequest2);
 
         //then
@@ -799,7 +795,7 @@ public class ScheduleServiceTest{
 
         //when
         scheduleManager.createSchedule(scheduleRequest);
-        Mockito.when(scheduleIdExistChecker.isExistScheduleId(Mockito.anyInt())).thenReturn(true);
+        Mockito.when(scheduleRepository.isExistScheduleId(Mockito.anyInt())).thenReturn(true);
         Mockito.when(scheduleRepository.readScheduleById(Mockito.anyInt())).thenReturn(scheduleRequest2);
 
         //then
@@ -830,7 +826,7 @@ public class ScheduleServiceTest{
                 .build();
 
         //when
-        Mockito.when(scheduleIdExistChecker.isExistScheduleId(Mockito.anyInt())).thenReturn(false);
+        Mockito.when(scheduleRepository.isExistScheduleId(Mockito.anyInt())).thenReturn(false);
         Mockito.when(scheduleRepository.readScheduleById(Mockito.anyInt())).thenReturn(scheduleRequest2);
 
         //then
@@ -862,7 +858,7 @@ public class ScheduleServiceTest{
 
         //when
         scheduleManager.createSchedule(scheduleRequest);
-        Mockito.when(scheduleIdExistChecker.isExistScheduleId(Mockito.anyInt())).thenReturn(true);
+        Mockito.when(scheduleRepository.isExistScheduleId(Mockito.anyInt())).thenReturn(true);
         Mockito.when(scheduleRepository.readScheduleById(Mockito.anyInt())).thenReturn(scheduleRequest);
 
         //then
@@ -894,7 +890,7 @@ public class ScheduleServiceTest{
 
         //when
         scheduleManager.createSchedule(scheduleRequest);
-        Mockito.when(scheduleIdExistChecker.isExistScheduleId(Mockito.anyInt())).thenReturn(false);
+        Mockito.when(scheduleRepository.isExistScheduleId(Mockito.anyInt())).thenReturn(false);
         Mockito.when(scheduleRepository.readScheduleById(Mockito.anyInt())).thenReturn(scheduleRequest);
 
         //then
