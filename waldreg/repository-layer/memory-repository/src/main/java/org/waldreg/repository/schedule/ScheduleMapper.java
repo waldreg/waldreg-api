@@ -13,19 +13,17 @@ public class ScheduleMapper{
                 .scheduleContent(scheduleDto.getScheduleContent())
                 .startedAt(LocalDateTime.parse(scheduleDto.getStartedAt()))
                 .finishAt(LocalDateTime.parse(scheduleDto.getFinishAt()));
-        return repeatDtoToScheduleRepeatDomain(scheduleDto, builder);
-
+        if (isExistRepeatDto(scheduleDto)){
+            builder = builder.scheduleRepeat(ScheduleRepeat.builder()
+                    .cycle(scheduleDto.getRepeatDto().getCycle())
+                    .repeatFinishAt(LocalDateTime.parse(scheduleDto.getRepeatDto().getRepeatFinishAt()))
+                    .build());
+        }
+        return builder.build();
     }
 
-    private Schedule repeatDtoToScheduleRepeatDomain(ScheduleDto scheduleDto, Schedule.Builder builder){
-        if (scheduleDto.getRepeatDto() == null){
-            return builder.build();
-        }
-        return builder.scheduleRepeat(ScheduleRepeat.builder()
-                        .cycle(scheduleDto.getRepeatDto().getCycle())
-                        .repeatFinishAt(LocalDateTime.parse(scheduleDto.getRepeatDto().getRepeatFinishAt()))
-                        .build())
-                .build();
+    private boolean isExistRepeatDto(ScheduleDto scheduleDto){
+        return scheduleDto.getRepeatDto() != null;
     }
 
 }

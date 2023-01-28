@@ -106,12 +106,12 @@ public class DefaultScheduleManager implements ScheduleManager{
     }
 
     private void throwIfRepeatExist(LocalDateTime startedAt, LocalDateTime finishAt, RepeatDto repeatDto){
-        if (repeatDtoExist(repeatDto)){
+        if (isExistRepeatDto(repeatDto)){
             throwIfInvalidRepeat(startedAt, finishAt, repeatDto);
         }
     }
 
-    private boolean repeatDtoExist(RepeatDto repeatDto){
+    private boolean isExistRepeatDto(RepeatDto repeatDto){
         return repeatDto != null;
     }
 
