@@ -24,8 +24,8 @@ public class SchedulePermissionConfigurer{
         permissionExtension.extend(DefaultPermissionUnit.builder()
                 .name("Create new schedule")
                 .info("If set true, can create new schedule")
-                .permissionVerifiable((s)->s.equals("true"))
-                .statusList(List.of("true","false"))
+                .permissionVerifiable((s) -> s.equals("true"))
+                .statusList(List.of("true", "false"))
                 .build());
     }
 
