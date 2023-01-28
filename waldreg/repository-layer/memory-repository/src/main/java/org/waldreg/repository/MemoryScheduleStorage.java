@@ -47,6 +47,10 @@ public class MemoryScheduleStorage{
         storage.put(id, schedule);
     }
 
+    public void deleteScheduleById(int id){
+        storage.remove(id);
+    }
+
     public void deleteAllSchedule(){
         storage.clear();
     }

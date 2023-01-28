@@ -183,7 +183,6 @@ public class ScheduleRepositoryTest{
         scheduleRepository.createSchedule(scheduleDto);
         scheduleRepository.createSchedule(scheduleDto2);
         List<ScheduleDto> scheduleDtoList = scheduleRepository.readScheduleByTerm(2023, 2);
-        System.out.println("!!!" + scheduleDtoList.get(0).getId());
         ScheduleDto result = scheduleRepository.readScheduleById(scheduleDtoList.get(0).getId());
 
         //then
@@ -286,6 +285,39 @@ public class ScheduleRepositoryTest{
                 () -> Assertions.assertEquals(scheduleDto2.getRepeatDto().getCycle(), result.getRepeatDto().getCycle()),
                 () -> Assertions.assertEquals(scheduleDto2.getRepeatDto().getRepeatFinishAt(), result.getRepeatDto().getRepeatFinishAt())
         );
+
+    }
+
+    @Test
+    @DisplayName("일정 조회 성공 테스트")
+    public void DELETE_SCHEDULE_SUCCESS_TEST(){
+        //given
+        String scheduleTitle = "seminar";
+        String scheduleContent = "BFS";
+        String startedAt = "2023-01-24T20:52";
+        String finishAt = "2023-01-31T23:59";
+        int cycle = 123;
+        String repeatFinishAt = "2023-12-31T23:59";
+        RepeatDto repeatDto = RepeatDto.builder()
+                .cycle(cycle)
+                .repeatFinishAt(repeatFinishAt)
+                .build();
+        ScheduleDto scheduleDto = ScheduleDto.builder()
+                .scheduleTitle(scheduleTitle)
+                .scheduleContent(scheduleContent)
+                .startedAt(startedAt)
+                .finishAt(finishAt)
+                .repeatDto(repeatDto)
+                .build();
+
+        //when
+        scheduleRepository.createSchedule(scheduleDto);
+        List<ScheduleDto> scheduleDtoList = scheduleRepository.readScheduleByTerm(2023, 1);
+        scheduleRepository.deleteScheduleById(scheduleDtoList.get(0).getId());
+        boolean result = scheduleRepository.isExistScheduleId(scheduleDtoList.get(0).getId());
+
+        //then
+        Assertions.assertEquals(false, result);
 
     }
 
