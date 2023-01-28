@@ -3,6 +3,7 @@ package org.waldreg.schedule.management;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeParseException;
 import java.util.List;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.waldreg.schedule.dto.RepeatDto;
 import org.waldreg.schedule.dto.ScheduleDto;
@@ -18,7 +19,7 @@ public class DefaultScheduleManager implements ScheduleManager{
 
     private final ScheduleRepository scheduleRepository;
 
-    public DefaultScheduleManager(ScheduleRepository scheduleRepository){
+    public DefaultScheduleManager(@Autowired ScheduleRepository scheduleRepository){
         this.scheduleRepository = scheduleRepository;
     }
 

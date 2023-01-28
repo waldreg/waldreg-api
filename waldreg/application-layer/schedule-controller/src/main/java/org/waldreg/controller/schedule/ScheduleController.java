@@ -11,11 +11,13 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.waldreg.character.aop.annotation.PermissionVerifying;
 import org.waldreg.controller.schedule.mapper.ControllerScheduleMapper;
 import org.waldreg.controller.schedule.request.ScheduleRequest;
 import org.waldreg.controller.schedule.response.ScheduleResponse;
 import org.waldreg.schedule.dto.ScheduleDto;
 import org.waldreg.schedule.management.ScheduleManager;
+import org.waldreg.token.aop.annotation.Authenticating;
 
 @RestController
 public class ScheduleController{
@@ -29,6 +31,8 @@ public class ScheduleController{
         this.controllerScheduleMapper = controllerScheduleMapper;
     }
 
+    @Authenticating
+    @PermissionVerifying(value = "Create new schedule")
     @PostMapping("/schedule")
     public void createSchedule(@RequestBody @Validated ScheduleRequest scheduleRequest){
         ScheduleDto scheduleDto = controllerScheduleMapper.scheduleRequestToScheduleDto(scheduleRequest);
@@ -54,7 +58,7 @@ public class ScheduleController{
     }
 
     @DeleteMapping("/schedule/{schedule-id}")
-    public void deleteSchedule(@PathVariable("schedule-id")int id){
+    public void deleteSchedule(@PathVariable("schedule-id") int id){
         scheduleManager.deleteScheduleById(id);
     }
 
