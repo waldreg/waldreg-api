@@ -1,9 +1,11 @@
 package org.waldreg.controller.schedule.request;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import javax.validation.constraints.NotBlank;
 
 public class ScheduleRequest{
 
+    @NotBlank(message = "Schedule title cannot be blank")
     @JsonProperty("schedule_title")
     private String scheduleTitle;
     @JsonProperty("scheduleContent")
