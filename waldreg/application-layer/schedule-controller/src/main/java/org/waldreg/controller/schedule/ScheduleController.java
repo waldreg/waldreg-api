@@ -2,6 +2,7 @@ package org.waldreg.controller.schedule;
 
 import java.util.List;
 import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -52,6 +53,9 @@ public class ScheduleController{
         scheduleManager.updateScheduleById(id, scheduleDto);
     }
 
-
+    @DeleteMapping("/schedule/{schedule-id}")
+    public void deleteSchedule(@PathVariable("schedule-id")int id){
+        scheduleManager.deleteScheduleById(id);
+    }
 
 }
