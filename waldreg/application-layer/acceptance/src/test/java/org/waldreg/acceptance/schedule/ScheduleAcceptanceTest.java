@@ -1,9 +1,7 @@
 package org.waldreg.acceptance.schedule;
 
 
-import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import java.util.List;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -18,6 +16,10 @@ import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import org.waldreg.acceptance.authentication.AuthenticationAcceptanceTestHelper;
+import org.waldreg.controller.schedule.request.ScheduleRepeatRequest;
+import org.waldreg.controller.schedule.request.ScheduleRequest;
+import org.waldreg.controller.schedule.response.ScheduleListResponse;
+import org.waldreg.controller.schedule.response.ScheduleResponse;
 
 @SpringBootTest
 @AutoConfigureMockMvc
@@ -96,7 +98,7 @@ public class ScheduleAcceptanceTest{
         String finishAt = "2023-01-31T23:59";
         int cycle = 123;
         String repeatFinishAt = "2023-12-31T23:59";
-        RepeatScheduleRequest repeatScheduleRequest = RepeatScheduleRequest.builder()
+        ScheduleRepeatRequest scheduleRepeatRequest = ScheduleRepeatRequest.builder()
                 .cycle(cycle)
                 .repeatFinishAt(repeatFinishAt)
                 .build();
@@ -105,7 +107,7 @@ public class ScheduleAcceptanceTest{
                 .scheduleContent(scheduleContent)
                 .startedAt(startedAt)
                 .finishAt(finishAt)
-                .repeat(repeatScheduleRequest)
+                .repeat(scheduleRepeatRequest)
                 .build();
 
         //when
@@ -131,7 +133,7 @@ public class ScheduleAcceptanceTest{
         String finishAt = "2023-01-31T23:59";
         int cycle = 123;
         String repeatFinishAt = "2023-12-31T23:59";
-        RepeatScheduleRequest repeatScheduleRequest = RepeatScheduleRequest.builder()
+        ScheduleRepeatRequest scheduleRepeatRequest = ScheduleRepeatRequest.builder()
                 .cycle(cycle)
                 .repeatFinishAt(repeatFinishAt)
                 .build();
@@ -140,7 +142,7 @@ public class ScheduleAcceptanceTest{
                 .scheduleContent(scheduleContent)
                 .startedAt(wrongMonthStartedAt)
                 .finishAt(finishAt)
-                .repeat(repeatScheduleRequest)
+                .repeat(scheduleRepeatRequest)
                 .build();
 
         //when
@@ -170,7 +172,7 @@ public class ScheduleAcceptanceTest{
         String finishAt = "2023-01-31T23:59";
         int cycle = 123;
         String repeatFinishAt = "2023-12-31T23:59";
-        RepeatScheduleRequest repeatScheduleRequest = RepeatScheduleRequest.builder()
+        ScheduleRepeatRequest scheduleRepeatRequest = ScheduleRepeatRequest.builder()
                 .cycle(cycle)
                 .repeatFinishAt(repeatFinishAt)
                 .build();
@@ -179,7 +181,7 @@ public class ScheduleAcceptanceTest{
                 .scheduleContent(scheduleContent)
                 .startedAt(wrongYearStartedAt)
                 .finishAt(finishAt)
-                .repeat(repeatScheduleRequest)
+                .repeat(scheduleRepeatRequest)
                 .build();
 
         //when
@@ -209,7 +211,7 @@ public class ScheduleAcceptanceTest{
         String finishAt = "2023-01-31T23:59";
         int wrongCycle = 0;
         String repeatFinishAt = "2023-12-31T23:59";
-        RepeatScheduleRequest repeatScheduleRequest = RepeatScheduleRequest.builder()
+        ScheduleRepeatRequest scheduleRepeatRequest = ScheduleRepeatRequest.builder()
                 .cycle(wrongCycle)
                 .repeatFinishAt(repeatFinishAt)
                 .build();
@@ -218,7 +220,7 @@ public class ScheduleAcceptanceTest{
                 .scheduleContent(scheduleContent)
                 .startedAt(startedAt)
                 .finishAt(finishAt)
-                .repeat(repeatScheduleRequest)
+                .repeat(scheduleRepeatRequest)
                 .build();
 
         //when
@@ -248,7 +250,7 @@ public class ScheduleAcceptanceTest{
         String finishAt = "2023-01-31T23:59";
         int cycle = 123;
         String wrongRepeatFinishAt = "2023-01-28T23:59";
-        RepeatScheduleRequest repeatScheduleRequest = RepeatScheduleRequest.builder()
+        ScheduleRepeatRequest scheduleRepeatRequest = ScheduleRepeatRequest.builder()
                 .cycle(cycle)
                 .repeatFinishAt(wrongRepeatFinishAt)
                 .build();
@@ -257,7 +259,7 @@ public class ScheduleAcceptanceTest{
                 .scheduleContent(scheduleContent)
                 .startedAt(startedAt)
                 .finishAt(finishAt)
-                .repeat(repeatScheduleRequest)
+                .repeat(scheduleRepeatRequest)
                 .build();
 
         //when
@@ -287,7 +289,7 @@ public class ScheduleAcceptanceTest{
         String finishAt = "2023-01-31T23:59";
         int cycle = 123;
         String repeatFinishAt = "2023-12-31T23:59";
-        RepeatScheduleRequest repeatScheduleRequest = RepeatScheduleRequest.builder()
+        ScheduleRepeatRequest scheduleRepeatRequest = ScheduleRepeatRequest.builder()
                 .cycle(cycle)
                 .repeatFinishAt(repeatFinishAt)
                 .build();
@@ -296,7 +298,7 @@ public class ScheduleAcceptanceTest{
                 .scheduleContent(scheduleContent)
                 .startedAt(startedAt)
                 .finishAt(finishAt)
-                .repeat(repeatScheduleRequest)
+                .repeat(scheduleRepeatRequest)
                 .build();
 
         //when
@@ -326,7 +328,7 @@ public class ScheduleAcceptanceTest{
         String finishAt = "2023-01-31T23:59";
         int cycle = 123;
         String repeatFinishAt = "2023-12-31T23:59";
-        RepeatScheduleRequest repeatScheduleRequest = RepeatScheduleRequest.builder()
+        ScheduleRepeatRequest scheduleRepeatRequest = ScheduleRepeatRequest.builder()
                 .cycle(cycle)
                 .repeatFinishAt(repeatFinishAt)
                 .build();
@@ -335,7 +337,7 @@ public class ScheduleAcceptanceTest{
                 .scheduleContent(scheduleContent)
                 .startedAt(finishAt)
                 .finishAt(startedAt)
-                .repeat(repeatScheduleRequest)
+                .repeat(scheduleRepeatRequest)
                 .build();
 
         //when
@@ -365,7 +367,7 @@ public class ScheduleAcceptanceTest{
         String finishAt = "2023-01-31T23:59";
         int cycle = 123;
         String repeatFinishAt = "2023-12-31T23:59";
-        RepeatScheduleRequest repeatScheduleRequest = RepeatScheduleRequest.builder()
+        ScheduleRepeatRequest scheduleRepeatRequest = ScheduleRepeatRequest.builder()
                 .cycle(cycle)
                 .repeatFinishAt(repeatFinishAt)
                 .build();
@@ -374,7 +376,7 @@ public class ScheduleAcceptanceTest{
                 .scheduleContent(scheduleContent)
                 .startedAt(startedAt)
                 .finishAt(finishAt)
-                .repeat(repeatScheduleRequest)
+                .repeat(scheduleRepeatRequest)
                 .build();
 
         //when
@@ -404,7 +406,7 @@ public class ScheduleAcceptanceTest{
         String finishAt = "2023-01-31T23:59";
         int cycle = 123;
         String repeatFinishAt = "2023-12-31T23:59";
-        RepeatScheduleRequest repeatScheduleRequest = RepeatScheduleRequest.builder()
+        ScheduleRepeatRequest scheduleRepeatRequest = ScheduleRepeatRequest.builder()
                 .cycle(cycle)
                 .repeatFinishAt(repeatFinishAt)
                 .build();
@@ -413,7 +415,7 @@ public class ScheduleAcceptanceTest{
                 .scheduleContent(scheduleContent)
                 .startedAt(startedAt)
                 .finishAt(finishAt)
-                .repeat(repeatScheduleRequest)
+                .repeat(scheduleRepeatRequest)
                 .build();
 
         //when
@@ -443,7 +445,7 @@ public class ScheduleAcceptanceTest{
         String finishAt = "2023-01-31T23:59";
         int cycle = 123;
         String repeatFinishAt = "2023-12-31T23:59";
-        RepeatScheduleRequest repeatScheduleRequest = RepeatScheduleRequest.builder()
+        ScheduleRepeatRequest scheduleRepeatRequest = ScheduleRepeatRequest.builder()
                 .cycle(cycle)
                 .repeatFinishAt(repeatFinishAt)
                 .build();
@@ -452,7 +454,7 @@ public class ScheduleAcceptanceTest{
                 .scheduleContent(scheduleContent)
                 .startedAt(startedAt)
                 .finishAt(finishAt)
-                .repeat(repeatScheduleRequest)
+                .repeat(scheduleRepeatRequest)
                 .build();
 
         //when
@@ -534,7 +536,7 @@ public class ScheduleAcceptanceTest{
         String finishAt3 = "2023-01-17T23:59";
         int cycle = 7;
         String repeatFinishAt = "2023-12-31T23:59";
-        RepeatScheduleRequest repeatScheduleRequest = RepeatScheduleRequest.builder()
+        ScheduleRepeatRequest scheduleRepeatRequest = ScheduleRepeatRequest.builder()
                 .cycle(cycle)
                 .repeatFinishAt(repeatFinishAt)
                 .build();
@@ -542,7 +544,7 @@ public class ScheduleAcceptanceTest{
                 .scheduleTitle(scheduleTitle3)
                 .scheduleContent(scheduleContent3)
                 .startedAt(startedAt3)
-                .repeat(repeatScheduleRequest)
+                .repeat(scheduleRepeatRequest)
                 .finishAt(finishAt3)
                 .build();
         int year = 2023;
@@ -607,7 +609,7 @@ public class ScheduleAcceptanceTest{
         String finishAt3 = "2023-01-17T23:59";
         int cycle = 7;
         String repeatFinishAt = "2023-12-31T23:59";
-        RepeatScheduleRequest repeatScheduleRequest = RepeatScheduleRequest.builder()
+        ScheduleRepeatRequest scheduleRepeatRequest = ScheduleRepeatRequest.builder()
                 .cycle(cycle)
                 .repeatFinishAt(repeatFinishAt)
                 .build();
@@ -615,7 +617,7 @@ public class ScheduleAcceptanceTest{
                 .scheduleTitle(scheduleTitle3)
                 .scheduleContent(scheduleContent3)
                 .startedAt(StartedAt3)
-                .repeat(repeatScheduleRequest)
+                .repeat(scheduleRepeatRequest)
                 .finishAt(finishAt3)
                 .build();
         int year = 2023;
@@ -670,7 +672,7 @@ public class ScheduleAcceptanceTest{
         String finishAt3 = "2023-01-17T23:59";
         int cycle = 7;
         String repeatFinishAt = "2023-12-31T23:59";
-        RepeatScheduleRequest repeatScheduleRequest = RepeatScheduleRequest.builder()
+        ScheduleRepeatRequest scheduleRepeatRequest = ScheduleRepeatRequest.builder()
                 .cycle(cycle)
                 .repeatFinishAt(repeatFinishAt)
                 .build();
@@ -678,7 +680,7 @@ public class ScheduleAcceptanceTest{
                 .scheduleTitle(scheduleTitle3)
                 .scheduleContent(scheduleContent3)
                 .startedAt(startedAt3)
-                .repeat(repeatScheduleRequest)
+                .repeat(scheduleRepeatRequest)
                 .finishAt(finishAt3)
                 .build();
         int wrongYear = 1999;
@@ -724,7 +726,7 @@ public class ScheduleAcceptanceTest{
         String modifiedfinishAt = "2023-01-31T23:59";
         int modifiedCycle = 7;
         String modifiedRepeatFinishAt = "2023-12-31T23:59";
-        RepeatScheduleRequest repeatScheduleRequest = RepeatScheduleRequest.builder()
+        ScheduleRepeatRequest scheduleRepeatRequest = ScheduleRepeatRequest.builder()
                 .cycle(modifiedCycle)
                 .repeatFinishAt(modifiedRepeatFinishAt)
                 .build();
@@ -733,7 +735,7 @@ public class ScheduleAcceptanceTest{
                 .scheduleContent(modifiedScheduleContent)
                 .startedAt(modifiedStartedAt)
                 .finishAt(modifiedfinishAt)
-                .repeat(repeatScheduleRequest)
+                .repeat(scheduleRepeatRequest)
                 .build();
 
         //when
@@ -776,7 +778,7 @@ public class ScheduleAcceptanceTest{
         String modifiedfinishAt = "2023-01-31T23:59";
         int modifiedCycle = 7;
         String modifiedRepeatFinishAt = "2023-12-31T23:59";
-        RepeatScheduleRequest repeatScheduleRequest = RepeatScheduleRequest.builder()
+        ScheduleRepeatRequest scheduleRepeatRequest = ScheduleRepeatRequest.builder()
                 .cycle(modifiedCycle)
                 .repeatFinishAt(modifiedRepeatFinishAt)
                 .build();
@@ -785,7 +787,7 @@ public class ScheduleAcceptanceTest{
                 .scheduleContent(modifiedScheduleContent)
                 .startedAt(wrongModifiedStartedAt)
                 .finishAt(modifiedfinishAt)
-                .repeat(repeatScheduleRequest)
+                .repeat(scheduleRepeatRequest)
                 .build();
 
         //when
@@ -831,7 +833,7 @@ public class ScheduleAcceptanceTest{
         String modifiedfinishAt = "2023-01-31T23:59";
         int modifiedCycle = 7;
         String modifiedRepeatFinishAt = "2023-12-31T23:59";
-        RepeatScheduleRequest repeatScheduleRequest = RepeatScheduleRequest.builder()
+        ScheduleRepeatRequest scheduleRepeatRequest = ScheduleRepeatRequest.builder()
                 .cycle(modifiedCycle)
                 .repeatFinishAt(modifiedRepeatFinishAt)
                 .build();
@@ -840,7 +842,7 @@ public class ScheduleAcceptanceTest{
                 .scheduleContent(modifiedScheduleContent)
                 .startedAt(wrongModifiedStartedAt)
                 .finishAt(modifiedfinishAt)
-                .repeat(repeatScheduleRequest)
+                .repeat(scheduleRepeatRequest)
                 .build();
 
         //when
@@ -886,7 +888,7 @@ public class ScheduleAcceptanceTest{
         String modifiedfinishAt = "2023-01-31T23:59";
         int wrongModifiedCycle = 0;
         String modifiedRepeatFinishAt = "2023-12-31T23:59";
-        RepeatScheduleRequest repeatScheduleRequest = RepeatScheduleRequest.builder()
+        ScheduleRepeatRequest scheduleRepeatRequest = ScheduleRepeatRequest.builder()
                 .cycle(wrongModifiedCycle)
                 .repeatFinishAt(modifiedRepeatFinishAt)
                 .build();
@@ -895,7 +897,7 @@ public class ScheduleAcceptanceTest{
                 .scheduleContent(modifiedScheduleContent)
                 .startedAt(modifiedStartedAt)
                 .finishAt(modifiedfinishAt)
-                .repeat(repeatScheduleRequest)
+                .repeat(scheduleRepeatRequest)
                 .build();
 
         //when
@@ -940,7 +942,7 @@ public class ScheduleAcceptanceTest{
         String modifiedfinishAt = "2023-01-31T23:59";
         int modifiedCycle = 7;
         String wrongModifiedRepeatFinishAt = "2023-01-28T23:59";
-        RepeatScheduleRequest repeatScheduleRequest = RepeatScheduleRequest.builder()
+        ScheduleRepeatRequest scheduleRepeatRequest = ScheduleRepeatRequest.builder()
                 .cycle(modifiedCycle)
                 .repeatFinishAt(wrongModifiedRepeatFinishAt)
                 .build();
@@ -949,7 +951,7 @@ public class ScheduleAcceptanceTest{
                 .scheduleContent(modifiedScheduleContent)
                 .startedAt(modifiedStartedAt)
                 .finishAt(modifiedfinishAt)
-                .repeat(repeatScheduleRequest)
+                .repeat(scheduleRepeatRequest)
                 .build();
 
         //when
@@ -995,7 +997,7 @@ public class ScheduleAcceptanceTest{
         String modifiedfinishAt = "2023-01-31T23:59";
         int modifiedCycle = 7;
         String modifiedRepeatFinishAt = "2023-12-31T23:59";
-        RepeatScheduleRequest repeatScheduleRequest = RepeatScheduleRequest.builder()
+        ScheduleRepeatRequest scheduleRepeatRequest = ScheduleRepeatRequest.builder()
                 .cycle(modifiedCycle)
                 .repeatFinishAt(modifiedRepeatFinishAt)
                 .build();
@@ -1004,7 +1006,7 @@ public class ScheduleAcceptanceTest{
                 .scheduleContent(modifiedScheduleContent)
                 .startedAt(modifiedStartedAt)
                 .finishAt(modifiedfinishAt)
-                .repeat(repeatScheduleRequest)
+                .repeat(scheduleRepeatRequest)
                 .build();
 
         //when
@@ -1050,7 +1052,7 @@ public class ScheduleAcceptanceTest{
         String modifiedfinishAt = "2023-01-31T23:59";
         int modifiedCycle = 7;
         String modifiedRepeatFinishAt = "2023-12-31T23:59";
-        RepeatScheduleRequest repeatScheduleRequest = RepeatScheduleRequest.builder()
+        ScheduleRepeatRequest scheduleRepeatRequest = ScheduleRepeatRequest.builder()
                 .cycle(modifiedCycle)
                 .repeatFinishAt(modifiedRepeatFinishAt)
                 .build();
@@ -1059,7 +1061,7 @@ public class ScheduleAcceptanceTest{
                 .scheduleContent(modifiedScheduleContent)
                 .startedAt(modifiedfinishAt)
                 .finishAt(modifiedStartedAt)
-                .repeat(repeatScheduleRequest)
+                .repeat(scheduleRepeatRequest)
                 .build();
 
         //when
@@ -1106,7 +1108,7 @@ public class ScheduleAcceptanceTest{
         String modifiedfinishAt = "2023-01-31T23:59";
         int modifiedCycle = 7;
         String modifiedRepeatFinishAt = "2023-12-31T23:59";
-        RepeatScheduleRequest repeatScheduleRequest = RepeatScheduleRequest.builder()
+        ScheduleRepeatRequest scheduleRepeatRequest = ScheduleRepeatRequest.builder()
                 .cycle(modifiedCycle)
                 .repeatFinishAt(modifiedRepeatFinishAt)
                 .build();
@@ -1115,7 +1117,7 @@ public class ScheduleAcceptanceTest{
                 .scheduleContent(modifiedScheduleContent)
                 .startedAt(modifiedStartedAt)
                 .finishAt(modifiedfinishAt)
-                .repeat(repeatScheduleRequest)
+                .repeat(scheduleRepeatRequest)
                 .build();
 
         //when
@@ -1161,7 +1163,7 @@ public class ScheduleAcceptanceTest{
         String modifiedfinishAt = "2023-01-31T23:59";
         int modifiedCycle = 7;
         String modifiedRepeatFinishAt = "2023-12-31T23:59";
-        RepeatScheduleRequest repeatScheduleRequest = RepeatScheduleRequest.builder()
+        ScheduleRepeatRequest scheduleRepeatRequest = ScheduleRepeatRequest.builder()
                 .cycle(modifiedCycle)
                 .repeatFinishAt(modifiedRepeatFinishAt)
                 .build();
@@ -1170,7 +1172,7 @@ public class ScheduleAcceptanceTest{
                 .scheduleContent(wrongModifiedScheduleContent)
                 .startedAt(modifiedStartedAt)
                 .finishAt(modifiedfinishAt)
-                .repeat(repeatScheduleRequest)
+                .repeat(scheduleRepeatRequest)
                 .build();
 
         //when
@@ -1206,7 +1208,7 @@ public class ScheduleAcceptanceTest{
         String finishAt = "2023-01-31T23:59";
         int cycle = 123;
         String repeatFinishAt = "2023-12-31T23:59";
-        RepeatScheduleRequest repeatScheduleRequest = RepeatScheduleRequest.builder()
+        ScheduleRepeatRequest scheduleRepeatRequest = ScheduleRepeatRequest.builder()
                 .cycle(cycle)
                 .repeatFinishAt(repeatFinishAt)
                 .build();
@@ -1215,7 +1217,7 @@ public class ScheduleAcceptanceTest{
                 .scheduleContent(scheduleContent)
                 .startedAt(startedAt)
                 .finishAt(finishAt)
-                .repeat(repeatScheduleRequest)
+                .repeat(scheduleRepeatRequest)
                 .build();
 
         //when
@@ -1249,7 +1251,7 @@ public class ScheduleAcceptanceTest{
         String finishAt = "2023-01-31T23:59";
         int cycle = 123;
         String repeatFinishAt = "2023-12-31T23:59";
-        RepeatScheduleRequest repeatScheduleRequest = RepeatScheduleRequest.builder()
+        ScheduleRepeatRequest scheduleRepeatRequest = ScheduleRepeatRequest.builder()
                 .cycle(cycle)
                 .repeatFinishAt(repeatFinishAt)
                 .build();
@@ -1258,7 +1260,7 @@ public class ScheduleAcceptanceTest{
                 .scheduleContent(scheduleContent)
                 .startedAt(startedAt)
                 .finishAt(finishAt)
-                .repeat(repeatScheduleRequest)
+                .repeat(scheduleRepeatRequest)
                 .build();
 
         //when
@@ -1288,372 +1290,6 @@ public class ScheduleAcceptanceTest{
             content += "A";
         }
         return content;
-    }
-
-    public static class ScheduleRequest{
-
-        @JsonProperty("schedule_title")
-        private String scheduleTitle;
-        @JsonProperty("scheduleContent")
-        private String scheduleContent;
-        @JsonProperty("startedAt")
-        private String startedAt;
-        @JsonProperty("finishAt")
-        private String finishAt;
-        @JsonProperty("repeat")
-        private RepeatScheduleRequest repeat = null;
-
-        private ScheduleRequest(){}
-
-        private ScheduleRequest(Builder builder){
-            this.scheduleTitle = builder.scheduleTitle;
-            this.scheduleContent = builder.scheduleContent;
-            this.startedAt = builder.startedAt;
-            this.finishAt = builder.finishAt;
-            this.repeat = builder.repeat;
-        }
-
-        public static Builder builder(){return new Builder();}
-
-        public String getScheduleTitle(){
-            return scheduleTitle;
-        }
-
-        public void setScheduleTitle(String scheduleTitle){
-            this.scheduleTitle = scheduleTitle;
-        }
-
-        public String getScheduleContent(){
-            return scheduleContent;
-        }
-
-        public void setScheduleContent(String scheduleContent){
-            this.scheduleContent = scheduleContent;
-        }
-
-        public String getStartedAt(){
-            return startedAt;
-        }
-
-        public void setStartedAt(String startedAt){
-            this.startedAt = startedAt;
-        }
-
-        public String getFinishAt(){
-            return finishAt;
-        }
-
-        public void setFinishAt(String finishAt){
-            this.finishAt = finishAt;
-        }
-
-        public RepeatScheduleRequest getRepeat(){
-            return repeat;
-        }
-
-        public void setRepeat(RepeatScheduleRequest repeat){
-            this.repeat = repeat;
-        }
-
-        public final static class Builder{
-
-            private String scheduleTitle;
-            private String scheduleContent;
-            private String startedAt;
-            private String finishAt;
-            private RepeatScheduleRequest repeat;
-
-            private Builder(){}
-
-            public Builder scheduleTitle(String scheduleTitle){
-                this.scheduleTitle = scheduleTitle;
-                return this;
-            }
-
-            public Builder scheduleContent(String scheduleContent){
-                this.scheduleContent = scheduleContent;
-                return this;
-            }
-
-            public Builder startedAt(String startedAt){
-                this.startedAt = startedAt;
-                return this;
-            }
-
-            public Builder finishAt(String finishAt){
-                this.finishAt = finishAt;
-                return this;
-            }
-
-            public Builder repeat(RepeatScheduleRequest repeat){
-                this.repeat = repeat;
-                return this;
-            }
-
-            public ScheduleRequest build(){return new ScheduleRequest(this);}
-
-        }
-
-    }
-
-    public static class RepeatScheduleRequest{
-
-        @JsonProperty("cycle")
-        private int cycle;
-        @JsonProperty("repeat_finish_at")
-        private String repeatFinishAt;
-
-        public RepeatScheduleRequest(){}
-
-        private RepeatScheduleRequest(Builder builder){
-            this.cycle = builder.cycle;
-            this.repeatFinishAt = builder.repeatFinishAt;
-        }
-
-        public static Builder builder(){return new Builder();}
-
-        public int getCycle(){
-            return cycle;
-        }
-
-        public void setCycle(int cycle){
-            this.cycle = cycle;
-        }
-
-        public String getRepeatFinishAt(){
-            return repeatFinishAt;
-        }
-
-        public void setRepeatFinishAt(String repeatFinishAt){
-            this.repeatFinishAt = repeatFinishAt;
-        }
-
-        public final static class Builder{
-
-            private int cycle;
-            private String repeatFinishAt;
-
-            private Builder(){}
-
-            public Builder cycle(int cycle){
-                this.cycle = cycle;
-                return this;
-            }
-
-            public Builder repeatFinishAt(String repeatFinishAt){
-                this.repeatFinishAt = repeatFinishAt;
-                return this;
-            }
-
-            public RepeatScheduleRequest build(){return new RepeatScheduleRequest(this);}
-
-        }
-
-    }
-
-    public static class ScheduleResponse{
-
-        @JsonProperty("id")
-        private int id;
-        @JsonProperty("schedule_title")
-        private String scheduleTitle;
-        @JsonProperty("scheduleContent")
-        private String scheduleContent;
-        @JsonProperty("startedAt")
-        private String startedAt;
-        @JsonProperty("finishAt")
-        private String finishAt;
-        @JsonProperty("repeat")
-        private RepeatScheduleResponse repeat = null;
-
-        private ScheduleResponse(){}
-
-        private ScheduleResponse(Builder builder){
-            this.scheduleTitle = builder.scheduleTitle;
-            this.scheduleContent = builder.scheduleContent;
-            this.startedAt = builder.startedAt;
-            this.finishAt = builder.finishAt;
-            this.repeat = builder.repeat;
-        }
-
-        public static Builder builder(){return new Builder();}
-
-        public int getId(){
-            return id;
-        }
-
-        public void setId(int id){
-            this.id = id;
-        }
-
-        public String getScheduleTitle(){
-            return scheduleTitle;
-        }
-
-        public void setScheduleTitle(String scheduleTitle){
-            this.scheduleTitle = scheduleTitle;
-        }
-
-        public String getScheduleContent(){
-            return scheduleContent;
-        }
-
-        public void setScheduleContent(String scheduleContent){
-            this.scheduleContent = scheduleContent;
-        }
-
-        public String getStartedAt(){
-            return startedAt;
-        }
-
-        public void setStartedAt(String startedAt){
-            this.startedAt = startedAt;
-        }
-
-        public String getFinishAt(){
-            return finishAt;
-        }
-
-        public void setFinishAt(String finishAt){
-            this.finishAt = finishAt;
-        }
-
-        public RepeatScheduleResponse getRepeat(){
-            return repeat;
-        }
-
-        public void setRepeat(RepeatScheduleResponse repeat){
-            this.repeat = repeat;
-        }
-
-        public final static class Builder{
-
-            private int id;
-            private String scheduleTitle;
-            private String scheduleContent;
-            private String startedAt;
-            private String finishAt;
-            private RepeatScheduleResponse repeat;
-
-            private Builder(){}
-
-            public Builder scheduleTitle(String scheduleTitle){
-                this.scheduleTitle = scheduleTitle;
-                return this;
-            }
-
-            public Builder scheduleContent(String scheduleContent){
-                this.scheduleContent = scheduleContent;
-                return this;
-            }
-
-            public Builder startedAt(String startedAt){
-                this.startedAt = startedAt;
-                return this;
-            }
-
-            public Builder finishAt(String finishAt){
-                this.finishAt = finishAt;
-                return this;
-            }
-
-            public Builder repeat(RepeatScheduleResponse repeat){
-                this.repeat = repeat;
-                return this;
-            }
-
-            public ScheduleResponse build(){return new ScheduleResponse(this);}
-
-        }
-
-
-    }
-
-    public static class RepeatScheduleResponse{
-
-        @JsonProperty("cycle")
-        private int cycle;
-        @JsonProperty("repeat_finish_at")
-        private String repeatFinishAt;
-
-        public RepeatScheduleResponse(){}
-
-        private RepeatScheduleResponse(Builder builder){
-            this.cycle = builder.cycle;
-            this.repeatFinishAt = builder.repeatFinishAt;
-        }
-
-        public static Builder builder(){return new Builder();}
-
-        public int getCycle(){
-            return cycle;
-        }
-
-        public void setCycle(int cycle){
-            this.cycle = cycle;
-        }
-
-        public String getRepeatFinishAt(){
-            return repeatFinishAt;
-        }
-
-        public void setRepeatFinishAt(String repeatFinishAt){
-            this.repeatFinishAt = repeatFinishAt;
-        }
-
-        public final static class Builder{
-
-            private int cycle;
-            private String repeatFinishAt;
-
-            private Builder(){}
-
-            public Builder cycle(int cycle){
-                this.cycle = cycle;
-                return this;
-            }
-
-            public Builder repeatFinishAt(String repeatFinishAt){
-                this.repeatFinishAt = repeatFinishAt;
-                return this;
-            }
-
-            public RepeatScheduleResponse build(){return new RepeatScheduleResponse(this);}
-
-        }
-
-    }
-
-    public static class ScheduleListResponse{
-
-        @JsonProperty("schedules")
-        private List<ScheduleResponse> scheduleList;
-
-        public ScheduleListResponse(){}
-
-        private ScheduleListResponse(Builder builder){
-            this.scheduleList = builder.scheduleList;
-        }
-
-        public static Builder builder(){return new Builder();}
-
-        public List<ScheduleResponse> getScheduleList(){return scheduleList;}
-
-        public final static class Builder{
-
-            private List<ScheduleResponse> scheduleList;
-
-            private Builder(){}
-
-            public Builder ScheduleList(List<ScheduleResponse> scheduleList){
-                this.scheduleList = scheduleList;
-                return this;
-            }
-
-            public ScheduleListResponse build(){return new ScheduleListResponse(this);}
-
-        }
-
     }
 
 }
