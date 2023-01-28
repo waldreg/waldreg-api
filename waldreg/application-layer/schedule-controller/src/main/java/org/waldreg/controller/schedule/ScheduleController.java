@@ -1,11 +1,15 @@
 package org.waldreg.controller.schedule;
 
+import java.util.List;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.waldreg.controller.schedule.mapper.ControllerScheduleMapper;
 import org.waldreg.controller.schedule.request.ScheduleRequest;
+import org.waldreg.controller.schedule.response.ScheduleResponse;
 import org.waldreg.schedule.dto.ScheduleDto;
 import org.waldreg.schedule.management.ScheduleManager;
 
@@ -25,6 +29,12 @@ public class ScheduleController{
     public void createSchedule(@RequestBody @Validated ScheduleRequest scheduleRequest){
         ScheduleDto scheduleDto = controllerScheduleMapper.scheduleRequestToScheduleDto(scheduleRequest);
         scheduleManager.createSchedule(scheduleDto);
+    }
+
+    @RequestMapping(value = "/calendar")
+    public List<ScheduleResponse> readScheduleByTerm(@RequestParam("year") int year, @RequestParam("month") int month){
+        List<ScheduleDto> scheduleDtoList = scheduleManager.readScheduleByTerm(year, month);
+        return controllerScheduleMapper.scheduleDtoListToScheduleResponseList(scheduleDtoList);
     }
 
 }
