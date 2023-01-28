@@ -8,12 +8,20 @@ import org.waldreg.schedule.dto.ScheduleDto;
 public class ScheduleMapper{
 
     public Schedule scheduleDtoToScheduleDomain(ScheduleDto scheduleDto){
-        return Schedule.builder()
+        Schedule.Builder builder = Schedule.builder()
                 .scheduleTitle(scheduleDto.getScheduleTitle())
                 .scheduleContent(scheduleDto.getScheduleContent())
                 .startedAt(LocalDateTime.parse(scheduleDto.getStartedAt()))
-                .finishAt(LocalDateTime.parse(scheduleDto.getFinishAt()))
-                .scheduleRepeat(ScheduleRepeat.builder()
+                .finishAt(LocalDateTime.parse(scheduleDto.getFinishAt()));
+        return repeatDtoToScheduleRepeatDomain(scheduleDto, builder);
+
+    }
+
+    private Schedule repeatDtoToScheduleRepeatDomain(ScheduleDto scheduleDto, Schedule.Builder builder){
+        if (scheduleDto.getRepeatDto() == null){
+            return builder.build();
+        }
+        return builder.scheduleRepeat(ScheduleRepeat.builder()
                         .cycle(scheduleDto.getRepeatDto().getCycle())
                         .repeatFinishAt(LocalDateTime.parse(scheduleDto.getRepeatDto().getRepeatFinishAt()))
                         .build())

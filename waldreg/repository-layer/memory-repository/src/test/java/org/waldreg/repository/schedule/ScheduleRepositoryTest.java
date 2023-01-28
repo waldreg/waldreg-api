@@ -49,5 +49,25 @@ public class ScheduleRepositoryTest{
 
     }
 
+    @Test
+    @DisplayName("새로운 일정 생성 성공 테스트 - 반복 없을 때")
+    public void CREATE_NEW_SCHEDULE_WITHOUT_REPEAT_SUCCESS_TEST(){
+        //given
+        String scheduleTitle = "seminar";
+        String scheduleContent = "BFS";
+        String startedAt = "2023-01-31T20:52";
+        String finishAt = "2023-02-23T23:59";
+        ScheduleDto scheduleDto = ScheduleDto.builder()
+                .scheduleTitle(scheduleTitle)
+                .scheduleContent(scheduleContent)
+                .startedAt(startedAt)
+                .finishAt(finishAt)
+                .build();
+
+        //when&then
+        Assertions.assertDoesNotThrow(() -> scheduleRepository.createSchedule(scheduleDto));
+
+    }
+
 
 }

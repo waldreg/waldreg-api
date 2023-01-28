@@ -49,11 +49,11 @@ public class DefaultScheduleManager implements ScheduleManager{
 
     @Override
     public List<ScheduleDto> readScheduleByTerm(int year, int month){
-        throwIfDateFormat(year, month);
+        throwIfInvalidDateFormat(year, month);
         return scheduleRepository.readScheduleByTerm(year, month);
     }
 
-    private void throwIfDateFormat(int year, int month){
+    private void throwIfInvalidDateFormat(int year, int month){
         throwIfInvalidYear(year);
         throwIfInvalidMonth(month);
     }
