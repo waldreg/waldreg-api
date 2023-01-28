@@ -19,6 +19,7 @@ public class SchedulePermissionConfigurer{
     public void configSchedulePermission(){
         configCreateNewSchedulePermission();
         configUpdateSchedulePermission();
+        configDeleteSchedulePermission();
     }
 
     private void configCreateNewSchedulePermission(){
@@ -34,6 +35,15 @@ public class SchedulePermissionConfigurer{
         permissionExtension.extend(DefaultPermissionUnit.builder()
                 .name("Schedule update manager")
                 .info("If set true, can update schedule")
+                .permissionVerifiable((s) -> s.equals("true"))
+                .statusList(List.of("true", "false"))
+                .build());
+    }
+
+    private void configDeleteSchedulePermission(){
+        permissionExtension.extend(DefaultPermissionUnit.builder()
+                .name("Schedule delete manager")
+                .info("If set true, can delete schedule")
                 .permissionVerifiable((s) -> s.equals("true"))
                 .statusList(List.of("true", "false"))
                 .build());
