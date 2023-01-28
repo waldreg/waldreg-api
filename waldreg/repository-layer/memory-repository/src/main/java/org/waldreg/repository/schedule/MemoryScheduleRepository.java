@@ -43,7 +43,8 @@ public class MemoryScheduleRepository implements ScheduleRepository{
 
     @Override
     public void updateScheduleById(int id, ScheduleDto scheduleDto){
-
+        Schedule schedule = scheduleMapper.scheduleDtoToScheduleDomain(scheduleDto);
+        memoryScheduleStorage.updateScheduleById(id, schedule);
     }
 
     @Override
