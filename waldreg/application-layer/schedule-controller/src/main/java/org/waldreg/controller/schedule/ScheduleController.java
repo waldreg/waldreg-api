@@ -5,6 +5,7 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -40,9 +41,17 @@ public class ScheduleController{
     }
 
     @GetMapping("/schedule/{schedule-id}")
-    public ScheduleResponse readScheduleById(@PathVariable("schedule-id")int id){
+    public ScheduleResponse readScheduleById(@PathVariable("schedule-id") int id){
         ScheduleDto scheduleDto = scheduleManager.readScheduleById(id);
         return controllerScheduleMapper.scheduleDtoToScheduleResponse(scheduleDto);
     }
+
+    @PutMapping("/schedule/{schedule-id}")
+    public void updateSchedule(@PathVariable("schedule-id") int id, @RequestBody ScheduleRequest scheduleRequest){
+        ScheduleDto scheduleDto = controllerScheduleMapper.scheduleRequestToScheduleDto(scheduleRequest);
+        scheduleManager.updateScheduleById(id, scheduleDto);
+    }
+
+
 
 }
