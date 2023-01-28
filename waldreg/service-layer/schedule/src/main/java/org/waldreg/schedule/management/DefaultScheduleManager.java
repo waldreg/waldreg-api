@@ -19,7 +19,8 @@ public class DefaultScheduleManager implements ScheduleManager{
 
     private final ScheduleRepository scheduleRepository;
 
-    public DefaultScheduleManager(@Autowired ScheduleRepository scheduleRepository){
+    @Autowired
+    public DefaultScheduleManager(ScheduleRepository scheduleRepository){
         this.scheduleRepository = scheduleRepository;
     }
 

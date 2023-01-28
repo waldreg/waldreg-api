@@ -22,7 +22,7 @@ public class SchedulePermissionConfigurer{
 
     private void configCreateNewSchedulePermission(){
         permissionExtension.extend(DefaultPermissionUnit.builder()
-                .name("Create new schedule")
+                .name("Schedule create manager")
                 .info("If set true, can create new schedule")
                 .permissionVerifiable((s) -> s.equals("true"))
                 .statusList(List.of("true", "false"))

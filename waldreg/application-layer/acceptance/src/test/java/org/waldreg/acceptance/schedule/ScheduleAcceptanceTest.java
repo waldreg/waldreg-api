@@ -2,6 +2,7 @@ package org.waldreg.acceptance.schedule;
 
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import java.util.List;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -37,12 +38,12 @@ public class ScheduleAcceptanceTest{
     public void INITIATE() throws Exception{
         String adminToken = AuthenticationAcceptanceTestHelper.getAdminToken(mvc, objectMapper);
         for (int month = 1; month <= 12; month++){
-            ScheduleListResponse scheduleListResponse = objectMapper.readValue(
+            ScheduleResponse[] scheduleResponseList = objectMapper.readValue(
                     ScheduleAcceptanceTestHelper.inquiryScheduleListByTerm(mvc, 2023, month, adminToken)
                             .andReturn()
                             .getResponse()
-                            .getContentAsString(), ScheduleListResponse.class);
-            for (ScheduleResponse scheduleResponse : scheduleListResponse.getScheduleList()){
+                            .getContentAsString(), ScheduleResponse[].class);
+            for (ScheduleResponse scheduleResponse : scheduleResponseList){
                 ResultActions result = ScheduleAcceptanceTestHelper.deleteSpecificSchedule(mvc, scheduleResponse.getId(), adminToken);
                 result.andExpectAll(
                         MockMvcResultMatchers.status().isBadRequest(),
@@ -458,12 +459,12 @@ public class ScheduleAcceptanceTest{
 
         //when
         ScheduleAcceptanceTestHelper.createNewSchedule(mvc, adminToken, objectMapper.writeValueAsString(scheduleRequest));
-        ScheduleListResponse scheduleListResponse = objectMapper.readValue(
+        ScheduleResponse[] scheduleResponseList = objectMapper.readValue(
                 ScheduleAcceptanceTestHelper.inquiryScheduleListByTerm(mvc, 2023, 1, adminToken)
                         .andReturn()
                         .getResponse()
-                        .getContentAsString(), ScheduleListResponse.class);
-        ResultActions result = ScheduleAcceptanceTestHelper.inquirySpecificSchedule(mvc, scheduleListResponse.getScheduleList().get(0).getId(), adminToken);
+                        .getContentAsString(), ScheduleResponse[].class);
+        ResultActions result = ScheduleAcceptanceTestHelper.inquirySpecificSchedule(mvc, scheduleResponseList[0].getId(), adminToken);
 
         //then
         result.andExpectAll(
@@ -739,12 +740,12 @@ public class ScheduleAcceptanceTest{
 
         //when
         ScheduleAcceptanceTestHelper.createNewSchedule(mvc, adminToken, objectMapper.writeValueAsString(scheduleRequest));
-        ScheduleListResponse scheduleListResponse = objectMapper.readValue(
+        ScheduleResponse[] scheduleResponseList = objectMapper.readValue(
                 ScheduleAcceptanceTestHelper.inquiryScheduleListByTerm(mvc, 2023, 1, adminToken)
                         .andReturn()
                         .getResponse()
-                        .getContentAsString(), ScheduleListResponse.class);
-        ResultActions result = ScheduleAcceptanceTestHelper.modifySchedule(mvc, scheduleListResponse.getScheduleList().get(0).getId(), adminToken, objectMapper.writeValueAsString(modifiedScheduleRequest));
+                        .getContentAsString(), ScheduleResponse[].class);
+        ResultActions result = ScheduleAcceptanceTestHelper.modifySchedule(mvc, scheduleResponseList[0].getId(), adminToken, objectMapper.writeValueAsString(modifiedScheduleRequest));
 
         //then
         result.andExpectAll(
@@ -791,12 +792,12 @@ public class ScheduleAcceptanceTest{
 
         //when
         ScheduleAcceptanceTestHelper.createNewSchedule(mvc, adminToken, objectMapper.writeValueAsString(scheduleRequest));
-        ScheduleListResponse scheduleListResponse = objectMapper.readValue(
+        ScheduleResponse[] scheduleResponseList = objectMapper.readValue(
                 ScheduleAcceptanceTestHelper.inquiryScheduleListByTerm(mvc, 2023, 1, adminToken)
                         .andReturn()
                         .getResponse()
-                        .getContentAsString(), ScheduleListResponse.class);
-        ResultActions result = ScheduleAcceptanceTestHelper.modifySchedule(mvc, scheduleListResponse.getScheduleList().get(0).getId(), adminToken, objectMapper.writeValueAsString(modifiedScheduleRequest));
+                        .getContentAsString(), ScheduleResponse[].class);
+        ResultActions result = ScheduleAcceptanceTestHelper.modifySchedule(mvc, scheduleResponseList[0].getId(), adminToken, objectMapper.writeValueAsString(modifiedScheduleRequest));
 
         //then
         result.andExpectAll(
@@ -846,12 +847,12 @@ public class ScheduleAcceptanceTest{
 
         //when
         ScheduleAcceptanceTestHelper.createNewSchedule(mvc, adminToken, objectMapper.writeValueAsString(scheduleRequest));
-        ScheduleListResponse scheduleListResponse = objectMapper.readValue(
+        ScheduleResponse[] scheduleResponseList = objectMapper.readValue(
                 ScheduleAcceptanceTestHelper.inquiryScheduleListByTerm(mvc, 2023, 1, adminToken)
                         .andReturn()
                         .getResponse()
-                        .getContentAsString(), ScheduleListResponse.class);
-        ResultActions result = ScheduleAcceptanceTestHelper.modifySchedule(mvc, scheduleListResponse.getScheduleList().get(0).getId(), adminToken, objectMapper.writeValueAsString(modifiedScheduleRequest));
+                        .getContentAsString(), ScheduleResponse[].class);
+        ResultActions result = ScheduleAcceptanceTestHelper.modifySchedule(mvc, scheduleResponseList[0].getId(), adminToken, objectMapper.writeValueAsString(modifiedScheduleRequest));
 
         //then
         result.andExpectAll(
@@ -900,12 +901,12 @@ public class ScheduleAcceptanceTest{
                 .build();
 
         //when
-        ScheduleListResponse scheduleListResponse = objectMapper.readValue(
+        ScheduleResponse[] scheduleResponseList = objectMapper.readValue(
                 ScheduleAcceptanceTestHelper.inquiryScheduleListByTerm(mvc, 2023, 1, adminToken)
                         .andReturn()
                         .getResponse()
-                        .getContentAsString(), ScheduleListResponse.class);
-        ResultActions result = ScheduleAcceptanceTestHelper.modifySchedule(mvc, scheduleListResponse.getScheduleList().get(0).getId(), adminToken, objectMapper.writeValueAsString(modifiedScheduleRequest));
+                        .getContentAsString(), ScheduleResponse[].class);
+        ResultActions result = ScheduleAcceptanceTestHelper.modifySchedule(mvc, scheduleResponseList[0].getId(), adminToken, objectMapper.writeValueAsString(modifiedScheduleRequest));
 
         //then
         result.andExpectAll(
@@ -955,12 +956,12 @@ public class ScheduleAcceptanceTest{
 
         //when
         ScheduleAcceptanceTestHelper.createNewSchedule(mvc, adminToken, objectMapper.writeValueAsString(scheduleRequest));
-        ScheduleListResponse scheduleListResponse = objectMapper.readValue(
+        ScheduleResponse[] scheduleResponseList = objectMapper.readValue(
                 ScheduleAcceptanceTestHelper.inquiryScheduleListByTerm(mvc, 2023, 1, adminToken)
                         .andReturn()
                         .getResponse()
-                        .getContentAsString(), ScheduleListResponse.class);
-        ResultActions result = ScheduleAcceptanceTestHelper.modifySchedule(mvc, scheduleListResponse.getScheduleList().get(0).getId(), adminToken, objectMapper.writeValueAsString(modifiedScheduleRequest));
+                        .getContentAsString(), ScheduleResponse[].class);
+        ResultActions result = ScheduleAcceptanceTestHelper.modifySchedule(mvc, scheduleResponseList[0].getId(), adminToken, objectMapper.writeValueAsString(modifiedScheduleRequest));
 
         //then
         result.andExpectAll(
@@ -1010,12 +1011,12 @@ public class ScheduleAcceptanceTest{
 
         //when
         ScheduleAcceptanceTestHelper.createNewSchedule(mvc, adminToken, objectMapper.writeValueAsString(scheduleRequest));
-        ScheduleListResponse scheduleListResponse = objectMapper.readValue(
+        ScheduleResponse[] scheduleResponseList = objectMapper.readValue(
                 ScheduleAcceptanceTestHelper.inquiryScheduleListByTerm(mvc, 2023, 1, adminToken)
                         .andReturn()
                         .getResponse()
-                        .getContentAsString(), ScheduleListResponse.class);
-        ResultActions result = ScheduleAcceptanceTestHelper.modifySchedule(mvc, scheduleListResponse.getScheduleList().get(0).getId(), adminToken, objectMapper.writeValueAsString(modifiedScheduleRequest));
+                        .getContentAsString(), ScheduleResponse[].class);
+        ResultActions result = ScheduleAcceptanceTestHelper.modifySchedule(mvc, scheduleResponseList[0].getId(), adminToken, objectMapper.writeValueAsString(modifiedScheduleRequest));
 
         //then
         result.andExpectAll(
@@ -1065,12 +1066,12 @@ public class ScheduleAcceptanceTest{
 
         //when
         ScheduleAcceptanceTestHelper.createNewSchedule(mvc, adminToken, objectMapper.writeValueAsString(scheduleRequest));
-        ScheduleListResponse scheduleListResponse = objectMapper.readValue(
+        ScheduleResponse[] scheduleResponseList = objectMapper.readValue(
                 ScheduleAcceptanceTestHelper.inquiryScheduleListByTerm(mvc, 2023, 1, adminToken)
                         .andReturn()
                         .getResponse()
-                        .getContentAsString(), ScheduleListResponse.class);
-        ResultActions result = ScheduleAcceptanceTestHelper.modifySchedule(mvc, scheduleListResponse.getScheduleList().get(0).getId(), adminToken, objectMapper.writeValueAsString(modifiedScheduleRequest));
+                        .getContentAsString(), ScheduleResponse[].class);
+        ResultActions result = ScheduleAcceptanceTestHelper.modifySchedule(mvc, scheduleResponseList[0].getId(), adminToken, objectMapper.writeValueAsString(modifiedScheduleRequest));
 
         //then
         result.andExpectAll(
@@ -1121,12 +1122,12 @@ public class ScheduleAcceptanceTest{
 
         //when
         ScheduleAcceptanceTestHelper.createNewSchedule(mvc, adminToken, objectMapper.writeValueAsString(scheduleRequest));
-        ScheduleListResponse scheduleListResponse = objectMapper.readValue(
+        ScheduleResponse[] scheduleResponseList = objectMapper.readValue(
                 ScheduleAcceptanceTestHelper.inquiryScheduleListByTerm(mvc, 2023, 1, adminToken)
                         .andReturn()
                         .getResponse()
-                        .getContentAsString(), ScheduleListResponse.class);
-        ResultActions result = ScheduleAcceptanceTestHelper.modifySchedule(mvc, scheduleListResponse.getScheduleList().get(0).getId(), adminToken, objectMapper.writeValueAsString(modifiedScheduleRequest));
+                        .getContentAsString(), ScheduleResponse[].class);
+        ResultActions result = ScheduleAcceptanceTestHelper.modifySchedule(mvc, scheduleResponseList[0].getId(), adminToken, objectMapper.writeValueAsString(modifiedScheduleRequest));
 
         //then
         result.andExpectAll(
@@ -1176,12 +1177,12 @@ public class ScheduleAcceptanceTest{
 
         //when
         ScheduleAcceptanceTestHelper.createNewSchedule(mvc, adminToken, objectMapper.writeValueAsString(scheduleRequest));
-        ScheduleListResponse scheduleListResponse = objectMapper.readValue(
+        ScheduleResponse[] scheduleResponseList = objectMapper.readValue(
                 ScheduleAcceptanceTestHelper.inquiryScheduleListByTerm(mvc, 2023, 1, adminToken)
                         .andReturn()
                         .getResponse()
-                        .getContentAsString(), ScheduleListResponse.class);
-        ResultActions result = ScheduleAcceptanceTestHelper.modifySchedule(mvc, scheduleListResponse.getScheduleList().get(0).getId(), adminToken, objectMapper.writeValueAsString(modifiedScheduleRequest));
+                        .getContentAsString(), ScheduleResponse[].class);
+        ResultActions result = ScheduleAcceptanceTestHelper.modifySchedule(mvc, scheduleResponseList[0].getId(), adminToken, objectMapper.writeValueAsString(modifiedScheduleRequest));
 
         //then
         result.andExpectAll(
@@ -1221,12 +1222,12 @@ public class ScheduleAcceptanceTest{
 
         //when
         ScheduleAcceptanceTestHelper.createNewSchedule(mvc, adminToken, objectMapper.writeValueAsString(scheduleRequest));
-        ScheduleListResponse scheduleListResponse = objectMapper.readValue(
+        ScheduleResponse[] scheduleResponseList = objectMapper.readValue(
                 ScheduleAcceptanceTestHelper.inquiryScheduleListByTerm(mvc, 2023, 1, adminToken)
                         .andReturn()
                         .getResponse()
-                        .getContentAsString(), ScheduleListResponse.class);
-        ResultActions result = ScheduleAcceptanceTestHelper.deleteSpecificSchedule(mvc, scheduleListResponse.getScheduleList().get(0).getId(), adminToken);
+                        .getContentAsString(), ScheduleResponse[].class);
+        ResultActions result = ScheduleAcceptanceTestHelper.deleteSpecificSchedule(mvc, scheduleResponseList[0].getId(), adminToken);
 
         //then
         result.andExpectAll(
@@ -1264,12 +1265,12 @@ public class ScheduleAcceptanceTest{
 
         //when
         ScheduleAcceptanceTestHelper.createNewSchedule(mvc, adminToken, objectMapper.writeValueAsString(scheduleRequest));
-        ScheduleListResponse scheduleListResponse = objectMapper.readValue(
+        ScheduleResponse[] scheduleResponseList = objectMapper.readValue(
                 ScheduleAcceptanceTestHelper.inquiryScheduleListByTerm(mvc, 2023, 1, adminToken)
                         .andReturn()
                         .getResponse()
-                        .getContentAsString(), ScheduleListResponse.class);
-        ResultActions result = ScheduleAcceptanceTestHelper.deleteSpecificSchedule(mvc, scheduleListResponse.getScheduleList().get(0).getId(), wrongToken);
+                        .getContentAsString(), ScheduleResponse[].class);
+        ResultActions result = ScheduleAcceptanceTestHelper.deleteSpecificSchedule(mvc, scheduleResponseList[0].getId(), wrongToken);
 
         //then
         result.andExpectAll(
