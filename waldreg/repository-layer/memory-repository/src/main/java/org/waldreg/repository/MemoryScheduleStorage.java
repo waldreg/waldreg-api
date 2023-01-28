@@ -1,5 +1,7 @@
 package org.waldreg.repository;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -21,6 +23,20 @@ public class MemoryScheduleStorage{
     public void createSchedule(Schedule schedule){
         schedule.setId(atomicInteger.getAndIncrement());
         storage.put(schedule.getId(), schedule);
+    }
+
+    public List<Schedule> readScheduleByTerm(int year, int month){
+        List<Schedule> scheduleList = new ArrayList<>();
+        for (Map.Entry<Integer, Schedule> scheduleEntry : storage.entrySet()){
+            if (isScheduleInTerm(year, month, scheduleEntry.getValue())){
+                scheduleList.add(scheduleEntry.getValue());
+            }
+        }
+        return scheduleList;
+    }
+
+    private boolean isScheduleInTerm(int year, int month, Schedule schedule){
+        return (schedule.getStartedAt().getYear() == year && schedule.getStartedAt().getMonthValue() == month) || (schedule.getFinishAt().getYear() == year && schedule.getFinishAt().getMonthValue() == month);
     }
 
 }

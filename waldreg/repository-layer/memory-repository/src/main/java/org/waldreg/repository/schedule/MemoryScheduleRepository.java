@@ -1,5 +1,6 @@
 package org.waldreg.repository.schedule;
 
+import java.util.ArrayList;
 import java.util.List;
 import org.springframework.stereotype.Repository;
 import org.waldreg.domain.calendar.Schedule;
@@ -31,7 +32,12 @@ public class MemoryScheduleRepository implements ScheduleRepository{
 
     @Override
     public List<ScheduleDto> readScheduleByTerm(int year, int month){
-        return null;
+        List<Schedule> scheduleList = memoryScheduleStorage.readScheduleByTerm(year,month);
+        List<ScheduleDto> scheduleDtoList = new ArrayList<>();
+        for(Schedule schedule : scheduleList){
+            scheduleDtoList.add(scheduleMapper.scheduleDomainToScheduleDto(schedule));
+        }
+        return scheduleDtoList;
     }
 
     @Override
