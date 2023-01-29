@@ -1,5 +1,7 @@
 package org.waldreg.repository;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -25,6 +27,22 @@ public class RewardTagStorage{
 
     public void updateRewardTag(int rewardTagId, RewardTag rewardTag){
         storage.replace(rewardTagId, rewardTag);
+    }
+
+    public List<RewardTag> readRewardTagList(){
+        List<RewardTag> rewardTagList = new ArrayList<>();
+        for(Map.Entry<Integer, RewardTag> entry : storage.entrySet()){
+            rewardTagList.add(entry.getValue());
+        }
+        return rewardTagList;
+    }
+
+    public RewardTag readRewardTag(int rewardTagId){
+        return storage.get(rewardTagId);
+    }
+
+    public void deleteRewardTag(int rewardTagId){
+        storage.remove(rewardTagId);
     }
 
 }

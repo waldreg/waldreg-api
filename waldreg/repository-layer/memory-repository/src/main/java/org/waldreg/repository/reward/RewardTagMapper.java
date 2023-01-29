@@ -14,4 +14,12 @@ public class RewardTagMapper{
                 .build();
     }
 
+    public RewardTagDto rewardTagToRewardTagDto(RewardTag rewardTag){
+        return RewardTagDto.builder()
+                .rewardTagId(rewardTag.getRewardTagId())
+                .rewardTagTitle(rewardTag.getRewardTagTitle())
+                .rewardPoint(rewardTag.getRewardPoint())
+                .build();
+    }
+
 }
