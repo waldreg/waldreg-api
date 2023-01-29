@@ -1,11 +1,11 @@
-package org.waldreg.controller.reward.mapper;
+package org.waldreg.controller.reward.tag.mapper;
 
 import java.util.ArrayList;
 import java.util.List;
 import org.springframework.stereotype.Service;
 import org.wadlreg.reward.tag.dto.RewardTagDto;
-import org.waldreg.controller.reward.request.RewardTagRequest;
-import org.waldreg.controller.reward.response.RewardTagResponse;
+import org.waldreg.controller.reward.tag.request.RewardTagRequest;
+import org.waldreg.controller.reward.tag.response.RewardTagResponse;
 
 @Service
 public class ControllerRewardTagMapper{

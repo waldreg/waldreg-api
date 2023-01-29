@@ -1,4 +1,4 @@
-package org.waldreg.controller.reward.response;
+package org.waldreg.controller.reward.tag.response;
 
 public final class RewardTagResponse{
 

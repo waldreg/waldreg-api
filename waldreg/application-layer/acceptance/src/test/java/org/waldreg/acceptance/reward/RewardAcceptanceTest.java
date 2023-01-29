@@ -23,8 +23,8 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import org.waldreg.acceptance.authentication.AuthenticationAcceptanceTestHelper;
 import org.waldreg.acceptance.user.UserAcceptanceTestHelper;
 import org.waldreg.auth.request.AuthTokenRequest;
-import org.waldreg.controller.reward.request.RewardTagRequest;
-import org.waldreg.controller.reward.response.RewardTagResponse;
+import org.waldreg.controller.reward.tag.request.RewardTagRequest;
+import org.waldreg.controller.reward.tag.response.RewardTagResponse;
 import org.waldreg.controller.user.request.UserRequest;
 import org.waldreg.controller.user.response.UserResponse;
 

@@ -1,4 +1,4 @@
-package org.waldreg.controller.reward.request;
+package org.waldreg.controller.reward.tag.request;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import javax.validation.constraints.NotNull;
