@@ -31,7 +31,7 @@ public class DefaultScheduleManager implements ScheduleManager{
         try{
             LocalDateTime startedAt = LocalDateTime.parse(scheduleDto.getStartedAt());
             LocalDateTime finishAt = LocalDateTime.parse(scheduleDto.getFinishAt());
-            throwIfDateFormatException(startedAt, finishAt);
+            throwIfUnderYearLimit(startedAt.getYear(), finishAt.getYear());
             throwIfContentOverflowException(scheduleDto.getScheduleContent());
             throwIfInvalidSchedulePeriodException(startedAt, finishAt);
             throwIfRepeatExist(startedAt, finishAt, scheduleDto.getRepeatDto());
@@ -41,13 +41,9 @@ public class DefaultScheduleManager implements ScheduleManager{
         }
     }
 
-    private void throwIfDateFormatException(LocalDateTime startedAt, LocalDateTime finishAt){
-        throwIfUnderYearLimit(startedAt.getYear(), finishAt.getYear());
-    }
-
     private void throwIfUnderYearLimit(int startedYear, int finishYear){
         if (startedYear < 2000 || finishYear < 2000){
-            throw new InvalidDateFormatException("year is under 2000");
+            throw new InvalidDateFormatException("Year cannot be under 2000 : current Schedule start year \""+startedYear+"\" finish year \""+finishYear+"\"");
         }
     }
 
@@ -103,14 +99,32 @@ public class DefaultScheduleManager implements ScheduleManager{
     }
 
     private void throwIfScheduleIdDoesNotExist(int id){
-        if (!scheduleIdExistChecker.checkIfIdExists(id)){
+        if (!scheduleIdExistChecker.isExistScheduleId(id)){
             throw new UnknownScheduleException("Cannot find schedule with id \"" + id + "\"");
         }
     }
 
     @Override
     public List<ScheduleDto> readScheduleByTerm(int year, int month){
+        throwIfDateFormatException(year, month);
         return scheduleRepository.readScheduleByTerm(year, month);
+    }
+
+    private void throwIfDateFormatException(int year, int month){
+        throwIfInvalidYear(year);
+        throwIfInvalidMonth(month);
+    }
+
+    private void throwIfInvalidYear(int year){
+        if(year<2000){
+            throw new InvalidDateFormatException("Year cannot be under 2000 : current year \""+year+"\"");
+        }
+    }
+
+    private void throwIfInvalidMonth(int month){
+        if(month<1 || month > 12){
+            throw new InvalidDateFormatException("Month cannot be under 1 or over 12 : current month \""+month+"\"");
+        }
     }
 
     @Override
