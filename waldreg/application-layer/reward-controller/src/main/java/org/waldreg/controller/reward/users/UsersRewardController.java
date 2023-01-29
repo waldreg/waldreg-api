@@ -30,6 +30,13 @@ public class UsersRewardController{
         }
     }
 
+    @Authenticating
+    @PermissionVerifying("Reward manager")
+    @GetMapping("/reward-tag/reset")
+    public void resetAllUsersReward(){
+        usersRewardManager.resetAllUsersReward();
+    }
+
     private List<Integer> getUserIdList(String userId){
         String[] userIds = userId.split(",");
         List<Integer> userIdList = new ArrayList<>();
