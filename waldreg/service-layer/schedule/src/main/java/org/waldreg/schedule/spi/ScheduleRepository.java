@@ -13,4 +13,6 @@ public interface ScheduleRepository{
 
     void updateScheduleById(int id, ScheduleDto scheduleDto);
 
+    void deleteScheduleById(int id);
+
 }

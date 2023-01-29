@@ -13,4 +13,6 @@ public interface ScheduleManager{
 
     void updateScheduleById(int id, ScheduleDto scheduleDto);
 
+    void deleteScheduleById(int id);
+
 }

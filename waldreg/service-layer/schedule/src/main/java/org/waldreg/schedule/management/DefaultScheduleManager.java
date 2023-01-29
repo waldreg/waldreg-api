@@ -106,4 +106,10 @@ public class DefaultScheduleManager implements ScheduleManager{
         scheduleRepository.updateScheduleById(id, scheduleDto);
     }
 
+    @Override
+    public void deleteScheduleById(int id){
+        scheduleRepository.deleteScheduleById(id);
+    }
+
+
 }
