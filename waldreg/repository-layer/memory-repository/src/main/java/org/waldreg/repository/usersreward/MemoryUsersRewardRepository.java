@@ -1,9 +1,9 @@
 package org.waldreg.repository.usersreward;
 
+import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 import org.wadlreg.reward.users.dto.UsersRewardDto;
-import org.wadlreg.reward.users.dto.UsersRewardTagDto;
 import org.wadlreg.reward.users.spi.repository.UsersRewardRepository;
 import org.waldreg.domain.rewardtag.RewardTag;
 import org.waldreg.domain.rewardtag.RewardTagWrapper;
@@ -51,7 +51,13 @@ public class MemoryUsersRewardRepository implements UsersRewardRepository{
 
     @Override
     public boolean isRewardIdExist(int id, int rewardId){
-        return false;
+        User user = memoryUserStorage.readUserById(id);
+        return isUserHasRewardId(user, rewardId);
+    }
+
+    private boolean isUserHasRewardId(User user, int rewardId){
+        List<RewardTagWrapper> rewardTagWrapperList = user.getRewardTagWrapperList();
+        return rewardTagWrapperList.stream().anyMatch(rewardTagWrapper -> rewardTagWrapper.getRewardId() == rewardId);
     }
 
 }

@@ -141,6 +141,26 @@ public class MemoryUsersRewardRepositoryTest{
         );
     }
 
+    @Test
+    @DisplayName("유저가 특정 reward를 갖고있는지 확인하는 테스트")
+    public void CHECK_USER_HAS_REWARD_TEST(){
+        // given
+        int id = createUserAndGetId();
+        int rewardTagId = createRewardTagAndGetId(0);
+
+        // when
+        memoryUsersRewardRepository.assignRewardToUser(id, rewardTagId);
+        int rewardId = getRewardId(memoryUsersRewardRepository.readSpecifyUsersReward(id), rewardTagId);
+        boolean resultTrue = memoryUsersRewardRepository.isRewardIdExist(id, rewardId);
+        boolean resultFalse = memoryUsersRewardRepository.isRewardIdExist(id, rewardId+100);
+
+        // then
+        Assertions.assertAll(
+                () -> Assertions.assertTrue(resultTrue),
+                () -> Assertions.assertFalse(resultFalse)
+        );
+    }
+
     private int createUserAndGetId(){
         User user = User.builder()
                 .userId("test user")
