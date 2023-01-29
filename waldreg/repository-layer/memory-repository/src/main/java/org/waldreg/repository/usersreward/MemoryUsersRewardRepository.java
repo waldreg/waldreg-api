@@ -3,6 +3,7 @@ package org.waldreg.repository.usersreward;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 import org.wadlreg.reward.users.dto.UsersRewardDto;
+import org.wadlreg.reward.users.dto.UsersRewardTagDto;
 import org.wadlreg.reward.users.spi.repository.UsersRewardRepository;
 import org.waldreg.domain.rewardtag.RewardTag;
 import org.waldreg.domain.rewardtag.RewardTagWrapper;
@@ -15,11 +16,15 @@ public class MemoryUsersRewardRepository implements UsersRewardRepository{
 
     private final MemoryRewardTagStorage memoryRewardTagStorage;
     private final MemoryUserStorage memoryUserStorage;
+    private final UsersRewardMapper usersRewardMapper;
 
     @Autowired
-    public MemoryUsersRewardRepository(MemoryRewardTagStorage memoryRewardTagStorage, MemoryUserStorage memoryUserStorage){
+    public MemoryUsersRewardRepository(MemoryRewardTagStorage memoryRewardTagStorage,
+            MemoryUserStorage memoryUserStorage,
+            UsersRewardMapper usersRewardMapper){
         this.memoryRewardTagStorage = memoryRewardTagStorage;
         this.memoryUserStorage = memoryUserStorage;
+        this.usersRewardMapper = usersRewardMapper;
     }
 
     @Override
@@ -30,7 +35,8 @@ public class MemoryUsersRewardRepository implements UsersRewardRepository{
 
     @Override
     public UsersRewardDto readSpecifyUsersReward(int id){
-        return null;
+        User user = memoryUserStorage.readUserById(id);
+        return usersRewardMapper.userToUsersRewardDto(user);
     }
 
     @Override

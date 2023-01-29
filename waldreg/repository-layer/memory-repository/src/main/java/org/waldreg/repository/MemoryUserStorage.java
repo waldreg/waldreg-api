@@ -110,6 +110,7 @@ public class MemoryUserStorage{
     public void updateUsersRewardTag(int id, RewardTagWrapper rewardTagWrapper){
         for (Map.Entry<String, User> userEntry : storage.entrySet()){
             if(userEntry.getValue().getId() == id){
+                rewardTagWrapper.setRewardId(atomicInteger.getAndIncrement());
                 userEntry.getValue().addRewardTagWrapper(rewardTagWrapper);
             }
         }

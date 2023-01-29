@@ -11,6 +11,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
+import org.wadlreg.reward.users.dto.UsersRewardDto;
 import org.waldreg.domain.character.Character;
 import org.waldreg.domain.rewardtag.RewardTag;
 import org.waldreg.domain.user.User;
@@ -26,7 +27,8 @@ import org.waldreg.repository.reward.RewardTagMapper;
         RewardTagMapper.class,
         MemoryRewardTagStorage.class,
         MemoryUserStorage.class,
-        MemoryCharacterStorage.class})
+        MemoryCharacterStorage.class,
+        UsersRewardMapper.class})
 public class MemoryUsersRewardRepositoryTest{
 
     @Autowired
@@ -61,10 +63,35 @@ public class MemoryUsersRewardRepositoryTest{
         Assertions.assertDoesNotThrow(() -> memoryUsersRewardRepository.assignRewardToUser(userId, rewardTagId));
     }
 
+    @Test
+    @DisplayName("특정 유저에게 부여된 상점 조회 테스트")
+    public void DELETE_REWARD_TO_USER_TEST(){
+        // given
+        int id = createUserAndGetId();
+        int rewardTagId = createRewardTagAndGetId();
+
+        // when
+        memoryUsersRewardRepository.assignRewardToUser(id, rewardTagId);
+        UsersRewardDto result = memoryUsersRewardRepository.readSpecifyUsersReward(id);
+
+        // then
+        Assertions.assertAll(
+                () -> Assertions.assertEquals(id, result.getId()),
+                () -> Assertions.assertEquals("test user", result.getUserId()),
+                () -> Assertions.assertEquals("test user name", result.getName()),
+                () -> Assertions.assertEquals(10, result.getReward()),
+                () -> Assertions.assertEquals(1, result.getUsersRewardTagDtoList().size()),
+                () -> Assertions.assertTrue(result.getUsersRewardTagDtoList().get(0).getRewardId() > 0),
+                () -> Assertions.assertEquals(rewardTagId, result.getUsersRewardTagDtoList().get(0).getRewardTagId()),
+                () -> Assertions.assertEquals(10, result.getUsersRewardTagDtoList().get(0).getRewardPoint()),
+                () -> Assertions.assertEquals("test reward", result.getUsersRewardTagDtoList().get(0).getRewardTagTitle())
+        );
+    }
+
     private int createUserAndGetId(){
         User user = User.builder()
                 .userId("test user")
-                .name("test user")
+                .name("test user name")
                 .phoneNumber("010-1234-5678")
                 .userPassword("helloworld!@#123")
                 .socialLogin(new ArrayList<>())
@@ -81,5 +108,7 @@ public class MemoryUsersRewardRepositoryTest{
         memoryRewardTagStorage.createRewardTag(rewardTag);
         return memoryRewardTagStorage.readRewardTagList().get(0).getRewardTagId();
     }
+
+
 
 }
