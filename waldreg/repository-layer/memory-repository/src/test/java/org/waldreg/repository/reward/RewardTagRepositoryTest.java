@@ -84,4 +84,31 @@ public class RewardTagRepositoryTest{
         );
     }
 
+    @Test
+    @DisplayName("상벌점 업데이트 테스트")
+    public void UPDATE_REWARD_SUCCESS_TEST(){
+        RewardTagDto rewardCreateRequest = RewardTagDto.builder()
+                .rewardTagTitle("hello world")
+                .rewardPoint(100)
+                .build();
+
+        RewardTagDto rewardUpdateRequest = RewardTagDto.builder()
+                .rewardTagTitle("hello world too")
+                .rewardPoint(-100)
+                .build();
+
+        // when
+        rewardTagRepository.createRewardTag(rewardCreateRequest);
+        int updateTarget = rewardTagRepository.readRewardTagList().get(0).getRewardTagId();
+        rewardTagRepository.updateRewardTag(updateTarget, rewardUpdateRequest);
+        List<RewardTagDto> result = rewardTagRepository.readRewardTagList();
+
+        // then
+        Assertions.assertAll(
+                () -> Assertions.assertEquals(updateTarget, result.get(0).getRewardTagId()),
+                () -> Assertions.assertEquals(rewardUpdateRequest.getRewardTagTitle(), result.get(0).getRewardTagTitle()),
+                () -> Assertions.assertEquals(rewardUpdateRequest.getRewardPoint(), result.get(0).getRewardPoint())
+        );
+    }
+
 }
