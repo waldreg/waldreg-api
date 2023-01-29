@@ -37,7 +37,7 @@ public class MemoryRewardTagRepository implements RewardTagRepository{
 
     @Override
     public void deleteRewardTag(int rewardTagId){
-
+        memoryRewardTagStorage.deleteRewardTag(rewardTagId);
     }
 
     @Override
