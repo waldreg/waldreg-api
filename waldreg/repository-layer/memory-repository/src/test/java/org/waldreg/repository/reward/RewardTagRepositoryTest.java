@@ -1,5 +1,6 @@
 package org.waldreg.repository.reward;
 
+import java.util.List;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -29,6 +30,28 @@ public class RewardTagRepositoryTest{
 
         // when & then
         Assertions.assertDoesNotThrow(() -> rewardTagRepository.createRewardTag(rewardCreateRequest));
+    }
+
+    @Test
+    @DisplayName("상벌점 조회 성공 테스트")
+    public void READ_REWARD_TAG_SUCCESS_TEST(){
+        // given
+        RewardTagDto rewardCreateRequest = RewardTagDto.builder()
+                .rewardTagTitle("hello world")
+                .rewardPoint(100)
+                .build();
+
+        // when
+        rewardTagRepository.createRewardTag(rewardCreateRequest);
+        List<RewardTagDto> result = rewardTagRepository.readRewardTagList();
+
+        // then
+        Assertions.assertAll(
+                () -> Assertions.assertEquals(1, result.size()),
+                () -> Assertions.assertEquals(rewardCreateRequest.getRewardTagTitle(), result.get(0).getRewardTagTitle()),
+                () -> Assertions.assertEquals(rewardCreateRequest.getRewardPoint(), result.get(0).getRewardPoint()),
+                () -> Assertions.assertTrue(result.get(0).getRewardTagId() > 0)
+        );
     }
 
 }
