@@ -356,6 +356,57 @@ public class ScheduleServiceTest{
     }
 
     @Test
+    @DisplayName("일정 조회 실패 테스트 - 잘못된 year, month")
+    public void READ_SCHEDULE_BY_TERM_FAIL_CAUSE_INVALID_DATE_FORMAT_TEST(){
+        //given
+        String scheduleTitle = "seminar";
+        String scheduleContent = "BFS";
+        String StartedAt = "2023-01-24T20:52";
+        String finishAt = "2023-01-31T23:59";
+        int cycle = 123;
+        String repeatFinishAt = "2023-12-31T23:59";
+        RepeatDto repeatScheduleRequest = RepeatDto.builder()
+                .cycle(cycle)
+                .repeatFinishAt(repeatFinishAt)
+                .build();
+        ScheduleDto scheduleRequest = ScheduleDto.builder()
+                .scheduleTitle(scheduleTitle)
+                .scheduleContent(scheduleContent)
+                .startedAt(StartedAt)
+                .finishAt(finishAt)
+                .repeatDto(repeatScheduleRequest)
+                .build();
+        String scheduleTitle2 = "seminar";
+        String scheduleContent2 = "DFS";
+        String StartedAt2 = "2023-02-01T20:52";
+        String finishAt2 = "2023-02-07T23:59";
+        int cycle2 = 12;
+        String repeatFinishAt2 = "2023-10-31T23:59";
+        RepeatDto repeatScheduleRequest2 = RepeatDto.builder()
+                .cycle(cycle2)
+                .repeatFinishAt(repeatFinishAt2)
+                .build();
+        ScheduleDto scheduleRequest2 = ScheduleDto.builder()
+                .scheduleTitle(scheduleTitle2)
+                .scheduleContent(scheduleContent2)
+                .startedAt(StartedAt2)
+                .finishAt(finishAt2)
+                .repeatDto(repeatScheduleRequest2)
+                .build();
+
+        //when
+        scheduleManager.createSchedule(scheduleRequest);
+        scheduleManager.createSchedule(scheduleRequest2);
+        List<ScheduleDto> scheduleDtoList = new ArrayList<>();
+        scheduleDtoList.add(scheduleRequest);
+        Mockito.when(scheduleRepository.readScheduleByTerm(Mockito.anyInt(), Mockito.anyInt())).thenReturn(scheduleDtoList);
+
+        //then
+        Assertions.assertThrows(InvalidDateFormatException.class,()->scheduleManager.readScheduleByTerm(1999, 0));
+
+    }
+
+    @Test
     @DisplayName("일정 수정 성공 테스트")
     public void UPDATE_SCHEDULE_SUCCESS_TEST(){
         //given
