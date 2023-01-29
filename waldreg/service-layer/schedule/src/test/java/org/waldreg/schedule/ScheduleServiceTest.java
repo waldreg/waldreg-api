@@ -710,6 +710,55 @@ public class ScheduleServiceTest{
     }
 
     @Test
+    @DisplayName("일정 수정 실패 테스트 - 일정 종료 날짜가 시작 날짜를 앞설 때")
+    public void UPDATE_SCHEDULE_FAIL_CAUSE_INVALID_SCHEDULE_PERIOD_TEST(){
+        //given
+        String scheduleTitle = "seminar";
+        String scheduleContent = "BFS";
+        String startedAt = "2023-01-24T20:52";
+        String finishAt = "2023-01-31T23:59";
+        int cycle = 123;
+        String repeatFinishAt = "2023-12-31T23:59";
+        RepeatDto repeatScheduleRequest = RepeatDto.builder()
+                .cycle(cycle)
+                .repeatFinishAt(repeatFinishAt)
+                .build();
+        ScheduleDto scheduleRequest = ScheduleDto.builder()
+                .scheduleTitle(scheduleTitle)
+                .scheduleContent(scheduleContent)
+                .startedAt(startedAt)
+                .finishAt(finishAt)
+                .repeatDto(repeatScheduleRequest)
+                .build();
+        String scheduleTitle2 = "seminar";
+        String scheduleContent2 = "BFS";
+        String startedAt2 = "2023-02-28T23:59";
+        String finishAt2 = "2023-02-01T20:52";
+        int cycle2 = 100;
+        String repeatFinishAt2 = "2023-12-31T23:59";
+        RepeatDto repeatScheduleRequest2 = RepeatDto.builder()
+                .cycle(cycle2)
+                .repeatFinishAt(repeatFinishAt2)
+                .build();
+        ScheduleDto scheduleRequest2 = ScheduleDto.builder()
+                .scheduleTitle(scheduleTitle2)
+                .scheduleContent(scheduleContent2)
+                .startedAt(startedAt2)
+                .finishAt(finishAt2)
+                .repeatDto(repeatScheduleRequest2)
+                .build();
+
+        //when
+        scheduleManager.createSchedule(scheduleRequest);
+        Mockito.when(scheduleIdExistChecker.isExistScheduleId(Mockito.anyInt())).thenReturn(true);
+        Mockito.when(scheduleRepository.readScheduleById(Mockito.anyInt())).thenReturn(scheduleRequest2);
+
+        //then
+        Assertions.assertThrows(InvalidSchedulePeriodException.class, () -> scheduleManager.updateScheduleById(1, scheduleRequest2));
+
+    }
+
+    @Test
     @DisplayName("일정 삭제 성공 테스트")
     public void DELETE_SCHEDULE_BY_ID_SUCCESS_TEST(){
         //given
