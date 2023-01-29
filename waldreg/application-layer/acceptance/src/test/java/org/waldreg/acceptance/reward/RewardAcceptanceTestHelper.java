@@ -47,7 +47,7 @@ public class RewardAcceptanceTestHelper{
 
     public static ResultActions givenRewardTagToUser(MockMvc mvc, String token, String ids, int rewardTagId) throws Exception{
         return mvc.perform(MockMvcRequestBuilders
-                .get("reward-tag?id={ids}&tag={rewardTagId}", ids, rewardTagId)
+                .get("reward-tag/users?id={ids}&reward-tag-id={rewardTagId}", ids, rewardTagId)
                 .accept(MediaType.APPLICATION_JSON)
                 .header("Api-version", "1.0")
                 .header(HttpHeaders.AUTHORIZATION, token));
