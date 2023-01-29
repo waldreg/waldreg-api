@@ -119,6 +119,28 @@ public class MemoryUsersRewardRepositoryTest{
         );
     }
 
+    @Test
+    @DisplayName("모든 유저의 상점 초기화 테스트")
+    public void RESET_ALL_USERS_REWARD_TEST(){
+        // given
+        int id = createUserAndGetId();
+        int rewardTagId = createRewardTagAndGetId(0);
+
+        // when
+        memoryUsersRewardRepository.assignRewardToUser(id, rewardTagId);
+        memoryUsersRewardRepository.resetAllUsersReward();
+        UsersRewardDto result = memoryUsersRewardRepository.readSpecifyUsersReward(id);
+
+        // then
+        Assertions.assertAll(
+                () -> Assertions.assertEquals(id, result.getId()),
+                () -> Assertions.assertEquals("test user", result.getUserId()),
+                () -> Assertions.assertEquals("test user name", result.getName()),
+                () -> Assertions.assertEquals(0, result.getReward()),
+                () -> Assertions.assertEquals(0, result.getUsersRewardTagDtoList().size())
+        );
+    }
+
     private int createUserAndGetId(){
         User user = User.builder()
                 .userId("test user")

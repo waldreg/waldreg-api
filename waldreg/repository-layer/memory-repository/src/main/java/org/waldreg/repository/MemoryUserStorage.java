@@ -123,7 +123,12 @@ public class MemoryUserStorage{
                         .removeIf(rewardTagWrapper -> (rewardTagWrapper.getRewardId() == rewardId));
             }
         }
+    }
 
+    public void deleteAllUsersReward(){
+        for (Map.Entry<String, User> userEntry : storage.entrySet()){
+            userEntry.getValue().getRewardTagWrapperList().clear();
+        }
     }
 
     public void deleteById(int id){
