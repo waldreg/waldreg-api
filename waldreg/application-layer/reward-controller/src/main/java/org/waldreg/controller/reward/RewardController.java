@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -60,6 +61,13 @@ public class RewardController{
         rewardTagManager.updateRewardTag(
                 rewardTagId, controllerRewardTagMapper.rewardTagRequestToRewardTagDto(rewardTagRequest)
         );
+    }
+
+    @Authenticating
+    @PermissionVerifying("Reward manager")
+    @DeleteMapping("/reward-tag/{reward-tag-id}")
+    public void deleteRewardTag(@PathVariable("reward-tag-id") int rewardTagId){
+        rewardTagManager.deleteRewardTag(rewardTagId);
     }
 
 }
