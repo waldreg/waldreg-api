@@ -5,7 +5,9 @@ import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 import org.wadlreg.reward.tag.RewardTagManager;
@@ -48,6 +50,16 @@ public class RewardController{
     public Map<String, List<RewardTagResponse>> readRewardTagMap(){
         List<RewardTagDto> rewardTagDtoList = rewardTagManager.readRewardTagList();
         return Map.of("reward_tags", controllerRewardTagMapper.rewardTagDtoListToRewardTagResponseList(rewardTagDtoList));
+    }
+
+    @Authenticating
+    @PermissionVerifying("Reward manager")
+    @PutMapping("/reward-tag/{reward-tag-id}")
+    public void updateRewardTag(@PathVariable("reward-tag-id") int rewardTagId,
+            @RequestBody @Validated RewardTagRequest rewardTagRequest){
+        rewardTagManager.updateRewardTag(
+                rewardTagId, controllerRewardTagMapper.rewardTagRequestToRewardTagDto(rewardTagRequest)
+        );
     }
 
 }
