@@ -402,7 +402,7 @@ public class ScheduleServiceTest{
         Mockito.when(scheduleRepository.readScheduleByTerm(Mockito.anyInt(), Mockito.anyInt())).thenReturn(scheduleDtoList);
 
         //then
-        Assertions.assertThrows(InvalidDateFormatException.class,()->scheduleManager.readScheduleByTerm(1999, 0));
+        Assertions.assertThrows(InvalidDateFormatException.class, () -> scheduleManager.readScheduleByTerm(1999, 0));
 
     }
 
@@ -461,6 +461,104 @@ public class ScheduleServiceTest{
                 () -> Assertions.assertEquals(scheduleRequest2.getRepeatDto().getCycle(), result.getRepeatDto().getCycle()),
                 () -> Assertions.assertEquals(scheduleRequest2.getRepeatDto().getRepeatFinishAt(), result.getRepeatDto().getRepeatFinishAt())
         );
+
+    }
+
+    @Test
+    @DisplayName("일정 수정 실패 테스트 - 날짜가 잘못된 형식일 때")
+    public void UPDATE_SCHEDULE_FAIL_CAUSE_INVALID_DATE_FORMAT_TEST(){
+        //given
+        String scheduleTitle = "seminar";
+        String scheduleContent = "BFS";
+        String StartedAt = "2023-01-24T20:52";
+        String finishAt = "2023-01-31T23:59";
+        int cycle = 123;
+        String repeatFinishAt = "2023-12-31T23:59";
+        RepeatDto repeatScheduleRequest = RepeatDto.builder()
+                .cycle(cycle)
+                .repeatFinishAt(repeatFinishAt)
+                .build();
+        ScheduleDto scheduleRequest = ScheduleDto.builder()
+                .scheduleTitle(scheduleTitle)
+                .scheduleContent(scheduleContent)
+                .startedAt(StartedAt)
+                .finishAt(finishAt)
+                .repeatDto(repeatScheduleRequest)
+                .build();
+        String scheduleTitle2 = "seminar";
+        String scheduleContent2 = "BFS";
+        String StartedAt2 = "2023-02-01T20:52";
+        String finishAt2 = "2023-02-29T23:59";
+        int cycle2 = 100;
+        String repeatFinishAt2 = "2023-12-31T23:59";
+        RepeatDto repeatScheduleRequest2 = RepeatDto.builder()
+                .cycle(cycle2)
+                .repeatFinishAt(repeatFinishAt2)
+                .build();
+        ScheduleDto scheduleRequest2 = ScheduleDto.builder()
+                .scheduleTitle(scheduleTitle2)
+                .scheduleContent(scheduleContent2)
+                .startedAt(StartedAt2)
+                .finishAt(finishAt2)
+                .repeatDto(repeatScheduleRequest2)
+                .build();
+
+        //when
+        scheduleManager.createSchedule(scheduleRequest);
+        Mockito.when(scheduleIdExistChecker.isExistScheduleId(Mockito.anyInt())).thenReturn(true);
+        Mockito.when(scheduleRepository.readScheduleById(Mockito.anyInt())).thenReturn(scheduleRequest2);
+
+        //then
+        Assertions.assertThrows(InvalidDateFormatException.class, () -> scheduleManager.updateScheduleById(1, scheduleRequest2));
+
+    }
+
+    @Test
+    @DisplayName("일정 수정 실패 테스트 - 년도가 2000 미만일 때")
+    public void UPDATE_SCHEDULE_FAIL_CAUSE_UNDER_YEAR_LIMIT_TEST(){
+        //given
+        String scheduleTitle = "seminar";
+        String scheduleContent = "BFS";
+        String StartedAt = "2023-01-24T20:52";
+        String finishAt = "2023-01-31T23:59";
+        int cycle = 123;
+        String repeatFinishAt = "2023-12-31T23:59";
+        RepeatDto repeatScheduleRequest = RepeatDto.builder()
+                .cycle(cycle)
+                .repeatFinishAt(repeatFinishAt)
+                .build();
+        ScheduleDto scheduleRequest = ScheduleDto.builder()
+                .scheduleTitle(scheduleTitle)
+                .scheduleContent(scheduleContent)
+                .startedAt(StartedAt)
+                .finishAt(finishAt)
+                .repeatDto(repeatScheduleRequest)
+                .build();
+        String scheduleTitle2 = "seminar";
+        String scheduleContent2 = "BFS";
+        String StartedAt2 = "1999-02-01T20:52";
+        String finishAt2 = "2023-02-28T23:59";
+        int cycle2 = 100;
+        String repeatFinishAt2 = "2023-12-31T23:59";
+        RepeatDto repeatScheduleRequest2 = RepeatDto.builder()
+                .cycle(cycle2)
+                .repeatFinishAt(repeatFinishAt2)
+                .build();
+        ScheduleDto scheduleRequest2 = ScheduleDto.builder()
+                .scheduleTitle(scheduleTitle2)
+                .scheduleContent(scheduleContent2)
+                .startedAt(StartedAt2)
+                .finishAt(finishAt2)
+                .repeatDto(repeatScheduleRequest2)
+                .build();
+
+        //when
+        scheduleManager.createSchedule(scheduleRequest);
+        Mockito.when(scheduleIdExistChecker.isExistScheduleId(Mockito.anyInt())).thenReturn(true);
+        Mockito.when(scheduleRepository.readScheduleById(Mockito.anyInt())).thenReturn(scheduleRequest2);
+
+        //then
+        Assertions.assertThrows(InvalidDateFormatException.class, () -> scheduleManager.updateScheduleById(1, scheduleRequest2));
 
     }
 

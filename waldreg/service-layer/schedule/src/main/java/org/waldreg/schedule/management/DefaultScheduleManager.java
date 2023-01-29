@@ -41,12 +41,6 @@ public class DefaultScheduleManager implements ScheduleManager{
         }
     }
 
-    private void throwIfUnderYearLimit(int startedYear, int finishYear){
-        if (startedYear < 2000 || finishYear < 2000){
-            throw new InvalidDateFormatException("Year cannot be under 2000 : current Schedule start year \""+startedYear+"\" finish year \""+finishYear+"\"");
-        }
-    }
-
     private void throwIfContentOverflowException(String content){
         int length = content.length();
         if (length > 1000){
@@ -116,26 +110,38 @@ public class DefaultScheduleManager implements ScheduleManager{
     }
 
     private void throwIfInvalidYear(int year){
-        if(year<2000){
-            throw new InvalidDateFormatException("Year cannot be under 2000 : current year \""+year+"\"");
+        if (year < 2000){
+            throw new InvalidDateFormatException("Year cannot be under 2000 : current year \"" + year + "\"");
         }
     }
 
     private void throwIfInvalidMonth(int month){
-        if(month<1 || month > 12){
-            throw new InvalidDateFormatException("Month cannot be under 1 or over 12 : current month \""+month+"\"");
+        if (month < 1 || month > 12){
+            throw new InvalidDateFormatException("Month cannot be under 1 or over 12 : current month \"" + month + "\"");
         }
     }
 
     @Override
     public void updateScheduleById(int id, ScheduleDto scheduleDto){
-        scheduleRepository.updateScheduleById(id, scheduleDto);
+        try{
+            LocalDateTime startedAt = LocalDateTime.parse(scheduleDto.getStartedAt());
+            LocalDateTime finishAt = LocalDateTime.parse(scheduleDto.getFinishAt());
+            throwIfUnderYearLimit(startedAt.getYear(), finishAt.getYear());
+            scheduleRepository.updateScheduleById(id, scheduleDto);
+        } catch (DateTimeParseException DTPE){
+            throw new InvalidDateFormatException("Invalid date format detected : Schedule start date \"" + scheduleDto.getStartedAt() + "\" Schedule finish date \"" + scheduleDto.getFinishAt() + "\"");
+        }
+    }
+
+    private void throwIfUnderYearLimit(int startedYear, int finishYear){
+        if (startedYear < 2000 || finishYear < 2000){
+            throw new InvalidDateFormatException("Year cannot be under 2000 : current Schedule start year \"" + startedYear + "\" finish year \"" + finishYear + "\"");
+        }
     }
 
     @Override
     public void deleteScheduleById(int id){
         scheduleRepository.deleteScheduleById(id);
     }
-
 
 }
