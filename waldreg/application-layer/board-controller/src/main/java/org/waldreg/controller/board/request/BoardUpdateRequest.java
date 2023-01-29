@@ -16,9 +16,9 @@ public class BoardUpdateRequest{
     private String memberTier;
 
     @JsonProperty("delete_image_id")
-    private ArrayList<Integer> deleteImageId;
+    private ArrayList<Integer> deleteImageIdList;
     @JsonProperty("delete_file_id")
-    private ArrayList<Integer> deleteFileId;
+    private ArrayList<Integer> deleteFileIdList;
 
     public BoardUpdateRequest(){}
     private BoardUpdateRequest(Builder builder){
@@ -26,6 +26,8 @@ public class BoardUpdateRequest{
         this.content = builder.content;
         this.categoryId = builder.categoryId;
         this.memberTier = builder.memberTier;
+        this.deleteImageIdList = builder.deleteImageIdList;
+        this.deleteFileIdList = builder.deleteFileIdList;
     }
 
     public static Builder builder(){
@@ -50,11 +52,11 @@ public class BoardUpdateRequest{
     }
 
     public ArrayList<Integer> getDeleteImageId(){
-        return deleteImageId;
+        return deleteImageIdList;
     }
 
     public ArrayList<Integer> getDeleteFileId(){
-        return deleteFileId;
+        return deleteFileIdList;
     }
 
     public final static class Builder{
@@ -63,13 +65,13 @@ public class BoardUpdateRequest{
         private int categoryId;
         private String memberTier;
 
-        private ArrayList<Integer> deleteImageId;
-        private ArrayList<Integer>  deleteFileId;
+        private ArrayList<Integer> deleteImageIdList;
+        private ArrayList<Integer>  deleteFileIdList;
 
         {
             categoryId = 0;
-            deleteImageId = new ArrayList<>();
-            deleteFileId = new ArrayList<>();
+            deleteImageIdList = new ArrayList<>();
+            deleteFileIdList = new ArrayList<>();
         }
 
         private Builder(){};
@@ -91,12 +93,12 @@ public class BoardUpdateRequest{
             this.memberTier = memberTier;
             return this;
         }
-        public Builder deleteImageId( ArrayList<Integer> deleteImageId){
-            this.deleteImageId = deleteImageId;
+        public Builder deleteImageIdList( ArrayList<Integer> deleteImageIdList){
+            this.deleteImageIdList = deleteImageIdList;
             return this;
         }
-        public Builder deleteFileId( ArrayList<Integer> deleteFileId){
-            this.deleteFileId = deleteFileId;
+        public Builder deleteFileIdList( ArrayList<Integer> deleteFileIdList){
+            this.deleteFileIdList = deleteFileIdList;
             return this;
         }
         public BoardUpdateRequest build(){

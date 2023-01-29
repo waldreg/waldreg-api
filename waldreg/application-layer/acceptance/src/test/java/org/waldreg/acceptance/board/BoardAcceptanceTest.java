@@ -16,6 +16,7 @@ import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.mock.web.MockPart;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
+import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import org.waldreg.acceptance.authentication.AuthenticationAcceptanceTestHelper;
@@ -45,7 +46,6 @@ public class BoardAcceptanceTest{
 
     private final ArrayList<UserRequest> userCreateRequestList = new ArrayList<>();
 
-    private final ArrayList<BoardResponse> boardResponseList = new ArrayList<>();
 
     @BeforeEach
     @AfterEach
@@ -73,16 +73,28 @@ public class BoardAcceptanceTest{
 
     @BeforeEach
     @AfterEach
-    public void INITIATE_Board() throws Exception{
-        String url = "/boards";
+    public void INITIATE_BOARD() throws Exception{
         String adminToken = AuthenticationAcceptanceTestHelper.getAdminToken(mvc, objectMapper);
-        for (BoardResponse response : boardResponseList){
-            int boardId = response.getId();
 
-            //보드 삭제 메서드
-
+        ResultActions result = BoardAcceptanceTestHelper.inquiryAllBoard(mvc, adminToken);
+        BoardResponse[] boardList = objectMapper.readValue(result.andReturn().getResponse().getContentAsString(), BoardListResponse.class).getBoards();
+        for (BoardResponse board : boardList){
+            BoardAcceptanceTestHelper.deleteBoard(mvc, adminToken, board.getId());
         }
-        boardResponseList.clear();
+
+    }
+
+    @BeforeEach
+    @AfterEach
+    public void INITIATE_CATEGORY() throws Exception{
+        String adminToken = AuthenticationAcceptanceTestHelper.getAdminToken(mvc, objectMapper);
+
+        ResultActions result = BoardAcceptanceTestHelper.inquiryAllCategory(mvc, adminToken);
+        CategoryResponse[] categoryList = objectMapper.readValue(result.andReturn().getResponse().getContentAsString(), CategoryListResponse.class).getCategories();
+        for (CategoryResponse category : categoryList){
+            BoardAcceptanceTestHelper.deleteCategory(mvc, adminToken, category.getCategoryId());
+        }
+
     }
 
 
@@ -517,48 +529,35 @@ public class BoardAcceptanceTest{
         //given
         String adminToken = AuthenticationAcceptanceTestHelper.getAdminToken(mvc, objectMapper);
 
-        String categoryName = "cate1";
-        String memberTier = "tier 1";
-        CategoryRequest categoryRequest = CategoryRequest.builder().categoryName(categoryName).memberTier(memberTier).build();
-        BoardAcceptanceTestHelper.createCategory(mvc, adminToken, objectMapper.writeValueAsString(categoryRequest));
-        CategoryListResponse categoryResult = objectMapper.readValue(BoardAcceptanceTestHelper.inquiryAllCategory(mvc, adminToken)
-                                                                             .andReturn()
-                                                                             .getResponse()
-                                                                             .getContentAsString(), CategoryListResponse.class);
-        int categoryId = categoryResult.getCategories()[0].getCategoryId();
-
-        String token = createUserAndGetToken("alcuk", "alcuk_id", "2gdddddd!");
-
-        String title = "notice";
-        String content = "content";
-        String memberTier1 = "tier 3";
-        BoardCreateRequest boardCreateRequest = BoardCreateRequest.builder()
-                .title(title)
-                .content(content).categoryId(categoryId).memberTier(memberTier1).build();
-
-        String imgName = "TestImage.jpg";
-        String imgContentType = "jpg";
-        String imgPath = "./src/test/java/org/waldreg/acceptance/board/TestImage.jpg";
-
-        String fileName = "TestDocx";
-        String fileContentType = "docx";
-        String filePath = "./src/test/java/org/waldreg/acceptance/board/TestDocx.docx";
-
-        MockPart jsonContent = new MockPart("boardCreateRequest", objectMapper.writeValueAsString(boardCreateRequest).getBytes());
-        MockMultipartFile imgFile = new MockMultipartFile("image", imgName, imgContentType, new FileInputStream(imgPath));
-        MockMultipartFile docxFile = new MockMultipartFile("file", fileName, fileContentType, new FileInputStream(filePath));
-        BoardAcceptanceTestHelper.createBoardWithAll(mvc, token, jsonContent, imgFile, docxFile);
+        createDefaultBoardWithAll();
 
         String title2 = "notice";
         String content2 = "content";
         String memberTier2 = "tier 3";
+
+        ResultActions resultActions = BoardAcceptanceTestHelper.inquiryAllBoard(mvc, adminToken);
+        BoardResponse[] boards = objectMapper.readValue(resultActions.andReturn().getResponse().getContentAsString(), BoardListResponse.class).getBoards();
+
+        ResultActions resultCategory = BoardAcceptanceTestHelper.inquiryAllCategory(mvc, adminToken);
+        CategoryResponse[] categoryList = objectMapper.readValue(resultCategory.andReturn().getResponse().getContentAsString(), CategoryListResponse.class).getCategories();
+
+        String[] imageUrls = boards[0].getImages();
+        String[] fileUrls = boards[0].getFiles();
+        String imageUrl1 = imageUrls[0].split("=")[1];
+        String fileUrl1 = fileUrls[0].split("=")[1];
+
+        int boardId = boards[0].getId();
+        int categoryId = categoryList[0].getCategoryId();
+        ArrayList<Integer> imageIdList = new ArrayList<>(Integer.parseInt(imageUrl1));
+        ArrayList<Integer> fileIdList = new ArrayList<>(Integer.parseInt(fileUrl1));
+
         BoardUpdateRequest boardUpdateRequest = BoardUpdateRequest.builder()
                 .title(title2)
                 .content(content2)
                 .categoryId(categoryId)
                 .memberTier(memberTier2)
-                //삭제할 이미지 아이디 List
-                //삭제할 파일 아이디 List
+                .deleteImageIdList(imageIdList)
+                .deleteFileIdList(fileIdList)
                 .build();
 
         String imgName2 = "TestImage2.jpg";
@@ -574,6 +573,8 @@ public class BoardAcceptanceTest{
         MockMultipartFile docxFile2 = new MockMultipartFile("file", fileName2, fileContentType2, new FileInputStream(filePath2));
         //when
 
+        ResultActions result = BoardAcceptanceTestHelper.modifyBoardWithAll(mvc, adminToken, boardId, jsonContent2, imgFile2, docxFile2);
+
         //then
         result.andExpectAll(
                 MockMvcResultMatchers.status().isOk(),
@@ -581,6 +582,298 @@ public class BoardAcceptanceTest{
                 MockMvcResultMatchers.header().string("api-version", apiVersion)
         );
 
+    }
+
+    @Test
+    @DisplayName("특정 게시글 수정 성공 - json 본문만 수정")
+    public void MODIFY_BOARD_WITH_ONLY_JSON_TEST() throws Exception{
+        //given
+        String adminToken = AuthenticationAcceptanceTestHelper.getAdminToken(mvc, objectMapper);
+
+        createDefaultBoardWithAll();
+
+        String title2 = "notice";
+        String content2 = "content";
+        String memberTier2 = "tier 3";
+
+        ResultActions resultActions = BoardAcceptanceTestHelper.inquiryAllBoard(mvc, adminToken);
+        BoardResponse[] boards = objectMapper.readValue(resultActions.andReturn().getResponse().getContentAsString(), BoardListResponse.class).getBoards();
+
+        ResultActions resultCategory = BoardAcceptanceTestHelper.inquiryAllCategory(mvc, adminToken);
+        CategoryResponse[] categoryList = objectMapper.readValue(resultCategory.andReturn().getResponse().getContentAsString(), CategoryListResponse.class).getCategories();
+
+        String[] imageUrls = boards[0].getImages();
+        String[] fileUrls = boards[0].getFiles();
+        String imageUrl1 = imageUrls[0].split("=")[1];
+        String fileUrl1 = fileUrls[0].split("=")[1];
+
+        int boardId = boards[0].getId();
+        int categoryId = categoryList[0].getCategoryId();
+        ArrayList<Integer> imageIdList = new ArrayList<>(Integer.parseInt(imageUrl1));
+        ArrayList<Integer> fileIdList = new ArrayList<>(Integer.parseInt(fileUrl1));
+
+        BoardUpdateRequest boardUpdateRequest = BoardUpdateRequest.builder()
+                .title(title2)
+                .content(content2)
+                .categoryId(categoryId)
+                .memberTier(memberTier2)
+                .deleteImageIdList(imageIdList)
+                .deleteFileIdList(fileIdList)
+                .build();
+
+        MockPart jsonContent2 = new MockPart("boardCreateRequest", objectMapper.writeValueAsString(boardUpdateRequest).getBytes());
+        //when
+
+        ResultActions result = BoardAcceptanceTestHelper.modifyBoardWithOnlyJson(mvc, adminToken, boardId, jsonContent2);
+
+        //then
+        result.andExpectAll(
+                MockMvcResultMatchers.status().isOk(),
+                MockMvcResultMatchers.header().string(HttpHeaders.CONTENT_TYPE, "application/json"),
+                MockMvcResultMatchers.header().string("api-version", apiVersion)
+        );
+
+    }
+
+    @Test
+    @DisplayName("특정 게시글 수정 성공 - json, 이미지 수정")
+    public void MODIFY_BOARD_WITH_JSON_AND_IMAGE_TEST() throws Exception{
+        //given
+        String adminToken = AuthenticationAcceptanceTestHelper.getAdminToken(mvc, objectMapper);
+
+        createDefaultBoardWithAll();
+
+        String title2 = "notice";
+        String content2 = "content";
+        String memberTier2 = "tier 3";
+
+        ResultActions resultActions = BoardAcceptanceTestHelper.inquiryAllBoard(mvc, adminToken);
+        BoardResponse[] boards = objectMapper.readValue(resultActions.andReturn().getResponse().getContentAsString(), BoardListResponse.class).getBoards();
+
+        ResultActions resultCategory = BoardAcceptanceTestHelper.inquiryAllCategory(mvc, adminToken);
+        CategoryResponse[] categoryList = objectMapper.readValue(resultCategory.andReturn().getResponse().getContentAsString(), CategoryListResponse.class).getCategories();
+
+        String[] imageUrls = boards[0].getImages();
+        String[] fileUrls = boards[0].getFiles();
+        String imageUrl1 = imageUrls[0].split("=")[1];
+        String fileUrl1 = fileUrls[0].split("=")[1];
+
+        int boardId = boards[0].getId();
+        int categoryId = categoryList[0].getCategoryId();
+        ArrayList<Integer> imageIdList = new ArrayList<>(Integer.parseInt(imageUrl1));
+        ArrayList<Integer> fileIdList = new ArrayList<>(Integer.parseInt(fileUrl1));
+
+        BoardUpdateRequest boardUpdateRequest = BoardUpdateRequest.builder()
+                .title(title2)
+                .content(content2)
+                .categoryId(categoryId)
+                .memberTier(memberTier2)
+                .deleteImageIdList(imageIdList)
+                .deleteFileIdList(fileIdList)
+                .build();
+
+        String imgName2 = "TestImage2.jpg";
+        String imgContentType2 = "jpg";
+        String imgPath2 = "./src/test/java/org/waldreg/acceptance/board/TestImage2.jpg";
+
+        MockPart jsonContent2 = new MockPart("boardCreateRequest", objectMapper.writeValueAsString(boardUpdateRequest).getBytes());
+        MockMultipartFile imgFile2 = new MockMultipartFile("image", imgName2, imgContentType2, new FileInputStream(imgPath2));
+        //when
+
+        ResultActions result = BoardAcceptanceTestHelper.modifyBoardWithJsonAndImage(mvc, adminToken, boardId, jsonContent2, imgFile2);
+
+        //then
+        result.andExpectAll(
+                MockMvcResultMatchers.status().isOk(),
+                MockMvcResultMatchers.header().string(HttpHeaders.CONTENT_TYPE, "application/json"),
+                MockMvcResultMatchers.header().string("api-version", apiVersion)
+        );
+
+    }
+
+    @Test
+    @DisplayName("특정 게시글 수정 성공 - json, 파일수정")
+    public void MODIFY_BOARD_WITH_JSON_AND_FILE_TEST() throws Exception{
+        //given
+        String adminToken = AuthenticationAcceptanceTestHelper.getAdminToken(mvc, objectMapper);
+
+        createDefaultBoardWithAll();
+
+        String title2 = "notice";
+        String content2 = "content";
+        String memberTier2 = "tier 3";
+
+        ResultActions resultActions = BoardAcceptanceTestHelper.inquiryAllBoard(mvc, adminToken);
+        BoardResponse[] boards = objectMapper.readValue(resultActions.andReturn().getResponse().getContentAsString(), BoardListResponse.class).getBoards();
+
+        ResultActions resultCategory = BoardAcceptanceTestHelper.inquiryAllCategory(mvc, adminToken);
+        CategoryResponse[] categoryList = objectMapper.readValue(resultCategory.andReturn().getResponse().getContentAsString(), CategoryListResponse.class).getCategories();
+
+        String[] imageUrls = boards[0].getImages();
+        String[] fileUrls = boards[0].getFiles();
+        String imageUrl1 = imageUrls[0].split("=")[1];
+        String fileUrl1 = fileUrls[0].split("=")[1];
+
+        int boardId = boards[0].getId();
+        int categoryId = categoryList[0].getCategoryId();
+        ArrayList<Integer> imageIdList = new ArrayList<>(Integer.parseInt(imageUrl1));
+        ArrayList<Integer> fileIdList = new ArrayList<>(Integer.parseInt(fileUrl1));
+
+        BoardUpdateRequest boardUpdateRequest = BoardUpdateRequest.builder()
+                .title(title2)
+                .content(content2)
+                .categoryId(categoryId)
+                .memberTier(memberTier2)
+                .deleteImageIdList(imageIdList)
+                .deleteFileIdList(fileIdList)
+                .build();
+
+        String fileName2 = "TestDocx2";
+        String fileContentType2 = "docx";
+        String filePath2 = "./src/test/java/org/waldreg/acceptance/board/TestDocx2.docx";
+
+        MockPart jsonContent2 = new MockPart("boardCreateRequest", objectMapper.writeValueAsString(boardUpdateRequest).getBytes());
+        MockMultipartFile docxFile2 = new MockMultipartFile("file", fileName2, fileContentType2, new FileInputStream(filePath2));
+        //when
+
+        ResultActions result = BoardAcceptanceTestHelper.modifyBoardWithJsonAndFile(mvc, adminToken, boardId, jsonContent2, docxFile2);
+
+        //then
+        result.andExpectAll(
+                MockMvcResultMatchers.status().isOk(),
+                MockMvcResultMatchers.header().string(HttpHeaders.CONTENT_TYPE, "application/json"),
+                MockMvcResultMatchers.header().string("api-version", apiVersion)
+        );
+
+    }
+
+
+    @Test
+    @DisplayName("특정 게시글 수정 실패")
+    public void MODIFY_BOARD_FAIL_INVALID_ID_TEST() throws Exception{
+        //given
+        String adminToken = AuthenticationAcceptanceTestHelper.getAdminToken(mvc, objectMapper);
+
+        createDefaultBoardWithAll();
+
+        String title2 = "notice";
+        String content2 = "content";
+        String memberTier2 = "tier 3";
+
+        ResultActions resultActions = BoardAcceptanceTestHelper.inquiryAllBoard(mvc, adminToken);
+        BoardResponse[] boards = objectMapper.readValue(resultActions.andReturn().getResponse().getContentAsString(), BoardListResponse.class).getBoards();
+
+        ResultActions resultCategory = BoardAcceptanceTestHelper.inquiryAllCategory(mvc, adminToken);
+        CategoryResponse[] categoryList = objectMapper.readValue(resultCategory.andReturn().getResponse().getContentAsString(), CategoryListResponse.class).getCategories();
+
+        String[] imageUrls = boards[0].getImages();
+        String[] fileUrls = boards[0].getFiles();
+        String imageUrl1 = imageUrls[0].split("=")[1];
+        String fileUrl1 = fileUrls[0].split("=")[1];
+
+        int boardId = -1;
+        int categoryId = categoryList[0].getCategoryId();
+        ArrayList<Integer> imageIdList = new ArrayList<>(Integer.parseInt(imageUrl1));
+        ArrayList<Integer> fileIdList = new ArrayList<>(Integer.parseInt(fileUrl1));
+
+        BoardUpdateRequest boardUpdateRequest = BoardUpdateRequest.builder()
+                .title(title2)
+                .content(content2)
+                .categoryId(categoryId)
+                .memberTier(memberTier2)
+                .deleteImageIdList(imageIdList)
+                .deleteFileIdList(fileIdList)
+                .build();
+
+        String imgName2 = "TestImage2.jpg";
+        String imgContentType2 = "jpg";
+        String imgPath2 = "./src/test/java/org/waldreg/acceptance/board/TestImage2.jpg";
+
+        String fileName2 = "TestDocx2";
+        String fileContentType2 = "docx";
+        String filePath2 = "./src/test/java/org/waldreg/acceptance/board/TestDocx2.docx";
+
+        MockPart jsonContent2 = new MockPart("boardCreateRequest", objectMapper.writeValueAsString(boardUpdateRequest).getBytes());
+        MockMultipartFile imgFile2 = new MockMultipartFile("image", imgName2, imgContentType2, new FileInputStream(imgPath2));
+        MockMultipartFile docxFile2 = new MockMultipartFile("file", fileName2, fileContentType2, new FileInputStream(filePath2));
+        //when
+
+        ResultActions result = BoardAcceptanceTestHelper.modifyBoardWithAll(mvc, adminToken, boardId, jsonContent2, imgFile2, docxFile2);
+
+        //then
+        result.andExpectAll(
+                MockMvcResultMatchers.status().isBadRequest(),
+                MockMvcResultMatchers.header().string(HttpHeaders.CONTENT_TYPE, "application/json"),
+                MockMvcResultMatchers.header().string("api-version", apiVersion),
+                MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON),
+                MockMvcResultMatchers.jsonPath("$.messages").value("Unknown board id"),
+                MockMvcResultMatchers.jsonPath("$.document_url").value("docs.waldreg.org")
+        );
+
+    }
+
+    @Test
+    @DisplayName("특정 게시글 수정 실패")
+    public void MODIFY_BOARD_FAIL_NO_PERMISSION_TEST() throws Exception{
+        //given
+        String adminToken = AuthenticationAcceptanceTestHelper.getAdminToken(mvc, objectMapper);
+        String token = createUserAndGetToken("alcuk", "alcuk_id", "2gdddddd!");
+
+        createDefaultBoardWithAll();
+
+        String title2 = "notice";
+        String content2 = "content";
+        String memberTier2 = "tier 3";
+
+        ResultActions resultActions = BoardAcceptanceTestHelper.inquiryAllBoard(mvc, token);
+        BoardResponse[] boards = objectMapper.readValue(resultActions.andReturn().getResponse().getContentAsString(), BoardListResponse.class).getBoards();
+
+        ResultActions resultCategory = BoardAcceptanceTestHelper.inquiryAllCategory(mvc, token);
+        CategoryResponse[] categoryList = objectMapper.readValue(resultCategory.andReturn().getResponse().getContentAsString(), CategoryListResponse.class).getCategories();
+
+        String[] imageUrls = boards[0].getImages();
+        String[] fileUrls = boards[0].getFiles();
+        String imageUrl1 = imageUrls[0].split("=")[1];
+        String fileUrl1 = fileUrls[0].split("=")[1];
+
+        int boardId = -1;
+        int categoryId = categoryList[0].getCategoryId();
+        ArrayList<Integer> imageIdList = new ArrayList<>(Integer.parseInt(imageUrl1));
+        ArrayList<Integer> fileIdList = new ArrayList<>(Integer.parseInt(fileUrl1));
+
+        BoardUpdateRequest boardUpdateRequest = BoardUpdateRequest.builder()
+                .title(title2)
+                .content(content2)
+                .categoryId(categoryId)
+                .memberTier(memberTier2)
+                .deleteImageIdList(imageIdList)
+                .deleteFileIdList(fileIdList)
+                .build();
+
+        String imgName2 = "TestImage2.jpg";
+        String imgContentType2 = "jpg";
+        String imgPath2 = "./src/test/java/org/waldreg/acceptance/board/TestImage2.jpg";
+
+        String fileName2 = "TestDocx2";
+        String fileContentType2 = "docx";
+        String filePath2 = "./src/test/java/org/waldreg/acceptance/board/TestDocx2.docx";
+
+        MockPart jsonContent2 = new MockPart("boardCreateRequest", objectMapper.writeValueAsString(boardUpdateRequest).getBytes());
+        MockMultipartFile imgFile2 = new MockMultipartFile("image", imgName2, imgContentType2, new FileInputStream(imgPath2));
+        MockMultipartFile docxFile2 = new MockMultipartFile("file", fileName2, fileContentType2, new FileInputStream(filePath2));
+        //when
+
+        ResultActions result = BoardAcceptanceTestHelper.modifyBoardWithAll(mvc, token, boardId, jsonContent2, imgFile2, docxFile2);
+
+        //then
+        result.andExpectAll(
+                MockMvcResultMatchers.status().isBadRequest(),
+                MockMvcResultMatchers.header().string(HttpHeaders.CONTENT_TYPE, "application/json"),
+                MockMvcResultMatchers.header().string("api-version", apiVersion),
+                MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON),
+                MockMvcResultMatchers.jsonPath("$.messages").value("No permission"),
+                MockMvcResultMatchers.jsonPath("$.document_url").value("docs.waldreg.org")
+        );
     }
 
     @Test
@@ -1189,6 +1482,407 @@ public class BoardAcceptanceTest{
     }
 
     @Test
+    @DisplayName("게시글 검색 성공 - 제목으로 검색, 1~2개 ")
+    public void SEARCH_BOARD_BY_TITLE_SUCCESS_TEST() throws Exception{
+        //given
+        String name = "alcuk";
+        String userId = "alcuk_id";
+        String userPassword = "2gdddddd!";
+        String token = createUserAndGetToken(name, userId, userPassword);
+
+        String title1 = "notice1";
+        String content1 = "content";
+        int category1 = 1;
+        String memberTier1 = "tier 3";
+        BoardCreateRequest boardCreateRequest1 = BoardCreateRequest.builder()
+                .title(title1)
+                .content(content1)
+                .categoryId(category1)
+                .memberTier(memberTier1)
+                .build();
+        MockPart jsonContent1 = new MockPart("boardCreateRequest", objectMapper.writeValueAsString(boardCreateRequest1).getBytes());
+
+        String title2 = "notice2";
+        String content2 = "content";
+        int category2 = 1;
+        String memberTier2 = "tier 3";
+        BoardCreateRequest boardCreateRequest2 = BoardCreateRequest.builder()
+                .title(title2)
+                .content(content2)
+                .categoryId(category2)
+                .memberTier(memberTier2)
+                .build();
+        MockPart jsonContent2 = new MockPart("boardCreateRequest", objectMapper.writeValueAsString(boardCreateRequest2).getBytes());
+
+        String title3 = "notice3";
+        String content3 = "content";
+        int category3 = 1;
+        String memberTier3 = "tier 3";
+        BoardCreateRequest boardCreateRequest3 = BoardCreateRequest.builder()
+                .title(title3)
+                .content(content3)
+                .categoryId(category3)
+                .memberTier(memberTier3)
+                .build();
+        MockPart jsonContent3 = new MockPart("boardCreateRequest", objectMapper.writeValueAsString(boardCreateRequest3).getBytes());
+
+        //when
+        BoardAcceptanceTestHelper.createBoardWithOnlyJson(mvc, token, jsonContent1);
+        BoardAcceptanceTestHelper.createBoardWithOnlyJson(mvc, token, jsonContent2);
+        BoardAcceptanceTestHelper.createBoardWithOnlyJson(mvc, token, jsonContent3);
+
+        ResultActions result = BoardAcceptanceTestHelper.searchBoard(mvc, token,"title","notice",0,1);
+
+        //then
+        result.andExpectAll(
+                MockMvcResultMatchers.status().isOk(),
+                MockMvcResultMatchers.header().string(HttpHeaders.CONTENT_TYPE, "application/json"),
+                MockMvcResultMatchers.header().string("api-version", apiVersion),
+                MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON),
+                MockMvcResultMatchers.jsonPath("$.max_idx").value(2),
+                MockMvcResultMatchers.jsonPath("$.boards.[0].title").value(title1),
+                MockMvcResultMatchers.jsonPath("$.boards.[0].content").value(content1),
+                MockMvcResultMatchers.jsonPath("$.boards.[0].category").value(category1),
+                MockMvcResultMatchers.jsonPath("$.boards.[0].member_tier").value(memberTier1),
+                MockMvcResultMatchers.jsonPath("$.boards.[0].author.user_id").value(userId),
+                MockMvcResultMatchers.jsonPath("$.boards.[0].author.name").value(name),
+                MockMvcResultMatchers.jsonPath("$.boards.[0].created_at").isNotEmpty(),
+                MockMvcResultMatchers.jsonPath("$.boards.[0].last_modified_at").isNotEmpty(),
+                MockMvcResultMatchers.jsonPath("$.boards.[0].exist_file").value("false"),
+                MockMvcResultMatchers.jsonPath("$.boards.[0].reactions.good").isNumber(),
+                MockMvcResultMatchers.jsonPath("$.boards.[0].reactions.bad").isNumber(),
+                MockMvcResultMatchers.jsonPath("$.boards.[0].reactions.check").isNumber(),
+                MockMvcResultMatchers.jsonPath("$.boards.[0].reactions.heart").isNumber(),
+                MockMvcResultMatchers.jsonPath("$.boards.[0].reactions.smile").isNumber(),
+                MockMvcResultMatchers.jsonPath("$.boards.[0].reactions.sad").isNumber(),
+                MockMvcResultMatchers.jsonPath("$.boards.[1].title").value(title2),
+                MockMvcResultMatchers.jsonPath("$.boards.[1].content").value(content2),
+                MockMvcResultMatchers.jsonPath("$.boards.[1].category").value(category2),
+                MockMvcResultMatchers.jsonPath("$.boards.[1].member_tier").value(memberTier2),
+                MockMvcResultMatchers.jsonPath("$.boards.[1].author.user_id").value(userId),
+                MockMvcResultMatchers.jsonPath("$.boards.[1].author.name").value(name),
+                MockMvcResultMatchers.jsonPath("$.boards.[1].created_at").isNotEmpty(),
+                MockMvcResultMatchers.jsonPath("$.boards.[1].last_modified_at").isNotEmpty(),
+                MockMvcResultMatchers.jsonPath("$.boards.[1].exist_file").value("false"),
+                MockMvcResultMatchers.jsonPath("$.boards.[1].reactions.good").isNumber(),
+                MockMvcResultMatchers.jsonPath("$.boards.[1].reactions.bad").isNumber(),
+                MockMvcResultMatchers.jsonPath("$.boards.[1].reactions.check").isNumber(),
+                MockMvcResultMatchers.jsonPath("$.boards.[1].reactions.heart").isNumber(),
+                MockMvcResultMatchers.jsonPath("$.boards.[1].reactions.smile").isNumber(),
+                MockMvcResultMatchers.jsonPath("$.boards.[1].reactions.sad").isNumber()
+        );
+    }
+
+    @Test
+    @DisplayName("게시글 검색 성공 - 내용으로 검색, 1~2개 ")
+    public void SEARCH_BOARD_BY_content_SUCCESS_TEST() throws Exception{
+        //given
+        String name = "alcuk";
+        String userId = "alcuk_id";
+        String userPassword = "2gdddddd!";
+        String token = createUserAndGetToken(name, userId, userPassword);
+
+        String title1 = "notice1";
+        String content1 = "content";
+        int category1 = 1;
+        String memberTier1 = "tier 3";
+        BoardCreateRequest boardCreateRequest1 = BoardCreateRequest.builder()
+                .title(title1)
+                .content(content1)
+                .categoryId(category1)
+                .memberTier(memberTier1)
+                .build();
+        MockPart jsonContent1 = new MockPart("boardCreateRequest", objectMapper.writeValueAsString(boardCreateRequest1).getBytes());
+
+        String title2 = "notice2";
+        String content2 = "content2";
+        int category2 = 1;
+        String memberTier2 = "tier 3";
+        BoardCreateRequest boardCreateRequest2 = BoardCreateRequest.builder()
+                .title(title2)
+                .content(content2)
+                .categoryId(category2)
+                .memberTier(memberTier2)
+                .build();
+        MockPart jsonContent2 = new MockPart("boardCreateRequest", objectMapper.writeValueAsString(boardCreateRequest2).getBytes());
+
+        String title3 = "notice3";
+        String content3 = "content3";
+        int category3 = 1;
+        String memberTier3 = "tier 3";
+        BoardCreateRequest boardCreateRequest3 = BoardCreateRequest.builder()
+                .title(title3)
+                .content(content3)
+                .categoryId(category3)
+                .memberTier(memberTier3)
+                .build();
+        MockPart jsonContent3 = new MockPart("boardCreateRequest", objectMapper.writeValueAsString(boardCreateRequest3).getBytes());
+
+        //when
+        BoardAcceptanceTestHelper.createBoardWithOnlyJson(mvc, token, jsonContent1);
+        BoardAcceptanceTestHelper.createBoardWithOnlyJson(mvc, token, jsonContent2);
+        BoardAcceptanceTestHelper.createBoardWithOnlyJson(mvc, token, jsonContent3);
+
+        ResultActions result = BoardAcceptanceTestHelper.searchBoard(mvc, token,"content","content",0,1);
+
+        //then
+        result.andExpectAll(
+                MockMvcResultMatchers.status().isOk(),
+                MockMvcResultMatchers.header().string(HttpHeaders.CONTENT_TYPE, "application/json"),
+                MockMvcResultMatchers.header().string("api-version", apiVersion),
+                MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON),
+                MockMvcResultMatchers.jsonPath("$.max_idx").value(2),
+                MockMvcResultMatchers.jsonPath("$.boards.[0].title").value(title1),
+                MockMvcResultMatchers.jsonPath("$.boards.[0].content").value(content1),
+                MockMvcResultMatchers.jsonPath("$.boards.[0].category").value(category1),
+                MockMvcResultMatchers.jsonPath("$.boards.[0].member_tier").value(memberTier1),
+                MockMvcResultMatchers.jsonPath("$.boards.[0].author.user_id").value(userId),
+                MockMvcResultMatchers.jsonPath("$.boards.[0].author.name").value(name),
+                MockMvcResultMatchers.jsonPath("$.boards.[0].created_at").isNotEmpty(),
+                MockMvcResultMatchers.jsonPath("$.boards.[0].last_modified_at").isNotEmpty(),
+                MockMvcResultMatchers.jsonPath("$.boards.[0].exist_file").value("false"),
+                MockMvcResultMatchers.jsonPath("$.boards.[0].reactions.good").isNumber(),
+                MockMvcResultMatchers.jsonPath("$.boards.[0].reactions.bad").isNumber(),
+                MockMvcResultMatchers.jsonPath("$.boards.[0].reactions.check").isNumber(),
+                MockMvcResultMatchers.jsonPath("$.boards.[0].reactions.heart").isNumber(),
+                MockMvcResultMatchers.jsonPath("$.boards.[0].reactions.smile").isNumber(),
+                MockMvcResultMatchers.jsonPath("$.boards.[0].reactions.sad").isNumber(),
+                MockMvcResultMatchers.jsonPath("$.boards.[1].title").value(title2),
+                MockMvcResultMatchers.jsonPath("$.boards.[1].content").value(content2),
+                MockMvcResultMatchers.jsonPath("$.boards.[1].category").value(category2),
+                MockMvcResultMatchers.jsonPath("$.boards.[1].member_tier").value(memberTier2),
+                MockMvcResultMatchers.jsonPath("$.boards.[1].author.user_id").value(userId),
+                MockMvcResultMatchers.jsonPath("$.boards.[1].author.name").value(name),
+                MockMvcResultMatchers.jsonPath("$.boards.[1].created_at").isNotEmpty(),
+                MockMvcResultMatchers.jsonPath("$.boards.[1].last_modified_at").isNotEmpty(),
+                MockMvcResultMatchers.jsonPath("$.boards.[1].exist_file").value("false"),
+                MockMvcResultMatchers.jsonPath("$.boards.[1].reactions.good").isNumber(),
+                MockMvcResultMatchers.jsonPath("$.boards.[1].reactions.bad").isNumber(),
+                MockMvcResultMatchers.jsonPath("$.boards.[1].reactions.check").isNumber(),
+                MockMvcResultMatchers.jsonPath("$.boards.[1].reactions.heart").isNumber(),
+                MockMvcResultMatchers.jsonPath("$.boards.[1].reactions.smile").isNumber(),
+                MockMvcResultMatchers.jsonPath("$.boards.[1].reactions.sad").isNumber()
+        );
+    }
+
+    @Test
+    @DisplayName("게시글 검색 성공 - 작성자로 검색, 1~2개 ")
+    public void SEARCH_BOARD_BY_AUTHOR_SUCCESS_TEST() throws Exception{
+        //given
+        String name = "alcuk";
+        String userId = "alcuk_id";
+        String userPassword = "2gdddddd!";
+        String token = createUserAndGetToken(name, userId, userPassword);
+
+        String title1 = "notice1";
+        String content1 = "content";
+        int category1 = 1;
+        String memberTier1 = "tier 3";
+        BoardCreateRequest boardCreateRequest1 = BoardCreateRequest.builder()
+                .title(title1)
+                .content(content1)
+                .categoryId(category1)
+                .memberTier(memberTier1)
+                .build();
+        MockPart jsonContent1 = new MockPart("boardCreateRequest", objectMapper.writeValueAsString(boardCreateRequest1).getBytes());
+
+        String title2 = "notice2";
+        String content2 = "content";
+        int category2 = 1;
+        String memberTier2 = "tier 3";
+        BoardCreateRequest boardCreateRequest2 = BoardCreateRequest.builder()
+                .title(title2)
+                .content(content2)
+                .categoryId(category2)
+                .memberTier(memberTier2)
+                .build();
+        MockPart jsonContent2 = new MockPart("boardCreateRequest", objectMapper.writeValueAsString(boardCreateRequest2).getBytes());
+
+        String title3 = "notice3";
+        String content3 = "content";
+        int category3 = 1;
+        String memberTier3 = "tier 3";
+        BoardCreateRequest boardCreateRequest3 = BoardCreateRequest.builder()
+                .title(title3)
+                .content(content3)
+                .categoryId(category3)
+                .memberTier(memberTier3)
+                .build();
+        MockPart jsonContent3 = new MockPart("boardCreateRequest", objectMapper.writeValueAsString(boardCreateRequest3).getBytes());
+
+        //when
+        BoardAcceptanceTestHelper.createBoardWithOnlyJson(mvc, token, jsonContent1);
+        BoardAcceptanceTestHelper.createBoardWithOnlyJson(mvc, token, jsonContent2);
+        BoardAcceptanceTestHelper.createBoardWithOnlyJson(mvc, token, jsonContent3);
+
+        ResultActions result = BoardAcceptanceTestHelper.searchBoard(mvc, token,"author","alcuk",0,1);
+
+        //then
+        result.andExpectAll(
+                MockMvcResultMatchers.status().isOk(),
+                MockMvcResultMatchers.header().string(HttpHeaders.CONTENT_TYPE, "application/json"),
+                MockMvcResultMatchers.header().string("api-version", apiVersion),
+                MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON),
+                MockMvcResultMatchers.jsonPath("$.max_idx").value(2),
+                MockMvcResultMatchers.jsonPath("$.boards.[0].title").value(title1),
+                MockMvcResultMatchers.jsonPath("$.boards.[0].content").value(content1),
+                MockMvcResultMatchers.jsonPath("$.boards.[0].category").value(category1),
+                MockMvcResultMatchers.jsonPath("$.boards.[0].member_tier").value(memberTier1),
+                MockMvcResultMatchers.jsonPath("$.boards.[0].author.user_id").value(userId),
+                MockMvcResultMatchers.jsonPath("$.boards.[0].author.name").value(name),
+                MockMvcResultMatchers.jsonPath("$.boards.[0].created_at").isNotEmpty(),
+                MockMvcResultMatchers.jsonPath("$.boards.[0].last_modified_at").isNotEmpty(),
+                MockMvcResultMatchers.jsonPath("$.boards.[0].exist_file").value("false"),
+                MockMvcResultMatchers.jsonPath("$.boards.[0].reactions.good").isNumber(),
+                MockMvcResultMatchers.jsonPath("$.boards.[0].reactions.bad").isNumber(),
+                MockMvcResultMatchers.jsonPath("$.boards.[0].reactions.check").isNumber(),
+                MockMvcResultMatchers.jsonPath("$.boards.[0].reactions.heart").isNumber(),
+                MockMvcResultMatchers.jsonPath("$.boards.[0].reactions.smile").isNumber(),
+                MockMvcResultMatchers.jsonPath("$.boards.[0].reactions.sad").isNumber(),
+                MockMvcResultMatchers.jsonPath("$.boards.[1].title").value(title2),
+                MockMvcResultMatchers.jsonPath("$.boards.[1].content").value(content2),
+                MockMvcResultMatchers.jsonPath("$.boards.[1].category").value(category2),
+                MockMvcResultMatchers.jsonPath("$.boards.[1].member_tier").value(memberTier2),
+                MockMvcResultMatchers.jsonPath("$.boards.[1].author.user_id").value(userId),
+                MockMvcResultMatchers.jsonPath("$.boards.[1].author.name").value(name),
+                MockMvcResultMatchers.jsonPath("$.boards.[1].created_at").isNotEmpty(),
+                MockMvcResultMatchers.jsonPath("$.boards.[1].last_modified_at").isNotEmpty(),
+                MockMvcResultMatchers.jsonPath("$.boards.[1].exist_file").value("false"),
+                MockMvcResultMatchers.jsonPath("$.boards.[1].reactions.good").isNumber(),
+                MockMvcResultMatchers.jsonPath("$.boards.[1].reactions.bad").isNumber(),
+                MockMvcResultMatchers.jsonPath("$.boards.[1].reactions.check").isNumber(),
+                MockMvcResultMatchers.jsonPath("$.boards.[1].reactions.heart").isNumber(),
+                MockMvcResultMatchers.jsonPath("$.boards.[1].reactions.smile").isNumber(),
+                MockMvcResultMatchers.jsonPath("$.boards.[1].reactions.sad").isNumber()
+        );
+    }
+
+    @Test
+    @DisplayName("게시글 검색 실패 - 검색하려는 타입이 잘못되었을때")
+    public void SEARCH_BOARD_BY_UNKNOWN_TYPE_TEST() throws Exception{
+        //given
+        String name = "alcuk";
+        String userId = "alcuk_id";
+        String userPassword = "2gdddddd!";
+        String token = createUserAndGetToken(name, userId, userPassword);
+
+        String title1 = "notice1";
+        String content1 = "content";
+        int category1 = 1;
+        String memberTier1 = "tier 3";
+        BoardCreateRequest boardCreateRequest1 = BoardCreateRequest.builder()
+                .title(title1)
+                .content(content1)
+                .categoryId(category1)
+                .memberTier(memberTier1)
+                .build();
+        MockPart jsonContent1 = new MockPart("boardCreateRequest", objectMapper.writeValueAsString(boardCreateRequest1).getBytes());
+
+        String title2 = "notice2";
+        String content2 = "content";
+        int category2 = 1;
+        String memberTier2 = "tier 3";
+        BoardCreateRequest boardCreateRequest2 = BoardCreateRequest.builder()
+                .title(title2)
+                .content(content2)
+                .categoryId(category2)
+                .memberTier(memberTier2)
+                .build();
+        MockPart jsonContent2 = new MockPart("boardCreateRequest", objectMapper.writeValueAsString(boardCreateRequest2).getBytes());
+
+        String title3 = "notice3";
+        String content3 = "content";
+        int category3 = 1;
+        String memberTier3 = "tier 3";
+        BoardCreateRequest boardCreateRequest3 = BoardCreateRequest.builder()
+                .title(title3)
+                .content(content3)
+                .categoryId(category3)
+                .memberTier(memberTier3)
+                .build();
+        MockPart jsonContent3 = new MockPart("boardCreateRequest", objectMapper.writeValueAsString(boardCreateRequest3).getBytes());
+
+        //when
+        BoardAcceptanceTestHelper.createBoardWithOnlyJson(mvc, token, jsonContent1);
+        BoardAcceptanceTestHelper.createBoardWithOnlyJson(mvc, token, jsonContent2);
+        BoardAcceptanceTestHelper.createBoardWithOnlyJson(mvc, token, jsonContent3);
+
+        ResultActions result = BoardAcceptanceTestHelper.searchBoard(mvc, token,"unknown","notice",0,1);
+
+        //then
+        result.andExpectAll(
+                MockMvcResultMatchers.status().isBadRequest(),
+                MockMvcResultMatchers.header().string(HttpHeaders.CONTENT_TYPE, "application/json"),
+                MockMvcResultMatchers.header().string("api-version", apiVersion),
+                MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON),
+                MockMvcResultMatchers.jsonPath("$.messages").value("Unknown type"),
+                MockMvcResultMatchers.jsonPath("$.document_url").value("docs.waldreg.org")
+        );
+    }
+    @Test
+    @DisplayName("게시글 검색 실패 - 검색하려는 범위가 잘못되었을때")
+    public void SEARCH_BOARD_BY_INVALID_RANGE_TEST() throws Exception{
+        //given
+        String name = "alcuk";
+        String userId = "alcuk_id";
+        String userPassword = "2gdddddd!";
+        String token = createUserAndGetToken(name, userId, userPassword);
+
+        String title1 = "notice1";
+        String content1 = "content";
+        int category1 = 1;
+        String memberTier1 = "tier 3";
+        BoardCreateRequest boardCreateRequest1 = BoardCreateRequest.builder()
+                .title(title1)
+                .content(content1)
+                .categoryId(category1)
+                .memberTier(memberTier1)
+                .build();
+        MockPart jsonContent1 = new MockPart("boardCreateRequest", objectMapper.writeValueAsString(boardCreateRequest1).getBytes());
+
+        String title2 = "notice2";
+        String content2 = "content";
+        int category2 = 1;
+        String memberTier2 = "tier 3";
+        BoardCreateRequest boardCreateRequest2 = BoardCreateRequest.builder()
+                .title(title2)
+                .content(content2)
+                .categoryId(category2)
+                .memberTier(memberTier2)
+                .build();
+        MockPart jsonContent2 = new MockPart("boardCreateRequest", objectMapper.writeValueAsString(boardCreateRequest2).getBytes());
+
+        String title3 = "notice3";
+        String content3 = "content";
+        int category3 = 1;
+        String memberTier3 = "tier 3";
+        BoardCreateRequest boardCreateRequest3 = BoardCreateRequest.builder()
+                .title(title3)
+                .content(content3)
+                .categoryId(category3)
+                .memberTier(memberTier3)
+                .build();
+        MockPart jsonContent3 = new MockPart("boardCreateRequest", objectMapper.writeValueAsString(boardCreateRequest3).getBytes());
+
+        //when
+        BoardAcceptanceTestHelper.createBoardWithOnlyJson(mvc, token, jsonContent1);
+        BoardAcceptanceTestHelper.createBoardWithOnlyJson(mvc, token, jsonContent2);
+        BoardAcceptanceTestHelper.createBoardWithOnlyJson(mvc, token, jsonContent3);
+
+        ResultActions result = BoardAcceptanceTestHelper.searchBoard(mvc, token,"title","notice",-1,-2);
+
+        //then
+        result.andExpectAll(
+                MockMvcResultMatchers.status().isBadRequest(),
+                MockMvcResultMatchers.header().string(HttpHeaders.CONTENT_TYPE, "application/json"),
+                MockMvcResultMatchers.header().string("api-version", apiVersion),
+                MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON),
+                MockMvcResultMatchers.jsonPath("$.messages").value("Invalid range"),
+                MockMvcResultMatchers.jsonPath("$.document_url").value("docs.waldreg.org")
+        );
+    }
+
+    @Test
     @DisplayName("새로운 카테고리 생성 성공")
     public void CREATE_NEW_CATEGORY_SUCCESS_TEST() throws Exception{
         //given
@@ -1497,6 +2191,181 @@ public class BoardAcceptanceTest{
     }
 
 
+    @Test
+    @DisplayName("이미지 불러오기 테스트")
+    public void IMAGE_LOAD_SUCCESS_TEST() throws Exception{
+        //given
+        String adminToken = AuthenticationAcceptanceTestHelper.getAdminToken(mvc, objectMapper);
+
+        createDefaultBoardWithAll();
+
+        ResultActions resultActions = BoardAcceptanceTestHelper.inquiryAllBoard(mvc, adminToken);
+        BoardResponse[] boards = objectMapper.readValue(resultActions.andReturn().getResponse().getContentAsString(), BoardListResponse.class).getBoards();
+        String[] imagesUrls = boards[0].getImages();
+
+        //when
+        //BoardAcceptanceTestHelper.getImage(mvc,adminToken,imageId);
+        ResultActions result = BoardAcceptanceTestHelper.getImage(mvc, adminToken, imagesUrls[0]);
+        //then
+
+        result.andExpectAll(
+                MockMvcResultMatchers.status().isOk(),
+                MockMvcResultMatchers.header().string(HttpHeaders.CONTENT_TYPE, "image/jpg"),
+                MockMvcResultMatchers.header().string("api-version", apiVersion)
+        );
+
+    }
+
+    @Test
+    @DisplayName("이미지 불러오기 테스트 실패 - 없는 이미지 아이디")
+    public void IMAGE_LOAD_FAIL_INVALID_ID_TEST() throws Exception{
+        //given
+        String adminToken = AuthenticationAcceptanceTestHelper.getAdminToken(mvc, objectMapper);
+
+        createDefaultBoardWithAll();
+
+        String failImageRequestUrl = "/image?image-id=-1";
+
+        //when
+        ResultActions result = BoardAcceptanceTestHelper.getImage(mvc, adminToken, failImageRequestUrl);
+        //then
+
+        result.andExpectAll(
+                MockMvcResultMatchers.status().isBadRequest(),
+                MockMvcResultMatchers.header().string(HttpHeaders.CONTENT_TYPE, "application/json"),
+                MockMvcResultMatchers.header().string("api-version", apiVersion),
+                MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON),
+                MockMvcResultMatchers.jsonPath("$.messages").value("Unknown image id"),
+                MockMvcResultMatchers.jsonPath("$.document_url").value("docs.waldreg.org")
+        );
+
+    }
+
+    @Test
+    @DisplayName("이미지 불러오기 테스트 실패 - 권한이 없는 경우")
+    public void IMAGE_LOAD_FAIL_NO_PERMISSION_TEST() throws Exception{
+        //given
+        String adminToken = AuthenticationAcceptanceTestHelper.getAdminToken(mvc, objectMapper);
+        String token = createUserAndGetToken("alcuk", "alcuk_id", "2gdddddd!");
+
+        createDefaultBoardWithAll();
+
+        ResultActions resultActions = BoardAcceptanceTestHelper.inquiryAllBoard(mvc, adminToken);
+        BoardResponse[] boards = objectMapper.readValue(resultActions.andReturn().getResponse().getContentAsString(), BoardListResponse.class).getBoards();
+        String[] imagesUrls = boards[0].getImages();
+
+        //when
+        ResultActions result = BoardAcceptanceTestHelper.getImage(mvc, token, imagesUrls[0]);
+        //then
+
+        result.andExpectAll(
+                MockMvcResultMatchers.status().isForbidden(),
+                MockMvcResultMatchers.header().string(HttpHeaders.CONTENT_TYPE, "application/json"),
+                MockMvcResultMatchers.header().string("api-version", apiVersion),
+                MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON),
+                MockMvcResultMatchers.jsonPath("$.messages").value("No permission"),
+                MockMvcResultMatchers.jsonPath("$.document_url").value("docs.waldreg.org")
+        );
+
+    }
+
+    @Test
+    @DisplayName("파일 다운로드 테스트 성공")
+    public void FILE_DOWNLOAD_SUCCESS_TEST() throws Exception{
+        //given
+        String adminToken = AuthenticationAcceptanceTestHelper.getAdminToken(mvc, objectMapper);
+
+        createDefaultBoardWithAll();
+
+        ResultActions resultActions = BoardAcceptanceTestHelper.inquiryAllBoard(mvc, adminToken);
+        BoardResponse[] boards = objectMapper.readValue(resultActions.andReturn().getResponse().getContentAsString(), BoardListResponse.class).getBoards();
+        String[] fileUrls = boards[0].getFiles();
+
+        //when
+        ResultActions result = BoardAcceptanceTestHelper.downloadFile(mvc, adminToken, fileUrls[0]);
+
+        //then
+        result.andExpectAll(
+                MockMvcResultMatchers.status().isOk(),
+                MockMvcResultMatchers.header().string(HttpHeaders.CONTENT_TYPE, "application/msword"),
+                MockMvcResultMatchers.header().string("api-version", apiVersion)
+        );
+
+    }
+
+
+    @Test
+    @DisplayName("파일 다운로드 테스트 실패 - 없는 파일 아이디")
+    public void FILE_DOWNLOAD_FAIL_INVALID_ID_TEST() throws Exception{
+        //given
+        String adminToken = AuthenticationAcceptanceTestHelper.getAdminToken(mvc, objectMapper);
+
+        createDefaultBoardWithAll();
+
+        String failFileRequestUrl = "/file?file-id=-1";
+
+        //when
+        ResultActions result = BoardAcceptanceTestHelper.downloadFile(mvc, adminToken, failFileRequestUrl);
+
+        //then
+        result.andExpectAll(
+                MockMvcResultMatchers.status().isBadRequest(),
+                MockMvcResultMatchers.header().string(HttpHeaders.CONTENT_TYPE, "application/json"),
+                MockMvcResultMatchers.header().string("api-version", apiVersion),
+                MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON),
+                MockMvcResultMatchers.jsonPath("$.messages").value("Unknown file id"),
+                MockMvcResultMatchers.jsonPath("$.document_url").value("docs.waldreg.org")
+        );
+
+    }
+
+    @Test
+    @DisplayName("파일 다운로드 테스트 실패 - 권한이 없는 경우")
+    public void FILE_DOWNLOAD_FAIL_NO_PERMISSION_TEST() throws Exception{
+        //given
+        String adminToken = AuthenticationAcceptanceTestHelper.getAdminToken(mvc, objectMapper);
+        String token = createUserAndGetToken("alcuk", "alcuk_id", "2gdddddd!");
+
+        createDefaultBoardWithAll();
+
+        ResultActions resultActions = BoardAcceptanceTestHelper.inquiryAllBoard(mvc, adminToken);
+        BoardResponse[] boards = objectMapper.readValue(resultActions.andReturn().getResponse().getContentAsString(), BoardListResponse.class).getBoards();
+        String[] fileUrls = boards[0].getFiles();
+
+        //when
+        ResultActions result = BoardAcceptanceTestHelper.downloadFile(mvc, token, fileUrls[0]);
+
+        //then
+        result.andExpectAll(
+                MockMvcResultMatchers.status().isForbidden(),
+                MockMvcResultMatchers.header().string(HttpHeaders.CONTENT_TYPE, "application/json"),
+                MockMvcResultMatchers.header().string("api-version", apiVersion),
+                MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON),
+                MockMvcResultMatchers.jsonPath("$.messages").value("No permission"),
+                MockMvcResultMatchers.jsonPath("$.document_url").value("docs.waldreg.org")
+        );
+
+    }
+
+    @Test
+    @DisplayName("멤버 티어 조회 성공")
+    public void INQUIRY_MEMBER_TIER_SUCCESS_TEST() throws Exception{
+        //given
+        String adminToken = AuthenticationAcceptanceTestHelper.getAdminToken(mvc, objectMapper);
+
+        //when
+        ResultActions result = BoardAcceptanceTestHelper.inquiryMemberTier(mvc,adminToken);
+
+        //then
+        result.andExpectAll(
+                MockMvcResultMatchers.status().isOk(),
+                MockMvcResultMatchers.header().string(HttpHeaders.CONTENT_TYPE, "application/json"),
+                MockMvcResultMatchers.header().string("api-version", apiVersion)
+        );
+
+    }
+
+
     private String createUserAndGetToken(String name, String userId, String userPassword) throws Exception{
         UserRequest userRequest = UserRequest.builder()
                 .name(name)
@@ -1511,6 +2380,44 @@ public class BoardAcceptanceTest{
                 .userId(userId)
                 .userPassword(userPassword)
                 .build());
+    }
+
+    private void createDefaultBoardWithAll() throws Exception{
+        String adminToken = AuthenticationAcceptanceTestHelper.getAdminToken(mvc, objectMapper);
+
+        String categoryName = "cate1";
+        String memberTier = "tier 1";
+        CategoryRequest categoryRequest = CategoryRequest.builder().categoryName(categoryName).memberTier(memberTier).build();
+        BoardAcceptanceTestHelper.createCategory(mvc, adminToken, objectMapper.writeValueAsString(categoryRequest));
+        CategoryListResponse categoryResult = objectMapper.readValue(BoardAcceptanceTestHelper.inquiryAllCategory(mvc, adminToken)
+                                                                             .andReturn()
+                                                                             .getResponse()
+                                                                             .getContentAsString(), CategoryListResponse.class);
+        int categoryId = categoryResult.getCategories()[0].getCategoryId();
+
+        String token = createUserAndGetToken("alcuk", "alcuk_id", "2gdddddd!");
+
+        String title = "notice";
+        String content = "content";
+        String memberTier1 = "tier 3";
+        BoardCreateRequest boardCreateRequest = BoardCreateRequest.builder()
+                .title(title)
+                .content(content).categoryId(categoryId).memberTier(memberTier1).build();
+
+        String imgName = "TestImage.jpg";
+        String imgContentType = "jpg";
+        String imgPath = "./src/test/java/org/waldreg/acceptance/board/TestImage.jpg";
+
+        String fileName = "TestDocx";
+        String fileContentType = "docx";
+        String filePath = "./src/test/java/org/waldreg/acceptance/board/TestDocx.docx";
+
+        MockPart jsonContent = new MockPart("boardCreateRequest", objectMapper.writeValueAsString(boardCreateRequest).getBytes());
+        MockMultipartFile imgFile = new MockMultipartFile("image", imgName, imgContentType, new FileInputStream(imgPath));
+        MockMultipartFile docxFile = new MockMultipartFile("file", fileName, fileContentType, new FileInputStream(filePath));
+
+        BoardAcceptanceTestHelper.createBoardWithAll(mvc, token, jsonContent, imgFile, docxFile);
+
     }
 
 }

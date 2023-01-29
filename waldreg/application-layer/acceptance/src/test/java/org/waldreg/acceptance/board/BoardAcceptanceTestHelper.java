@@ -66,8 +66,37 @@ public class BoardAcceptanceTestHelper{
                                    .header("api-version", apiVersion));
     }
 
+    public static ResultActions modifyBoardWithOnlyJson(MockMvc mvc, String token, int boardId, MockPart jsonContent) throws Exception{
+        return mvc.perform(MockMvcRequestBuilders.multipart("/board/{board-id}", boardId)
+                                   .part(jsonContent)
+                                   .header(HttpHeaders.AUTHORIZATION, token)
+                                   .contentType(MediaType.APPLICATION_JSON)
+                                   .accept(MediaType.APPLICATION_JSON)
+                                   .header("api-version", apiVersion));
+    }
+
+    public static ResultActions modifyBoardWithJsonAndImage(MockMvc mvc, String token, int boardId, MockPart jsonContent, MockMultipartFile imgFile) throws Exception{
+        return mvc.perform(MockMvcRequestBuilders.multipart("/board/{board-id}", boardId)
+                                   .part(jsonContent)
+                                   .file(imgFile)
+                                   .header(HttpHeaders.AUTHORIZATION, token)
+                                   .contentType(MediaType.APPLICATION_JSON)
+                                   .accept(MediaType.APPLICATION_JSON)
+                                   .header("api-version", apiVersion));
+    }
+
+    public static ResultActions modifyBoardWithJsonAndFile(MockMvc mvc, String token, int boardId, MockPart jsonContent, MockMultipartFile docxFile) throws Exception{
+        return mvc.perform(MockMvcRequestBuilders.multipart("/board/{board-id}", boardId)
+                                   .part(jsonContent)
+                                   .file(docxFile)
+                                   .header(HttpHeaders.AUTHORIZATION, token)
+                                   .contentType(MediaType.APPLICATION_JSON)
+                                   .accept(MediaType.APPLICATION_JSON)
+                                   .header("api-version", apiVersion));
+    }
+
     public static ResultActions deleteBoard(MockMvc mvc, String token, int boardId) throws Exception{
-        return mvc.perform(MockMvcRequestBuilders.delete("/board/{board-id}",boardId)
+        return mvc.perform(MockMvcRequestBuilders.delete("/board/{board-id}", boardId)
                                    .header(HttpHeaders.AUTHORIZATION, token)
                                    .accept(MediaType.APPLICATION_JSON)
                                    .contentType(MediaType.APPLICATION_JSON)
@@ -118,6 +147,17 @@ public class BoardAcceptanceTestHelper{
                                    .header("api-version", apiVersion));
     }
 
+    public static ResultActions searchBoard(MockMvc mvc, String token, String type,String keyword,int startIdx,int endIdx ) throws Exception{
+        return mvc.perform(MockMvcRequestBuilders.get("/board/search")
+                                   .param("type",type)
+                                   .param("keyword",keyword)
+                                   .param("from",Integer.toString(startIdx))
+                                   .param("to",Integer.toString(endIdx))
+                                   .header(HttpHeaders.AUTHORIZATION, token)
+                                   .accept(MediaType.APPLICATION_JSON)
+                                   .header("api-version", apiVersion));
+    }
+
     public static ResultActions createCategory(MockMvc mvc, String token, String content) throws Exception{
         return mvc.perform(MockMvcRequestBuilders.post("/category")
                                    .header(HttpHeaders.AUTHORIZATION, token)
@@ -147,6 +187,27 @@ public class BoardAcceptanceTestHelper{
 
     public static ResultActions deleteCategory(MockMvc mvc, String token, int categoryId) throws Exception{
         return mvc.perform(MockMvcRequestBuilders.delete("/category/{category-id}", categoryId)
+                                   .header(HttpHeaders.AUTHORIZATION, token)
+                                   .accept(MediaType.APPLICATION_JSON)
+                                   .header("api-version", apiVersion));
+    }
+
+    public static ResultActions getImage(MockMvc mvc, String token, String url) throws Exception{
+        return mvc.perform(MockMvcRequestBuilders.get(url)
+                                   .header(HttpHeaders.AUTHORIZATION, token)
+                                   .accept(MediaType.APPLICATION_JSON)
+                                   .header("api-version", apiVersion));
+    }
+
+    public static ResultActions downloadFile(MockMvc mvc, String token, String url) throws Exception{
+        return mvc.perform(MockMvcRequestBuilders.get(url)
+                                   .header(HttpHeaders.AUTHORIZATION, token)
+                                   .accept(MediaType.APPLICATION_JSON)
+                                   .header("api-version", apiVersion));
+    }
+
+    public static ResultActions inquiryMemberTier(MockMvc mvc, String token) throws Exception{
+        return mvc.perform(MockMvcRequestBuilders.get("/board-tier")
                                    .header(HttpHeaders.AUTHORIZATION, token)
                                    .accept(MediaType.APPLICATION_JSON)
                                    .header("api-version", apiVersion));
