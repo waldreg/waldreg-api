@@ -109,11 +109,31 @@ public class MemoryUserStorage{
 
     public void updateUsersRewardTag(int id, RewardTagWrapper rewardTagWrapper){
         for (Map.Entry<String, User> userEntry : storage.entrySet()){
-            if(userEntry.getValue().getId() == id){
+            if (userEntry.getValue().getId() == id){
                 rewardTagWrapper.setRewardId(atomicInteger.getAndIncrement());
                 userEntry.getValue().addRewardTagWrapper(rewardTagWrapper);
             }
         }
+    }
+
+    public void deleteRewardToUser(int id, int rewardId){
+        for (Map.Entry<String, User> userEntry : storage.entrySet()){
+            if (userEntry.getValue().getId() == id){
+                RewardTagWrapper deleteTarget = getDeleteTarget(userEntry.getValue(), rewardId);
+                userEntry.getValue().getRewardTagWrapperList().remove(deleteTarget);
+            }
+        }
+
+    }
+
+    private RewardTagWrapper getDeleteTarget(User user, int rewardId){
+        List<RewardTagWrapper> rewardTagWrapperList = user.getRewardTagWrapperList();
+        for(RewardTagWrapper rewardTagWrapper : rewardTagWrapperList){
+            if(rewardTagWrapper.getRewardId() == rewardId){
+                return rewardTagWrapper;
+            }
+        }
+        throw new IllegalStateException("Cannot find rewardTagWrapper reward id \"" + rewardId + "\"");
     }
 
     public void deleteById(int id){

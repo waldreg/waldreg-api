@@ -41,7 +41,7 @@ public class MemoryUsersRewardRepository implements UsersRewardRepository{
 
     @Override
     public void deleteRewardToUser(int id, int rewardId){
-
+        memoryUserStorage.deleteRewardToUser(id, rewardId);
     }
 
     @Override
