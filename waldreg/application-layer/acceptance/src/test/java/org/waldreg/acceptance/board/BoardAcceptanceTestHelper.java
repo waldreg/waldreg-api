@@ -192,6 +192,15 @@ public class BoardAcceptanceTestHelper{
                                    );
     }
 
+    public static ResultActions createReaction(MockMvc mvc, String token,int boardId, String type) throws Exception{
+        return mvc.perform(MockMvcRequestBuilders.delete("/reaction/{board-id}",boardId)
+                                   .param("reaction-type",type)
+                                   .header(HttpHeaders.AUTHORIZATION, token)
+                                   .accept(MediaType.APPLICATION_JSON)
+                                   .header("api-version", apiVersion).contentType(MediaType.APPLICATION_JSON)
+        );
+    }
+
     public static ResultActions createCategory(MockMvc mvc, String token, String content) throws Exception{
         return mvc.perform(MockMvcRequestBuilders.post("/category")
                                    .header(HttpHeaders.AUTHORIZATION, token)
