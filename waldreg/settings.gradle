@@ -32,4 +32,6 @@ include 'application-layer:user-controller'
 findProject(':application-layer:user-controller')?.name = 'user-controller'
 include 'service-layer:reward'
 findProject(':service-layer:reward')?.name = 'reward'
+include 'application-layer:reward-controller'
+findProject(':application-layer:reward-controller')?.name = 'reward-controller'
 

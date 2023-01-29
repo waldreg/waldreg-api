@@ -23,6 +23,7 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import org.waldreg.acceptance.authentication.AuthenticationAcceptanceTestHelper;
 import org.waldreg.acceptance.user.UserAcceptanceTestHelper;
 import org.waldreg.auth.request.AuthTokenRequest;
+import org.waldreg.controller.reward.request.RewardTagRequest;
 import org.waldreg.controller.user.request.UserRequest;
 import org.waldreg.controller.user.response.UserResponse;
 
@@ -916,66 +917,6 @@ public class RewardAcceptanceTest{
     private UsersRewardTagResponse getUsersRewardTagResponse(ResultActions resultActions) throws Exception{
         String content = resultActions.andReturn().getResponse().getContentAsString();
         return objectMapper.readValue(content, UsersRewardTagResponse.class);
-    }
-
-    public final static class RewardTagRequest{
-
-        @JsonProperty("reward_tag_title")
-        private String rewardTagTitle;
-
-        @JsonProperty("reward_point")
-        private int rewardPoint;
-
-        public RewardTagRequest(){}
-
-        private RewardTagRequest(Builder builder){
-            this.rewardTagTitle = builder.rewardTagTitle;
-            this.rewardPoint = builder.rewardPoint;
-        }
-
-        public static Builder builder(){
-            return new Builder();
-        }
-
-        public String getRewardTagTitle(){
-            return rewardTagTitle;
-        }
-
-        public int getRewardPoint(){
-            return rewardPoint;
-        }
-
-        public void setRewardTagTitle(String rewardTagTitle){
-            this.rewardTagTitle = rewardTagTitle;
-        }
-
-        public void setRewardPoint(int rewardPoint){
-            this.rewardPoint = rewardPoint;
-        }
-
-        public final static class Builder{
-
-            private String rewardTagTitle;
-            private int rewardPoint;
-
-            private Builder(){}
-
-            public Builder rewardTagTitle(String rewardTagTitle){
-                this.rewardTagTitle = rewardTagTitle;
-                return this;
-            }
-
-            public Builder rewardPoint(int rewardPoint){
-                this.rewardPoint = rewardPoint;
-                return this;
-            }
-
-            public RewardTagRequest build(){
-                return new RewardTagRequest(this);
-            }
-
-        }
-
     }
 
     public final static class RewardTagResponse{
