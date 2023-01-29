@@ -30,7 +30,9 @@ public class MemoryRewardTagRepository implements RewardTagRepository{
 
     @Override
     public void updateRewardTag(int rewardTagId, RewardTagDto rewardTagDto){
-
+        memoryRewardTagStorage.updateRewardTag(
+                rewardTagId, rewardTagMapper.rewardTagDtoToRewardTag(rewardTagDto)
+        );
     }
 
     @Override

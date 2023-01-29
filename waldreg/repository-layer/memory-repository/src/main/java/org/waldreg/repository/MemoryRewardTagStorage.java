@@ -26,6 +26,7 @@ public class MemoryRewardTagStorage{
     }
 
     public void updateRewardTag(int rewardTagId, RewardTag rewardTag){
+        rewardTag.setRewardTagId(rewardTagId);
         storage.replace(rewardTagId, rewardTag);
     }
 
