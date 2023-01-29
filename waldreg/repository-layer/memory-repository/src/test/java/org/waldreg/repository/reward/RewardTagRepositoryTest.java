@@ -87,6 +87,7 @@ public class RewardTagRepositoryTest{
     @Test
     @DisplayName("상벌점 업데이트 테스트")
     public void UPDATE_REWARD_SUCCESS_TEST(){
+        // given
         RewardTagDto rewardCreateRequest = RewardTagDto.builder()
                 .rewardTagTitle("hello world")
                 .rewardPoint(100)
@@ -109,6 +110,24 @@ public class RewardTagRepositoryTest{
                 () -> Assertions.assertEquals(rewardUpdateRequest.getRewardTagTitle(), result.get(0).getRewardTagTitle()),
                 () -> Assertions.assertEquals(rewardUpdateRequest.getRewardPoint(), result.get(0).getRewardPoint())
         );
+    }
+
+    @Test
+    @DisplayName("상벌점 삭제 테스트")
+    public void DELETE_REWARD_SUCCESS_TEST(){
+        // given
+        RewardTagDto rewardCreateRequest = RewardTagDto.builder()
+                .rewardTagTitle("hello world")
+                .rewardPoint(100)
+                .build();
+
+        // when
+        rewardTagRepository.createRewardTag(rewardCreateRequest);
+        int deleteTarget = rewardTagRepository.readRewardTagList().get(0).getRewardTagId();
+        rewardTagRepository.deleteRewardTag(deleteTarget);
+
+        // then
+        Assertions.assertFalse(rewardTagRepository.isRewardTagExist(deleteTarget));
     }
 
 }
