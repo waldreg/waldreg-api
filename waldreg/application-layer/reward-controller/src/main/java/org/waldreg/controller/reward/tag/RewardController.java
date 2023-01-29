@@ -1,4 +1,4 @@
-package org.waldreg.controller.reward;
+package org.waldreg.controller.reward.tag;
 
 import java.util.List;
 import java.util.Map;
@@ -13,26 +13,22 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 import org.wadlreg.reward.tag.RewardTagManager;
 import org.wadlreg.reward.tag.dto.RewardTagDto;
-import org.wadlreg.reward.users.UsersRewardManager;
 import org.waldreg.character.aop.annotation.PermissionVerifying;
-import org.waldreg.controller.reward.mapper.ControllerRewardTagMapper;
-import org.waldreg.controller.reward.request.RewardTagRequest;
-import org.waldreg.controller.reward.response.RewardTagResponse;
+import org.waldreg.controller.reward.tag.mapper.ControllerRewardTagMapper;
+import org.waldreg.controller.reward.tag.request.RewardTagRequest;
+import org.waldreg.controller.reward.tag.response.RewardTagResponse;
 import org.waldreg.token.aop.annotation.Authenticating;
 
 @RestController
 public class RewardController{
 
     private final RewardTagManager rewardTagManager;
-    private final UsersRewardManager usersRewardManager;
     private final ControllerRewardTagMapper controllerRewardTagMapper;
 
     @Autowired
     public RewardController(RewardTagManager rewardTagManager,
-            UsersRewardManager usersRewardManager,
             ControllerRewardTagMapper controllerRewardTagMapper){
         this.rewardTagManager = rewardTagManager;
-        this.usersRewardManager = usersRewardManager;
         this.controllerRewardTagMapper = controllerRewardTagMapper;
     }
 
