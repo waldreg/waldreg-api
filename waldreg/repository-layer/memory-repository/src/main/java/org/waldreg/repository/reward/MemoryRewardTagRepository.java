@@ -7,23 +7,23 @@ import org.springframework.stereotype.Repository;
 import org.wadlreg.reward.tag.dto.RewardTagDto;
 import org.wadlreg.reward.tag.spi.RewardTagRepository;
 import org.waldreg.domain.rewardtag.RewardTag;
-import org.waldreg.repository.RewardTagStorage;
+import org.waldreg.repository.MemoryRewardTagStorage;
 
 @Repository
 public class MemoryRewardTagRepository implements RewardTagRepository{
 
-    private final RewardTagStorage rewardTagStorage;
+    private final MemoryRewardTagStorage memoryRewardTagStorage;
     private final RewardTagMapper rewardTagMapper;
 
     @Autowired
-    public MemoryRewardTagRepository(RewardTagStorage rewardTagStorage, RewardTagMapper rewardTagMapper){
-        this.rewardTagStorage = rewardTagStorage;
+    public MemoryRewardTagRepository(MemoryRewardTagStorage memoryRewardTagStorage, RewardTagMapper rewardTagMapper){
+        this.memoryRewardTagStorage = memoryRewardTagStorage;
         this.rewardTagMapper = rewardTagMapper;
     }
 
     @Override
     public void createRewardTag(RewardTagDto rewardTagDto){
-        rewardTagStorage.createRewardTag(
+        memoryRewardTagStorage.createRewardTag(
                 rewardTagMapper.rewardTagDtoToRewardTag(rewardTagDto)
         );
     }
@@ -40,7 +40,7 @@ public class MemoryRewardTagRepository implements RewardTagRepository{
 
     @Override
     public List<RewardTagDto> readRewardTagList(){
-        List<RewardTag> rewardTagList = rewardTagStorage.readRewardTagList();
+        List<RewardTag> rewardTagList = memoryRewardTagStorage.readRewardTagList();
         List<RewardTagDto> rewardTagDtoList = new ArrayList<>();
         for(RewardTag rewardTag : rewardTagList){
             rewardTagDtoList.add(rewardTagMapper.rewardTagToRewardTagDto(rewardTag));
@@ -50,7 +50,7 @@ public class MemoryRewardTagRepository implements RewardTagRepository{
 
     @Override
     public boolean isRewardTagExist(int rewardTagId){
-        return false;
+        return memoryRewardTagStorage.readRewardTag(rewardTagId) != null;
     }
 
 }

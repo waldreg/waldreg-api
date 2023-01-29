@@ -9,7 +9,7 @@ import org.springframework.stereotype.Repository;
 import org.waldreg.domain.rewardtag.RewardTag;
 
 @Repository
-public class RewardTagStorage{
+public class MemoryRewardTagStorage{
 
     private final Map<Integer, RewardTag> storage;
     private final AtomicInteger atomicInteger;
@@ -43,6 +43,10 @@ public class RewardTagStorage{
 
     public void deleteRewardTag(int rewardTagId){
         storage.remove(rewardTagId);
+    }
+
+    public void deleteAll(){
+        storage.clear();
     }
 
 }
