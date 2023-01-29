@@ -7,21 +7,21 @@ import org.wadlreg.reward.exception.UnknownRewardTargetException;
 import org.wadlreg.reward.exception.UnknownRewardTagException;
 import org.wadlreg.reward.users.dto.UsersRewardDto;
 import org.wadlreg.reward.users.spi.repository.UserExistChecker;
-import org.wadlreg.reward.users.spi.repository.UsersRewardManagerRepository;
+import org.wadlreg.reward.users.spi.repository.UsersRewardRepository;
 import org.wadlreg.reward.users.spi.tag.RewardTagExistChecker;
 
 @Service
 public class DefaultUsersRewardManager implements UsersRewardManager{
 
-    private final UsersRewardManagerRepository usersRewardManagerRepository;
+    private final UsersRewardRepository usersRewardRepository;
     private final RewardTagExistChecker rewardTagExistChecker;
     private final UserExistChecker userExistChecker;
 
     @Autowired
-    public DefaultUsersRewardManager(UsersRewardManagerRepository usersRewardManagerRepository,
+    public DefaultUsersRewardManager(UsersRewardRepository usersRewardRepository,
             RewardTagExistChecker rewardTagExistChecker,
             UserExistChecker userExistChecker){
-        this.usersRewardManagerRepository = usersRewardManagerRepository;
+        this.usersRewardRepository = usersRewardRepository;
         this.rewardTagExistChecker = rewardTagExistChecker;
         this.userExistChecker = userExistChecker;
     }
@@ -30,20 +30,20 @@ public class DefaultUsersRewardManager implements UsersRewardManager{
     public void assignRewardToUser(int id, int rewardTagId){
         throwIfCannotFindUserById(id);
         throwIfCannotFindRewardByRewardTagId(rewardTagId);
-        usersRewardManagerRepository.assignRewardToUser(id, rewardTagId);
+        usersRewardRepository.assignRewardToUser(id, rewardTagId);
     }
 
     @Override
     public UsersRewardDto readSpecifyUsersReward(int id){
         throwIfCannotFindUserById(id);
-        return usersRewardManagerRepository.readSpecifyUsersReward(id);
+        return usersRewardRepository.readSpecifyUsersReward(id);
     }
 
     @Override
     public void deleteRewardToUser(int id, int rewardId){
         throwIfCannotFindUserById(id);
         throwIfCannotFindRewardOnUser(id, rewardId);
-        usersRewardManagerRepository.deleteRewardToUser(id, rewardId);
+        usersRewardRepository.deleteRewardToUser(id, rewardId);
     }
 
     private void throwIfCannotFindUserById(int id){
@@ -59,14 +59,14 @@ public class DefaultUsersRewardManager implements UsersRewardManager{
     }
 
     private void throwIfCannotFindRewardOnUser(int id, int rewardId){
-        if(!usersRewardManagerRepository.isRewardIdExist(id, rewardId)){
+        if(!usersRewardRepository.isRewardIdExist(id, rewardId)){
             throw new UnknownRewardException(rewardId);
         }
     }
 
     @Override
     public void resetAllUsersReward(){
-        usersRewardManagerRepository.resetAllUsersReward();
+        usersRewardRepository.resetAllUsersReward();
     }
 
 }
