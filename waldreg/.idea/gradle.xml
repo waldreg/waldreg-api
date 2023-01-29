@@ -27,6 +27,7 @@
             <option value="$PROJECT_DIR$/service-layer/auth" />
             <option value="$PROJECT_DIR$/service-layer/jwt-auth" />
             <option value="$PROJECT_DIR$/service-layer/reward" />
+            <option value="$PROJECT_DIR$/service-layer/schedule" />
             <option value="$PROJECT_DIR$/service-layer/user" />
             <option value="$PROJECT_DIR$/stable-service-layer" />
             <option value="$PROJECT_DIR$/stable-service-layer/character" />
