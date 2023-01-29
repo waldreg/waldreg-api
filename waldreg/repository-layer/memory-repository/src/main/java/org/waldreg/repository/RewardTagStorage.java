@@ -23,4 +23,8 @@ public class RewardTagStorage{
         storage.put(id, rewardTag);
     }
 
+    public void updateRewardTag(int rewardTagId, RewardTag rewardTag){
+        storage.replace(rewardTagId, rewardTag);
+    }
+
 }
