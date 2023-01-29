@@ -54,4 +54,23 @@ public class RewardTagRepositoryTest{
         );
     }
 
+    @Test
+    @DisplayName("상벌점 존재 확인 테스트")
+    public void REWARD_EXIST_CHECK_SUCCESS_TEST(){
+        // given
+        RewardTagDto rewardCreateRequest = RewardTagDto.builder()
+                .rewardTagTitle("hello world")
+                .rewardPoint(100)
+                .build();
+
+        // when
+        rewardTagRepository.createRewardTag(rewardCreateRequest);
+        List<RewardTagDto> result = rewardTagRepository.readRewardTagList();
+
+        Assertions.assertAll(
+                () -> Assertions.assertTrue(rewardTagRepository.isRewardTagExist(result.get(0).getRewardTagId())),
+                () -> Assertions.assertFalse(rewardTagRepository.isRewardTagExist(100))
+        );
+    }
+
 }

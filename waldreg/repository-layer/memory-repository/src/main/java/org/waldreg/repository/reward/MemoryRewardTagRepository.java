@@ -50,7 +50,7 @@ public class MemoryRewardTagRepository implements RewardTagRepository{
 
     @Override
     public boolean isRewardTagExist(int rewardTagId){
-        return false;
+        return rewardTagStorage.readRewardTag(rewardTagId) != null;
     }
 
 }
