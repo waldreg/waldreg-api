@@ -55,7 +55,7 @@ public class RewardAcceptanceTestHelper{
 
     public static ResultActions resetRewardTagFromAllUsers(MockMvc mvc, String token) throws Exception{
         return mvc.perform(MockMvcRequestBuilders
-                .get("/reward-tag/reset")
+                .get("/reward-tag/users/reset")
                 .accept(MediaType.APPLICATION_JSON)
                 .header("Api-version", "1.0")
                 .header(HttpHeaders.AUTHORIZATION, token));
@@ -63,7 +63,7 @@ public class RewardAcceptanceTestHelper{
 
     public static ResultActions inquirySpecifyUsersRewardTags(MockMvc mvc, String token, int id) throws Exception{
         return mvc.perform(MockMvcRequestBuilders
-                .get("/reward-tag/{id}", id)
+                .get("/reward-tag/user/{id}", id)
                 .accept(MediaType.APPLICATION_JSON)
                 .header("Api-version", "1.0")
                 .header(HttpHeaders.AUTHORIZATION, token));
