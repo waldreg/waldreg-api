@@ -101,4 +101,9 @@ public class DefaultScheduleManager implements ScheduleManager{
         return scheduleRepository.readScheduleByTerm(year, month);
     }
 
+    @Override
+    public void updateScheduleById(int id, ScheduleDto scheduleDto){
+        scheduleRepository.updateScheduleById(id, scheduleDto);
+    }
+
 }

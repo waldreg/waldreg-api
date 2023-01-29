@@ -336,6 +336,63 @@ public class ScheduleServiceTest{
 
     }
 
+    @Test
+    @DisplayName("일정 수정 성공 테스트")
+    public void UPDATE_SCHEDULE_SUCCESS_TEST(){
+        //given
+        String scheduleTitle = "seminar";
+        String scheduleContent = "BFS";
+        String StartedAt = "2023-01-24T20:52";
+        String finishAt = "2023-01-31T23:59";
+        int cycle = 123;
+        String repeatFinishAt = "2023-12-31T23:59";
+        RepeatDto repeatScheduleRequest = RepeatDto.builder()
+                .cycle(cycle)
+                .repeatFinishAt(repeatFinishAt)
+                .build();
+        ScheduleDto scheduleRequest = ScheduleDto.builder()
+                .scheduleTitle(scheduleTitle)
+                .scheduleContent(scheduleContent)
+                .startedAt(StartedAt)
+                .finishAt(finishAt)
+                .repeatDto(repeatScheduleRequest)
+                .build();
+        String scheduleTitle2 = "seminar";
+        String scheduleContent2 = "BFS";
+        String StartedAt2 = "2023-02-01T20:52";
+        String finishAt2 = "2023-02-07T23:59";
+        int cycle2 = 100;
+        String repeatFinishAt2 = "2023-12-31T23:59";
+        RepeatDto repeatScheduleRequest2 = RepeatDto.builder()
+                .cycle(cycle2)
+                .repeatFinishAt(repeatFinishAt2)
+                .build();
+        ScheduleDto scheduleRequest2 = ScheduleDto.builder()
+                .scheduleTitle(scheduleTitle2)
+                .scheduleContent(scheduleContent2)
+                .startedAt(StartedAt2)
+                .finishAt(finishAt2)
+                .repeatDto(repeatScheduleRequest2)
+                .build();
+
+        //when
+        scheduleManager.createSchedule(scheduleRequest);
+        scheduleManager.updateScheduleById(1, scheduleRequest2);
+        Mockito.when(scheduleRepository.readScheduleById(Mockito.anyInt())).thenReturn(scheduleRequest2);
+        ScheduleDto result = scheduleManager.readScheduleById(1);
+
+        //then
+        Assertions.assertAll(
+                () -> Assertions.assertEquals(scheduleRequest2.getScheduleTitle(), result.getScheduleTitle()),
+                () -> Assertions.assertEquals(scheduleRequest2.getScheduleContent(), result.getScheduleContent()),
+                () -> Assertions.assertEquals(scheduleRequest2.getStartedAt(), result.getStartedAt()),
+                () -> Assertions.assertEquals(scheduleRequest2.getFinishAt(), result.getFinishAt()),
+                () -> Assertions.assertEquals(scheduleRequest2.getRepeatDto().getCycle(), result.getRepeatDto().getCycle()),
+                () -> Assertions.assertEquals(scheduleRequest2.getRepeatDto().getRepeatFinishAt(), result.getRepeatDto().getRepeatFinishAt())
+        );
+
+    }
+
 
     private String createOverflow(){
         String content = "";
