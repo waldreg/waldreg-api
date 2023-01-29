@@ -158,6 +158,40 @@ public class BoardAcceptanceTestHelper{
                                    .header("api-version", apiVersion));
     }
 
+    public static ResultActions createComment(MockMvc mvc, String token, int boardId,String content ) throws Exception{
+        return mvc.perform(MockMvcRequestBuilders.post("/comment/{board-id}",boardId)
+                                   .header(HttpHeaders.AUTHORIZATION, token)
+                                   .accept(MediaType.APPLICATION_JSON)
+                                   .header("api-version", apiVersion)
+                                   .contentType(MediaType.APPLICATION_JSON)
+                                   .content(content));
+    }
+
+    public static ResultActions inquiryComment(MockMvc mvc, String token, int boardId, int startIdx,int endIdx) throws Exception{
+        return mvc.perform(MockMvcRequestBuilders.post("/board/comment/{board-id}",boardId)
+                                   .param("from",Integer.toString(startIdx))
+                                   .param("to",Integer.toString(endIdx))
+                                   .header(HttpHeaders.AUTHORIZATION, token)
+                                   .accept(MediaType.APPLICATION_JSON)
+                                   .header("api-version", apiVersion));
+    }
+
+    public static ResultActions modifyComment(MockMvc mvc, String token, int commentId, String content) throws Exception{
+        return mvc.perform(MockMvcRequestBuilders.put("/comment/{comment-id}",commentId)
+                                   .header(HttpHeaders.AUTHORIZATION, token)
+                                   .accept(MediaType.APPLICATION_JSON)
+                                   .header("api-version", apiVersion).contentType(MediaType.APPLICATION_JSON)
+                                   .content(content));
+    }
+
+    public static ResultActions deleteComment(MockMvc mvc, String token, int commentId) throws Exception{
+        return mvc.perform(MockMvcRequestBuilders.delete("/comment/{comment-id}",commentId)
+                                   .header(HttpHeaders.AUTHORIZATION, token)
+                                   .accept(MediaType.APPLICATION_JSON)
+                                   .header("api-version", apiVersion).contentType(MediaType.APPLICATION_JSON)
+                                   );
+    }
+
     public static ResultActions createCategory(MockMvc mvc, String token, String content) throws Exception{
         return mvc.perform(MockMvcRequestBuilders.post("/category")
                                    .header(HttpHeaders.AUTHORIZATION, token)

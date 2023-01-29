@@ -16,7 +16,6 @@ import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.mock.web.MockPart;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
-import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import org.waldreg.acceptance.authentication.AuthenticationAcceptanceTestHelper;
@@ -25,10 +24,12 @@ import org.waldreg.auth.request.AuthTokenRequest;
 import org.waldreg.controller.board.request.BoardCreateRequest;
 import org.waldreg.controller.board.request.BoardUpdateRequest;
 import org.waldreg.controller.board.request.CategoryRequest;
-import org.waldreg.controller.board.response.BoardListResponse;
-import org.waldreg.controller.board.response.BoardResponse;
-import org.waldreg.controller.board.response.CategoryListResponse;
-import org.waldreg.controller.board.response.CategoryResponse;
+import org.waldreg.controller.board.response.board.BoardListResponse;
+import org.waldreg.controller.board.response.board.BoardResponse;
+import org.waldreg.controller.board.response.category.CategoryListResponse;
+import org.waldreg.controller.board.response.category.CategoryResponse;
+import org.waldreg.controller.board.response.comment.CommentListResponse;
+import org.waldreg.controller.board.response.comment.CommentResponse;
 import org.waldreg.controller.user.request.UserRequest;
 import org.waldreg.controller.user.response.UserResponse;
 
@@ -529,7 +530,7 @@ public class BoardAcceptanceTest{
         //given
         String adminToken = AuthenticationAcceptanceTestHelper.getAdminToken(mvc, objectMapper);
 
-        createDefaultBoardWithAll();
+        createTier1BoardWithAll();
 
         String title2 = "notice";
         String content2 = "content";
@@ -590,7 +591,7 @@ public class BoardAcceptanceTest{
         //given
         String adminToken = AuthenticationAcceptanceTestHelper.getAdminToken(mvc, objectMapper);
 
-        createDefaultBoardWithAll();
+        createTier1BoardWithAll();
 
         String title2 = "notice";
         String content2 = "content";
@@ -641,7 +642,7 @@ public class BoardAcceptanceTest{
         //given
         String adminToken = AuthenticationAcceptanceTestHelper.getAdminToken(mvc, objectMapper);
 
-        createDefaultBoardWithAll();
+        createTier1BoardWithAll();
 
         String title2 = "notice";
         String content2 = "content";
@@ -697,7 +698,7 @@ public class BoardAcceptanceTest{
         //given
         String adminToken = AuthenticationAcceptanceTestHelper.getAdminToken(mvc, objectMapper);
 
-        createDefaultBoardWithAll();
+        createTier1BoardWithAll();
 
         String title2 = "notice";
         String content2 = "content";
@@ -749,12 +750,12 @@ public class BoardAcceptanceTest{
 
 
     @Test
-    @DisplayName("특정 게시글 수정 실패")
-    public void MODIFY_BOARD_FAIL_INVALID_ID_TEST() throws Exception{
+    @DisplayName("특정 게시글 수정 실패 - 없는 아이디")
+    public void MODIFY_BOARD_FAIL_UNKNOWN_ID_TEST() throws Exception{
         //given
         String adminToken = AuthenticationAcceptanceTestHelper.getAdminToken(mvc, objectMapper);
 
-        createDefaultBoardWithAll();
+        createTier1BoardWithAll();
 
         String title2 = "notice";
         String content2 = "content";
@@ -813,13 +814,13 @@ public class BoardAcceptanceTest{
     }
 
     @Test
-    @DisplayName("특정 게시글 수정 실패")
+    @DisplayName("특정 게시글 수정 실패 - 권한이 없는 경우")
     public void MODIFY_BOARD_FAIL_NO_PERMISSION_TEST() throws Exception{
         //given
         String adminToken = AuthenticationAcceptanceTestHelper.getAdminToken(mvc, objectMapper);
         String token = createUserAndGetToken("alcuk", "alcuk_id", "2gdddddd!");
 
-        createDefaultBoardWithAll();
+        createTier1BoardWithAll();
 
         String title2 = "notice";
         String content2 = "content";
@@ -1411,7 +1412,7 @@ public class BoardAcceptanceTest{
 
     @Test
     @DisplayName("전체 게시글 조회 실패 - 올바르지 않은 범위")
-    public void INQUIRY_ALL_BOARD_Fail_INVALID_RANGE_TEST() throws Exception{
+    public void INQUIRY_ALL_BOARD_FAIL_INVALID_RANGE_TEST() throws Exception{
         //given
         String adminToken = AuthenticationAcceptanceTestHelper.getAdminToken(mvc, objectMapper);
 
@@ -1531,7 +1532,7 @@ public class BoardAcceptanceTest{
         BoardAcceptanceTestHelper.createBoardWithOnlyJson(mvc, token, jsonContent2);
         BoardAcceptanceTestHelper.createBoardWithOnlyJson(mvc, token, jsonContent3);
 
-        ResultActions result = BoardAcceptanceTestHelper.searchBoard(mvc, token,"title","notice",0,1);
+        ResultActions result = BoardAcceptanceTestHelper.searchBoard(mvc, token, "title", "notice", 0, 1);
 
         //then
         result.andExpectAll(
@@ -1623,7 +1624,7 @@ public class BoardAcceptanceTest{
         BoardAcceptanceTestHelper.createBoardWithOnlyJson(mvc, token, jsonContent2);
         BoardAcceptanceTestHelper.createBoardWithOnlyJson(mvc, token, jsonContent3);
 
-        ResultActions result = BoardAcceptanceTestHelper.searchBoard(mvc, token,"content","content",0,1);
+        ResultActions result = BoardAcceptanceTestHelper.searchBoard(mvc, token, "content", "content", 0, 1);
 
         //then
         result.andExpectAll(
@@ -1715,7 +1716,7 @@ public class BoardAcceptanceTest{
         BoardAcceptanceTestHelper.createBoardWithOnlyJson(mvc, token, jsonContent2);
         BoardAcceptanceTestHelper.createBoardWithOnlyJson(mvc, token, jsonContent3);
 
-        ResultActions result = BoardAcceptanceTestHelper.searchBoard(mvc, token,"author","alcuk",0,1);
+        ResultActions result = BoardAcceptanceTestHelper.searchBoard(mvc, token, "author", "alcuk", 0, 1);
 
         //then
         result.andExpectAll(
@@ -1807,7 +1808,7 @@ public class BoardAcceptanceTest{
         BoardAcceptanceTestHelper.createBoardWithOnlyJson(mvc, token, jsonContent2);
         BoardAcceptanceTestHelper.createBoardWithOnlyJson(mvc, token, jsonContent3);
 
-        ResultActions result = BoardAcceptanceTestHelper.searchBoard(mvc, token,"unknown","notice",0,1);
+        ResultActions result = BoardAcceptanceTestHelper.searchBoard(mvc, token, "unknown", "notice", 0, 1);
 
         //then
         result.andExpectAll(
@@ -1819,6 +1820,7 @@ public class BoardAcceptanceTest{
                 MockMvcResultMatchers.jsonPath("$.document_url").value("docs.waldreg.org")
         );
     }
+
     @Test
     @DisplayName("게시글 검색 실패 - 검색하려는 범위가 잘못되었을때")
     public void SEARCH_BOARD_BY_INVALID_RANGE_TEST() throws Exception{
@@ -1869,7 +1871,7 @@ public class BoardAcceptanceTest{
         BoardAcceptanceTestHelper.createBoardWithOnlyJson(mvc, token, jsonContent2);
         BoardAcceptanceTestHelper.createBoardWithOnlyJson(mvc, token, jsonContent3);
 
-        ResultActions result = BoardAcceptanceTestHelper.searchBoard(mvc, token,"title","notice",-1,-2);
+        ResultActions result = BoardAcceptanceTestHelper.searchBoard(mvc, token, "title", "notice", -1, -2);
 
         //then
         result.andExpectAll(
@@ -1881,6 +1883,402 @@ public class BoardAcceptanceTest{
                 MockMvcResultMatchers.jsonPath("$.document_url").value("docs.waldreg.org")
         );
     }
+
+
+    @Test
+    @DisplayName("특정 게시글에 댓글 작성 성공")
+    public void CREATE_COMMENT_SUCCESS_TEST() throws Exception{
+        //given
+        String adminToken = AuthenticationAcceptanceTestHelper.getAdminToken(mvc, objectMapper);
+
+        createTier1BoardWithAll();
+
+        ResultActions resultActions = BoardAcceptanceTestHelper.inquiryAllBoard(mvc, adminToken);
+        BoardResponse[] boards = objectMapper.readValue(resultActions.andReturn().getResponse().getContentAsString(), BoardListResponse.class).getBoards();
+        int boardId = boards[0].getId();
+        String content = "comment1";
+
+        //when
+        ResultActions result = BoardAcceptanceTestHelper.createComment(mvc, adminToken, boardId, content);
+
+        //then
+
+        result.andExpectAll(
+                MockMvcResultMatchers.status().isOk(),
+                MockMvcResultMatchers.header().string(HttpHeaders.CONTENT_TYPE, "application/json"),
+                MockMvcResultMatchers.header().string("api-version", apiVersion)
+        );
+
+    }
+
+    @Test
+    @DisplayName("특정 게시글에 댓글 작성 실패 - 권한이 없는 경우")
+    public void CREATE_COMMENT_NO_PERMISSION_TEST() throws Exception{
+        //given
+        String adminToken = AuthenticationAcceptanceTestHelper.getAdminToken(mvc, objectMapper);
+        String token = createUserAndGetToken("alcuk", "alcuk_id", "2gdddddd!");
+
+        createTier1BoardWithAll();
+
+        ResultActions resultActions = BoardAcceptanceTestHelper.inquiryAllBoard(mvc, adminToken);
+        BoardResponse[] boards = objectMapper.readValue(resultActions.andReturn().getResponse().getContentAsString(), BoardListResponse.class).getBoards();
+        int boardId = boards[0].getId();
+        String content = "comment1";
+
+        //when
+        ResultActions result = BoardAcceptanceTestHelper.createComment(mvc, token, boardId, content);
+
+        //then
+
+        result.andExpectAll(
+                MockMvcResultMatchers.status().isForbidden(),
+                MockMvcResultMatchers.header().string(HttpHeaders.CONTENT_TYPE, "application/json"),
+                MockMvcResultMatchers.header().string("api-version", apiVersion),
+                MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON),
+                MockMvcResultMatchers.jsonPath("$.messages").value("No permission"),
+                MockMvcResultMatchers.jsonPath("$.document_url").value("docs.waldreg.org")
+        );
+    }
+
+    @Test
+    @DisplayName("특정 게시글에 댓글 작성 실패 - 내용이 1000자를 넘어가는 경우")
+    public void CREATE_COMMENT_OVER_FLOW_TEST() throws Exception{
+        //given
+        String adminToken = AuthenticationAcceptanceTestHelper.getAdminToken(mvc, objectMapper);
+
+        createTier1BoardWithAll();
+
+        ResultActions resultActions = BoardAcceptanceTestHelper.inquiryAllBoard(mvc, adminToken);
+        BoardResponse[] boards = objectMapper.readValue(resultActions.andReturn().getResponse().getContentAsString(), BoardListResponse.class).getBoards();
+        int boardId = boards[0].getId();
+        String overFlowContent = "comment1comment1comment1comment1comment1comment1comment1comment1comment1comment1comment1comment1comment1comment1comment1comment1comment1comment1comment1comment1comment1comment1comment1comment1comment1comment1comment1comment1comment1comment1comment1comment1comment1comment1comment1comment1comment1comment1comment1comment1comment1comment1comment1comment1comment1comment1comment1comment1comment1comment1comment1comment1comment1comment1comment1comment1comment1comment1comment1comment1comment1comment1comment1comment1comment1comment1comment1comment1comment1comment1comment1comment1comment1comment1comment1comment1comment1comment1comment1comment1comment1comment1comment1comment1comment1comment1comment1comment1comment1comment1comment1comment1comment1comment1comment1comment1comment1comment1comment1comment1comment1comment1comment1comment1comment1comment1comment1comment1comment1comment1comment1comment1comment1comment1comment1comment1comment1comment1comment1comment1comment1comment1comment1comment1comment1comment1comment1comment1comment1comment1comment1comment1comment1comment1comment1comment1comment1comment1comment1comment1comment1comment1comment1comment1comment1comment1comment1comment1comment1comment1comment1comment1comment1comment1comment1comment1comment1comment1comment1comment1comment1comment1comment1comment1comment1comment1comment1comment1comment1comment1";
+
+        //when
+        ResultActions result = BoardAcceptanceTestHelper.createComment(mvc, adminToken, boardId, overFlowContent);
+
+        //then
+        result.andExpectAll(
+                MockMvcResultMatchers.status().isBadRequest(),
+                MockMvcResultMatchers.header().string(HttpHeaders.CONTENT_TYPE, "application/json"),
+                MockMvcResultMatchers.header().string("api-version", apiVersion),
+                MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON),
+                MockMvcResultMatchers.jsonPath("$.messages").value("Overflow content"),
+                MockMvcResultMatchers.jsonPath("$.document_url").value("docs.waldreg.org")
+        );
+
+    }
+
+
+    @Test
+    @DisplayName("특정 게시글의 댓글 조회 성공 - 0~1 인덱스 댓글 조회")
+    public void INQUIRY_COMMENT_SUCCESS_TEST() throws Exception{
+        //given
+        String adminToken = AuthenticationAcceptanceTestHelper.getAdminToken(mvc, objectMapper);
+
+        createTier1BoardWithAll();
+
+        ResultActions resultActions = BoardAcceptanceTestHelper.inquiryAllBoard(mvc, adminToken);
+        BoardResponse[] boards = objectMapper.readValue(resultActions.andReturn().getResponse().getContentAsString(), BoardListResponse.class).getBoards();
+        int boardId = boards[0].getId();
+        BoardAcceptanceTestHelper.createComment(mvc, adminToken, boardId, "comment1");
+        BoardAcceptanceTestHelper.createComment(mvc, adminToken, boardId, "comment2");
+
+        //when
+        ResultActions result = BoardAcceptanceTestHelper.inquiryComment(mvc, adminToken, boardId, 0, 1);
+        //then
+        result.andExpectAll(
+                MockMvcResultMatchers.status().isOk(),
+                MockMvcResultMatchers.header().string(HttpHeaders.CONTENT_TYPE, "application/json"),
+                MockMvcResultMatchers.header().string("api-version", apiVersion),
+                MockMvcResultMatchers.jsonPath("$.max_idx").value(2),
+                MockMvcResultMatchers.jsonPath("$.member_tier").value("tier 1"),
+                MockMvcResultMatchers.jsonPath("$.comments.[0].user_id").value("Admin"),
+                MockMvcResultMatchers.jsonPath("$.comments.[0].name").value("Admin"),
+                MockMvcResultMatchers.jsonPath("$.comments.[0].created_at").isNotEmpty(),
+                MockMvcResultMatchers.jsonPath("$.comments.[0].last_modified_at").isNotEmpty(),
+                MockMvcResultMatchers.jsonPath("$.comments.[0].content").value("comment1"),
+                MockMvcResultMatchers.jsonPath("$.comments.[0].user_id").value("Admin"),
+                MockMvcResultMatchers.jsonPath("$.comments.[0].name").value("Admin"),
+                MockMvcResultMatchers.jsonPath("$.comments.[0].created_at").isNotEmpty(),
+                MockMvcResultMatchers.jsonPath("$.comments.[0].last_modified_at").isNotEmpty(),
+                MockMvcResultMatchers.jsonPath("$.comments.[0].content").value("comment2")
+        );
+
+    }
+
+    @Test
+    @DisplayName("특정 게시글의 댓글 조회 실패 - 없는 게시글 아이디")
+    public void INQUIRY_COMMENT_FAIL_UNKNOWN_BOARD_ID_TEST() throws Exception{
+        //given
+        String adminToken = AuthenticationAcceptanceTestHelper.getAdminToken(mvc, objectMapper);
+
+        createTier1BoardWithAll();
+
+        ResultActions resultActions = BoardAcceptanceTestHelper.inquiryAllBoard(mvc, adminToken);
+        BoardResponse[] boards = objectMapper.readValue(resultActions.andReturn().getResponse().getContentAsString(), BoardListResponse.class).getBoards();
+        int boardId = boards[0].getId();
+        BoardAcceptanceTestHelper.createComment(mvc, adminToken, boardId, "comment1");
+        BoardAcceptanceTestHelper.createComment(mvc, adminToken, boardId, "comment2");
+
+        //when
+        ResultActions result = BoardAcceptanceTestHelper.inquiryComment(mvc, adminToken, boardId, 0, 1);
+        //then
+        result.andExpectAll(
+                MockMvcResultMatchers.status().isBadRequest(),
+                MockMvcResultMatchers.header().string(HttpHeaders.CONTENT_TYPE, "application/json"),
+                MockMvcResultMatchers.header().string("api-version", apiVersion),
+                MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON),
+                MockMvcResultMatchers.jsonPath("$.messages").value("Unknown board id"),
+                MockMvcResultMatchers.jsonPath("$.document_url").value("docs.waldreg.org")
+        );
+
+    }
+
+    @Test
+    @DisplayName("특정 게시글의 댓글 조회 실패 - 권한이 없는 경우")
+    public void INQUIRY_COMMENT_FAIL_NO_PERMISSION_TEST() throws Exception{
+        //given
+        String adminToken = AuthenticationAcceptanceTestHelper.getAdminToken(mvc, objectMapper);
+        String token = createUserAndGetToken("alcuk", "alcuk_id", "2gdddddd!");
+
+        createTier1BoardWithAll();
+
+        ResultActions resultActions = BoardAcceptanceTestHelper.inquiryAllBoard(mvc, adminToken);
+        BoardResponse[] boards = objectMapper.readValue(resultActions.andReturn().getResponse().getContentAsString(), BoardListResponse.class).getBoards();
+        int boardId = boards[0].getId();
+        BoardAcceptanceTestHelper.createComment(mvc, adminToken, boardId, "comment1");
+        BoardAcceptanceTestHelper.createComment(mvc, adminToken, boardId, "comment2");
+
+        //when
+        ResultActions result = BoardAcceptanceTestHelper.inquiryComment(mvc, token, -1, 0, 1);
+        //then
+        result.andExpectAll(
+                MockMvcResultMatchers.status().isForbidden(),
+                MockMvcResultMatchers.header().string(HttpHeaders.CONTENT_TYPE, "application/json"),
+                MockMvcResultMatchers.header().string("api-version", apiVersion),
+                MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON),
+                MockMvcResultMatchers.jsonPath("$.messages").value("No permission"),
+                MockMvcResultMatchers.jsonPath("$.document_url").value("docs.waldreg.org")
+        );
+
+    }
+
+    @Test
+    @DisplayName("특정 게시글의 댓글 조회 실패 - 잘못된 범위")
+    public void INQUIRY_COMMENT_FAIL_INVALID_RANGE_TEST() throws Exception{
+        //given
+        String adminToken = AuthenticationAcceptanceTestHelper.getAdminToken(mvc, objectMapper);
+
+        createTier1BoardWithAll();
+
+        ResultActions resultActions = BoardAcceptanceTestHelper.inquiryAllBoard(mvc, adminToken);
+        BoardResponse[] boards = objectMapper.readValue(resultActions.andReturn().getResponse().getContentAsString(), BoardListResponse.class).getBoards();
+        int boardId = boards[0].getId();
+        BoardAcceptanceTestHelper.createComment(mvc, adminToken, boardId, "comment1");
+        BoardAcceptanceTestHelper.createComment(mvc, adminToken, boardId, "comment2");
+
+        //when
+        ResultActions result = BoardAcceptanceTestHelper.inquiryComment(mvc, adminToken, boardId, -1, -2);
+        //then
+        result.andExpectAll(
+                MockMvcResultMatchers.status().isBadRequest(),
+                MockMvcResultMatchers.header().string(HttpHeaders.CONTENT_TYPE, "application/json"),
+                MockMvcResultMatchers.header().string("api-version", apiVersion),
+                MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON),
+                MockMvcResultMatchers.jsonPath("$.messages").value("Invalid range"),
+                MockMvcResultMatchers.jsonPath("$.document_url").value("docs.waldreg.org")
+        );
+
+    }
+
+    @Test
+    @DisplayName("특정 게시글의 댓글 수정 성공 ")
+    public void MODIFY_COMMENT_SUCCESS_TEST() throws Exception{
+        //given
+        String adminToken = AuthenticationAcceptanceTestHelper.getAdminToken(mvc, objectMapper);
+
+        createTier1BoardWithAll();
+
+        ResultActions resultActions = BoardAcceptanceTestHelper.inquiryAllBoard(mvc, adminToken);
+        BoardResponse[] boards = objectMapper.readValue(resultActions.andReturn().getResponse().getContentAsString(), BoardListResponse.class).getBoards();
+        int boardId = boards[0].getId();
+        BoardAcceptanceTestHelper.createComment(mvc, adminToken, boardId, "comment1");
+
+        ResultActions comments = BoardAcceptanceTestHelper.inquiryComment(mvc, adminToken, boardId, 0, 1);
+        CommentResponse comment1 = objectMapper.readValue(comments.andReturn().getResponse().getContentAsString(), CommentListResponse.class).getComments().get(0);
+
+        int commentId = comment1.getId();
+        String modifyContent = "modify Content";
+        //when
+        ResultActions result = BoardAcceptanceTestHelper.modifyComment(mvc, adminToken, commentId, modifyContent);
+
+        //then
+        result.andExpectAll(
+                MockMvcResultMatchers.status().isOk(),
+                MockMvcResultMatchers.header().string(HttpHeaders.CONTENT_TYPE, "application/json"),
+                MockMvcResultMatchers.header().string("api-version", apiVersion)
+        );
+
+    }
+
+    @Test
+    @DisplayName("특정 게시글의 댓글 수정 실패 - 권한이 없는 경우 ")
+    public void MODIFY_COMMENT_NO_PERMISSION_TEST() throws Exception{
+        //given
+        String adminToken = AuthenticationAcceptanceTestHelper.getAdminToken(mvc, objectMapper);
+
+        createTier1BoardWithAll();
+
+        ResultActions resultActions = BoardAcceptanceTestHelper.inquiryAllBoard(mvc, adminToken);
+        BoardResponse[] boards = objectMapper.readValue(resultActions.andReturn().getResponse().getContentAsString(), BoardListResponse.class).getBoards();
+        int boardId = boards[0].getId();
+        BoardAcceptanceTestHelper.createComment(mvc, adminToken, boardId, "comment1");
+
+        ResultActions comments = BoardAcceptanceTestHelper.inquiryComment(mvc, adminToken, boardId, 0, 1);
+        CommentResponse comment1 = objectMapper.readValue(comments.andReturn().getResponse().getContentAsString(), CommentListResponse.class).getComments().get(0);
+
+        int commentId = comment1.getId();
+        String modifyContent = "comment1comment1comment1comment1comment1comment1comment1comment1comment1comment1comment1comment1comment1comment1comment1comment1comment1comment1comment1comment1comment1comment1comment1comment1comment1comment1comment1comment1comment1comment1comment1comment1comment1comment1comment1comment1comment1comment1comment1comment1comment1comment1comment1comment1comment1comment1comment1comment1comment1comment1comment1comment1comment1comment1comment1comment1comment1comment1comment1comment1comment1comment1comment1comment1comment1comment1comment1comment1comment1comment1comment1comment1comment1comment1comment1comment1comment1comment1comment1comment1comment1comment1comment1comment1comment1comment1comment1comment1comment1comment1comment1comment1comment1comment1comment1comment1comment1comment1comment1comment1comment1comment1comment1comment1comment1comment1comment1comment1comment1comment1comment1comment1comment1comment1comment1comment1comment1comment1comment1comment1comment1comment1comment1comment1comment1comment1comment1comment1comment1comment1comment1comment1comment1comment1comment1comment1comment1comment1comment1comment1comment1comment1comment1comment1comment1comment1comment1comment1comment1comment1comment1comment1comment1comment1comment1comment1comment1comment1comment1comment1comment1comment1comment1comment1comment1comment1comment1comment1comment1comment1";
+
+        //when
+        ResultActions result = BoardAcceptanceTestHelper.modifyComment(mvc, adminToken, commentId, modifyContent);
+
+        //then
+        result.andExpectAll(
+                MockMvcResultMatchers.status().isBadRequest(),
+                MockMvcResultMatchers.header().string(HttpHeaders.CONTENT_TYPE, "application/json"),
+                MockMvcResultMatchers.header().string("api-version", apiVersion),
+                MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON),
+                MockMvcResultMatchers.jsonPath("$.messages").value("Overflow content"),
+                MockMvcResultMatchers.jsonPath("$.document_url").value("docs.waldreg.org")
+        );
+
+    }
+
+    @Test
+    @DisplayName("특정 게시글의 댓글 수정 실패 - 아이디가 없는 경우 ")
+    public void MODIFY_COMMENT_UNKNOWN_ID_TEST() throws Exception{
+        //given
+        String adminToken = AuthenticationAcceptanceTestHelper.getAdminToken(mvc, objectMapper);
+
+        createTier1BoardWithAll();
+
+        ResultActions resultActions = BoardAcceptanceTestHelper.inquiryAllBoard(mvc, adminToken);
+        BoardResponse[] boards = objectMapper.readValue(resultActions.andReturn().getResponse().getContentAsString(), BoardListResponse.class).getBoards();
+        int boardId = boards[0].getId();
+        BoardAcceptanceTestHelper.createComment(mvc, adminToken, boardId, "comment1");
+
+        ResultActions comments = BoardAcceptanceTestHelper.inquiryComment(mvc, adminToken, boardId, 0, 1);
+
+        String modifyContent = "modify content";
+        //when
+        ResultActions result = BoardAcceptanceTestHelper.modifyComment(mvc, adminToken, -1, modifyContent);
+
+        //then
+        result.andExpectAll(
+                MockMvcResultMatchers.status().isBadRequest(),
+                MockMvcResultMatchers.header().string(HttpHeaders.CONTENT_TYPE, "application/json"),
+                MockMvcResultMatchers.header().string("api-version", apiVersion),
+                MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON),
+                MockMvcResultMatchers.jsonPath("$.messages").value("Unknown board id"),
+                MockMvcResultMatchers.jsonPath("$.document_url").value("docs.waldreg.org")
+        );
+
+    }
+
+    @Test
+    @DisplayName("특정 게시글의 댓글 삭제 성공")
+    public void DELETE_COMMENT_SUCCESS_TEST() throws Exception{
+        //given
+        String adminToken = AuthenticationAcceptanceTestHelper.getAdminToken(mvc, objectMapper);
+
+        createTier1BoardWithAll();
+
+        ResultActions resultActions = BoardAcceptanceTestHelper.inquiryAllBoard(mvc, adminToken);
+        BoardResponse[] boards = objectMapper.readValue(resultActions.andReturn().getResponse().getContentAsString(), BoardListResponse.class).getBoards();
+        int boardId = boards[0].getId();
+        BoardAcceptanceTestHelper.createComment(mvc, adminToken, boardId, "comment1");
+
+        ResultActions comments = BoardAcceptanceTestHelper.inquiryComment(mvc, adminToken, boardId, 0, 1);
+        CommentResponse comment1 = objectMapper.readValue(comments.andReturn().getResponse().getContentAsString(), CommentListResponse.class).getComments().get(0);
+
+        int commentId = comment1.getId();
+        //when
+        ResultActions result = BoardAcceptanceTestHelper.deleteComment(mvc, adminToken, commentId);
+
+        //then
+        result.andExpectAll(
+                MockMvcResultMatchers.status().isOk(),
+                MockMvcResultMatchers.header().string(HttpHeaders.CONTENT_TYPE, "application/json"),
+                MockMvcResultMatchers.header().string("api-version", apiVersion)
+        );
+
+    }
+
+    @Test
+    @DisplayName("특정 게시글의 댓글 삭제 실패 - 권한 없을때")
+    public void DELETE_COMMENT_NO_PERMISSION_TEST() throws Exception{
+        //given
+        String adminToken = AuthenticationAcceptanceTestHelper.getAdminToken(mvc, objectMapper);
+
+        createTier1BoardWithAll();
+
+        ResultActions resultActions = BoardAcceptanceTestHelper.inquiryAllBoard(mvc, adminToken);
+        BoardResponse[] boards = objectMapper.readValue(resultActions.andReturn().getResponse().getContentAsString(), BoardListResponse.class).getBoards();
+        int boardId = boards[0].getId();
+        BoardAcceptanceTestHelper.createComment(mvc, adminToken, boardId, "comment1");
+
+        ResultActions comments = BoardAcceptanceTestHelper.inquiryComment(mvc, adminToken, boardId, 0, 1);
+        CommentResponse comment1 = objectMapper.readValue(comments.andReturn().getResponse().getContentAsString(), CommentListResponse.class).getComments().get(0);
+
+        int commentId = comment1.getId();
+        String token = createUserAndGetToken("alcuk", "alcuk_id", "2gdddddd!");
+        //when
+        ResultActions result = BoardAcceptanceTestHelper.deleteComment(mvc, token, commentId);
+
+        //then
+        result.andExpectAll(
+                MockMvcResultMatchers.status().isForbidden(),
+                MockMvcResultMatchers.header().string(HttpHeaders.CONTENT_TYPE, "application/json"),
+                MockMvcResultMatchers.header().string("api-version", apiVersion),
+                MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON),
+                MockMvcResultMatchers.jsonPath("$.messages").value("No permission"),
+                MockMvcResultMatchers.jsonPath("$.document_url").value("docs.waldreg.org")
+        );
+
+    }
+
+    @Test
+    @DisplayName("특정 게시글의 댓글 삭제 실패 - 없는 아이디")
+    public void DELETE_COMMENT_UNKNOWN_ID_TEST() throws Exception{
+        //given
+        String adminToken = AuthenticationAcceptanceTestHelper.getAdminToken(mvc, objectMapper);
+
+        createTier1BoardWithAll();
+
+        ResultActions resultActions = BoardAcceptanceTestHelper.inquiryAllBoard(mvc, adminToken);
+        BoardResponse[] boards = objectMapper.readValue(resultActions.andReturn().getResponse().getContentAsString(), BoardListResponse.class).getBoards();
+        int boardId = boards[0].getId();
+        BoardAcceptanceTestHelper.createComment(mvc, adminToken, boardId, "comment1");
+
+        ResultActions comments = BoardAcceptanceTestHelper.inquiryComment(mvc, adminToken, boardId, 0, 1);
+        CommentResponse comment1 = objectMapper.readValue(comments.andReturn().getResponse().getContentAsString(), CommentListResponse.class).getComments().get(0);
+
+        //when
+        ResultActions result = BoardAcceptanceTestHelper.deleteComment(mvc, adminToken, -1);
+
+        //then
+        result.andExpectAll(
+                MockMvcResultMatchers.status().isBadRequest(),
+                MockMvcResultMatchers.header().string(HttpHeaders.CONTENT_TYPE, "application/json"),
+                MockMvcResultMatchers.header().string("api-version", apiVersion),
+                MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON),
+                MockMvcResultMatchers.jsonPath("$.messages").value("Unknown board id"),
+                MockMvcResultMatchers.jsonPath("$.document_url").value("docs.waldreg.org")
+        );
+
+    }
+
 
     @Test
     @DisplayName("새로운 카테고리 생성 성공")
@@ -2197,7 +2595,7 @@ public class BoardAcceptanceTest{
         //given
         String adminToken = AuthenticationAcceptanceTestHelper.getAdminToken(mvc, objectMapper);
 
-        createDefaultBoardWithAll();
+        createTier1BoardWithAll();
 
         ResultActions resultActions = BoardAcceptanceTestHelper.inquiryAllBoard(mvc, adminToken);
         BoardResponse[] boards = objectMapper.readValue(resultActions.andReturn().getResponse().getContentAsString(), BoardListResponse.class).getBoards();
@@ -2218,11 +2616,11 @@ public class BoardAcceptanceTest{
 
     @Test
     @DisplayName("이미지 불러오기 테스트 실패 - 없는 이미지 아이디")
-    public void IMAGE_LOAD_FAIL_INVALID_ID_TEST() throws Exception{
+    public void IMAGE_LOAD_FAIL_UNKNOWN_ID_TEST() throws Exception{
         //given
         String adminToken = AuthenticationAcceptanceTestHelper.getAdminToken(mvc, objectMapper);
 
-        createDefaultBoardWithAll();
+        createTier1BoardWithAll();
 
         String failImageRequestUrl = "/image?image-id=-1";
 
@@ -2248,7 +2646,7 @@ public class BoardAcceptanceTest{
         String adminToken = AuthenticationAcceptanceTestHelper.getAdminToken(mvc, objectMapper);
         String token = createUserAndGetToken("alcuk", "alcuk_id", "2gdddddd!");
 
-        createDefaultBoardWithAll();
+        createTier1BoardWithAll();
 
         ResultActions resultActions = BoardAcceptanceTestHelper.inquiryAllBoard(mvc, adminToken);
         BoardResponse[] boards = objectMapper.readValue(resultActions.andReturn().getResponse().getContentAsString(), BoardListResponse.class).getBoards();
@@ -2275,7 +2673,7 @@ public class BoardAcceptanceTest{
         //given
         String adminToken = AuthenticationAcceptanceTestHelper.getAdminToken(mvc, objectMapper);
 
-        createDefaultBoardWithAll();
+        createTier1BoardWithAll();
 
         ResultActions resultActions = BoardAcceptanceTestHelper.inquiryAllBoard(mvc, adminToken);
         BoardResponse[] boards = objectMapper.readValue(resultActions.andReturn().getResponse().getContentAsString(), BoardListResponse.class).getBoards();
@@ -2296,11 +2694,11 @@ public class BoardAcceptanceTest{
 
     @Test
     @DisplayName("파일 다운로드 테스트 실패 - 없는 파일 아이디")
-    public void FILE_DOWNLOAD_FAIL_INVALID_ID_TEST() throws Exception{
+    public void FILE_DOWNLOAD_FAIL_UNKNOWN_ID_TEST() throws Exception{
         //given
         String adminToken = AuthenticationAcceptanceTestHelper.getAdminToken(mvc, objectMapper);
 
-        createDefaultBoardWithAll();
+        createTier1BoardWithAll();
 
         String failFileRequestUrl = "/file?file-id=-1";
 
@@ -2326,7 +2724,7 @@ public class BoardAcceptanceTest{
         String adminToken = AuthenticationAcceptanceTestHelper.getAdminToken(mvc, objectMapper);
         String token = createUserAndGetToken("alcuk", "alcuk_id", "2gdddddd!");
 
-        createDefaultBoardWithAll();
+        createTier1BoardWithAll();
 
         ResultActions resultActions = BoardAcceptanceTestHelper.inquiryAllBoard(mvc, adminToken);
         BoardResponse[] boards = objectMapper.readValue(resultActions.andReturn().getResponse().getContentAsString(), BoardListResponse.class).getBoards();
@@ -2354,7 +2752,7 @@ public class BoardAcceptanceTest{
         String adminToken = AuthenticationAcceptanceTestHelper.getAdminToken(mvc, objectMapper);
 
         //when
-        ResultActions result = BoardAcceptanceTestHelper.inquiryMemberTier(mvc,adminToken);
+        ResultActions result = BoardAcceptanceTestHelper.inquiryMemberTier(mvc, adminToken);
 
         //then
         result.andExpectAll(
@@ -2382,7 +2780,7 @@ public class BoardAcceptanceTest{
                 .build());
     }
 
-    private void createDefaultBoardWithAll() throws Exception{
+    private void createTier1BoardWithAll() throws Exception{
         String adminToken = AuthenticationAcceptanceTestHelper.getAdminToken(mvc, objectMapper);
 
         String categoryName = "cate1";
@@ -2395,14 +2793,11 @@ public class BoardAcceptanceTest{
                                                                              .getContentAsString(), CategoryListResponse.class);
         int categoryId = categoryResult.getCategories()[0].getCategoryId();
 
-        String token = createUserAndGetToken("alcuk", "alcuk_id", "2gdddddd!");
-
         String title = "notice";
         String content = "content";
-        String memberTier1 = "tier 3";
         BoardCreateRequest boardCreateRequest = BoardCreateRequest.builder()
                 .title(title)
-                .content(content).categoryId(categoryId).memberTier(memberTier1).build();
+                .content(content).categoryId(categoryId).memberTier(memberTier).build();
 
         String imgName = "TestImage.jpg";
         String imgContentType = "jpg";
@@ -2416,7 +2811,7 @@ public class BoardAcceptanceTest{
         MockMultipartFile imgFile = new MockMultipartFile("image", imgName, imgContentType, new FileInputStream(imgPath));
         MockMultipartFile docxFile = new MockMultipartFile("file", fileName, fileContentType, new FileInputStream(filePath));
 
-        BoardAcceptanceTestHelper.createBoardWithAll(mvc, token, jsonContent, imgFile, docxFile);
+        BoardAcceptanceTestHelper.createBoardWithAll(mvc, adminToken, jsonContent, imgFile, docxFile);
 
     }
 

@@ -1,4 +1,4 @@
-package org.waldreg.controller.board.response;
+package org.waldreg.controller.board.response.memberTier;
 
 public class MemberTier{
 

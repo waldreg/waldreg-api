@@ -1,6 +1,9 @@
-package org.waldreg.controller.board.response;
+package org.waldreg.controller.board.response.board;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import java.time.LocalDateTime;
+import org.waldreg.controller.board.response.Reaction;
+import org.waldreg.controller.board.response.author.Author;
 
 public class BoardResponse{
 
@@ -10,10 +13,10 @@ public class BoardResponse{
     private String content;
     private Author author;
     @JsonProperty("created_at")
-    private String createdAt;
+    private LocalDateTime createdAt;
 
     @JsonProperty("last_modified_at")
-    private String lastModifiedAt;
+    private LocalDateTime lastModifiedAt;
 
     @JsonProperty("member_tier")
     private String memberTier;
@@ -89,19 +92,19 @@ public class BoardResponse{
         this.author = author;
     }
 
-    public String getCreatedAt(){
+    public LocalDateTime getCreatedAt(){
         return createdAt;
     }
 
-    public void setCreatedAt(String createdAt){
+    public void setCreatedAt(LocalDateTime createdAt){
         this.createdAt = createdAt;
     }
 
-    public String getLastModifiedAt(){
+    public LocalDateTime getLastModifiedAt(){
         return lastModifiedAt;
     }
 
-    public void setLastModifiedAt(String lastModifiedAt){
+    public void setLastModifiedAt(LocalDateTime lastModifiedAt){
         this.lastModifiedAt = lastModifiedAt;
     }
 
@@ -152,9 +155,9 @@ public class BoardResponse{
         private String title;
         private String content;
         private Author author;
-        private String createdAt;
+        private LocalDateTime createdAt;
 
-        private String lastModifiedAt;
+        private LocalDateTime lastModifiedAt;
 
         private String memberTier;
 
@@ -194,12 +197,12 @@ public class BoardResponse{
             return this;
         }
 
-        public Builder createdAt(String createdAt){
+        public Builder createdAt(LocalDateTime createdAt){
             this.createdAt = createdAt;
             return this;
         }
 
-        public Builder lastModifiedAt(String lastModifiedAt){
+        public Builder lastModifiedAt(LocalDateTime lastModifiedAt){
             this.lastModifiedAt = lastModifiedAt;
             return this;
         }

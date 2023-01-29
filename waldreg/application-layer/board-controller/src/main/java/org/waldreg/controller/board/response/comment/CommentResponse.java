@@ -1,23 +1,25 @@
-package org.waldreg.domain.board.comment;
+package org.waldreg.controller.board.response.comment;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import java.time.LocalDateTime;
-import org.waldreg.domain.user.User;
 
-public final class Comment{
+public class CommentResponse{
 
-    private final int id;
-    private final User user;
-    private final LocalDateTime createdAt;
-    private final LocalDateTime lastModifiedAt;
-    private final String content;
+    private int id;
+    @JsonProperty("user_id")
+    private String userId;
 
-    private Comment(){
-        throw new UnsupportedOperationException("Can not invoke constructor \"Comment()\"");
-    }
+    private String name;
+    private LocalDateTime createdAt;
+    private LocalDateTime lastModifiedAt;
+    private String content;
 
-    private Comment(Builder builder){
+    private CommentResponse(){}
+
+    private CommentResponse(Builder builder){
         this.id = builder.id;
-        this.user = builder.user;
+        this.userId = builder.userId;
+        this.name = builder.name;
         this.createdAt = builder.createdAt;
         this.lastModifiedAt = builder.lastModifiedAt;
         this.content = builder.content;
@@ -27,8 +29,12 @@ public final class Comment{
         return id;
     }
 
-    public User getUser(){
-        return user;
+    public String getUserId(){
+        return userId;
+    }
+
+    public String getName(){
+        return name;
     }
 
     public LocalDateTime getCreatedAt(){
@@ -43,11 +49,13 @@ public final class Comment{
         return content;
     }
 
+
     public final static class Builder{
 
         private int id;
-        private User user;
-        private final LocalDateTime createdAt;
+        private String userId;
+        private String name;
+        private LocalDateTime createdAt;
         private LocalDateTime lastModifiedAt;
         private String content;
 
@@ -63,8 +71,13 @@ public final class Comment{
             return this;
         }
 
-        public Builder user(User user){
-            this.user = user;
+        public Builder userId(String userId){
+            this.userId = userId;
+            return this;
+        }
+
+        public Builder name(String name){
+            this.name = name;
             return this;
         }
 
@@ -78,8 +91,8 @@ public final class Comment{
             return this;
         }
 
-        public Comment build(){
-            return new Comment(this);
+        public CommentResponse build(){
+            return new CommentResponse(this);
         }
 
     }
