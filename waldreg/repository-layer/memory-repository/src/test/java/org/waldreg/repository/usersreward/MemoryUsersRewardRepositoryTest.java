@@ -161,6 +161,23 @@ public class MemoryUsersRewardRepositoryTest{
         );
     }
 
+    @Test
+    @DisplayName("유저가 존재 확인 테스트")
+    public void CHECK_USER_EXIST_TEST(){
+        // given
+        int id = createUserAndGetId();
+
+        // when
+        boolean resultTrue = memoryUsersRewardRepository.isUserExist(id);
+        boolean resultFalse = memoryUsersRewardRepository.isUserExist(id+100);
+
+        // then
+        Assertions.assertAll(
+                () -> Assertions.assertTrue(resultTrue),
+                () -> Assertions.assertFalse(resultFalse)
+        );
+    }
+
     private int createUserAndGetId(){
         User user = User.builder()
                 .userId("test user")
