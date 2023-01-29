@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 import org.waldreg.character.exception.UnknownCharacterException;
 import org.waldreg.domain.character.Character;
+import org.waldreg.domain.rewardtag.RewardTagWrapper;
 import org.waldreg.domain.user.User;
 import org.waldreg.user.exception.UnknownIdException;
 import org.waldreg.user.exception.UnknownUserIdException;
@@ -102,6 +103,14 @@ public class MemoryUserStorage{
                 userEntry.getValue().setName(user.getName());
                 userEntry.getValue().setUserPassword(user.getUserPassword());
                 userEntry.getValue().setPhoneNumber(user.getPhoneNumber());
+            }
+        }
+    }
+
+    public void updateUsersRewardTag(int id, RewardTagWrapper rewardTagWrapper){
+        for (Map.Entry<String, User> userEntry : storage.entrySet()){
+            if(userEntry.getValue().getId() == id){
+                userEntry.getValue().addRewardTagWrapper(rewardTagWrapper);
             }
         }
     }

@@ -4,7 +4,7 @@ import java.time.LocalDateTime;
 
 public class RewardTagWrapper{
 
-    private final int rewardId;
+    private int rewardId;
     private final LocalDateTime rewardPresentedAt;
     private final RewardTag rewardTag;
 
@@ -13,13 +13,16 @@ public class RewardTagWrapper{
     }
 
     private RewardTagWrapper(Builder builder){
-        this.rewardId = builder.rewardId;
         this.rewardPresentedAt = builder.rewardPresentedAt;
         this.rewardTag = builder.rewardTag;
     }
 
     public static Builder builder(){
         return new Builder();
+    }
+
+    public void setRewardId(int rewardId){
+        this.rewardId = rewardId;
     }
 
     public int getRewardId(){
@@ -36,7 +39,6 @@ public class RewardTagWrapper{
 
     public final static class Builder{
 
-        private int rewardId;
         private final LocalDateTime rewardPresentedAt;
         private RewardTag rewardTag;
 
@@ -45,11 +47,6 @@ public class RewardTagWrapper{
         }
 
         private Builder(){}
-
-        public Builder rewardId(int rewardId){
-            this.rewardId = rewardId;
-            return this;
-        }
 
         public Builder rewardTag(RewardTag rewardTag){
             this.rewardTag = rewardTag;
