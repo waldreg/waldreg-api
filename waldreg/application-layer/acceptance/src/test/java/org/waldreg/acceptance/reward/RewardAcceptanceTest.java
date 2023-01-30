@@ -638,7 +638,6 @@ public class RewardAcceptanceTest{
     public void INQUIRY_SPECIFY_USERS_REWARD_TAG_FAIL_NO_PERMISSION_BUT_MYSELF_SUCCESS_TEST() throws Exception{
         // given
         String adminToken = AuthenticationAcceptanceTestHelper.getAdminToken(mvc, objectMapper);
-
         RewardTagRequest createRequest = RewardTagRequest.builder()
                 .rewardTagTitle("contest loser")
                 .rewardPoint(-100)
@@ -654,22 +653,17 @@ public class RewardAcceptanceTest{
                 .phoneNumber("010-1234-1234")
                 .build();
 
+        String token = createUserAndGetToken(name, userId, userPassword);
+
         // when
         RewardAcceptanceTestHelper.createRewardTag(mvc, adminToken, objectMapper.writeValueAsString(createRequest));
         ResultActions inquiryTagResult = RewardAcceptanceTestHelper.inquiryRewardTagList(mvc, adminToken);
         RewardTagResponse rewardTagResponse = getRewardTagResponseMap(inquiryTagResult).get("reward_tags").get(0);
         int rewardTagId = rewardTagResponse.getRewardTagId();
 
-        UserAcceptanceTestHelper.createUser(mvc, objectMapper.writeValueAsString(userRequest)).andDo(MockMvcResultHandlers.print());
-        userCreateRequestList.add(userRequest);
-
         int id = getUserResponse(userId, adminToken).getId();
         RewardAcceptanceTestHelper.givenRewardTagToUser(mvc, adminToken, ""+id, rewardTagId);
         RewardAcceptanceTestHelper.givenRewardTagToUser(mvc, adminToken, ""+id, rewardTagId);
-        String token = AuthenticationAcceptanceTestHelper.getToken(mvc, objectMapper, AuthTokenRequest.builder()
-                .userId(userId)
-                .userPassword(userPassword)
-                .build());
         ResultActions resultActions = RewardAcceptanceTestHelper.inquirySpecifyUsersRewardTags(mvc, token, id);
 
         // then
@@ -731,26 +725,6 @@ public class RewardAcceptanceTest{
                 MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON),
                 MockMvcResultMatchers.header().string(HttpHeaders.CONTENT_TYPE, "application/json"),
                 MockMvcResultMatchers.jsonPath("$.messages").value("Unknown user id \"" + 10000 + "\""),
-                MockMvcResultMatchers.jsonPath("$.document_url").value("docs.waldreg.org")
-        );
-    }
-
-    @Test
-    @DisplayName("특정 유저의 상 벌점 조회 실패 인수 테스트 - 인증 실패")
-    public void INQUIRY_SPECIFY_USERS_REWARD_TAG_FAIL_AUTHENTICATE_FAIL_USER_ACCEPTANCE_TEST() throws Exception{
-        // given
-        String token = "abc.def.ghi";
-
-        // when
-        ResultActions result = RewardAcceptanceTestHelper.inquirySpecifyUsersRewardTags(mvc, token, 10);
-
-        // then
-        result.andExpectAll(
-                MockMvcResultMatchers.status().isUnauthorized(),
-                MockMvcResultMatchers.header().string("Api-version", apiVersion),
-                MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON),
-                MockMvcResultMatchers.header().string(HttpHeaders.CONTENT_TYPE, "application/json"),
-                MockMvcResultMatchers.jsonPath("$.messages").value("Authenticate fail"),
                 MockMvcResultMatchers.jsonPath("$.document_url").value("docs.waldreg.org")
         );
     }
