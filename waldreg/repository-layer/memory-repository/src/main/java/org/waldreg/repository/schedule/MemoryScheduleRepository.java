@@ -1,11 +1,13 @@
 package org.waldreg.repository.schedule;
 
 import java.util.List;
+import org.springframework.stereotype.Repository;
 import org.waldreg.domain.calendar.Schedule;
 import org.waldreg.repository.MemoryScheduleStorage;
 import org.waldreg.schedule.dto.ScheduleDto;
 import org.waldreg.schedule.spi.repository.ScheduleRepository;
 
+@Repository
 public class MemoryScheduleRepository implements ScheduleRepository{
 
     private final MemoryScheduleStorage memoryScheduleStorage;

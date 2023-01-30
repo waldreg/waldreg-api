@@ -49,11 +49,11 @@ public class DefaultScheduleManager implements ScheduleManager{
 
     @Override
     public List<ScheduleDto> readScheduleByTerm(int year, int month){
-        throwIfDateFormat(year, month);
+        throwIfInvalidDateFormat(year, month);
         return scheduleRepository.readScheduleByTerm(year, month);
     }
 
-    private void throwIfDateFormat(int year, int month){
+    private void throwIfInvalidDateFormat(int year, int month){
         throwIfInvalidYear(year);
         throwIfInvalidMonth(month);
     }
@@ -106,12 +106,12 @@ public class DefaultScheduleManager implements ScheduleManager{
     }
 
     private void throwIfRepeatExist(LocalDateTime startedAt, LocalDateTime finishAt, RepeatDto repeatDto){
-        if (repeatDtoExist(repeatDto)){
+        if (isExistRepeatDto(repeatDto)){
             throwIfInvalidRepeat(startedAt, finishAt, repeatDto);
         }
     }
 
-    private boolean repeatDtoExist(RepeatDto repeatDto){
+    private boolean isExistRepeatDto(RepeatDto repeatDto){
         return repeatDto != null;
     }
 
