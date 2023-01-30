@@ -5,19 +5,17 @@ import java.util.List;
 
 public final class UsersRewardTagResponse{
 
-    private final int id;
-    private final String name;
+    private int id;
+    private String name;
 
     @JsonProperty("user_id")
-    private final String userId;
-    private final int reward;
+    private String userId;
+    private int reward;
 
     @JsonProperty("reward_infos")
-    private final List<RewardTagWrapperResponse> rewardInfoList;
+    private List<RewardTagWrapperResponse> rewardInfoList;
 
-    private UsersRewardTagResponse(){
-        throw new UnsupportedOperationException("Can not invoke constructor \"UsersRewardTagResponse()\"");
-    }
+    public UsersRewardTagResponse(){}
 
     private UsersRewardTagResponse(Builder builder){
         this.id = builder.id;

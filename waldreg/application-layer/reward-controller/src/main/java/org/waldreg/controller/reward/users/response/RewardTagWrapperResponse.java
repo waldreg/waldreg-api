@@ -5,23 +5,21 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 public final class RewardTagWrapperResponse{
 
     @JsonProperty("reward_id")
-    private final int rewardId;
+    private int rewardId;
 
     @JsonProperty("reward_tag_id")
-    private final int rewardTagId;
+    private int rewardTagId;
 
     @JsonProperty("reward_tag_title")
-    private final String rewardTagTitle;
+    private String rewardTagTitle;
 
     @JsonProperty("reward_presented_at")
-    private final String rewardPresentedAt;
+    private String rewardPresentedAt;
 
     @JsonProperty("reward_point")
-    private final int rewardPoint;
+    private int rewardPoint;
 
-    private RewardTagWrapperResponse(){
-        throw new UnsupportedOperationException("Can not invoke constructor \"RewardTagWrapperResponse()\"");
-    }
+    public RewardTagWrapperResponse(){}
 
     private RewardTagWrapperResponse(Builder builder){
         this.rewardId = builder.rewardId;
