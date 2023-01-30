@@ -2,7 +2,7 @@ package org.waldreg.domain.rewardtag;
 
 public class RewardTag{
 
-    private final int rewardTagId;
+    private int rewardTagId;
     private final String rewardTagTitle;
     private final int rewardPoint;
 
@@ -11,13 +11,16 @@ public class RewardTag{
     }
 
     private RewardTag(Builder builder){
-        this.rewardTagId = builder.rewardTagId;
         this.rewardTagTitle = builder.rewardTagTitle;
         this.rewardPoint = builder.rewardPoint;
     }
 
     public static Builder builder(){
         return new Builder();
+    }
+
+    public void setRewardTagId(int rewardTagId){
+        this.rewardTagId = rewardTagId;
     }
 
     public int getRewardTagId(){
@@ -32,18 +35,12 @@ public class RewardTag{
         return rewardPoint;
     }
 
-    private final static class Builder{
+    public final static class Builder{
 
-        private int rewardTagId;
         private String rewardTagTitle;
         private int rewardPoint;
 
         private Builder(){}
-
-        public Builder rewardTagId(int rewardTagId){
-            this.rewardTagId = rewardTagId;
-            return this;
-        }
 
         public Builder rewardTagTitle(String rewardTagTitle){
             this.rewardTagTitle = rewardTagTitle;
