@@ -1,28 +1,25 @@
-package org.waldreg.controller.reward.users.response;
+package org.waldreg.reward.users.dto;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.List;
 
-public final class UsersRewardTagResponse{
+public class UsersRewardDto{
 
-    private int id;
-    private String name;
+    private final int id;
+    private final String name;
+    private final String userId;
+    private final int reward;
+    private final List<UsersRewardTagDto> usersRewardTagDtoList;
 
-    @JsonProperty("user_id")
-    private String userId;
-    private int reward;
+    private UsersRewardDto(){
+        throw new UnsupportedOperationException("Cannot invoke constructor \"UsersRewardDto()\"");
+    }
 
-    @JsonProperty("reward_infos")
-    private List<RewardTagWrapperResponse> rewardInfoList;
-
-    public UsersRewardTagResponse(){}
-
-    private UsersRewardTagResponse(Builder builder){
+    private UsersRewardDto(Builder builder){
         this.id = builder.id;
         this.name = builder.name;
         this.userId = builder.userId;
         this.reward = builder.reward;
-        this.rewardInfoList = builder.rewardInfoList;
+        this.usersRewardTagDtoList = builder.usersRewardTagDtoList;
     }
 
     public static Builder builder(){
@@ -45,8 +42,8 @@ public final class UsersRewardTagResponse{
         return reward;
     }
 
-    public List<RewardTagWrapperResponse> getRewardInfoList(){
-        return rewardInfoList;
+    public List<UsersRewardTagDto> getUsersRewardTagDtoList(){
+        return usersRewardTagDtoList;
     }
 
     public final static class Builder{
@@ -55,7 +52,7 @@ public final class UsersRewardTagResponse{
         private String name;
         private String userId;
         private int reward;
-        private List<RewardTagWrapperResponse> rewardInfoList;
+        private List<UsersRewardTagDto> usersRewardTagDtoList;
 
         private Builder(){}
 
@@ -79,13 +76,13 @@ public final class UsersRewardTagResponse{
             return this;
         }
 
-        public Builder rewardInfoList(List<RewardTagWrapperResponse> rewardInfoList){
-            this.rewardInfoList = rewardInfoList;
+        public Builder usersRewardTagDtoList(List<UsersRewardTagDto> usersRewardTagDtoList){
+            this.usersRewardTagDtoList = usersRewardTagDtoList;
             return this;
         }
 
-        public UsersRewardTagResponse build(){
-            return new UsersRewardTagResponse(this);
+        public UsersRewardDto build(){
+            return new UsersRewardDto(this);
         }
 
     }

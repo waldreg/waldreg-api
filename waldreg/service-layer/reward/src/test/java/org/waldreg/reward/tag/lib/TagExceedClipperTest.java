@@ -7,7 +7,6 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
-import org.wadlreg.reward.tag.lib.TagExceedClipper;
 
 @ExtendWith(SpringExtension.class)
 @ContextConfiguration(classes = TagExceedClipper.class)

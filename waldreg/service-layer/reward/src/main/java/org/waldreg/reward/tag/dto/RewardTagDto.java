@@ -1,14 +1,16 @@
-package org.waldreg.controller.reward.tag.response;
+package org.waldreg.reward.tag.dto;
 
-public final class RewardTagResponse{
+public final class RewardTagDto{
 
-    private int rewardTagId;
-    private String rewardTagTitle;
-    private int rewardPoint;
+    private final int rewardTagId;
+    private final String rewardTagTitle;
+    private final int rewardPoint;
 
-    private RewardTagResponse(){}
+    private RewardTagDto(){
+        throw new UnsupportedOperationException("Can not invoke constructor \"RewardTagDto()\"");
+    }
 
-    private RewardTagResponse(Builder builder){
+    private RewardTagDto(Builder builder){
         this.rewardTagId = builder.rewardTagId;
         this.rewardTagTitle = builder.rewardTagTitle;
         this.rewardPoint = builder.rewardPoint;
@@ -53,8 +55,8 @@ public final class RewardTagResponse{
             return this;
         }
 
-        public RewardTagResponse build(){
-            return new RewardTagResponse(this);
+        public RewardTagDto build(){
+            return new RewardTagDto(this);
         }
 
     }

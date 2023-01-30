@@ -4,8 +4,8 @@ import java.util.ArrayList;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
-import org.wadlreg.reward.tag.dto.RewardTagDto;
-import org.wadlreg.reward.tag.spi.RewardTagRepository;
+import org.waldreg.reward.tag.dto.RewardTagDto;
+import org.waldreg.reward.tag.spi.RewardTagRepository;
 import org.waldreg.domain.rewardtag.RewardTag;
 import org.waldreg.repository.MemoryRewardTagStorage;
 

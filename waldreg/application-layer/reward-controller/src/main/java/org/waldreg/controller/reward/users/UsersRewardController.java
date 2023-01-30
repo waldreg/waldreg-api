@@ -3,15 +3,15 @@ package org.waldreg.controller.reward.users;
 import java.util.ArrayList;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-import org.wadlreg.reward.users.UsersRewardManager;
-import org.wadlreg.reward.users.dto.UsersRewardDto;
+import org.waldreg.reward.users.UsersRewardManager;
+import org.waldreg.reward.users.dto.UsersRewardDto;
 import org.waldreg.character.aop.annotation.PermissionVerifying;
 import org.waldreg.controller.reward.users.mapper.ControllerUsersRewardMapper;
-import org.waldreg.controller.reward.users.response.RewardTagWrapperResponse;
 import org.waldreg.controller.reward.users.response.UsersRewardTagResponse;
 import org.waldreg.token.aop.annotation.Authenticating;
 
@@ -40,7 +40,7 @@ public class UsersRewardController{
 
     @Authenticating
     @PermissionVerifying("Reward manager")
-    @GetMapping("/reward-tag/reset")
+    @GetMapping("/reward-tag/users/reset")
     public void resetAllUsersReward(){
         usersRewardManager.resetAllUsersReward();
     }
@@ -51,6 +51,13 @@ public class UsersRewardController{
     public UsersRewardTagResponse readSpecifyUsersReward(@PathVariable("id") int id){
         UsersRewardDto usersRewardDto = usersRewardManager.readSpecifyUsersReward(id);
         return controllerUsersRewardMapper.usersRewardDtoToUsersRewardTagResponse(usersRewardDto);
+    }
+
+    @Authenticating
+    @PermissionVerifying("Reward manager")
+    @DeleteMapping("/reward-tag/user")
+    public void deleteSpecifyUsersReward(@RequestParam("id") int id, @RequestParam("reward-id") int rewardId){
+        usersRewardManager.deleteRewardToUser(id ,rewardId);
     }
 
     private List<Integer> getUserIdList(String userId){

@@ -526,7 +526,7 @@ public class RewardAcceptanceTest{
         RewardTagResponse rewardTagResponse = getRewardTagResponseMap(inquiryTagResult).get("reward_tags").get(0);
         int rewardTagId = rewardTagResponse.getRewardTagId();
 
-        ResultActions result = RewardAcceptanceTestHelper.givenRewardTagToUser(mvc, adminToken, ""+1, rewardTagId);
+        ResultActions result = RewardAcceptanceTestHelper.givenRewardTagToUser(mvc, adminToken, ""+2, rewardTagId);
 
         // then
         result.andExpectAll(

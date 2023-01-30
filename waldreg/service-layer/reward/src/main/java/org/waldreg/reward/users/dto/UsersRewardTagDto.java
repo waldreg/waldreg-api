@@ -1,27 +1,20 @@
-package org.waldreg.controller.reward.users.response;
+package org.waldreg.reward.users.dto;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
+import java.time.LocalDateTime;
 
-public final class RewardTagWrapperResponse{
+public class UsersRewardTagDto{
 
-    @JsonProperty("reward_id")
-    private int rewardId;
+    private final int rewardId;
+    private final int rewardTagId;
+    private final String rewardTagTitle;
+    private final LocalDateTime rewardPresentedAt;
+    private final int rewardPoint;
 
-    @JsonProperty("reward_tag_id")
-    private int rewardTagId;
+    private UsersRewardTagDto(){
+        throw new UnsupportedOperationException("Can not invoke constructor \"UsersRewardTagDto()\"");
+    }
 
-    @JsonProperty("reward_tag_title")
-    private String rewardTagTitle;
-
-    @JsonProperty("reward_presented_at")
-    private String rewardPresentedAt;
-
-    @JsonProperty("reward_point")
-    private int rewardPoint;
-
-    public RewardTagWrapperResponse(){}
-
-    private RewardTagWrapperResponse(Builder builder){
+    private UsersRewardTagDto(Builder builder){
         this.rewardId = builder.rewardId;
         this.rewardTagId = builder.rewardTagId;
         this.rewardTagTitle = builder.rewardTagTitle;
@@ -45,7 +38,7 @@ public final class RewardTagWrapperResponse{
         return rewardTagTitle;
     }
 
-    public String getRewardPresentedAt(){
+    public LocalDateTime getRewardPresentedAt(){
         return rewardPresentedAt;
     }
 
@@ -58,7 +51,7 @@ public final class RewardTagWrapperResponse{
         private int rewardId;
         private int rewardTagId;
         private String rewardTagTitle;
-        private String rewardPresentedAt;
+        private LocalDateTime rewardPresentedAt;
         private int rewardPoint;
 
         private Builder(){}
@@ -78,7 +71,7 @@ public final class RewardTagWrapperResponse{
             return this;
         }
 
-        public Builder rewardPresentedAt(String rewardPresentedAt){
+        public Builder rewardPresentedAt(LocalDateTime rewardPresentedAt){
             this.rewardPresentedAt = rewardPresentedAt;
             return this;
         }
@@ -88,8 +81,8 @@ public final class RewardTagWrapperResponse{
             return this;
         }
 
-        public RewardTagWrapperResponse build(){
-            return new RewardTagWrapperResponse(this);
+        public UsersRewardTagDto build(){
+            return new UsersRewardTagDto(this);
         }
 
     }
