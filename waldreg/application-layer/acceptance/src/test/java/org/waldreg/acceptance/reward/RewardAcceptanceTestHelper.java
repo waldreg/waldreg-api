@@ -72,7 +72,7 @@ public class RewardAcceptanceTestHelper{
 
     public static ResultActions deleteSpecifyUsersRewardTags(MockMvc mvc, String token, int id, int rewardId) throws Exception{
         return mvc.perform(MockMvcRequestBuilders
-                .delete("/reward-tag/users?id={id}$reward-tag={reward-id}", id, rewardId)
+                .delete("/reward-tag/user?id={id}&reward-id={reward-id}", id, rewardId)
                 .accept(MediaType.APPLICATION_JSON)
                 .header("Api-version", "1.0")
                 .header(HttpHeaders.AUTHORIZATION, token));

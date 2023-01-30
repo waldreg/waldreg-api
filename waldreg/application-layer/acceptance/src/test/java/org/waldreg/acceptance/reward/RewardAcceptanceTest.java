@@ -84,7 +84,7 @@ public class RewardAcceptanceTest{
                             MockMvcResultMatchers.header().string("Api-version", apiVersion),
                             MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON),
                             MockMvcResultMatchers.header().string(HttpHeaders.CONTENT_TYPE, "application/json"),
-                            MockMvcResultMatchers.jsonPath("$.messages").value("Unknown reward tag id"),
+                            MockMvcResultMatchers.jsonPath("$.messages").value("Unknown reward tag id \"" + rewardTagResponse.getRewardTagId() + "\""),
                             MockMvcResultMatchers.jsonPath("$.document_url").value("docs.waldreg.org")
                     );
         }
@@ -318,7 +318,7 @@ public class RewardAcceptanceTest{
                 MockMvcResultMatchers.header().string("Api-version", apiVersion),
                 MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON),
                 MockMvcResultMatchers.header().string(HttpHeaders.CONTENT_TYPE, "application/json"),
-                MockMvcResultMatchers.jsonPath("$.messages").value("Unknown reward tag id"),
+                MockMvcResultMatchers.jsonPath("$.messages").value("Unknown reward tag id \"" + 999 + "\""),
                 MockMvcResultMatchers.jsonPath("$.document_url").value("docs.waldreg.org")
         );
     }
@@ -371,7 +371,7 @@ public class RewardAcceptanceTest{
                 MockMvcResultMatchers.header().string("Api-version", apiVersion),
                 MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON),
                 MockMvcResultMatchers.header().string(HttpHeaders.CONTENT_TYPE, "application/json"),
-                MockMvcResultMatchers.jsonPath("$.messages").value("Unknown reward tag id"),
+                MockMvcResultMatchers.jsonPath("$.messages").value("Unknown reward tag id \"" + rewardTagResponse.getRewardTagId() + "\""),
                 MockMvcResultMatchers.jsonPath("$.document_url").value("docs.waldreg.org")
         );
     }
@@ -485,7 +485,7 @@ public class RewardAcceptanceTest{
                 MockMvcResultMatchers.header().string("Api-version", apiVersion),
                 MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON),
                 MockMvcResultMatchers.header().string(HttpHeaders.CONTENT_TYPE, "application/json"),
-                MockMvcResultMatchers.jsonPath("$.messages").value("Unknown reward tag id"),
+                MockMvcResultMatchers.jsonPath("$.messages").value("Unknown reward tag id \"" + 100 + "\""),
                 MockMvcResultMatchers.jsonPath("$.document_url").value("docs.waldreg.org")
         );
     }
@@ -534,7 +534,7 @@ public class RewardAcceptanceTest{
                 MockMvcResultMatchers.header().string("Api-version", apiVersion),
                 MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON),
                 MockMvcResultMatchers.header().string(HttpHeaders.CONTENT_TYPE, "application/json"),
-                MockMvcResultMatchers.jsonPath("$.messages").value("Unknown user id"),
+                MockMvcResultMatchers.jsonPath("$.messages").value("Unknown user id \"" + 2 + "\""),
                 MockMvcResultMatchers.jsonPath("$.document_url").value("docs.waldreg.org")
         );
     }
@@ -722,7 +722,7 @@ public class RewardAcceptanceTest{
         String adminToken = AuthenticationAcceptanceTestHelper.getAdminToken(mvc, objectMapper);
 
         // when
-        ResultActions resultActions = RewardAcceptanceTestHelper.inquirySpecifyUsersRewardTags(mvc, adminToken, 10);
+        ResultActions resultActions = RewardAcceptanceTestHelper.inquirySpecifyUsersRewardTags(mvc, adminToken, 10000);
 
         // then
         resultActions.andExpectAll(
@@ -730,7 +730,7 @@ public class RewardAcceptanceTest{
                 MockMvcResultMatchers.header().string("Api-version", apiVersion),
                 MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON),
                 MockMvcResultMatchers.header().string(HttpHeaders.CONTENT_TYPE, "application/json"),
-                MockMvcResultMatchers.jsonPath("$.messages").value("Unknown user id"),
+                MockMvcResultMatchers.jsonPath("$.messages").value("Unknown user id \"" + 10000 + "\""),
                 MockMvcResultMatchers.jsonPath("$.document_url").value("docs.waldreg.org")
         );
     }
@@ -863,7 +863,7 @@ public class RewardAcceptanceTest{
                 MockMvcResultMatchers.header().string("Api-version", apiVersion),
                 MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON),
                 MockMvcResultMatchers.header().string(HttpHeaders.CONTENT_TYPE, "application/json"),
-                MockMvcResultMatchers.jsonPath("$.messages").value("Unknown reward id"),
+                MockMvcResultMatchers.jsonPath("$.messages").value("Unknown reward id \"" + 1000 + "\""),
                 MockMvcResultMatchers.jsonPath("$.document_url").value("docs.waldreg.org")
         );
     }
@@ -883,7 +883,7 @@ public class RewardAcceptanceTest{
                 MockMvcResultMatchers.header().string("Api-version", apiVersion),
                 MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON),
                 MockMvcResultMatchers.header().string(HttpHeaders.CONTENT_TYPE, "application/json"),
-                MockMvcResultMatchers.jsonPath("$.messages").value("Unknown user id"),
+                MockMvcResultMatchers.jsonPath("$.messages").value("Unknown user id \"" + 100 + "\""),
                 MockMvcResultMatchers.jsonPath("$.document_url").value("docs.waldreg.org")
         );
     }

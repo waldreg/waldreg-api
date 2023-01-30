@@ -26,7 +26,7 @@ public class RewardControllerAdvice{
     public ResponseEntity<ExceptionTemplate> catchUnknownRewardTagException(UnknownRewardTagException unknownRewardTagException){
         ExceptionTemplate exceptionTemplate = ExceptionTemplate.builder()
                 .message(unknownRewardTagException.getMessage())
-                .message(documentUrl)
+                .documentUrl(documentUrl)
                 .build();
         return new ResponseEntity<>(exceptionTemplate, HttpStatus.BAD_REQUEST);
     }
@@ -35,7 +35,7 @@ public class RewardControllerAdvice{
     public ResponseEntity<ExceptionTemplate> catchUnknownRewardTargetException(UnknownRewardTargetException unknownRewardTargetException){
         ExceptionTemplate exceptionTemplate = ExceptionTemplate.builder()
                 .message(unknownRewardTargetException.getMessage())
-                .message(documentUrl)
+                .documentUrl(documentUrl)
                 .build();
         return new ResponseEntity<>(exceptionTemplate, HttpStatus.BAD_REQUEST);
     }
