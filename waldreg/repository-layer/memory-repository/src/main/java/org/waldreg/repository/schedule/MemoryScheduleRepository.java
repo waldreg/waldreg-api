@@ -49,7 +49,7 @@ public class MemoryScheduleRepository implements ScheduleRepository{
 
     @Override
     public void deleteScheduleById(int id){
-
+        memoryScheduleStorage.deleteScheduleById(id);
     }
 
     @Override
