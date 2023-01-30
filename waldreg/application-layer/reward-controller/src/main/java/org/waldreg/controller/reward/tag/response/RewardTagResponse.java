@@ -1,9 +1,16 @@
 package org.waldreg.controller.reward.tag.response;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 public final class RewardTagResponse{
 
+    @JsonProperty("reward_tag_id")
     private int rewardTagId;
+
+    @JsonProperty("reward_tag_title")
     private String rewardTagTitle;
+
+    @JsonProperty("reward_point")
     private int rewardPoint;
 
     private RewardTagResponse(){}

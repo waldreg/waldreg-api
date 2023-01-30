@@ -38,6 +38,15 @@ public class UsersRewardController{
         }
     }
 
+    private List<Integer> getUserIdList(String userId){
+        String[] userIds = userId.split(",");
+        List<Integer> userIdList = new ArrayList<>();
+        for(String element : userIds){
+            userIdList.add(Integer.parseInt(element.strip()));
+        }
+        return userIdList;
+    }
+
     @Authenticating
     @PermissionVerifying("Reward manager")
     @GetMapping("/reward-tag/users/reset")
@@ -57,16 +66,7 @@ public class UsersRewardController{
     @PermissionVerifying("Reward manager")
     @DeleteMapping("/reward-tag/user")
     public void deleteSpecifyUsersReward(@RequestParam("id") int id, @RequestParam("reward-id") int rewardId){
-        usersRewardManager.deleteRewardToUser(id ,rewardId);
-    }
-
-    private List<Integer> getUserIdList(String userId){
-        String[] userIds = userId.split(",");
-        List<Integer> userIdList = new ArrayList<>();
-        for(String element : userIds){
-            userIdList.add(Integer.parseInt(element.strip()));
-        }
-        return userIdList;
+        usersRewardManager.deleteRewardToUser(id, rewardId);
     }
 
 }
