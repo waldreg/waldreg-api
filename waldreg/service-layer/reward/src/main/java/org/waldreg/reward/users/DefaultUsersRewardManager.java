@@ -1,14 +1,14 @@
-package org.wadlreg.reward.users;
+package org.waldreg.reward.users;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.wadlreg.reward.exception.UnknownRewardException;
-import org.wadlreg.reward.exception.UnknownRewardTargetException;
-import org.wadlreg.reward.exception.UnknownRewardTagException;
-import org.wadlreg.reward.users.dto.UsersRewardDto;
-import org.wadlreg.reward.users.spi.repository.UserExistChecker;
-import org.wadlreg.reward.users.spi.repository.UsersRewardRepository;
-import org.wadlreg.reward.users.spi.tag.RewardTagExistChecker;
+import org.waldreg.reward.exception.UnknownRewardException;
+import org.waldreg.reward.exception.UnknownRewardTargetException;
+import org.waldreg.reward.exception.UnknownRewardTagException;
+import org.waldreg.reward.users.dto.UsersRewardDto;
+import org.waldreg.reward.users.spi.repository.UserExistChecker;
+import org.waldreg.reward.users.spi.repository.UsersRewardRepository;
+import org.waldreg.reward.users.spi.tag.RewardTagExistChecker;
 
 @Service
 public class DefaultUsersRewardManager implements UsersRewardManager{

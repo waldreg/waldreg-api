@@ -1,4 +1,4 @@
-package org.wadlreg.reward.config;
+package org.waldreg.reward.config;
 
 import java.util.List;
 import javax.annotation.PostConstruct;

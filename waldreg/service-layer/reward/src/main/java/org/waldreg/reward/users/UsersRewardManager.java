@@ -1,8 +1,8 @@
-package org.wadlreg.reward.users.spi.repository;
+package org.waldreg.reward.users;
 
-import org.wadlreg.reward.users.dto.UsersRewardDto;
+import org.waldreg.reward.users.dto.UsersRewardDto;
 
-public interface UsersRewardRepository{
+public interface UsersRewardManager{
 
     void assignRewardToUser(int id, int rewardTagId);
 
@@ -11,7 +11,5 @@ public interface UsersRewardRepository{
     void deleteRewardToUser(int id, int rewardId);
 
     void resetAllUsersReward();
-
-    boolean isRewardIdExist(int id, int rewardId);
 
 }

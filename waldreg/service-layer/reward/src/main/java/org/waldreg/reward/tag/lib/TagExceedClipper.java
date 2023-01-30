@@ -1,4 +1,4 @@
-package org.wadlreg.reward.tag.lib;
+package org.waldreg.reward.tag.lib;
 
 import org.springframework.stereotype.Service;
 

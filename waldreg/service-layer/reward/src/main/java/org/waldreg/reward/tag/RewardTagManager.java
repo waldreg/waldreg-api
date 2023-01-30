@@ -1,10 +1,9 @@
-package org.wadlreg.reward.tag.spi;
+package org.waldreg.reward.tag;
 
 import java.util.List;
-import org.wadlreg.reward.tag.dto.RewardTagDto;
-import org.wadlreg.reward.users.spi.tag.RewardTagExistChecker;
+import org.waldreg.reward.tag.dto.RewardTagDto;
 
-public interface RewardTagRepository extends RewardTagExistChecker{
+public interface RewardTagManager{
 
     void createRewardTag(RewardTagDto rewardTagDto);
 

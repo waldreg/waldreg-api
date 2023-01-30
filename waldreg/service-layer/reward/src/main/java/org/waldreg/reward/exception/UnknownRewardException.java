@@ -1,4 +1,4 @@
-package org.wadlreg.reward.exception;
+package org.waldreg.reward.exception;
 
 public class UnknownRewardException extends RuntimeException{
 

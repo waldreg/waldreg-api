@@ -10,8 +10,8 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
-import org.wadlreg.reward.tag.dto.RewardTagDto;
-import org.wadlreg.reward.tag.spi.RewardTagRepository;
+import org.waldreg.reward.tag.dto.RewardTagDto;
+import org.waldreg.reward.tag.spi.RewardTagRepository;
 import org.waldreg.repository.MemoryRewardTagStorage;
 
 @ExtendWith(SpringExtension.class)

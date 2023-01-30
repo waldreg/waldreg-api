@@ -1,12 +1,12 @@
-package org.wadlreg.reward.tag;
+package org.waldreg.reward.tag;
 
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.wadlreg.reward.tag.dto.RewardTagDto;
-import org.wadlreg.reward.exception.UnknownRewardTagException;
-import org.wadlreg.reward.tag.lib.TagExceedClipper;
-import org.wadlreg.reward.tag.spi.RewardTagRepository;
+import org.waldreg.reward.tag.dto.RewardTagDto;
+import org.waldreg.reward.exception.UnknownRewardTagException;
+import org.waldreg.reward.tag.lib.TagExceedClipper;
+import org.waldreg.reward.tag.spi.RewardTagRepository;
 
 @Service
 public class DefaultRewardTagManager implements RewardTagManager{

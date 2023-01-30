@@ -34,12 +34,13 @@ public class RewardAcceptanceTestHelper{
                 .accept(MediaType.APPLICATION_JSON)
                 .header("Api-version", "1.0")
                 .header(HttpHeaders.AUTHORIZATION, token)
+                .contentType(MediaType.APPLICATION_JSON)
                 .content(content));
     }
 
     public static ResultActions deleteRewardTag(MockMvc mvc, String token, int rewardTagId) throws Exception{
         return mvc.perform(MockMvcRequestBuilders
-                .post("/reward-tag/{reward-tag-id}", rewardTagId)
+                .delete("/reward-tag/{reward-tag-id}", rewardTagId)
                 .accept(MediaType.APPLICATION_JSON)
                 .header("Api-version", "1.0")
                 .header(HttpHeaders.AUTHORIZATION, token));
@@ -47,7 +48,7 @@ public class RewardAcceptanceTestHelper{
 
     public static ResultActions givenRewardTagToUser(MockMvc mvc, String token, String ids, int rewardTagId) throws Exception{
         return mvc.perform(MockMvcRequestBuilders
-                .get("reward-tag/users?id={ids}&reward-tag-id={rewardTagId}", ids, rewardTagId)
+                .get("/reward-tag/users?id={ids}&reward-tag-id={rewardTagId}", ids, rewardTagId)
                 .accept(MediaType.APPLICATION_JSON)
                 .header("Api-version", "1.0")
                 .header(HttpHeaders.AUTHORIZATION, token));
@@ -71,7 +72,7 @@ public class RewardAcceptanceTestHelper{
 
     public static ResultActions deleteSpecifyUsersRewardTags(MockMvc mvc, String token, int id, int rewardId) throws Exception{
         return mvc.perform(MockMvcRequestBuilders
-                .delete("/reward-tag?id={id}$tag={reward-id}", id, rewardId)
+                .delete("/reward-tag/users?id={id}$reward-tag={reward-id}", id, rewardId)
                 .accept(MediaType.APPLICATION_JSON)
                 .header("Api-version", "1.0")
                 .header(HttpHeaders.AUTHORIZATION, token));

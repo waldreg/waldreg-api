@@ -2,13 +2,11 @@ package org.waldreg.controller.reward.tag.response;
 
 public final class RewardTagResponse{
 
-    private final int rewardTagId;
-    private final String rewardTagTitle;
-    private final int rewardPoint;
+    private int rewardTagId;
+    private String rewardTagTitle;
+    private int rewardPoint;
 
-    private RewardTagResponse(){
-        throw new UnsupportedOperationException("Can not invoke constructor \"RewardTagResponse()\"");
-    }
+    private RewardTagResponse(){}
 
     private RewardTagResponse(Builder builder){
         this.rewardTagId = builder.rewardTagId;

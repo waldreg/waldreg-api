@@ -1,4 +1,4 @@
-package org.wadlreg.reward.users.dto;
+package org.waldreg.reward.users.dto;
 
 import java.time.LocalDateTime;
 

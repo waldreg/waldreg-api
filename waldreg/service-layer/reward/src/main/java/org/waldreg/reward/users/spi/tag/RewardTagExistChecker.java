@@ -1,4 +1,4 @@
-package org.wadlreg.reward.users.spi.tag;
+package org.waldreg.reward.users.spi.tag;
 
 public interface RewardTagExistChecker{
 

@@ -1,4 +1,4 @@
-package org.wadlreg.reward.users.spi.repository;
+package org.waldreg.reward.users.spi.repository;
 
 public interface UserExistChecker{
 

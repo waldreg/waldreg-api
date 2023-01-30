@@ -3,8 +3,8 @@ package org.waldreg.repository.usersreward;
 import java.util.ArrayList;
 import java.util.List;
 import org.springframework.stereotype.Service;
-import org.wadlreg.reward.users.dto.UsersRewardDto;
-import org.wadlreg.reward.users.dto.UsersRewardTagDto;
+import org.waldreg.reward.users.dto.UsersRewardDto;
+import org.waldreg.reward.users.dto.UsersRewardTagDto;
 import org.waldreg.domain.rewardtag.RewardTagWrapper;
 import org.waldreg.domain.user.User;
 

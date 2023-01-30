@@ -1,4 +1,4 @@
-package org.wadlreg.reward.tag.dto;
+package org.waldreg.reward.tag.dto;
 
 public final class RewardTagDto{
 
