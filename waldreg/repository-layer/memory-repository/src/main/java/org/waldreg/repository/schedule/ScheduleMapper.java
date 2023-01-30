@@ -1,11 +1,13 @@
 package org.waldreg.repository.schedule;
 
 import java.time.LocalDateTime;
+import org.springframework.stereotype.Service;
 import org.waldreg.domain.calendar.Schedule;
 import org.waldreg.domain.calendar.ScheduleRepeat;
 import org.waldreg.schedule.dto.RepeatDto;
 import org.waldreg.schedule.dto.ScheduleDto;
 
+@Service
 public class ScheduleMapper{
 
     public Schedule scheduleDtoToScheduleDomain(ScheduleDto scheduleDto){

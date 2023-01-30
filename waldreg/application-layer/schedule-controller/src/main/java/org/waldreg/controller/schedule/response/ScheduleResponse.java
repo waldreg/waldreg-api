@@ -20,6 +20,7 @@ public class ScheduleResponse{
     private ScheduleResponse(){}
 
     private ScheduleResponse(Builder builder){
+        this.id = builder.id;
         this.scheduleTitle = builder.scheduleTitle;
         this.scheduleContent = builder.scheduleContent;
         this.startedAt = builder.startedAt;
@@ -87,6 +88,11 @@ public class ScheduleResponse{
         private ScheduleRepeatResponse repeat;
 
         private Builder(){}
+
+        public Builder id(int id){
+            this.id = id;
+            return this;
+        }
 
         public Builder scheduleTitle(String scheduleTitle){
             this.scheduleTitle = scheduleTitle;

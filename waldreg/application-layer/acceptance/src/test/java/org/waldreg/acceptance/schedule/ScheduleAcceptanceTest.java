@@ -18,7 +18,6 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import org.waldreg.acceptance.authentication.AuthenticationAcceptanceTestHelper;
 import org.waldreg.controller.schedule.request.ScheduleRepeatRequest;
 import org.waldreg.controller.schedule.request.ScheduleRequest;
-import org.waldreg.controller.schedule.response.ScheduleListResponse;
 import org.waldreg.controller.schedule.response.ScheduleResponse;
 
 @SpringBootTest
