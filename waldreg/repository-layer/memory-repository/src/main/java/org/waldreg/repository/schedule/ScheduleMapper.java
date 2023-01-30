@@ -3,6 +3,7 @@ package org.waldreg.repository.schedule;
 import java.time.LocalDateTime;
 import org.waldreg.domain.calendar.Schedule;
 import org.waldreg.domain.calendar.ScheduleRepeat;
+import org.waldreg.schedule.dto.RepeatDto;
 import org.waldreg.schedule.dto.ScheduleDto;
 
 public class ScheduleMapper{
@@ -29,6 +30,30 @@ public class ScheduleMapper{
 
     private boolean isExistRepeatDto(ScheduleDto scheduleDto){
         return scheduleDto.getRepeatDto() != null;
+    }
+
+    public ScheduleDto scheduleDomainToScheduleDto(Schedule schedule){
+        ScheduleDto.Builder builder = ScheduleDto.builder()
+                .scheduleTitle(schedule.getScheduleTitle())
+                .scheduleContent(schedule.getScheduleContent())
+                .startedAt(schedule.getStartedAt().toString())
+                .finishAt(schedule.getFinishAt().toString());
+        if (isExistScheduleRepeat(schedule)){
+            return scheduleRepeatToRepeatDto(schedule, builder);
+        }
+        return builder.build();
+    }
+
+    private ScheduleDto scheduleRepeatToRepeatDto(Schedule schedule, ScheduleDto.Builder builder){
+        return builder.repeatDto(RepeatDto.builder()
+                        .cycle(schedule.getScheduleRepeat().getCycle())
+                        .repeatFinishAt(schedule.getScheduleRepeat().getRepeatFinishAt().toString())
+                        .build())
+                .build();
+    }
+
+    private boolean isExistScheduleRepeat(Schedule schedule){
+        return schedule.getScheduleRepeat() != null;
     }
 
 }
