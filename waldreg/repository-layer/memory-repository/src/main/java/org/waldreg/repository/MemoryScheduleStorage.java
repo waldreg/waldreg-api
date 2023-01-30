@@ -43,6 +43,10 @@ public class MemoryScheduleStorage{
         return storage.get(id);
     }
 
+    public void updateScheduleById(int id, Schedule schedule){
+        storage.put(id, schedule);
+    }
+
     public void deleteAllSchedule(){
         storage.clear();
     }

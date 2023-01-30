@@ -192,7 +192,99 @@ public class ScheduleRepositoryTest{
                 () -> Assertions.assertEquals(scheduleDto2.getScheduleContent(), result.getScheduleContent()),
                 () -> Assertions.assertEquals(scheduleDto2.getStartedAt(), result.getStartedAt()),
                 () -> Assertions.assertEquals(scheduleDto2.getFinishAt(), result.getFinishAt()),
-                () -> Assertions.assertNull(scheduleDto2.getRepeatDto())
+                () -> Assertions.assertNull(result.getRepeatDto())
+        );
+
+    }
+
+    @Test
+    @DisplayName("일정 수정 성공 테스트 - 반복 삭제하고, schedule content 변경")
+    public void UPDATE_SCHEDULE_WITH_DELETE_REPEAT_SUCCESS_TEST(){
+        //given
+        String scheduleTitle = "seminar";
+        String scheduleContent = "BFS";
+        String startedAt = "2023-01-31T20:52";
+        String finishAt = "2023-02-23T23:59";
+        int cycle = 123;
+        String repeatFinishAt = "2023-12-28T23:59";
+        RepeatDto repeatDto = RepeatDto.builder()
+                .cycle(cycle)
+                .repeatFinishAt(repeatFinishAt)
+                .build();
+        ScheduleDto scheduleDto = ScheduleDto.builder()
+                .scheduleTitle(scheduleTitle)
+                .scheduleContent(scheduleContent)
+                .startedAt(startedAt)
+                .finishAt(finishAt)
+                .repeatDto(repeatDto)
+                .build();
+        String scheduleContent2 = "DFS";
+        ScheduleDto scheduleDto2 = ScheduleDto.builder()
+                .scheduleTitle(scheduleTitle)
+                .scheduleContent(scheduleContent2)
+                .startedAt(startedAt)
+                .finishAt(finishAt)
+                .build();
+
+        //when
+        scheduleRepository.createSchedule(scheduleDto);
+        List<ScheduleDto> scheduleDtoList = scheduleRepository.readScheduleByTerm(2023, 2);
+        scheduleRepository.updateScheduleById(scheduleDtoList.get(0).getId(), scheduleDto2);
+        ScheduleDto result = scheduleRepository.readScheduleById(scheduleDtoList.get(0).getId());
+
+        //then
+        Assertions.assertAll(
+                () -> Assertions.assertEquals(scheduleDto2.getScheduleTitle(), result.getScheduleTitle()),
+                () -> Assertions.assertEquals(scheduleDto2.getScheduleContent(), result.getScheduleContent()),
+                () -> Assertions.assertEquals(scheduleDto2.getStartedAt(), result.getStartedAt()),
+                () -> Assertions.assertEquals(scheduleDto2.getFinishAt(), result.getFinishAt()),
+                () -> Assertions.assertNull(result.getRepeatDto())
+        );
+
+    }
+
+    @Test
+    @DisplayName("일정 수정 성공 테스트 - 반복 추가")
+    public void UPDATE_SCHEDULE_WITH_ADD_REPEAT_SUCCESS_TEST(){
+        //given
+        String scheduleTitle = "seminar";
+        String scheduleContent = "BFS";
+        String startedAt = "2023-01-31T20:52";
+        String finishAt = "2023-02-23T23:59";
+        ScheduleDto scheduleDto = ScheduleDto.builder()
+                .scheduleTitle(scheduleTitle)
+                .scheduleContent(scheduleContent)
+                .startedAt(startedAt)
+                .finishAt(finishAt)
+                .build();
+        int cycle2 = 123;
+        String repeatFinishAt2 = "2023-12-28T23:59";
+        RepeatDto repeatDto2 = RepeatDto.builder()
+                .cycle(cycle2)
+                .repeatFinishAt(repeatFinishAt2)
+                .build();
+        ScheduleDto scheduleDto2 = ScheduleDto.builder()
+                .scheduleTitle(scheduleTitle)
+                .scheduleContent(scheduleContent)
+                .startedAt(startedAt)
+                .finishAt(finishAt)
+                .repeatDto(repeatDto2)
+                .build();
+
+        //when
+        scheduleRepository.createSchedule(scheduleDto);
+        List<ScheduleDto> scheduleDtoList = scheduleRepository.readScheduleByTerm(2023, 2);
+        scheduleRepository.updateScheduleById(scheduleDtoList.get(0).getId(), scheduleDto2);
+        ScheduleDto result = scheduleRepository.readScheduleById(scheduleDtoList.get(0).getId());
+
+        //then
+        Assertions.assertAll(
+                () -> Assertions.assertEquals(scheduleDto2.getScheduleTitle(), result.getScheduleTitle()),
+                () -> Assertions.assertEquals(scheduleDto2.getScheduleContent(), result.getScheduleContent()),
+                () -> Assertions.assertEquals(scheduleDto2.getStartedAt(), result.getStartedAt()),
+                () -> Assertions.assertEquals(scheduleDto2.getFinishAt(), result.getFinishAt()),
+                () -> Assertions.assertEquals(scheduleDto2.getRepeatDto().getCycle(), result.getRepeatDto().getCycle()),
+                () -> Assertions.assertEquals(scheduleDto2.getRepeatDto().getRepeatFinishAt(), result.getRepeatDto().getRepeatFinishAt())
         );
 
     }
