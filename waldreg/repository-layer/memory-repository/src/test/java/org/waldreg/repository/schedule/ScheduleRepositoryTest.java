@@ -1,7 +1,9 @@
 package org.waldreg.repository.schedule;
 
 import java.util.List;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -11,7 +13,7 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.waldreg.repository.MemoryScheduleStorage;
 import org.waldreg.schedule.dto.RepeatDto;
 import org.waldreg.schedule.dto.ScheduleDto;
-import org.waldreg.schedule.spi.repository.ScheduleRepository;
+import org.waldreg.schedule.spi.ScheduleRepository;
 
 @ExtendWith(SpringExtension.class)
 @ContextConfiguration(classes = {MemoryScheduleRepository.class, MemoryScheduleStorage.class, ScheduleMapper.class})
@@ -22,6 +24,10 @@ public class ScheduleRepositoryTest{
 
     @Autowired
     MemoryScheduleStorage memoryScheduleStorage;
+
+    @BeforeEach
+    @AfterEach
+    private void DELETE_ALL(){memoryScheduleStorage.deleteAllSchedule();}
 
     @Test
     @DisplayName("새로운 일정 생성 성공 테스트 - 반복 있을 때")
@@ -127,6 +133,7 @@ public class ScheduleRepositoryTest{
 
         //then
         Assertions.assertAll(
+                () -> Assertions.assertEquals(2, result.size()),
                 () -> Assertions.assertEquals(scheduleRequest.getScheduleTitle(), result.get(0).getScheduleTitle()),
                 () -> Assertions.assertEquals(scheduleRequest.getScheduleContent(), result.get(0).getScheduleContent()),
                 () -> Assertions.assertEquals(scheduleRequest.getStartedAt(), result.get(0).getStartedAt()),
@@ -140,5 +147,54 @@ public class ScheduleRepositoryTest{
                 () -> Assertions.assertNull(result.get(1).getRepeatDto()));
     }
 
+    @Test
+    @DisplayName("특정 일정 조회 성공 테스트")
+    public void READ_SPECIFIC_SCHEDULE_SUCCESS_TEST(){
+        //given
+        String scheduleTitle = "seminar";
+        String scheduleContent = "BFS";
+        String startedAt = "2023-01-24T20:52";
+        String finishAt = "2023-01-31T23:59";
+        int cycle = 123;
+        String repeatFinishAt = "2023-12-31T23:59";
+        RepeatDto repeatDto = RepeatDto.builder()
+                .cycle(cycle)
+                .repeatFinishAt(repeatFinishAt)
+                .build();
+        ScheduleDto scheduleDto = ScheduleDto.builder()
+                .scheduleTitle(scheduleTitle)
+                .scheduleContent(scheduleContent)
+                .startedAt(startedAt)
+                .finishAt(finishAt)
+                .repeatDto(repeatDto)
+                .build();
+        String scheduleTitle2 = "seminar";
+        String scheduleContent2 = "DFS";
+        String startedAt2 = "2023-01-31T20:52";
+        String finishAt2 = "2023-02-23T23:59";
+        ScheduleDto scheduleDto2 = ScheduleDto.builder()
+                .scheduleTitle(scheduleTitle2)
+                .scheduleContent(scheduleContent2)
+                .startedAt(startedAt2)
+                .finishAt(finishAt2)
+                .build();
+
+        //when
+        scheduleRepository.createSchedule(scheduleDto);
+        scheduleRepository.createSchedule(scheduleDto2);
+        List<ScheduleDto> scheduleDtoList = scheduleRepository.readScheduleByTerm(2023, 2);
+        System.out.println("!!!" + scheduleDtoList.get(0).getId());
+        ScheduleDto result = scheduleRepository.readScheduleById(scheduleDtoList.get(0).getId());
+
+        //then
+        Assertions.assertAll(
+                () -> Assertions.assertEquals(scheduleDto2.getScheduleTitle(), result.getScheduleTitle()),
+                () -> Assertions.assertEquals(scheduleDto2.getScheduleContent(), result.getScheduleContent()),
+                () -> Assertions.assertEquals(scheduleDto2.getStartedAt(), result.getStartedAt()),
+                () -> Assertions.assertEquals(scheduleDto2.getFinishAt(), result.getFinishAt()),
+                () -> Assertions.assertNull(scheduleDto2.getRepeatDto())
+        );
+
+    }
 
 }

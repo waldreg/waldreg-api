@@ -20,6 +20,10 @@ public class ScheduleMapper{
         return builder.build();
     }
 
+    private boolean isExistRepeatDto(ScheduleDto scheduleDto){
+        return scheduleDto.getRepeatDto() != null;
+    }
+
     private Schedule repeatDtoToScheduleRepeat(ScheduleDto scheduleDto, Schedule.Builder builder){
         return builder.scheduleRepeat(ScheduleRepeat.builder()
                         .cycle(scheduleDto.getRepeatDto().getCycle())
@@ -28,12 +32,9 @@ public class ScheduleMapper{
                 .build();
     }
 
-    private boolean isExistRepeatDto(ScheduleDto scheduleDto){
-        return scheduleDto.getRepeatDto() != null;
-    }
-
     public ScheduleDto scheduleDomainToScheduleDto(Schedule schedule){
         ScheduleDto.Builder builder = ScheduleDto.builder()
+                .id(schedule.getId())
                 .scheduleTitle(schedule.getScheduleTitle())
                 .scheduleContent(schedule.getScheduleContent())
                 .startedAt(schedule.getStartedAt().toString())
