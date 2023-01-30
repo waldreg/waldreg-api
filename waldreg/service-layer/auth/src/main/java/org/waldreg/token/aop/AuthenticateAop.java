@@ -139,7 +139,7 @@ public class AuthenticateAop{
         boolean verifyState = true;
         try{
             TokenUserDto tokenUserDto = tokenUserFindById.findUserById(getDecryptedId(getToken()));
-            throwIfIdDoesNotSame(tokenUserDto.getId(), idAuthenticating.idx());
+            throwIfIdDoesNotSame(tokenUserDto.getId(), (int)proceedingJoinPoint.getArgs()[idAuthenticating.idx()]);
         }catch(Exception E){
             idAuthenticating.fail().behave();
             verifyState = false;

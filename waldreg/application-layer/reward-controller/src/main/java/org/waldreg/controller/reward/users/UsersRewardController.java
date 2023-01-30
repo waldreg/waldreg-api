@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.waldreg.character.aop.behavior.VerifyingFailBehavior;
 import org.waldreg.character.aop.parameter.PermissionVerifyState;
+import org.waldreg.character.exception.NoPermissionException;
 import org.waldreg.reward.users.UsersRewardManager;
 import org.waldreg.reward.users.dto.UsersRewardDto;
 import org.waldreg.character.aop.annotation.PermissionVerifying;
@@ -18,6 +19,8 @@ import org.waldreg.controller.reward.users.mapper.ControllerUsersRewardMapper;
 import org.waldreg.controller.reward.users.response.UsersRewardTagResponse;
 import org.waldreg.token.aop.annotation.Authenticating;
 import org.waldreg.token.aop.annotation.IdAuthenticating;
+import org.waldreg.token.aop.behavior.AuthFailBehavior;
+import org.waldreg.token.aop.parameter.AuthenticateVerifyState;
 
 @RestController
 public class UsersRewardController{
@@ -58,12 +61,21 @@ public class UsersRewardController{
         usersRewardManager.resetAllUsersReward();
     }
 
-    @IdAuthenticating
+    @IdAuthenticating(fail = AuthFailBehavior.PASS)
     @PermissionVerifying(value = "Reward manager", fail = VerifyingFailBehavior.PASS)
     @GetMapping("/reward-tag/user/{id}")
-    public UsersRewardTagResponse readSpecifyUsersReward(@PathVariable("id") int id, @Nullable PermissionVerifyState permissionVerifyState){
+    public UsersRewardTagResponse readSpecifyUsersReward(@PathVariable("id") int id,
+            PermissionVerifyState permissionVerifyState,
+            AuthenticateVerifyState authenticateVerifyState){
+        throwIfValidationFail(permissionVerifyState, authenticateVerifyState);
         UsersRewardDto usersRewardDto = usersRewardManager.readSpecifyUsersReward(id);
         return controllerUsersRewardMapper.usersRewardDtoToUsersRewardTagResponse(usersRewardDto);
+    }
+
+    private void throwIfValidationFail(PermissionVerifyState permissionVerifyState, AuthenticateVerifyState authenticateVerifyState){
+        if(!permissionVerifyState.isVerified() && !authenticateVerifyState.isVerified()){
+            throw new NoPermissionException();
+        }
     }
 
     @Authenticating
