@@ -3,6 +3,7 @@ package org.waldreg.repository.user;
 import java.util.ArrayList;
 import java.util.List;
 import org.springframework.stereotype.Service;
+import org.waldreg.domain.rewardtag.RewardTagWrapper;
 import org.waldreg.domain.user.User;
 import org.waldreg.user.dto.UserDto;
 
@@ -26,8 +27,7 @@ public class UserMapper{
                 .userPassword(user.getUserPassword())
                 .phoneNumber(user.getPhoneNumber())
                 .createdAt(user.getCreatedAt())
-                .advantage(user.getAdvantage().getPoint())
-                .penalty(user.getPenalty().getPoint())
+                .rewardPoint(addUpRewardTagWrapperListPoint(user.getRewardTagWrapperList()))
                 .character(user.getCharacter().getCharacterName())
                 .socialLogin(user.getSocialLogin())
                 .build();
@@ -39,6 +39,14 @@ public class UserMapper{
             userDtoList.add(userDomainToUserDto(user));
         }
         return userDtoList;
+    }
+
+    private int addUpRewardTagWrapperListPoint(List<RewardTagWrapper> rewardTagWrapperList){
+        int sum = 0;
+        for(RewardTagWrapper rewardTagWrapper : rewardTagWrapperList){
+            sum+=rewardTagWrapper.getRewardTag().getRewardPoint();
+        }
+        return sum;
     }
 
 }

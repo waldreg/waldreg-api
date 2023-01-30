@@ -63,9 +63,9 @@ public class UserController{
     @Authenticating(fail = AuthFailBehavior.PASS)
     @PermissionVerifying(value = "Read other user info permission", fail = VerifyingFailBehavior.PASS)
     @RequestMapping(value = "/users")
-    public UserListResponse readAllUser(@RequestParam("from") int startId, @RequestParam("to") int endId, @Nullable PermissionVerifyState permissionVerifyState){
+    public UserListResponse readAllUser(@RequestParam("from") int startIdx, @RequestParam("to") int endIdx, @Nullable PermissionVerifyState permissionVerifyState){
         int maxIdx = userManager.readMaxIdx();
-        List<UserDto> userDtoList = userManager.readUserList(startId, endId);
+        List<UserDto> userDtoList = userManager.readUserList(startIdx, endIdx);
         if (permissionVerifyState.isVerified()){
             List<UserResponse> userResponseList = controllerUserMapper.userDtoListToUserListResponseWithPermission(userDtoList);
             return controllerUserMapper.createUserListResponse(maxIdx, userResponseList);

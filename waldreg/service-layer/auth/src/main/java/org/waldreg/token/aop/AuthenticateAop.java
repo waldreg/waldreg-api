@@ -1,6 +1,9 @@
 package org.waldreg.token.aop;
 
+import java.lang.reflect.Method;
+import java.lang.reflect.Parameter;
 import javax.servlet.http.HttpServletRequest;
+import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
@@ -10,9 +13,12 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.stereotype.Service;
 import org.waldreg.token.aop.annotation.Authenticating;
 import org.waldreg.token.aop.annotation.HeaderPasswordAuthenticating;
+import org.waldreg.token.aop.annotation.IdAuthenticating;
 import org.waldreg.token.aop.annotation.UserIdAuthenticating;
+import org.waldreg.token.aop.parameter.AuthenticateVerifyState;
 import org.waldreg.token.authenticator.TokenAuthenticator;
 import org.waldreg.token.dto.TokenUserDto;
+import org.waldreg.token.exception.IdMissMatchException;
 import org.waldreg.token.exception.PasswordMissMatchException;
 import org.waldreg.token.exception.TokenExpiredException;
 import org.waldreg.token.exception.UserIdMissMatchException;
@@ -29,6 +35,7 @@ public class AuthenticateAop{
     private final AnnotationExtractor<Authenticating> authenticatingAnnotationExtractor;
     private final AnnotationExtractor<HeaderPasswordAuthenticating> headerPasswordAuthenticatingAnnotationExtractor;
     private final AnnotationExtractor<UserIdAuthenticating> userIdAuthenticatingAnnotationExtractor;
+    private final AnnotationExtractor<IdAuthenticating> idAuthenticatingAnnotationExtractor;
 
     @Autowired
     public AuthenticateAop(TokenUserFindById tokenUserFindById,
@@ -36,13 +43,15 @@ public class AuthenticateAop{
             HttpServletRequest httpServletRequest,
             AnnotationExtractor<Authenticating> authenticatingAnnotationExtractor,
             AnnotationExtractor<HeaderPasswordAuthenticating> headerPasswordAuthenticatingAnnotationExtractor,
-            AnnotationExtractor<UserIdAuthenticating> userIdAuthenticatingAnnotationExtractor) {
+            AnnotationExtractor<UserIdAuthenticating> userIdAuthenticatingAnnotationExtractor,
+            AnnotationExtractor<IdAuthenticating> idAuthenticatingAnnotationExtractor) {
         this.tokenUserFindById = tokenUserFindById;
         this.tokenAuthenticator = tokenAuthenticator;
         this.httpServletRequest = httpServletRequest;
         this.authenticatingAnnotationExtractor = authenticatingAnnotationExtractor;
         this.headerPasswordAuthenticatingAnnotationExtractor = headerPasswordAuthenticatingAnnotationExtractor;
         this.userIdAuthenticatingAnnotationExtractor = userIdAuthenticatingAnnotationExtractor;
+        this.idAuthenticatingAnnotationExtractor = idAuthenticatingAnnotationExtractor;
     }
 
     @Around("@annotation(org.waldreg.token.aop.annotation.Authenticating)")
@@ -95,14 +104,6 @@ public class AuthenticateAop{
         return proceedingJoinPoint.proceed(proceedingJoinPoint.getArgs());
     }
 
-    private String getToken(){
-        return httpServletRequest.getHeader(HttpHeaders.AUTHORIZATION);
-    }
-
-    private int getDecryptedId(String token) throws TokenExpiredException{
-        return tokenAuthenticator.authenticate(token);
-    }
-
     private void throwIfUserIdDoesNotSame(TokenUserDto tokenUserDto, ProceedingJoinPoint proceedingJoinPoint, int argumentIdx){
         String userId = getParameterArgument(proceedingJoinPoint, argumentIdx, String.class);
         if(!tokenUserDto.getUserId().equals(userId)){
@@ -130,5 +131,58 @@ public class AuthenticateAop{
             throw new IllegalArgumentException("Can not cast parameter type to " + type.getSimpleName());
         }
     }
+
+    @Around("@annotation(org.waldreg.token.aop.annotation.IdAuthenticating)")
+    public Object authenticateById(ProceedingJoinPoint proceedingJoinPoint) throws Throwable{
+        IdAuthenticating idAuthenticating = idAuthenticatingAnnotationExtractor
+                .extractAnnotation(proceedingJoinPoint, IdAuthenticating.class);
+        boolean verifyState = true;
+        try{
+            TokenUserDto tokenUserDto = tokenUserFindById.findUserById(getDecryptedId(getToken()));
+            throwIfIdDoesNotSame(tokenUserDto.getId(), (int)proceedingJoinPoint.getArgs()[idAuthenticating.idx()]);
+        }catch(Exception E){
+            idAuthenticating.fail().behave();
+            verifyState = false;
+        }
+        return proceedingJoinPoint.proceed(setPermissionVerifyStateParameter(proceedingJoinPoint, verifyState));
+    }
+
+    private String getToken(){
+        return httpServletRequest.getHeader(HttpHeaders.AUTHORIZATION);
+    }
+
+    private int getDecryptedId(String token) throws TokenExpiredException{
+        return tokenAuthenticator.authenticate(token);
+    }
+
+    private void throwIfIdDoesNotSame(int authorizedId, int targetId){
+        if(authorizedId != targetId){
+            throw new IdMissMatchException(authorizedId, targetId);
+        }
+    }
+
+    private Object[] setPermissionVerifyStateParameter(JoinPoint joinPoint, boolean state){
+        Object[] objects = joinPoint.getArgs();
+        Parameter[] parameters = extractParameters(joinPoint);
+        for (int i = 0; i < parameters.length; i++){
+            if (parameters[i].getType().equals(AuthenticateVerifyState.class)){
+                objects[i] = (AuthenticateVerifyState) (new AuthenticateVerifyState(state));
+            }
+        }
+        return objects;
+    }
+
+    private Parameter[] extractParameters(JoinPoint joinPoint){
+        String methodName = joinPoint.getSignature().getName();
+        Class<?> targetClass = joinPoint.getTarget().getClass();
+        Method[] methods = targetClass.getMethods();
+        for (Method method : methods){
+            if (method.getName().equals(methodName)){
+                return method.getParameters();
+            }
+        }
+        throw new IllegalStateException("Can not find method named \"" + methodName + "\"");
+    }
+
 
 }
