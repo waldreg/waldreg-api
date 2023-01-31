@@ -23,6 +23,15 @@ public class DefaultCharacterManager implements CharacterManager{
     private final PermissionUnitListReadable permissionUnitListReadable;
     private final String[] deletedBlockedPermissionNames = {"Admin", "Guest"};
 
+    @Autowired
+    private DefaultCharacterManager(CharacterRepository characterRepository,
+            PermissionChecker permissionChecker,
+            PermissionUnitListReadable permissionUnitListReadable){
+        this.characterRepository = characterRepository;
+        this.permissionChecker = permissionChecker;
+        this.permissionUnitListReadable = permissionUnitListReadable;
+    }
+
     @Override
     public void createCharacter(CharacterDto characterDto){
         throwIfInvalidPermissionDetected(characterDto.getPermissionList());
@@ -53,14 +62,14 @@ public class DefaultCharacterManager implements CharacterManager{
     }
 
     private void throwIfInvalidPermissionStatusDetected(PermissionDto permissionDto){
-        if (!permissionChecker.isPossiblePermissionStatus(permissionDto.getName(), permissionDto.getStatus())){
-            throw new UnknownPermissionStatusException(permissionDto.getName(), permissionDto.getStatus());
+        if (!permissionChecker.isPossiblePermission(permissionDto.getId(), permissionDto.getName(), permissionDto.getStatus())){
+            throw new UnknownPermissionStatusException(permissionDto.getId(), permissionDto.getName(), permissionDto.getStatus());
         }
     }
 
     private CharacterDto fillAbsentPermissionToCharacterDto(CharacterDto characterDto){
         Map<String, PermissionDto> permissionDtoMap = convertListToMap(characterDto.getPermissionList());
-        fillAbsentPermissions(permissionDtoMap, false);
+        fillAbsentPermissions(permissionDtoMap);
         return CharacterDto.builder()
                 .characterName(characterDto.getCharacterName())
                 .permissionDtoList(convertMapToList(permissionDtoMap))
@@ -75,13 +84,14 @@ public class DefaultCharacterManager implements CharacterManager{
         return permissionDtoMap;
     }
 
-    private void fillAbsentPermissions(Map<String, PermissionDto> permissionDtoMap, boolean absentStatus){
+    private void fillAbsentPermissions(Map<String, PermissionDto> permissionDtoMap){
         List<PermissionUnit> permissionUnitList = permissionUnitListReadable.getPermissionUnitList();
         for(PermissionUnit permissionUnit : permissionUnitList){
             if(!permissionDtoMap.containsKey(permissionUnit.getName())){
                 PermissionDto permissionDto = PermissionDto.builder()
+                        .id(permissionUnit.getId())
                         .name(permissionUnit.getName())
-                        .status(getStatusOfPermissionUnit(permissionUnit, absentStatus))
+                        .status(getStatusOfPermissionUnit(permissionUnit, false))
                         .build();
                 permissionDtoMap.put(permissionUnit.getName(), permissionDto);
             }
@@ -131,15 +141,6 @@ public class DefaultCharacterManager implements CharacterManager{
             if(name.equals(characterName)) return true;
         }
         return false;
-    }
-
-    @Autowired
-    private DefaultCharacterManager(CharacterRepository characterRepository,
-            PermissionChecker permissionChecker,
-            PermissionUnitListReadable permissionUnitListReadable){
-        this.characterRepository = characterRepository;
-        this.permissionChecker = permissionChecker;
-        this.permissionUnitListReadable = permissionUnitListReadable;
     }
 
 }
