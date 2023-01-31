@@ -59,7 +59,9 @@ public class ScheduleController{
         scheduleManager.updateScheduleById(id, scheduleDto);
     }
 
+    @Authenticating
     @DeleteMapping("/schedule/{schedule-id}")
+    @PermissionVerifying(value = "Schedule delete manager")
     public void deleteSchedule(@PathVariable("schedule-id") int id){
         scheduleManager.deleteScheduleById(id);
     }
