@@ -39,12 +39,14 @@ public class ScheduleController{
         scheduleManager.createSchedule(scheduleDto);
     }
 
+    @Authenticating
     @RequestMapping(value = "/calendar")
     public List<ScheduleResponse> readScheduleByTerm(@RequestParam("year") int year, @RequestParam("month") int month){
         List<ScheduleDto> scheduleDtoList = scheduleManager.readScheduleByTerm(year, month);
         return controllerScheduleMapper.scheduleDtoListToScheduleResponseList(scheduleDtoList);
     }
 
+    @Authenticating
     @GetMapping("/schedule/{schedule-id}")
     public ScheduleResponse readScheduleById(@PathVariable("schedule-id") int id){
         ScheduleDto scheduleDto = scheduleManager.readScheduleById(id);
