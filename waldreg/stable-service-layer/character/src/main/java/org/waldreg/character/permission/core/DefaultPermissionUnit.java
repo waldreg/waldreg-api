@@ -1,10 +1,14 @@
 package org.waldreg.character.permission.core;
 
 import java.util.List;
+import java.util.concurrent.atomic.AtomicInteger;
 import org.waldreg.character.permission.spi.PermissionVerifiable;
 
 public final class DefaultPermissionUnit implements PermissionUnit{
 
+    private final static AtomicInteger PERMISSION_UNIT_ID_GENERATOR = new AtomicInteger(1);
+
+    private final int id;
     private final String name;
     private final String info;
     private final PermissionVerifiable permissionVerifiable;
@@ -15,6 +19,7 @@ public final class DefaultPermissionUnit implements PermissionUnit{
     }
 
     private DefaultPermissionUnit(Builder builder){
+        this.id = PERMISSION_UNIT_ID_GENERATOR.getAndIncrement();
         this.name = builder.name;
         this.info = builder.info;
         this.permissionVerifiable = builder.permissionVerifiable;
@@ -23,6 +28,11 @@ public final class DefaultPermissionUnit implements PermissionUnit{
 
     public static Builder builder(){
         return new Builder();
+    }
+
+    @Override
+    public int getId(){
+        return this.id;
     }
 
     @Override
@@ -46,8 +56,8 @@ public final class DefaultPermissionUnit implements PermissionUnit{
     }
 
     @Override
-    public boolean isPossibleStatus(String status){
-        return statusList.contains(status);
+    public boolean isPossible(int id, String status){
+        return this.id == id && statusList.contains(status);
     }
 
     public static final class Builder{

@@ -35,6 +35,7 @@ public class AdminCharacterConfigurer{
     }
 
     private void createAdminIfDoesNotExist(){
+        List<PermissionUnit> permissionUnit = permissionUnitListReadable.getPermissionUnitList();
         try{
             characterManager.readCharacter("Admin");
         } catch (UnknownCharacterException UCE){
@@ -50,6 +51,7 @@ public class AdminCharacterConfigurer{
         List<PermissionDto> permissionDtoList = new ArrayList<>();
         for(PermissionUnit permissionUnit : permissionUnitList){
             PermissionDto permissionDto = PermissionDto.builder()
+                    .id(permissionUnit.getId())
                     .name(permissionUnit.getName())
                     .status(getSuccessStatusOfPermissionUnit(permissionUnit))
                     .build();

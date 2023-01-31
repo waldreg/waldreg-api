@@ -4,6 +4,8 @@ import java.util.List;
 
 public interface PermissionUnit{
 
+    int getId();
+
     String getName();
 
     String getInfo();
@@ -12,6 +14,6 @@ public interface PermissionUnit{
 
     List<String> getStatusList();
 
-    boolean isPossibleStatus(String status);
+    boolean isPossible(int id, String status);
 
 }
