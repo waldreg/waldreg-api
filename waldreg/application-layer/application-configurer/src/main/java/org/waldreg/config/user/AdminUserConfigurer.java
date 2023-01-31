@@ -4,7 +4,6 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Component;
-import org.waldreg.config.character.AdminCharacterConfigurer;
 import org.waldreg.config.character.AdminCharacterCreatedEvent;
 import org.waldreg.user.dto.UserDto;
 import org.waldreg.user.exception.UnknownUserIdException;

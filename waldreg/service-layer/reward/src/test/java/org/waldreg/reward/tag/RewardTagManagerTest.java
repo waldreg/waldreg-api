@@ -10,12 +10,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
-import org.wadlreg.reward.tag.DefaultRewardTagManager;
-import org.wadlreg.reward.tag.RewardTagManager;
-import org.wadlreg.reward.tag.dto.RewardTagDto;
-import org.wadlreg.reward.tag.exception.UnknownRewardTagException;
-import org.wadlreg.reward.tag.lib.TagExceedClipper;
-import org.wadlreg.reward.tag.spi.RewardTagRepository;
+import org.waldreg.reward.tag.dto.RewardTagDto;
+import org.waldreg.reward.exception.UnknownRewardTagException;
+import org.waldreg.reward.tag.lib.TagExceedClipper;
+import org.waldreg.reward.tag.spi.RewardTagRepository;
 
 @ExtendWith(SpringExtension.class)
 @ContextConfiguration(classes = {DefaultRewardTagManager.class, TagExceedClipper.class})
@@ -69,7 +67,7 @@ public class RewardTagManagerTest{
                 .build();
 
         // when
-        Mockito.when(rewardTagRepository.readRewardTagList()).thenReturn(List.of(RewardTagDto.builder().rewardTagId(1).build()));
+        Mockito.when(rewardTagRepository.isRewardTagExist(Mockito.anyInt())).thenReturn(true);
 
         // then
         Assertions.assertDoesNotThrow(() -> rewardTagManager.updateRewardTag(1, rewardTagDto));
@@ -87,7 +85,7 @@ public class RewardTagManagerTest{
                 .build();
 
         // when
-        Mockito.when(rewardTagRepository.readRewardTagList()).thenReturn(List.of(RewardTagDto.builder().rewardTagId(1).build()));
+        Mockito.when(rewardTagRepository.isRewardTagExist(Mockito.anyInt())).thenReturn(true);
 
         // then
         Assertions.assertDoesNotThrow(() -> rewardTagManager.updateRewardTag(1, rewardTagDto));
@@ -105,10 +103,10 @@ public class RewardTagManagerTest{
                 .build();
 
         // when
-        Mockito.when(rewardTagRepository.readRewardTagList()).thenReturn(List.of(RewardTagDto.builder().rewardTagId(1).build()));
+        Mockito.when(rewardTagRepository.isRewardTagExist(Mockito.anyInt())).thenReturn(false);
 
         // then
-        Assertions.assertDoesNotThrow(() -> rewardTagManager.updateRewardTag(1, rewardTagDto));
+        Assertions.assertThrows(UnknownRewardTagException.class, () -> rewardTagManager.updateRewardTag(1, rewardTagDto));
     }
 
     @Test
@@ -118,7 +116,7 @@ public class RewardTagManagerTest{
         int rewardTagId = 1;
 
         // when
-        Mockito.when(rewardTagRepository.readRewardTagList()).thenReturn(List.of(RewardTagDto.builder().rewardTagId(1).build()));
+        Mockito.when(rewardTagRepository.isRewardTagExist(Mockito.anyInt())).thenReturn(true);
 
         // then
         Assertions.assertDoesNotThrow(() -> rewardTagManager.deleteRewardTag(rewardTagId));
@@ -130,7 +128,10 @@ public class RewardTagManagerTest{
         // given
         int rewardTagId = 1;
 
-        // when & then
+        // when
+        Mockito.when(rewardTagRepository.isRewardTagExist(Mockito.anyInt())).thenReturn(false);
+
+        // then
         Assertions.assertThrows(UnknownRewardTagException.class, () -> rewardTagManager.deleteRewardTag(rewardTagId));
     }
 
@@ -154,7 +155,7 @@ public class RewardTagManagerTest{
 
         // when
         Mockito.when(rewardTagRepository.readRewardTagList()).thenReturn(List.of(rewardTagDto, rewardTagDto2));
-        List<RewardTagDto> rewardTagDtoList = rewardTagRepository.readRewardTagList();
+        List<RewardTagDto> rewardTagDtoList = rewardTagManager.readRewardTagList();
 
         // then
         Assertions.assertAll(

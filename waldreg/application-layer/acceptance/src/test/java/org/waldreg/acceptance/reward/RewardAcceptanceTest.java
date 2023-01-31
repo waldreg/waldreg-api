@@ -23,6 +23,10 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import org.waldreg.acceptance.authentication.AuthenticationAcceptanceTestHelper;
 import org.waldreg.acceptance.user.UserAcceptanceTestHelper;
 import org.waldreg.auth.request.AuthTokenRequest;
+import org.waldreg.controller.reward.tag.request.RewardTagRequest;
+import org.waldreg.controller.reward.tag.response.RewardTagResponse;
+import org.waldreg.controller.reward.users.response.RewardTagWrapperResponse;
+import org.waldreg.controller.reward.users.response.UsersRewardTagResponse;
 import org.waldreg.controller.user.request.UserRequest;
 import org.waldreg.controller.user.response.UserResponse;
 
@@ -80,7 +84,7 @@ public class RewardAcceptanceTest{
                             MockMvcResultMatchers.header().string("Api-version", apiVersion),
                             MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON),
                             MockMvcResultMatchers.header().string(HttpHeaders.CONTENT_TYPE, "application/json"),
-                            MockMvcResultMatchers.jsonPath("$.messages").value("Unknown reward tag id"),
+                            MockMvcResultMatchers.jsonPath("$.messages").value("Unknown reward tag id \"" + rewardTagResponse.getRewardTagId() + "\""),
                             MockMvcResultMatchers.jsonPath("$.document_url").value("docs.waldreg.org")
                     );
         }
@@ -314,7 +318,7 @@ public class RewardAcceptanceTest{
                 MockMvcResultMatchers.header().string("Api-version", apiVersion),
                 MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON),
                 MockMvcResultMatchers.header().string(HttpHeaders.CONTENT_TYPE, "application/json"),
-                MockMvcResultMatchers.jsonPath("$.messages").value("Unknown reward tag id"),
+                MockMvcResultMatchers.jsonPath("$.messages").value("Unknown reward tag id \"" + 999 + "\""),
                 MockMvcResultMatchers.jsonPath("$.document_url").value("docs.waldreg.org")
         );
     }
@@ -367,7 +371,7 @@ public class RewardAcceptanceTest{
                 MockMvcResultMatchers.header().string("Api-version", apiVersion),
                 MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON),
                 MockMvcResultMatchers.header().string(HttpHeaders.CONTENT_TYPE, "application/json"),
-                MockMvcResultMatchers.jsonPath("$.messages").value("Unknown reward tag id"),
+                MockMvcResultMatchers.jsonPath("$.messages").value("Unknown reward tag id \"" + rewardTagResponse.getRewardTagId() + "\""),
                 MockMvcResultMatchers.jsonPath("$.document_url").value("docs.waldreg.org")
         );
     }
@@ -481,7 +485,7 @@ public class RewardAcceptanceTest{
                 MockMvcResultMatchers.header().string("Api-version", apiVersion),
                 MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON),
                 MockMvcResultMatchers.header().string(HttpHeaders.CONTENT_TYPE, "application/json"),
-                MockMvcResultMatchers.jsonPath("$.messages").value("Unknown reward tag id"),
+                MockMvcResultMatchers.jsonPath("$.messages").value("Unknown reward tag id \"" + 100 + "\""),
                 MockMvcResultMatchers.jsonPath("$.document_url").value("docs.waldreg.org")
         );
     }
@@ -522,7 +526,7 @@ public class RewardAcceptanceTest{
         RewardTagResponse rewardTagResponse = getRewardTagResponseMap(inquiryTagResult).get("reward_tags").get(0);
         int rewardTagId = rewardTagResponse.getRewardTagId();
 
-        ResultActions result = RewardAcceptanceTestHelper.givenRewardTagToUser(mvc, adminToken, ""+1, rewardTagId);
+        ResultActions result = RewardAcceptanceTestHelper.givenRewardTagToUser(mvc, adminToken, ""+2, rewardTagId);
 
         // then
         result.andExpectAll(
@@ -530,7 +534,7 @@ public class RewardAcceptanceTest{
                 MockMvcResultMatchers.header().string("Api-version", apiVersion),
                 MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON),
                 MockMvcResultMatchers.header().string(HttpHeaders.CONTENT_TYPE, "application/json"),
-                MockMvcResultMatchers.jsonPath("$.messages").value("Unknown user id"),
+                MockMvcResultMatchers.jsonPath("$.messages").value("Unknown user id \"" + 2 + "\""),
                 MockMvcResultMatchers.jsonPath("$.document_url").value("docs.waldreg.org")
         );
     }
@@ -634,7 +638,6 @@ public class RewardAcceptanceTest{
     public void INQUIRY_SPECIFY_USERS_REWARD_TAG_FAIL_NO_PERMISSION_BUT_MYSELF_SUCCESS_TEST() throws Exception{
         // given
         String adminToken = AuthenticationAcceptanceTestHelper.getAdminToken(mvc, objectMapper);
-
         RewardTagRequest createRequest = RewardTagRequest.builder()
                 .rewardTagTitle("contest loser")
                 .rewardPoint(-100)
@@ -650,22 +653,17 @@ public class RewardAcceptanceTest{
                 .phoneNumber("010-1234-1234")
                 .build();
 
+        String token = createUserAndGetToken(name, userId, userPassword);
+
         // when
         RewardAcceptanceTestHelper.createRewardTag(mvc, adminToken, objectMapper.writeValueAsString(createRequest));
         ResultActions inquiryTagResult = RewardAcceptanceTestHelper.inquiryRewardTagList(mvc, adminToken);
         RewardTagResponse rewardTagResponse = getRewardTagResponseMap(inquiryTagResult).get("reward_tags").get(0);
         int rewardTagId = rewardTagResponse.getRewardTagId();
 
-        UserAcceptanceTestHelper.createUser(mvc, objectMapper.writeValueAsString(userRequest)).andDo(MockMvcResultHandlers.print());
-        userCreateRequestList.add(userRequest);
-
         int id = getUserResponse(userId, adminToken).getId();
         RewardAcceptanceTestHelper.givenRewardTagToUser(mvc, adminToken, ""+id, rewardTagId);
         RewardAcceptanceTestHelper.givenRewardTagToUser(mvc, adminToken, ""+id, rewardTagId);
-        String token = AuthenticationAcceptanceTestHelper.getToken(mvc, objectMapper, AuthTokenRequest.builder()
-                .userId(userId)
-                .userPassword(userPassword)
-                .build());
         ResultActions resultActions = RewardAcceptanceTestHelper.inquirySpecifyUsersRewardTags(mvc, token, id);
 
         // then
@@ -718,7 +716,7 @@ public class RewardAcceptanceTest{
         String adminToken = AuthenticationAcceptanceTestHelper.getAdminToken(mvc, objectMapper);
 
         // when
-        ResultActions resultActions = RewardAcceptanceTestHelper.inquirySpecifyUsersRewardTags(mvc, adminToken, 10);
+        ResultActions resultActions = RewardAcceptanceTestHelper.inquirySpecifyUsersRewardTags(mvc, adminToken, 10000);
 
         // then
         resultActions.andExpectAll(
@@ -726,27 +724,7 @@ public class RewardAcceptanceTest{
                 MockMvcResultMatchers.header().string("Api-version", apiVersion),
                 MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON),
                 MockMvcResultMatchers.header().string(HttpHeaders.CONTENT_TYPE, "application/json"),
-                MockMvcResultMatchers.jsonPath("$.messages").value("Unknown user id"),
-                MockMvcResultMatchers.jsonPath("$.document_url").value("docs.waldreg.org")
-        );
-    }
-
-    @Test
-    @DisplayName("특정 유저의 상 벌점 조회 실패 인수 테스트 - 인증 실패")
-    public void INQUIRY_SPECIFY_USERS_REWARD_TAG_FAIL_AUTHENTICATE_FAIL_USER_ACCEPTANCE_TEST() throws Exception{
-        // given
-        String token = "abc.def.ghi";
-
-        // when
-        ResultActions result = RewardAcceptanceTestHelper.inquirySpecifyUsersRewardTags(mvc, token, 10);
-
-        // then
-        result.andExpectAll(
-                MockMvcResultMatchers.status().isUnauthorized(),
-                MockMvcResultMatchers.header().string("Api-version", apiVersion),
-                MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON),
-                MockMvcResultMatchers.header().string(HttpHeaders.CONTENT_TYPE, "application/json"),
-                MockMvcResultMatchers.jsonPath("$.messages").value("Authenticate fail"),
+                MockMvcResultMatchers.jsonPath("$.messages").value("Unknown user id \"" + 10000 + "\""),
                 MockMvcResultMatchers.jsonPath("$.document_url").value("docs.waldreg.org")
         );
     }
@@ -859,7 +837,7 @@ public class RewardAcceptanceTest{
                 MockMvcResultMatchers.header().string("Api-version", apiVersion),
                 MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON),
                 MockMvcResultMatchers.header().string(HttpHeaders.CONTENT_TYPE, "application/json"),
-                MockMvcResultMatchers.jsonPath("$.messages").value("Unknown reward id"),
+                MockMvcResultMatchers.jsonPath("$.messages").value("Unknown reward id \"" + 1000 + "\""),
                 MockMvcResultMatchers.jsonPath("$.document_url").value("docs.waldreg.org")
         );
     }
@@ -879,7 +857,7 @@ public class RewardAcceptanceTest{
                 MockMvcResultMatchers.header().string("Api-version", apiVersion),
                 MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON),
                 MockMvcResultMatchers.header().string(HttpHeaders.CONTENT_TYPE, "application/json"),
-                MockMvcResultMatchers.jsonPath("$.messages").value("Unknown user id"),
+                MockMvcResultMatchers.jsonPath("$.messages").value("Unknown user id \"" + 100 + "\""),
                 MockMvcResultMatchers.jsonPath("$.document_url").value("docs.waldreg.org")
         );
     }
@@ -916,316 +894,6 @@ public class RewardAcceptanceTest{
     private UsersRewardTagResponse getUsersRewardTagResponse(ResultActions resultActions) throws Exception{
         String content = resultActions.andReturn().getResponse().getContentAsString();
         return objectMapper.readValue(content, UsersRewardTagResponse.class);
-    }
-
-    public final static class RewardTagRequest{
-
-        @JsonProperty("reward_tag_title")
-        private String rewardTagTitle;
-
-        @JsonProperty("reward_point")
-        private int rewardPoint;
-
-        public RewardTagRequest(){}
-
-        private RewardTagRequest(Builder builder){
-            this.rewardTagTitle = builder.rewardTagTitle;
-            this.rewardPoint = builder.rewardPoint;
-        }
-
-        public static Builder builder(){
-            return new Builder();
-        }
-
-        public String getRewardTagTitle(){
-            return rewardTagTitle;
-        }
-
-        public int getRewardPoint(){
-            return rewardPoint;
-        }
-
-        public void setRewardTagTitle(String rewardTagTitle){
-            this.rewardTagTitle = rewardTagTitle;
-        }
-
-        public void setRewardPoint(int rewardPoint){
-            this.rewardPoint = rewardPoint;
-        }
-
-        public final static class Builder{
-
-            private String rewardTagTitle;
-            private int rewardPoint;
-
-            private Builder(){}
-
-            public Builder rewardTagTitle(String rewardTagTitle){
-                this.rewardTagTitle = rewardTagTitle;
-                return this;
-            }
-
-            public Builder rewardPoint(int rewardPoint){
-                this.rewardPoint = rewardPoint;
-                return this;
-            }
-
-            public RewardTagRequest build(){
-                return new RewardTagRequest(this);
-            }
-
-        }
-
-    }
-
-    public final static class RewardTagResponse{
-
-        private final int rewardTagId;
-        private final String rewardTagTitle;
-        private final int rewardPoint;
-
-        private RewardTagResponse(){
-            throw new UnsupportedOperationException("Can not invoke constructor \"RewardTagResponse()\"");
-        }
-
-        private RewardTagResponse(Builder builder){
-            this.rewardTagId = builder.rewardTagId;
-            this.rewardTagTitle = builder.rewardTagTitle;
-            this.rewardPoint = builder.rewardPoint;
-        }
-
-        public static Builder builder(){
-            return new Builder();
-        }
-
-        public int getRewardTagId(){
-            return rewardTagId;
-        }
-
-        public String getRewardTagTitle(){
-            return rewardTagTitle;
-        }
-
-        public int getRewardPoint(){
-            return rewardPoint;
-        }
-
-        public final static class Builder{
-
-            private int rewardTagId;
-            private String rewardTagTitle;
-            private int rewardPoint;
-
-            private Builder(){}
-
-            public Builder rewardTagId(int rewardTagId){
-                this.rewardTagId = rewardTagId;
-                return this;
-            }
-
-            public Builder rewardTagTitle(String rewardTagTitle){
-                this.rewardTagTitle = rewardTagTitle;
-                return this;
-            }
-
-            public Builder rewardPoint(int rewardPoint){
-                this.rewardPoint = rewardPoint;
-                return this;
-            }
-
-            public RewardTagResponse build(){
-                return new RewardTagResponse(this);
-            }
-
-        }
-
-    }
-
-    public final static class UsersRewardTagResponse{
-
-        private final int id;
-        private final String name;
-
-        @JsonProperty("user_id")
-        private final String userId;
-        private final int reward;
-
-        @JsonProperty("reward_infos")
-        private final List<RewardTagWrapperResponse> rewardInfoList;
-
-        private UsersRewardTagResponse(){
-            throw new UnsupportedOperationException("Can not invoke constructor \"UsersRewardTagResponse()\"");
-        }
-
-        private UsersRewardTagResponse(Builder builder){
-            this.id = builder.id;
-            this.name = builder.name;
-            this.userId = builder.userId;
-            this.reward = builder.reward;
-            this.rewardInfoList = builder.rewardInfoList;
-        }
-
-        public static Builder builder(){
-            return new Builder();
-        }
-
-        public int getId(){
-            return id;
-        }
-
-        public String getName(){
-            return name;
-        }
-
-        public String getUserId(){
-            return userId;
-        }
-
-        public int getReward(){
-            return reward;
-        }
-
-        public List<RewardTagWrapperResponse> getRewardInfoList(){
-            return rewardInfoList;
-        }
-
-        public final static class Builder{
-
-            private int id;
-            private String name;
-            private String userId;
-            private int reward;
-            private List<RewardTagWrapperResponse> rewardInfoList;
-
-            private Builder(){}
-
-            public Builder id(int id){
-                this.id = id;
-                return this;
-            }
-
-            public Builder name(String name){
-                this.name = name;
-                return this;
-            }
-
-            public Builder userId(String userId){
-                this.userId = userId;
-                return this;
-            }
-
-            public Builder reward(int reward){
-                this.reward = reward;
-                return this;
-            }
-
-            public Builder rewardInfoList(List<RewardTagWrapperResponse> rewardInfoList){
-                this.rewardInfoList = rewardInfoList;
-                return this;
-            }
-
-            public UsersRewardTagResponse build(){
-                return new UsersRewardTagResponse(this);
-            }
-
-        }
-
-    }
-
-    public final static class RewardTagWrapperResponse{
-
-        @JsonProperty("reward_id")
-        private final int rewardId;
-
-        @JsonProperty("reward_tag_id")
-        private final int rewardTagId;
-
-        @JsonProperty("reward_tag_title")
-        private final String rewardTagTitle;
-
-        @JsonProperty("reward_presented_at")
-        private final String rewardPresentedAt;
-
-        @JsonProperty("reward_point")
-        private final int rewardPoint;
-
-        private RewardTagWrapperResponse(){
-            throw new UnsupportedOperationException("Can not invoke constructor \"RewardTagWrapperResponse()\"");
-        }
-
-        private RewardTagWrapperResponse(Builder builder){
-            this.rewardId = builder.rewardId;
-            this.rewardTagId = builder.rewardTagId;
-            this.rewardTagTitle = builder.rewardTagTitle;
-            this.rewardPresentedAt = builder.rewardPresentedAt;
-            this.rewardPoint = builder.rewardPoint;
-        }
-
-        public static Builder builder(){
-            return new Builder();
-        }
-
-        public int getRewardId(){
-            return rewardId;
-        }
-
-        public int getRewardTagId(){
-            return rewardTagId;
-        }
-
-        public String getRewardTagTitle(){
-            return rewardTagTitle;
-        }
-
-        public String getRewardPresentedAt(){
-            return rewardPresentedAt;
-        }
-
-        public int getRewardPoint(){
-            return rewardPoint;
-        }
-
-        public final static class Builder{
-
-            private int rewardId;
-            private int rewardTagId;
-            private String rewardTagTitle;
-            private String rewardPresentedAt;
-            private int rewardPoint;
-
-            private Builder(){}
-
-            public Builder rewardId(int rewardId){
-                this.rewardId = rewardId;
-                return this;
-            }
-
-            public Builder rewardTagId(int rewardTagId){
-                this.rewardTagId = rewardTagId;
-                return this;
-            }
-
-            public Builder rewardTagTitle(String rewardTagTitle){
-                this.rewardTagTitle = rewardTagTitle;
-                return this;
-            }
-
-            public Builder rewardPresentedAt(String rewardPresentedAt){
-                this.rewardPresentedAt = rewardPresentedAt;
-                return this;
-            }
-
-            public Builder rewardPoint(int rewardPoint){
-                this.rewardPoint = rewardPoint;
-                return this;
-            }
-
-            public RewardTagWrapperResponse build(){
-                return new RewardTagWrapperResponse(this);
-            }
-
-        }
-
     }
 
 }

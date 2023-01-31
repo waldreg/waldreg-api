@@ -26,7 +26,9 @@ dependencies {
     implementation project(':service-layer:auth')
     implementation project(':stable-service-layer:character')
     implementation project(':service-layer:user')
+    implementation project(':service-layer:schedule')
     implementation project(':domain-layer:domain')
+    implementation project(':service-layer:reward')
 
     implementation 'org.springframework.boot:spring-boot-starter'
     implementation 'org.springframework.boot:spring-boot-starter-web'

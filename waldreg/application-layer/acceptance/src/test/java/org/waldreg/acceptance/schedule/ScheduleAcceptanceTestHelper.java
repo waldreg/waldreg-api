@@ -29,7 +29,7 @@ public class ScheduleAcceptanceTestHelper{
 
     public static ResultActions inquiryScheduleListByTerm(MockMvc mvc, int year, int month, String token) throws Exception{
         return mvc.perform(MockMvcRequestBuilders
-                .get("/schedule").param("year", Integer.toString(year)).param("month", Integer.toString(month))
+                .get("/calendar").param("year", Integer.toString(year)).param("month", Integer.toString(month))
                 .accept(MediaType.APPLICATION_JSON)
                 .header("Api-version", apiVersion)
                 .header(HttpHeaders.AUTHORIZATION, token));

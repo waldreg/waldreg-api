@@ -8,7 +8,8 @@ sourceCompatibility = '11'
 targetCompatibility = '11'
 
 group 'org.waldreg'
-version '0.1.1-SNAPSHOT'
+
+version '0.2.0-SNAPSHOT'
 
 jar {
     enabled = false;
@@ -23,6 +24,8 @@ dependencies {
     implementation project(':application-layer:character-controller')
     implementation project(':application-layer:user-controller')
     implementation project(':application-layer:auth-controller')
+    implementation project(':application-layer:schedule-controller')
+    implementation project(':application-layer:reward-controller')
     implementation project(':application-layer:application-configurer')
 
     implementation 'org.springframework.boot:spring-boot-starter'
