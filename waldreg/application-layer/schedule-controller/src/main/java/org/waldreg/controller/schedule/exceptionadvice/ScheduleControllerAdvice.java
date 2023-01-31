@@ -6,6 +6,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.waldreg.schedule.exception.ContentOverflowException;
 import org.waldreg.schedule.exception.InvalidDateFormatException;
+import org.waldreg.schedule.exception.InvalidRepeatException;
 
 @RestControllerAdvice
 public class ScheduleControllerAdvice{
@@ -25,6 +26,15 @@ public class ScheduleControllerAdvice{
     public ResponseEntity<ExceptionTemplate> catchInvalidDateFormatException(InvalidDateFormatException invalidDateFormatException){
         ExceptionTemplate exceptionTemplate = ExceptionTemplate.builder()
                 .message(invalidDateFormatException.getMessage())
+                .documentUrl(documentUrl)
+                .build();
+        return new ResponseEntity<>(exceptionTemplate, HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler({InvalidRepeatException.class})
+    public ResponseEntity<ExceptionTemplate> catchInvalidRepeatException(InvalidRepeatException invalidRepeatException){
+        ExceptionTemplate exceptionTemplate = ExceptionTemplate.builder()
+                .message(invalidRepeatException.getMessage())
                 .documentUrl(documentUrl)
                 .build();
         return new ResponseEntity<>(exceptionTemplate, HttpStatus.BAD_REQUEST);
