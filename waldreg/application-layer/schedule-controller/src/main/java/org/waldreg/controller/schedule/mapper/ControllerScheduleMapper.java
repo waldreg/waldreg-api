@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import org.springframework.stereotype.Service;
 import org.waldreg.controller.schedule.request.ScheduleRequest;
+import org.waldreg.controller.schedule.response.ScheduleListResponse;
 import org.waldreg.controller.schedule.response.ScheduleRepeatResponse;
 import org.waldreg.controller.schedule.response.ScheduleResponse;
 import org.waldreg.schedule.dto.RepeatDto;
@@ -36,12 +37,14 @@ public class ControllerScheduleMapper{
                 .build();
     }
 
-    public List<ScheduleResponse> scheduleDtoListToScheduleResponseList(List<ScheduleDto> scheduleDtoList){
+    public ScheduleListResponse scheduleDtoListToScheduleListResponse(List<ScheduleDto> scheduleDtoList){
         List<ScheduleResponse> scheduleResponseList = new ArrayList<>();
         for(ScheduleDto scheduleDto : scheduleDtoList){
             scheduleResponseList.add(scheduleDtoToScheduleResponse(scheduleDto));
         }
-        return scheduleResponseList;
+        return ScheduleListResponse.builder()
+                .scheduleList(scheduleResponseList)
+                .build();
     }
 
     public ScheduleResponse scheduleDtoToScheduleResponse(ScheduleDto scheduleDto){

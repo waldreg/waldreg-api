@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.waldreg.character.aop.annotation.PermissionVerifying;
 import org.waldreg.controller.schedule.mapper.ControllerScheduleMapper;
 import org.waldreg.controller.schedule.request.ScheduleRequest;
+import org.waldreg.controller.schedule.response.ScheduleListResponse;
 import org.waldreg.controller.schedule.response.ScheduleResponse;
 import org.waldreg.schedule.dto.ScheduleDto;
 import org.waldreg.schedule.management.ScheduleManager;
@@ -41,9 +42,9 @@ public class ScheduleController{
 
     @Authenticating
     @RequestMapping(value = "/calendar")
-    public List<ScheduleResponse> readScheduleByTerm(@RequestParam("year") int year, @RequestParam("month") int month){
+    public ScheduleListResponse readScheduleByTerm(@RequestParam("year") int year, @RequestParam("month") int month){
         List<ScheduleDto> scheduleDtoList = scheduleManager.readScheduleByTerm(year, month);
-        return controllerScheduleMapper.scheduleDtoListToScheduleResponseList(scheduleDtoList);
+        return controllerScheduleMapper.scheduleDtoListToScheduleListResponse(scheduleDtoList);
     }
 
     @Authenticating
@@ -56,7 +57,7 @@ public class ScheduleController{
     @Authenticating
     @PermissionVerifying(value = "Schedule update manager")
     @PutMapping("/schedule/{schedule-id}")
-    public void updateSchedule(@PathVariable("schedule-id") int id, @RequestBody ScheduleRequest scheduleRequest){
+    public void updateSchedule(@PathVariable("schedule-id") int id, @RequestBody @Validated ScheduleRequest scheduleRequest){
         ScheduleDto scheduleDto = controllerScheduleMapper.scheduleRequestToScheduleDto(scheduleRequest);
         scheduleManager.updateScheduleById(id, scheduleDto);
     }
