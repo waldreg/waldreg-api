@@ -8,6 +8,7 @@ import org.waldreg.schedule.exception.ContentOverflowException;
 import org.waldreg.schedule.exception.InvalidDateFormatException;
 import org.waldreg.schedule.exception.InvalidRepeatException;
 import org.waldreg.schedule.exception.InvalidSchedulePeriodException;
+import org.waldreg.schedule.exception.UnknownScheduleException;
 
 @RestControllerAdvice
 public class ScheduleControllerAdvice{
@@ -45,6 +46,15 @@ public class ScheduleControllerAdvice{
     public ResponseEntity<ExceptionTemplate> catchInvalidSchedulePeriodException(InvalidSchedulePeriodException invalidSchedulePeriodException){
         ExceptionTemplate exceptionTemplate = ExceptionTemplate.builder()
                 .message(invalidSchedulePeriodException.getMessage())
+                .documentUrl(documentUrl)
+                .build();
+        return new ResponseEntity<>(exceptionTemplate, HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler({UnknownScheduleException.class})
+    public ResponseEntity<ExceptionTemplate> catchUnknownScheduleException(UnknownScheduleException unknownScheduleException){
+        ExceptionTemplate exceptionTemplate = ExceptionTemplate.builder()
+                .message(unknownScheduleException.getMessage())
                 .documentUrl(documentUrl)
                 .build();
         return new ResponseEntity<>(exceptionTemplate, HttpStatus.BAD_REQUEST);
