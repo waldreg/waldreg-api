@@ -1,2 +1,4 @@
-package org.waldreg.board.category;public class CategoryManager {
+package org.waldreg.board.category;
+
+public interface CategoryManager{
 }

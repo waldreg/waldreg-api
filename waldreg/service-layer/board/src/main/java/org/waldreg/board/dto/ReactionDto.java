@@ -1,2 +1,4 @@
-package org.waldreg.board.dto;public class ReactionDto {
+package org.waldreg.board.dto;
+
+public class ReactionDto{
 }

@@ -1,2 +1,4 @@
-package org.waldreg.board.category.spi;public class CategoryRepository {
+package org.waldreg.board.category.spi;
+
+public interface CategoryRepository{
 }

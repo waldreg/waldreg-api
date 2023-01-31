@@ -1,4 +1,4 @@
-package org.waldreg.board.board.spi;
+package org.waldreg.board.category.spi;
 
 public interface BoardRepository{
 }

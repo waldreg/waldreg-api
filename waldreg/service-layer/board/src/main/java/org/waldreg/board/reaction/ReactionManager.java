@@ -1,4 +1,4 @@
-package org.waldreg.board.category;
+package org.waldreg.board.reaction;
 
-public interface CategoryManager{
+public interface ReactionManager{
 }

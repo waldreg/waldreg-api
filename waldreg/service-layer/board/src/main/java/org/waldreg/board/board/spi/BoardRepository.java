@@ -1,2 +1,4 @@
-package org.waldreg.board.board.spi;public class BoardRepository {
+package org.waldreg.board.board.spi;
+
+public interface BoardRepository{
 }

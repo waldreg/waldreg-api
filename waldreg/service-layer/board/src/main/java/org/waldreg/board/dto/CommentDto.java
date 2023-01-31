@@ -1,2 +1,4 @@
-package org.waldreg.board.dto;public class CommentDto {
+package org.waldreg.board.dto;
+
+public class CommentDto{
 }

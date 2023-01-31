@@ -1,4 +1,4 @@
-package org.waldreg.board.reaction;
+package org.waldreg.board.image;
 
-public interface ReactionManager{
+public interface ImageManager{
 }

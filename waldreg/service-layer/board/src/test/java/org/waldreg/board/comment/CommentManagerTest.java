@@ -1,2 +1,4 @@
-package org.waldreg.board.CommentManagerTest;public class CommentManagerTest {
+package org.waldreg.board.comment;
+
+public class CommentManagerTest{
 }

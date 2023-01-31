@@ -1,2 +1,4 @@
-package org.waldreg.board.comment;public class CommentManager {
+package org.waldreg.board.comment;
+
+public interface CommentManager{
 }

@@ -40,3 +40,6 @@ include 'application-layer:reward-controller'
 findProject(':application-layer:reward-controller')?.name = 'reward-controller'
 include 'application-layer:board-controller'
 findProject(':application-layer:board-controller')?.name = 'board-controller'
+include 'service-layer:board'
+findProject(':service-layer:board')?.name = 'board'
+

@@ -1,2 +1,4 @@
-package org.waldreg.board.file.spi;public interface ImageRepository {
+package org.waldreg.board.file.spi;
+
+public interface FileRepository{
 }

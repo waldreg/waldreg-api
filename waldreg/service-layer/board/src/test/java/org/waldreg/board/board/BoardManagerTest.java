@@ -1,2 +1,5 @@
-package org.waldreg.board.board;public class BoardManagerTest {
+package org.waldreg.board.board;
+
+
+public class BoardManagerTest{
 }

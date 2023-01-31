@@ -1,2 +1,4 @@
-package org.waldreg.board.comment.spi;public class CommentRepository {
+package org.waldreg.board.comment.spi;
+
+public interface CommentRepository{
 }

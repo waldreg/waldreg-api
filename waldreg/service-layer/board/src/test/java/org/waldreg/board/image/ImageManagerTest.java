@@ -1,5 +1,5 @@
-package org.waldreg.board.board;
+package org.waldreg.board.image;
 
 
-public class BoardManagerTest{
+public class ImageManagerTest{
 }

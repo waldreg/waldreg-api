@@ -1,4 +1,4 @@
-package org.waldreg.board.board.dto;
+package org.waldreg.board.dto;
 
 public class BoardDto{
 }

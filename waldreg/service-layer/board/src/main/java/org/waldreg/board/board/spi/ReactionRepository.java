@@ -1,4 +1,4 @@
-package org.waldreg.board.reaction.spi;
+package org.waldreg.board.board.spi;
 
 public interface ReactionRepository{
 }

@@ -1,2 +1,4 @@
-package org.waldreg.board.board;public class BoardManager {
+package org.waldreg.board.board;
+
+public interface BoardManager{
 }

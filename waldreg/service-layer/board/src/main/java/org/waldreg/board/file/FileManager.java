@@ -1,4 +1,4 @@
-package org.waldreg.board.reaction;
+package org.waldreg.board.file;
 
-public interface ReactionManager{
+public interface FileManager{
 }
