@@ -2,6 +2,7 @@ package org.waldreg.repository.schedule;
 
 import java.util.ArrayList;
 import java.util.List;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 import org.waldreg.domain.calendar.Schedule;
 import org.waldreg.repository.MemoryScheduleStorage;
@@ -14,6 +15,7 @@ public class MemoryScheduleRepository implements ScheduleRepository{
     private final MemoryScheduleStorage memoryScheduleStorage;
     private final ScheduleMapper scheduleMapper;
 
+    @Autowired
     public MemoryScheduleRepository(MemoryScheduleStorage memoryScheduleStorage, ScheduleMapper scheduleMapper){
         this.memoryScheduleStorage = memoryScheduleStorage;
         this.scheduleMapper = scheduleMapper;

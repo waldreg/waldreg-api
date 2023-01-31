@@ -13,7 +13,8 @@ public class DefaultUserManager implements UserManager{
     private final int perPage = 20;
     private final UserRepository userRepository;
 
-    public DefaultUserManager(@Autowired UserRepository userRepository){this.userRepository = userRepository;}
+    @Autowired
+    public DefaultUserManager(UserRepository userRepository){this.userRepository = userRepository;}
 
     @Override
     public void createUser(UserDto userDto){
