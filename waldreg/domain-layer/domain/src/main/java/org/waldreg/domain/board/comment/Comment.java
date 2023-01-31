@@ -5,6 +5,7 @@ import org.waldreg.domain.user.User;
 
 public final class Comment{
 
+    private final int id;
     private final User user;
     private final LocalDateTime createdAt;
     private final LocalDateTime lastModifiedAt;
@@ -15,10 +16,15 @@ public final class Comment{
     }
 
     private Comment(Builder builder){
+        this.id = builder.id;
         this.user = builder.user;
         this.createdAt = builder.createdAt;
         this.lastModifiedAt = builder.lastModifiedAt;
         this.content = builder.content;
+    }
+
+    public int getId(){
+        return id;
     }
 
     public User getUser(){
@@ -39,6 +45,7 @@ public final class Comment{
 
     public final static class Builder{
 
+        private int id;
         private User user;
         private final LocalDateTime createdAt;
         private LocalDateTime lastModifiedAt;
@@ -50,6 +57,11 @@ public final class Comment{
         }
 
         private Builder(){}
+
+        public Builder id(int id){
+            this.id = id;
+            return this;
+        }
 
         public Builder user(User user){
             this.user = user;
