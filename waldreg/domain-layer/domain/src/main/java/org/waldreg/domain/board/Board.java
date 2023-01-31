@@ -21,8 +21,8 @@ public final class Board{
     private final List<String> imagePathList;
     private final List<String> filePathList;
     private final Reaction reactions;
-
     private final List<Comment> commentList;
+    private final int views;
 
     private Board(){
         throw new UnsupportedOperationException("Can not invoke constructor \"Board()\"");
@@ -41,6 +41,7 @@ public final class Board{
         this.filePathList = builder.filePathList;
         this.reactions = builder.reactions;
         this.commentList = builder.commentList;
+        this.views = builder.views;
     }
 
     public static Builder builder(){
@@ -95,6 +96,10 @@ public final class Board{
         return commentList;
     }
 
+    public int getViews(){
+        return views;
+    }
+
     public static final class Builder{
 
         private int id;
@@ -109,10 +114,13 @@ public final class Board{
         private List<String> filePathList;
         private Reaction reactions;
         private List<Comment> commentList;
+        private int views;
+
 
         {
             createdAt = LocalDateTime.now();
             lastModifiedAt = createdAt;
+            views = 0;
         }
 
         private Builder(){}
@@ -169,6 +177,10 @@ public final class Board{
 
         public Builder commentList(List<Comment> commentList){
             this.commentList = commentList;
+            return this;
+        }
+        public Builder views(int views){
+            this.views = views;
             return this;
         }
 
