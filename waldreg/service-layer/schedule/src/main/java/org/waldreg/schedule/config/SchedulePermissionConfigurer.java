@@ -18,6 +18,7 @@ public class SchedulePermissionConfigurer{
     @PostConstruct
     public void configSchedulePermission(){
         configCreateNewSchedulePermission();
+        configUpdateSchedulePermission();
     }
 
     private void configCreateNewSchedulePermission(){
@@ -29,5 +30,13 @@ public class SchedulePermissionConfigurer{
                 .build());
     }
 
+    private void configUpdateSchedulePermission(){
+        permissionExtension.extend(DefaultPermissionUnit.builder()
+                .name("Schedule update manager")
+                .info("If set true, can update schedule")
+                .permissionVerifiable((s) -> s.equals("true"))
+                .statusList(List.of("true", "false"))
+                .build());
+    }
 
 }
