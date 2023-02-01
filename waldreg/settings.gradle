@@ -38,3 +38,6 @@ include 'application-layer:schedule-controller'
 findProject(':application-layer:schedule-controller')?.name = 'schedule-controller'
 include 'application-layer:reward-controller'
 findProject(':application-layer:reward-controller')?.name = 'reward-controller'
+include 'core-layer:template'
+findProject(':core-layer:template')?.name = 'template'
+
