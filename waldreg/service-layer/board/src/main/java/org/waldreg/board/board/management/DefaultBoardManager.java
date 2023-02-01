@@ -59,11 +59,11 @@ public class DefaultBoardManager implements BoardManager{
 
     @Override
     public BoardDto inquiryBoardById(int id){
-        throwIfBoardDoesNotExistBoard(id);
+        throwIfBoardDoesNotExist(id);
         return boardRepository.inquiryBoardById(id);
     }
 
-    private void throwIfBoardDoesNotExistBoard(int boardId){
+    private void throwIfBoardDoesNotExist(int boardId){
         if (!boardRepository.isExistBoard(boardId)){
             throw new BoardDoesNotExistException(boardId);
         }
