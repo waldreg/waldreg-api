@@ -3,9 +3,11 @@ package org.waldreg.schedule.config;
 import java.util.List;
 import javax.annotation.PostConstruct;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Configuration;
 import org.waldreg.character.permission.core.DefaultPermissionUnit;
 import org.waldreg.character.permission.extension.PermissionExtension;
 
+@Configuration
 public class SchedulePermissionConfigurer{
 
     private final PermissionExtension permissionExtension;

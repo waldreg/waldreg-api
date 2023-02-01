@@ -16,6 +16,7 @@ public class ScheduleAcceptanceTestHelper{
                 .accept(MediaType.APPLICATION_JSON)
                 .header("Api-version", apiVersion)
                 .header(HttpHeaders.AUTHORIZATION, token)
+                .contentType(MediaType.APPLICATION_JSON)
                 .content(content));
     }
 
@@ -37,10 +38,11 @@ public class ScheduleAcceptanceTestHelper{
 
     public static ResultActions modifySchedule(MockMvc mvc, int id, String token, String content) throws Exception{
         return mvc.perform(MockMvcRequestBuilders
-                .get("/schedule/{schedule-id}", id)
+                .put("/schedule/{schedule-id}", id)
                 .accept(MediaType.APPLICATION_JSON)
                 .header("Api-version", apiVersion)
                 .header(HttpHeaders.AUTHORIZATION, token)
+                .contentType(MediaType.APPLICATION_JSON)
                 .content(content));
     }
 
