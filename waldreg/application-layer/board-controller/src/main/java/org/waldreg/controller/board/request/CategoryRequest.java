@@ -1,9 +1,11 @@
 package org.waldreg.controller.board.request;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import javax.validation.constraints.NotBlank;
 
 public class CategoryRequest{
 
+    @NotBlank(message = "category title cannot be null")
     @JsonProperty("category_name")
     private String categoryName;
 

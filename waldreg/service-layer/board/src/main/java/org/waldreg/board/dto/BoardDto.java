@@ -1,26 +1,25 @@
 package org.waldreg.board.dto;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
+import org.springframework.web.multipart.MultipartFile;
 
 public class BoardDto{
-    private final int id;
-    private final String title;
-    private final CategoryDto category;
-    private final String content;
-    private final UserDto user;
-    private final LocalDateTime createdAt;
-    private final LocalDateTime lastModifiedAt;
-    private final MemberTier memberTier;
-    private final List<String> imagePathList;
-    private final List<String> filePathList;
-    private final ReactionDto reactions;
-    private final List<CommentDto> commentList;
-    private final int views;
 
-    private BoardDto(){
-        throw new UnsupportedOperationException("Can not invoke constructor \"Board()\"");
-    }
+    private int id;
+    private String title;
+    private CategoryDto category;
+    private String content;
+    private UserDto user;
+    private LocalDateTime createdAt;
+    private LocalDateTime lastModifiedAt;
+    private MemberTier memberTier;
+    private ReactionDto reactions;
+    private List<CommentDto> commentList;
+    private int views;
+
+    private BoardDto(){}
 
     private BoardDto(Builder builder){
         this.id = builder.id;
@@ -31,8 +30,6 @@ public class BoardDto{
         this.createdAt = builder.createdAt;
         this.lastModifiedAt = builder.lastModifiedAt;
         this.memberTier = builder.memberTier;
-        this.imagePathList = builder.imagePathList;
-        this.filePathList = builder.filePathList;
         this.reactions = builder.reactions;
         this.commentList = builder.commentList;
         this.views = builder.views;
@@ -46,52 +43,88 @@ public class BoardDto{
         return id;
     }
 
+    public void setId(int id){
+        this.id = id;
+    }
+
     public String getTitle(){
         return title;
+    }
+
+    public void setTitle(String title){
+        this.title = title;
     }
 
     public CategoryDto getCategory(){
         return category;
     }
 
+    public void setCategory(CategoryDto category){
+        this.category = category;
+    }
+
     public String getContent(){
         return content;
+    }
+
+    public void setContent(String content){
+        this.content = content;
     }
 
     public UserDto getUser(){
         return user;
     }
 
+    public void setUser(UserDto user){
+        this.user = user;
+    }
+
     public LocalDateTime getCreatedAt(){
         return createdAt;
+    }
+
+    public void setCreatedAt(LocalDateTime createdAt){
+        this.createdAt = createdAt;
     }
 
     public LocalDateTime getLastModifiedAt(){
         return lastModifiedAt;
     }
 
+    public void setLastModifiedAt(LocalDateTime lastModifiedAt){
+        this.lastModifiedAt = lastModifiedAt;
+    }
+
     public MemberTier getMemberTier(){
         return memberTier;
     }
 
-    public List<String> getImagePathList(){
-        return imagePathList;
-    }
-
-    public List<String> getFilePathList(){
-        return filePathList;
+    public void setMemberTier(MemberTier memberTier){
+        this.memberTier = memberTier;
     }
 
     public ReactionDto getReactions(){
         return reactions;
     }
 
+    public void setReactions(ReactionDto reactions){
+        this.reactions = reactions;
+    }
+
     public List<CommentDto> getCommentList(){
         return commentList;
     }
 
+    public void setCommentList(List<CommentDto> commentList){
+        this.commentList = commentList;
+    }
+
     public int getViews(){
         return views;
+    }
+
+    public void setViews(int views){
+        this.views = views;
     }
 
     public static final class Builder{
@@ -104,8 +137,6 @@ public class BoardDto{
         private final LocalDateTime createdAt;
         private LocalDateTime lastModifiedAt;
         private MemberTier memberTier;
-        private List<String> imagePathList;
-        private List<String> filePathList;
         private ReactionDto reactions;
         private List<CommentDto> commentList;
         private int views;
@@ -115,6 +146,7 @@ public class BoardDto{
             createdAt = LocalDateTime.now();
             lastModifiedAt = createdAt;
             views = 0;
+            commentList = new ArrayList<>();
         }
 
         private Builder(){}
@@ -154,25 +186,11 @@ public class BoardDto{
             return this;
         }
 
-        public Builder imagePathList(List<String> imagePathList){
-            this.imagePathList = imagePathList;
-            return this;
-        }
-
-        public Builder filePathList(List<String> filePathList){
-            this.filePathList = filePathList;
-            return this;
-        }
-
         public Builder reactions(ReactionDto reactions){
             this.reactions = reactions;
             return this;
         }
 
-        public Builder commentList(List<CommentDto> commentList){
-            this.commentList = commentList;
-            return this;
-        }
         public Builder views(int views){
             this.views = views;
             return this;
