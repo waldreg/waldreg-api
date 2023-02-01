@@ -7,6 +7,8 @@ public interface BoardManager{
 
     BoardDto createBoard(BoardRequest request);
 
+    BoardDto inquiryBoardById(int id);
+
 
     final class BoardRequest{
 

@@ -2,7 +2,9 @@ package org.waldreg.board.board.management;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.waldreg.board.board.exception.BlankTitleException;
+import org.waldreg.board.board.exception.BoardDoesNotExistException;
+import org.waldreg.board.board.exception.CategoryDoesNotExistException;
+import org.waldreg.board.board.exception.UserDoesNotExistException;
 import org.waldreg.board.board.spi.BoardRepository;
 import org.waldreg.board.board.spi.CategoryRepository;
 import org.waldreg.board.board.spi.UserRepository;
@@ -26,17 +28,20 @@ public class DefaultBoardManager implements BoardManager{
 
     @Override
     public BoardDto createBoard(BoardRequest request){
-        try{
-            throwIfTitleIsBlank(request.getTitle());
-            return boardRepository.createBoard(buildBoardDto(request));
-        } catch (RuntimeException e){
-            throw new RuntimeException(e.getMessage());
+        throwIfCategoryDoesNotExist(request.getCategoryId());
+        throwIfUserDoesNotExist(request.getAuthorId());
+        return boardRepository.createBoard(buildBoardDto(request));
+    }
+
+    private void throwIfCategoryDoesNotExist(int categoryId){
+        if (!categoryRepository.isExistCategory(categoryId)){
+            throw new CategoryDoesNotExistException(categoryId);
         }
     }
 
-    private void throwIfTitleIsBlank(String title){
-        if (title.isBlank() || title.isEmpty()){
-            throw new BlankTitleException();
+    private void throwIfUserDoesNotExist(int authorId){
+        if (!userRepository.isExistUser(authorId)){
+            throw new UserDoesNotExistException(authorId);
         }
     }
 
@@ -50,6 +55,18 @@ public class DefaultBoardManager implements BoardManager{
                 .user(userDto)
                 .memberTier(request.getMemberTier())
                 .build();
+    }
+
+    @Override
+    public BoardDto inquiryBoardById(int id){
+        throwIfBoardDoesNotExistBoard(id);
+        return boardRepository.inquiryBoardById(id);
+    }
+
+    private void throwIfBoardDoesNotExistBoard(int boardId){
+        if (!boardRepository.isExistBoard(boardId)){
+            throw new BoardDoesNotExistException(boardId);
+        }
     }
 
 }
