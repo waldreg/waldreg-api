@@ -11,7 +11,7 @@ public final class CharacterRequest{
     @JsonProperty("character_name")
     private String characterName;
 
-    @NotNull(message = "CHARACTER-415 permissions cannot be null")
+    @NotNull(message = "CHARACTER-414 permissions cannot be null")
     @JsonProperty("permissions")
     private List<PermissionRequest> permissionList;
 

@@ -59,6 +59,7 @@ public class CharacterControllerAdvice{
     @ExceptionHandler({UnknownCharacterException.class})
     public ResponseEntity<ExceptionTemplate> catchUnknownCharacterException(UnknownCharacterException unknownCharacterException){
         ExceptionTemplate exceptionTemplate = ExceptionTemplate.builder()
+                .code("CHARACTER-420")
                 .message(unknownCharacterException.getMessage())
                 .documentUrl(documentUrl)
                 .build();
