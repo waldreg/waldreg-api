@@ -14,8 +14,15 @@ public class ReactionDto{
         this.reactionMap = builder.reactionMap;
     }
 
+    public static Builder builder(){
+        return new Builder();
+    }
     public Map<ReactionType, List<UserDto>> getReactionMap(){
         return reactionMap;
+    }
+
+    public void setReactionMap(Map<ReactionType, List<UserDto>> reactionMap){
+        this.reactionMap = reactionMap;
     }
 
     public final static class Builder{
