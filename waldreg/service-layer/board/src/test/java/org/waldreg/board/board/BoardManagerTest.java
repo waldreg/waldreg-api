@@ -10,12 +10,12 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.waldreg.board.board.management.BoardManager;
+import org.waldreg.board.board.management.BoardManager.BoardRequest;
 import org.waldreg.board.board.management.DefaultBoardManager;
 import org.waldreg.board.board.spi.BoardRepository;
-import org.waldreg.board.dto.BoardDto;
-import org.waldreg.board.dto.CategoryDto;
-import org.waldreg.board.dto.ReactionDto;
-import org.waldreg.board.dto.UserDto;
+import org.waldreg.board.board.spi.CategoryRepository;
+import org.waldreg.board.board.spi.UserRepository;
+import org.waldreg.board.dto.MemberTier;
 
 @ExtendWith(SpringExtension.class)
 @ContextConfiguration(classes = {DefaultBoardManager.class})
@@ -26,6 +26,11 @@ public class BoardManagerTest{
 
     @MockBean
     private BoardRepository boardRepository;
+    @MockBean
+    private UserRepository userRepository;
+    @MockBean
+    private CategoryRepository categoryRepository;
+
 
     @Test
     @DisplayName("보드 생성 성공 테스트")
@@ -36,29 +41,21 @@ public class BoardManagerTest{
         String content = "content";
 
         int id = 1;
-        String name = "name";
-        String userId = "id";
-        UserDto userDto = UserDto.builder()
-                .id(id)
-                .userId(userId)
-                .name(name)
-                .build();
+        int categoryId = 1;
+        MemberTier memberTier = MemberTier.TIER_3;
 
-        CategoryDto categoryDto = CategoryDto.builder()
-                .categoryName("cate1")
-                .build();
-        ReactionDto reactionDto = ReactionDto.builder().build();
-
-        BoardDto boardDto = BoardDto.builder()
-                .user(userDto)
+        BoardRequest boardRequest = BoardRequest.builder()
+                .authorId(id)
                 .title(title)
                 .content(content)
-                .category(categoryDto)
-                .reactions(reactionDto)
+                .categoryId(categoryId)
+                .memberTier(memberTier)
+                .imageCount(2)
+                .fileCount(3)
                 .build();
 
         //when&then
-        Assertions.assertDoesNotThrow(() -> boardManager.createBoard(boardDto));
+        Assertions.assertDoesNotThrow(() -> boardManager.createBoard(boardRequest));
     }
 
 }

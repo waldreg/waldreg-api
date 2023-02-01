@@ -3,7 +3,6 @@ package org.waldreg.board.dto;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
-import org.springframework.web.multipart.MultipartFile;
 
 public class BoardDto{
 
@@ -14,6 +13,8 @@ public class BoardDto{
     private UserDto user;
     private LocalDateTime createdAt;
     private LocalDateTime lastModifiedAt;
+    private List<String> fileUrls;
+    private List<String> imageUrls;
     private MemberTier memberTier;
     private ReactionDto reactions;
     private List<CommentDto> commentList;
