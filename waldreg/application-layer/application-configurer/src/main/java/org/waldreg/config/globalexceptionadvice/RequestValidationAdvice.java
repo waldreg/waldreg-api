@@ -17,10 +17,18 @@ public class RequestValidationAdvice{
         String[] messages = methodArgumentNotValidException.getBindingResult().getAllErrors().get(0).getDefaultMessage().split(" ");
         ExceptionTemplate exceptionTemplate = ExceptionTemplate.builder()
                 .code(messages[0])
-                .message(messages[1])
+                .message(getMessage(messages))
                 .documentUrl(documentUrl)
                 .build();
         return new ResponseEntity<>(exceptionTemplate, HttpStatus.BAD_REQUEST);
+    }
+
+    private String getMessage(String[] message){
+        StringBuilder sb = new StringBuilder();
+        for(int i = 1; i < message.length; i++){
+            sb.append(sb).append(" ");
+        }
+        return sb.toString();
     }
 
 }

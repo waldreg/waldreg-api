@@ -7,11 +7,11 @@ import javax.validation.constraints.NotNull;
 
 public final class CharacterRequest{
 
-    @NotBlank(message = "character_name cannot be blank")
+    @NotBlank(message = "CHARACTER-413 character_name cannot be blank")
     @JsonProperty("character_name")
     private String characterName;
 
-    @NotNull(message = "permissions cannot be null")
+    @NotNull(message = "CHARACTER-415 permissions cannot be null")
     @JsonProperty("permissions")
     private List<PermissionRequest> permissionList;
 
