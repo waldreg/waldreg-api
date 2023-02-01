@@ -27,7 +27,7 @@ public class DefaultFileManager{
                 Files.copy(file.getInputStream(), copyOfLocation, StandardCopyOption.REPLACE_EXISTING);
                 filePaths.add(String.valueOf(copyOfLocation));
             } catch (IOException IOE){
-                throw new FileStorageException("Could not store file : " + file.getOriginalFilename());
+
             }
         }
         return filePaths;
