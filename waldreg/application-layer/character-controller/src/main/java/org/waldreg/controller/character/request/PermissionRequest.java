@@ -62,7 +62,7 @@ public final class PermissionRequest{
 
         private Builder(){}
 
-        public Builder id(int id){
+        public Builder id(Integer id){
             this.id = id;
             return this;
         }
