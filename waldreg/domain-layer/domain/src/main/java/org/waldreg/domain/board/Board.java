@@ -2,6 +2,7 @@ package org.waldreg.domain.board;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import org.waldreg.domain.board.comment.Comment;
 import org.waldreg.domain.board.reaction.Reaction;
 import org.waldreg.domain.category.Category;
 import org.waldreg.domain.tier.MemberTier;
@@ -20,6 +21,8 @@ public final class Board{
     private final List<String> imagePathList;
     private final List<String> filePathList;
     private final Reaction reactions;
+    private final List<Comment> commentList;
+    private final int views;
 
     private Board(){
         throw new UnsupportedOperationException("Can not invoke constructor \"Board()\"");
@@ -37,6 +40,8 @@ public final class Board{
         this.imagePathList = builder.imagePathList;
         this.filePathList = builder.filePathList;
         this.reactions = builder.reactions;
+        this.commentList = builder.commentList;
+        this.views = builder.views;
     }
 
     public static Builder builder(){
@@ -87,6 +92,14 @@ public final class Board{
         return reactions;
     }
 
+    public List<Comment> getCommentList(){
+        return commentList;
+    }
+
+    public int getViews(){
+        return views;
+    }
+
     public static final class Builder{
 
         private int id;
@@ -100,10 +113,14 @@ public final class Board{
         private List<String> imagePathList;
         private List<String> filePathList;
         private Reaction reactions;
+        private List<Comment> commentList;
+        private int views;
+
 
         {
             createdAt = LocalDateTime.now();
             lastModifiedAt = createdAt;
+            views = 0;
         }
 
         private Builder(){}
@@ -155,6 +172,15 @@ public final class Board{
 
         public Builder reactions(Reaction reactions){
             this.reactions = reactions;
+            return this;
+        }
+
+        public Builder commentList(List<Comment> commentList){
+            this.commentList = commentList;
+            return this;
+        }
+        public Builder views(int views){
+            this.views = views;
             return this;
         }
 

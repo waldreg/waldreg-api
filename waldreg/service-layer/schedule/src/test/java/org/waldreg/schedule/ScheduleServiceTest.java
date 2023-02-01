@@ -20,8 +20,7 @@ import org.waldreg.schedule.exception.InvalidSchedulePeriodException;
 import org.waldreg.schedule.exception.UnknownScheduleException;
 import org.waldreg.schedule.management.DefaultScheduleManager;
 import org.waldreg.schedule.management.ScheduleManager;
-import org.waldreg.schedule.spi.repository.ScheduleRepository;
-import org.waldreg.schedule.spi.schedule.ScheduleIdExistChecker;
+import org.waldreg.schedule.spi.ScheduleRepository;
 
 @ExtendWith(SpringExtension.class)
 @ContextConfiguration(classes = {DefaultScheduleManager.class})
@@ -32,9 +31,6 @@ public class ScheduleServiceTest{
 
     @MockBean
     private ScheduleRepository scheduleRepository;
-
-    @MockBean
-    private ScheduleIdExistChecker scheduleIdExistChecker;
 
     @Test
     @DisplayName("새로운 일정 생성 성공 테스트 - 반복 있을 때")
@@ -266,7 +262,7 @@ public class ScheduleServiceTest{
 
         //when
         scheduleManager.createSchedule(scheduleRequest);
-        Mockito.when(scheduleIdExistChecker.isExistScheduleId(Mockito.anyInt())).thenReturn(true);
+        Mockito.when(scheduleRepository.isExistScheduleId(Mockito.anyInt())).thenReturn(true);
         Mockito.when(scheduleRepository.readScheduleById(Mockito.anyInt())).thenReturn(scheduleRequest);
         ScheduleDto result = scheduleManager.readScheduleById(1);
 
@@ -288,7 +284,7 @@ public class ScheduleServiceTest{
         //given
 
         //when
-        Mockito.when(scheduleIdExistChecker.isExistScheduleId(Mockito.anyInt())).thenReturn(false);
+        Mockito.when(scheduleRepository.isExistScheduleId(Mockito.anyInt())).thenReturn(false);
 
         //then
         Assertions.assertThrows(UnknownScheduleException.class, () -> scheduleManager.readScheduleById(1));
@@ -447,9 +443,9 @@ public class ScheduleServiceTest{
 
         //when
         scheduleManager.createSchedule(scheduleRequest);
-        scheduleManager.updateScheduleById(1, scheduleRequest2);
-        Mockito.when(scheduleIdExistChecker.isExistScheduleId(Mockito.anyInt())).thenReturn(true);
+        Mockito.when(scheduleRepository.isExistScheduleId(Mockito.anyInt())).thenReturn(true);
         Mockito.when(scheduleRepository.readScheduleById(Mockito.anyInt())).thenReturn(scheduleRequest2);
+        scheduleManager.updateScheduleById(1, scheduleRequest2);
         ScheduleDto result = scheduleManager.readScheduleById(1);
 
         //then
@@ -505,7 +501,7 @@ public class ScheduleServiceTest{
 
         //when
         scheduleManager.createSchedule(scheduleRequest);
-        Mockito.when(scheduleIdExistChecker.isExistScheduleId(Mockito.anyInt())).thenReturn(true);
+        Mockito.when(scheduleRepository.isExistScheduleId(Mockito.anyInt())).thenReturn(true);
         Mockito.when(scheduleRepository.readScheduleById(Mockito.anyInt())).thenReturn(scheduleRequest2);
 
         //then
@@ -554,7 +550,7 @@ public class ScheduleServiceTest{
 
         //when
         scheduleManager.createSchedule(scheduleRequest);
-        Mockito.when(scheduleIdExistChecker.isExistScheduleId(Mockito.anyInt())).thenReturn(true);
+        Mockito.when(scheduleRepository.isExistScheduleId(Mockito.anyInt())).thenReturn(true);
         Mockito.when(scheduleRepository.readScheduleById(Mockito.anyInt())).thenReturn(scheduleRequest2);
 
         //then
@@ -603,7 +599,7 @@ public class ScheduleServiceTest{
 
         //when
         scheduleManager.createSchedule(scheduleRequest);
-        Mockito.when(scheduleIdExistChecker.isExistScheduleId(Mockito.anyInt())).thenReturn(true);
+        Mockito.when(scheduleRepository.isExistScheduleId(Mockito.anyInt())).thenReturn(true);
         Mockito.when(scheduleRepository.readScheduleById(Mockito.anyInt())).thenReturn(scheduleRequest2);
 
         //then
@@ -652,7 +648,7 @@ public class ScheduleServiceTest{
 
         //when
         scheduleManager.createSchedule(scheduleRequest);
-        Mockito.when(scheduleIdExistChecker.isExistScheduleId(Mockito.anyInt())).thenReturn(true);
+        Mockito.when(scheduleRepository.isExistScheduleId(Mockito.anyInt())).thenReturn(true);
         Mockito.when(scheduleRepository.readScheduleById(Mockito.anyInt())).thenReturn(scheduleRequest2);
 
         //then
@@ -701,7 +697,7 @@ public class ScheduleServiceTest{
 
         //when
         scheduleManager.createSchedule(scheduleRequest);
-        Mockito.when(scheduleIdExistChecker.isExistScheduleId(Mockito.anyInt())).thenReturn(true);
+        Mockito.when(scheduleRepository.isExistScheduleId(Mockito.anyInt())).thenReturn(true);
         Mockito.when(scheduleRepository.readScheduleById(Mockito.anyInt())).thenReturn(scheduleRequest2);
 
         //then
@@ -750,11 +746,91 @@ public class ScheduleServiceTest{
 
         //when
         scheduleManager.createSchedule(scheduleRequest);
-        Mockito.when(scheduleIdExistChecker.isExistScheduleId(Mockito.anyInt())).thenReturn(true);
+        Mockito.when(scheduleRepository.isExistScheduleId(Mockito.anyInt())).thenReturn(true);
         Mockito.when(scheduleRepository.readScheduleById(Mockito.anyInt())).thenReturn(scheduleRequest2);
 
         //then
         Assertions.assertThrows(InvalidSchedulePeriodException.class, () -> scheduleManager.updateScheduleById(1, scheduleRequest2));
+
+    }
+
+    @Test
+    @DisplayName("일정 수정 실패 테스트 - schedule_content가 1000자를 넘을 때")
+    public void UPDATE_SCHEDULE_FAIL_CAUSE_CONTENT_OVERFLOW_TEST(){
+        //given
+        String scheduleTitle = "seminar";
+        String scheduleContent = "BFS";
+        String startedAt = "2023-01-24T20:52";
+        String finishAt = "2023-01-31T23:59";
+        int cycle = 123;
+        String repeatFinishAt = "2023-12-31T23:59";
+        RepeatDto repeatScheduleRequest = RepeatDto.builder()
+                .cycle(cycle)
+                .repeatFinishAt(repeatFinishAt)
+                .build();
+        ScheduleDto scheduleRequest = ScheduleDto.builder()
+                .scheduleTitle(scheduleTitle)
+                .scheduleContent(scheduleContent)
+                .startedAt(startedAt)
+                .finishAt(finishAt)
+                .repeatDto(repeatScheduleRequest)
+                .build();
+        String scheduleTitle2 = "seminar";
+        String scheduleContent2 = createOverflow();
+        String startedAt2 = "2023-02-01T20:52";
+        String finishAt2 = "2023-02-28T23:59";
+        int cycle2 = 100;
+        String repeatFinishAt2 = "2023-12-31T23:59";
+        RepeatDto repeatScheduleRequest2 = RepeatDto.builder()
+                .cycle(cycle2)
+                .repeatFinishAt(repeatFinishAt2)
+                .build();
+        ScheduleDto scheduleRequest2 = ScheduleDto.builder()
+                .scheduleTitle(scheduleTitle2)
+                .scheduleContent(scheduleContent2)
+                .startedAt(startedAt2)
+                .finishAt(finishAt2)
+                .repeatDto(repeatScheduleRequest2)
+                .build();
+
+        //when
+        scheduleManager.createSchedule(scheduleRequest);
+        Mockito.when(scheduleRepository.isExistScheduleId(Mockito.anyInt())).thenReturn(true);
+        Mockito.when(scheduleRepository.readScheduleById(Mockito.anyInt())).thenReturn(scheduleRequest2);
+
+        //then
+        Assertions.assertThrows(ContentOverflowException.class, () -> scheduleManager.updateScheduleById(1, scheduleRequest2));
+
+    }
+
+    @Test
+    @DisplayName("일정 수정 실패 테스트 - 없는 schedule")
+    public void UPDATE_SCHEDULE_FAIL_CAUSE_UNKNOWN_SCHEDULE_TEST(){
+        //given
+        String scheduleTitle2 = "seminar";
+        String scheduleContent2 = "BFS";
+        String startedAt2 = "2023-02-01T20:52";
+        String finishAt2 = "2023-02-28T23:59";
+        int cycle2 = 100;
+        String repeatFinishAt2 = "2023-12-31T23:59";
+        RepeatDto repeatScheduleRequest2 = RepeatDto.builder()
+                .cycle(cycle2)
+                .repeatFinishAt(repeatFinishAt2)
+                .build();
+        ScheduleDto scheduleRequest2 = ScheduleDto.builder()
+                .scheduleTitle(scheduleTitle2)
+                .scheduleContent(scheduleContent2)
+                .startedAt(startedAt2)
+                .finishAt(finishAt2)
+                .repeatDto(repeatScheduleRequest2)
+                .build();
+
+        //when
+        Mockito.when(scheduleRepository.isExistScheduleId(Mockito.anyInt())).thenReturn(false);
+        Mockito.when(scheduleRepository.readScheduleById(Mockito.anyInt())).thenReturn(scheduleRequest2);
+
+        //then
+        Assertions.assertThrows(UnknownScheduleException.class, () -> scheduleManager.updateScheduleById(1, scheduleRequest2));
 
     }
 
@@ -782,6 +858,7 @@ public class ScheduleServiceTest{
 
         //when
         scheduleManager.createSchedule(scheduleRequest);
+        Mockito.when(scheduleRepository.isExistScheduleId(Mockito.anyInt())).thenReturn(true);
         Mockito.when(scheduleRepository.readScheduleById(Mockito.anyInt())).thenReturn(scheduleRequest);
 
         //then
@@ -789,6 +866,37 @@ public class ScheduleServiceTest{
 
     }
 
+    @Test
+    @DisplayName("일정 삭제 실패 테스트 - 잘못된 id")
+    public void DELETE_SCHEDULE_BY_ID_FAIL_CAUSE_UNKNOWN_SCHEDULE_TEST(){
+        //given
+        String scheduleTitle = "seminar";
+        String scheduleContent = "BFS";
+        String startedAt = "2023-01-24T20:52";
+        String finishAt = "2023-01-31T23:59";
+        int cycle = 123;
+        String repeatFinishAt = "2023-12-31T23:59";
+        RepeatDto repeatScheduleRequest = RepeatDto.builder()
+                .cycle(cycle)
+                .repeatFinishAt(repeatFinishAt)
+                .build();
+        ScheduleDto scheduleRequest = ScheduleDto.builder()
+                .scheduleTitle(scheduleTitle)
+                .scheduleContent(scheduleContent)
+                .startedAt(startedAt)
+                .finishAt(finishAt)
+                .repeatDto(repeatScheduleRequest)
+                .build();
+
+        //when
+        scheduleManager.createSchedule(scheduleRequest);
+        Mockito.when(scheduleRepository.isExistScheduleId(Mockito.anyInt())).thenReturn(false);
+        Mockito.when(scheduleRepository.readScheduleById(Mockito.anyInt())).thenReturn(scheduleRequest);
+
+        //then
+        Assertions.assertThrows(UnknownScheduleException.class, () -> scheduleManager.deleteScheduleById(1));
+
+    }
 
     private String createOverflow(){
         String content = "";

@@ -4,12 +4,12 @@ import java.time.LocalDateTime;
 
 public final class Schedule{
 
-    private final int id;
-    private final String scheduleTitle;
-    private final String scheduleContent;
-    private final LocalDateTime startedAt;
-    private final LocalDateTime finishAt;
-    private final ScheduleRepeat scheduleRepeat;
+    private int id;
+    private String scheduleTitle;
+    private String scheduleContent;
+    private LocalDateTime startedAt;
+    private LocalDateTime finishAt;
+    private ScheduleRepeat scheduleRepeat;
 
     private Schedule(){
         throw new UnsupportedOperationException("Can not invoke constructor \"Schedule()\"");
@@ -50,6 +50,30 @@ public final class Schedule{
 
     public ScheduleRepeat getScheduleRepeat(){
         return scheduleRepeat;
+    }
+
+    public void setId(int id){
+        this.id = id;
+    }
+
+    public void setScheduleTitle(String scheduleTitle){
+        this.scheduleTitle = scheduleTitle;
+    }
+
+    public void setScheduleContent(String scheduleContent){
+        this.scheduleContent = scheduleContent;
+    }
+
+    public void setStartedAt(LocalDateTime startedAt){
+        this.startedAt = startedAt;
+    }
+
+    public void setFinishAt(LocalDateTime finishAt){
+        this.finishAt = finishAt;
+    }
+
+    public void setScheduleRepeat(ScheduleRepeat scheduleRepeat){
+        this.scheduleRepeat = scheduleRepeat;
     }
 
     public final static class Builder{

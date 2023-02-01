@@ -50,7 +50,7 @@ public class UserController{
     }
 
     @Authenticating(fail = AuthFailBehavior.PASS)
-    @PermissionVerifying(value = "Read other user info permission", fail = VerifyingFailBehavior.PASS)
+    @PermissionVerifying(value = "User info read manager", fail = VerifyingFailBehavior.PASS)
     @GetMapping("/user/{user-id}")
     public UserResponse readSpecificUser(@PathVariable("user-id") String userId, @Nullable PermissionVerifyState permissionVerifyState){
         UserDto userDto = userManager.readUserByUserId(userId);
@@ -61,7 +61,7 @@ public class UserController{
     }
 
     @Authenticating(fail = AuthFailBehavior.PASS)
-    @PermissionVerifying(value = "Read other user info permission", fail = VerifyingFailBehavior.PASS)
+    @PermissionVerifying(value = "User info read manager", fail = VerifyingFailBehavior.PASS)
     @RequestMapping(value = "/users")
     public UserListResponse readAllUser(@RequestParam("from") int startIdx, @RequestParam("to") int endIdx, @Nullable PermissionVerifyState permissionVerifyState){
         int maxIdx = userManager.readMaxIdx();
@@ -91,7 +91,7 @@ public class UserController{
     }
 
     @Authenticating
-    @PermissionVerifying(value = "Fire other user permission")
+    @PermissionVerifying(value = "User fire manager")
     @DeleteMapping("/user/{id}")
     public void deleteUser(@PathVariable("id") int id){
         userManager.deleteById(id);
@@ -105,7 +105,7 @@ public class UserController{
     }
 
     @Authenticating
-    @PermissionVerifying("Update other user's character permission")
+    @PermissionVerifying("User's character update manager")
     @PutMapping("/user/character/{id}")
     public void updateUserCharacter(@PathVariable("id") int id, @RequestBody @Validated CharacterRequest characterRequest){
         String character = characterRequest.getCharacter();
