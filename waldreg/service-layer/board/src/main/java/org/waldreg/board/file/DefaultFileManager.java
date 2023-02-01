@@ -12,9 +12,8 @@ import java.util.UUID;
 import org.springframework.web.multipart.MultipartFile;
 
 public class DefaultFileManager{
+
     private String uploadLocation = "./src/main/java/org/waldreg/";
-
-
 
 
     public List<String> storeFiles(List<MultipartFile> files, String uploadPackageName){
