@@ -311,6 +311,45 @@ public class ScheduleAcceptanceTest{
     }
 
     @Test
+    @DisplayName("새로운 일정 생성 실패 테스트 - 잘못된 형식의 반복 종료 날짜")
+    public void CREATE_NEW_SCHEDULE_FAIL_CAUSE_INVALID_REPEAT_FINISH_DATE_FORMAT_TEST() throws Exception{
+        //given
+        String adminToken = AuthenticationAcceptanceTestHelper.getAdminToken(mvc, objectMapper);
+
+        String scheduleTitle = "seminar";
+        String scheduleContent = "BFS";
+        String startedAt = "2023-01-24T20:52";
+        String finishAt = "2023-01-31T23:59";
+        int cycle = 123;
+        String wrongRepeatFinishAt = "2023-13-28T23:59";
+        ScheduleRepeatRequest scheduleRepeatRequest = ScheduleRepeatRequest.builder()
+                .cycle(cycle)
+                .repeatFinishAt(wrongRepeatFinishAt)
+                .build();
+        ScheduleRequest scheduleRequest = ScheduleRequest.builder()
+                .scheduleTitle(scheduleTitle)
+                .scheduleContent(scheduleContent)
+                .startedAt(startedAt)
+                .finishAt(finishAt)
+                .repeat(scheduleRepeatRequest)
+                .build();
+
+        //when
+        ResultActions result = ScheduleAcceptanceTestHelper.createNewSchedule(mvc, adminToken, objectMapper.writeValueAsString(scheduleRequest));
+
+        //then
+        result.andExpectAll(
+                MockMvcResultMatchers.status().isBadRequest(),
+                MockMvcResultMatchers.header().string(HttpHeaders.CONTENT_TYPE, "application/json"),
+                MockMvcResultMatchers.header().string("api-version", apiVersion),
+                MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON),
+                MockMvcResultMatchers.jsonPath("$.messages").value("Invalid date format detected Schedule repeat finish date \"" + wrongRepeatFinishAt + "\""),
+                MockMvcResultMatchers.jsonPath("$.document_url").value("docs.waldreg.org")
+        ).andDo(MockMvcResultHandlers.print());
+
+    }
+
+    @Test
     @DisplayName("새로운 일정 생성 실패 테스트 - 빈 schedule title")
     public void CREATE_NEW_SCHEDULE_FAIL_CAUSE_BLANK_SCHEDULE_TITLE_TEST() throws Exception{
         //given

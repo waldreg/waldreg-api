@@ -21,8 +21,8 @@ import org.waldreg.controller.character.mapper.ControllerPermissionMapper;
 import org.waldreg.controller.character.request.CharacterRequest;
 import org.waldreg.controller.character.response.CharacterResponse;
 import org.waldreg.controller.character.response.PermissionResponse;
+import org.waldreg.controller.character.response.SimpleCharacterResponse;
 import org.waldreg.token.aop.annotation.Authenticating;
-import org.waldreg.token.aop.behavior.AuthFailBehavior;
 
 @RestController
 public class CharacterController{
@@ -43,24 +43,24 @@ public class CharacterController{
         this.controllerCharacterMapper = controllerCharacterMapper;
     }
 
-    @Authenticating()
+    @Authenticating
     @PermissionVerifying("Character manager")
     @GetMapping("/permission")
     public Map<String, List<PermissionResponse>> getAllPermissions(){
         List<PermissionUnit> permissionUnits = permissionUnitListReadable.getPermissionUnitList();
-        List<PermissionResponse> permissionResponseDtoList = controllerPermissionMapper.permissionUnitToPermissionResponse(permissionUnits);
-        return Map.of("permissions", permissionResponseDtoList);
+        List<PermissionResponse> permissionResponseList = controllerPermissionMapper.permissionUnitToPermissionResponse(permissionUnits);
+        return Map.of("permissions", permissionResponseList);
     }
 
-    @Authenticating()
+    @Authenticating
     @PermissionVerifying("Character manager")
     @GetMapping("/character")
-    public Map<String, List<String>> getAllCharacters(){
-        List<String> characterNameList = controllerCharacterMapper.characterDtoListToCharacterNameList(characterManager.readCharacterList());
-        return Map.of("character_name", characterNameList);
+    public Map<String, List<SimpleCharacterResponse>> getAllCharacters(){
+        List<SimpleCharacterResponse> simpleCharacterResponseList = controllerCharacterMapper.characterDtoListToSimpleCharacterResponseList(characterManager.readCharacterList());
+        return Map.of("characters", simpleCharacterResponseList);
     }
 
-    @Authenticating()
+    @Authenticating
     @PermissionVerifying("Character manager")
     @PostMapping("/character")
     public void createNewCharacter(@RequestBody @Validated CharacterRequest characterRequest){
@@ -68,7 +68,7 @@ public class CharacterController{
         characterManager.createCharacter(characterDto);
     }
 
-    @Authenticating()
+    @Authenticating
     @PermissionVerifying("Character manager")
     @GetMapping("/character/{character-name}")
     public CharacterResponse getCharacterByName(@PathVariable("character-name") String characterName){
@@ -76,14 +76,14 @@ public class CharacterController{
         return controllerCharacterMapper.characterDtoToCharacterResponse(characterDto);
     }
 
-    @Authenticating()
+    @Authenticating
     @PermissionVerifying("Character manager")
     @PatchMapping("/character/{character-name}")
     public void updateCharacter(@PathVariable("character-name") String characterName, @RequestBody CharacterRequest characterRequest){
         characterManager.updateCharacter(characterName, controllerCharacterMapper.characterRequestToCharacterDto(characterRequest));
     }
 
-    @Authenticating()
+    @Authenticating
     @PermissionVerifying("Character manager")
     @DeleteMapping("/character/{character-name}")
     public void deleteCharacter(@PathVariable("character-name") String characterName){

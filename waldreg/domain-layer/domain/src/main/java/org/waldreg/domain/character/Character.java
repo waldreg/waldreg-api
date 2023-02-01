@@ -4,6 +4,7 @@ import java.util.List;
 
 public final class Character{
 
+    private int id;
     private final String characterName;
     private final List<Permission> permissionList;
 
@@ -26,6 +27,14 @@ public final class Character{
 
     public List<Permission> getPermissionList(){
         return permissionList;
+    }
+
+    public void setId(int id){
+        this.id = id;
+    }
+
+    public int getId(){
+        return id;
     }
 
     public final static class Builder{

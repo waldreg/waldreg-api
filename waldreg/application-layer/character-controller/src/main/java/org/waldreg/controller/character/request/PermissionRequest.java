@@ -2,8 +2,13 @@ package org.waldreg.controller.character.request;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 
 public final class PermissionRequest{
+
+    @NotNull(message = "permission_id cannot be null")
+    @JsonProperty("permission_id")
+    private int id;
 
     @NotBlank(message = "permission_name cannot be blank")
     @JsonProperty("permission_name")
@@ -16,6 +21,7 @@ public final class PermissionRequest{
     public PermissionRequest(){}
 
     private PermissionRequest(Builder builder){
+        this.id = builder.id;
         this.name = builder.name;
         this.status = builder.status;
     }
@@ -40,12 +46,26 @@ public final class PermissionRequest{
         this.status = status;
     }
 
+    public int getId(){
+        return id;
+    }
+
+    public void setId(int id){
+        this.id = id;
+    }
+
     public final static class Builder{
 
+        private int id;
         private String name;
         private String status;
 
         private Builder(){}
+
+        public Builder id(int id){
+            this.id = id;
+            return this;
+        }
 
         public Builder name(String name){
             this.name = name;

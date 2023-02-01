@@ -52,10 +52,12 @@ public class DefaultCharacterManagerTest{
     @DisplayName("새로운 Character 추가 성공 테스트")
     public void CREATE_NEW_CHARACTER_SUCCESS_TEST(){
         // given
+        PermissionUnit permissionUnit = permissionUnitManager.getPermission("mock permission");
         CharacterDto character = CharacterDto.builder()
                 .characterName("new character")
                 .permissionDtoList(List.of(
                         PermissionDto.builder()
+                                .id(permissionUnit.getId())
                                 .name(permissionName)
                                 .status("true")
                                 .build()
@@ -73,6 +75,7 @@ public class DefaultCharacterManagerTest{
                 .characterName("new character")
                 .permissionDtoList(List.of(
                         PermissionDto.builder()
+                                .id(12)
                                 .name("Unknown Character")
                                 .status("fail")
                                 .build()
@@ -86,10 +89,12 @@ public class DefaultCharacterManagerTest{
     @DisplayName("새로운 Character 추가 실패 테스트 - permission name 이 갖고있는 permission status 가 아님")
     public void CREATE_NEW_CHARACTER_FAIL_INVALID_STATUS_NAME_TEST(){
         // given
+        PermissionUnit permissionUnit = permissionUnitManager.getPermission("mock permission");
         CharacterDto character = CharacterDto.builder()
                 .characterName("new character")
                 .permissionDtoList(List.of(
                         PermissionDto.builder()
+                                .id(permissionUnit.getId())
                                 .name(permissionName)
                                 .status("invalid")
                                 .build()
@@ -103,11 +108,13 @@ public class DefaultCharacterManagerTest{
     @DisplayName("특정 Character 조회 성공 테스트")
     public void READ_CHARACTER_SUCCESS_TEST(){
         // given
+        PermissionUnit permissionUnit = permissionUnitManager.getPermission("mock permission");
         String characterName = "characterName";
         CharacterDto characterDto = CharacterDto.builder()
                 .characterName(characterName)
                 .permissionDtoList(List.of(
                         PermissionDto.builder()
+                                .id(permissionUnit.getId())
                                 .name(permissionName)
                                 .status("fail")
                                 .build()
@@ -129,12 +136,14 @@ public class DefaultCharacterManagerTest{
     @DisplayName("유저 id에 속한 Character 조회 테스트")
     public void READ_CHARACTER_BY_USER_ID_TEST(){
         // given
+        PermissionUnit permissionUnit = permissionUnitManager.getPermission("mock permission");
         int id = 1;
         String characterName = "admin";
         CharacterDto characterDto = CharacterDto.builder()
                 .characterName(characterName)
                 .permissionDtoList(List.of(
                         PermissionDto.builder()
+                                .id(permissionUnit.getId())
                                 .name(permissionName)
                                 .status("fail")
                                 .build()
@@ -152,10 +161,12 @@ public class DefaultCharacterManagerTest{
     @DisplayName("Character 목록 조회 성공 테스트")
     public void READ_CHARACTER_LIST_SUCCESS_TEST(){
         // given
+        PermissionUnit permissionUnit = permissionUnitManager.getPermission("mock permission");
         CharacterDto characterDto1 = CharacterDto.builder()
                 .characterName("1")
                 .permissionDtoList(List.of(
                         PermissionDto.builder()
+                                .id(permissionUnit.getId())
                                 .name(permissionName)
                                 .status("fail")
                                 .build()
@@ -164,6 +175,7 @@ public class DefaultCharacterManagerTest{
                 .characterName("2")
                 .permissionDtoList(List.of(
                         PermissionDto.builder()
+                                .id(permissionUnit.getId())
                                 .name(permissionName)
                                 .status("fail")
                                 .build()
@@ -187,11 +199,13 @@ public class DefaultCharacterManagerTest{
     @DisplayName("Character 수정 성공 테스트")
     public void UPDATE_CHARACTER_SUCCESS_TEST(){
         // given
+        PermissionUnit permissionUnit = permissionUnitManager.getPermission("mock permission");
         String beforeName = "mock character";
         CharacterDto beforeCharacter = CharacterDto.builder()
                 .characterName(beforeName)
                 .permissionDtoList(List.of(
                         PermissionDto.builder()
+                                .id(permissionUnit.getId())
                                 .name(permissionName)
                                 .status("fail")
                                 .build()
@@ -201,6 +215,7 @@ public class DefaultCharacterManagerTest{
                 .characterName(afterName)
                 .permissionDtoList(List.of(
                         PermissionDto.builder()
+                                .id(permissionUnit.getId())
                                 .name(permissionName)
                                 .status("fail")
                                 .build()
@@ -220,11 +235,13 @@ public class DefaultCharacterManagerTest{
     @DisplayName("Character 수정 실패 테스트 - 존재하지 않는 권한을 수정하려고 할 경우")
     public void UPDATE_CHARACTER_FAIL_UNKNOWN_PERMISSION_TEST(){
         // given
+        PermissionUnit permissionUnit = permissionUnitManager.getPermission("mock permission");
         String beforeName = "mock character";
         CharacterDto beforeCharacter = CharacterDto.builder()
                 .characterName(beforeName)
                 .permissionDtoList(List.of(
                         PermissionDto.builder()
+                                .id(permissionUnit.getId())
                                 .name(permissionName)
                                 .status("fail")
                                 .build()
@@ -234,6 +251,7 @@ public class DefaultCharacterManagerTest{
                 .characterName(afterName)
                 .permissionDtoList(List.of(
                         PermissionDto.builder()
+                                .id(2)
                                 .name("unknown permission")
                                 .status("fail")
                                 .build()
@@ -250,11 +268,13 @@ public class DefaultCharacterManagerTest{
     @DisplayName("Character 수정 실패 테스트 - 해당 권한에 해당하지 않는 permission status 로 변경하려고 시도하는 경우")
     public void UPDATE_CHARACTER_FAIL_UNKNOWN_PERMISSION_STATUS_TEST(){
         // given
+        PermissionUnit permissionUnit = permissionUnitManager.getPermission("mock permission");
         String beforeName = "mock character";
         CharacterDto beforeCharacter = CharacterDto.builder()
                 .characterName(beforeName)
                 .permissionDtoList(List.of(
                         PermissionDto.builder()
+                                .id(permissionUnit.getId())
                                 .name(permissionName)
                                 .status("fail")
                                 .build()
@@ -264,6 +284,7 @@ public class DefaultCharacterManagerTest{
                 .characterName(afterName)
                 .permissionDtoList(List.of(
                         PermissionDto.builder()
+                                .id(permissionUnit.getId())
                                 .name(permissionName)
                                 .status("never used")
                                 .build()

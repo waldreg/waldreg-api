@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 import org.waldreg.character.dto.CharacterDto;
 import org.waldreg.controller.character.request.CharacterRequest;
 import org.waldreg.controller.character.response.CharacterResponse;
+import org.waldreg.controller.character.response.SimpleCharacterResponse;
 
 @Service
 public class ControllerCharacterMapper{
@@ -18,10 +19,13 @@ public class ControllerCharacterMapper{
         this.controllerPermissionMapper = controllerPermissionMapper;
     }
 
-    public List<String> characterDtoListToCharacterNameList(List<CharacterDto> characterDtoList){
-        List<String> characterNameList = new ArrayList<>();
+    public List<SimpleCharacterResponse> characterDtoListToSimpleCharacterResponseList(List<CharacterDto> characterDtoList){
+        List<SimpleCharacterResponse> characterNameList = new ArrayList<>();
         for(CharacterDto characterDto : characterDtoList){
-            characterNameList.add(characterDto.getCharacterName());
+            characterNameList.add(SimpleCharacterResponse.builder()
+                    .id(characterDto.getId())
+                    .characterName(characterDto.getCharacterName())
+                    .build());
         }
         return characterNameList;
     }
@@ -37,6 +41,7 @@ public class ControllerCharacterMapper{
 
     public CharacterResponse characterDtoToCharacterResponse(CharacterDto characterDto){
         return CharacterResponse.builder()
+                .id(characterDto.getId())
                 .characterName(characterDto.getCharacterName())
                 .permissionList(controllerPermissionMapper.permissionDtoListToSpecifyPermissionResponseList(characterDto.getPermissionList()))
                 .build();
