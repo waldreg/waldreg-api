@@ -12,6 +12,8 @@ public interface BoardManager{
 
     List<BoardDto> inquiryAllBoard(int from, int to);
 
+    List<BoardDto> inquiryAllBoardByCategory(int categoryId, int from, int to);
+
     final class BoardRequest{
 
         private int authorId;

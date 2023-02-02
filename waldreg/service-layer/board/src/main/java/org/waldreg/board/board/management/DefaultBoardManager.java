@@ -97,5 +97,13 @@ public class DefaultBoardManager implements BoardManager{
         return to;
     }
 
+    @Override
+    public List<BoardDto> inquiryAllBoardByCategory(int categoryId, int from, int to){
+        throwIfCategoryDoesNotExist(categoryId);
+        throwIfInvalidRangeDetected(from, to);
+        int maxIdx = boardRepository.getBoardMaxIndex();
+        to = adjustEndIdx(from, to, maxIdx);
+        return boardRepository.inquiryAllBoardByCategory(categoryId,from,to);
+    }
 
 }

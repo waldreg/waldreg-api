@@ -13,6 +13,7 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.waldreg.board.board.exception.BoardDoesNotExistException;
+import org.waldreg.board.board.exception.CategoryDoesNotExistException;
 import org.waldreg.board.board.exception.InvalidRangeException;
 import org.waldreg.board.board.management.BoardManager;
 import org.waldreg.board.board.management.BoardManager.BoardRequest;
@@ -221,29 +222,34 @@ public class BoardManagerTest{
     public void INQUIRY_ALL_BOARD_INVALID_RANGE_TEST(){
 
         //given
+        //when
+        //then
+        Assertions.assertAll(
+                () -> Assertions.assertThrows(InvalidRangeException.class, () -> boardManager.inquiryAllBoard(-1, 0)),
+                () -> Assertions.assertThrows(InvalidRangeException.class, () -> boardManager.inquiryAllBoard(5, 4))
+        );
+    }
+
+
+    @Test
+    @DisplayName("카테고리별 전체 게시글 조회 성공")
+    public void INQUIRY_ALL_BOARD_BY_CATEGORY_SUCCESS_TEST(){
+
+        //given
         String title = "title";
         String content = "content";
 
         int id1 = 1;
-        int id2 = 2;
         int categoryId1 = 1;
-        int categoryId2 = 2;
-
         MemberTier memberTier = MemberTier.TIER_3;
 
         UserDto userDto1 = UserDto.builder()
                 .id(id1)
                 .build();
-        UserDto userDto2 = UserDto.builder()
-                .id(id2)
-                .build();
+
         CategoryDto categoryDto1 = CategoryDto.builder()
                 .id(categoryId1)
                 .categoryName("categoryName1")
-                .build();
-        CategoryDto categoryDto2 = CategoryDto.builder()
-                .id(categoryId2)
-                .categoryName("categoryName2")
                 .build();
 
         BoardDto boardDto1 = BoardDto.builder()
@@ -254,23 +260,58 @@ public class BoardManagerTest{
                 .title(title)
                 .content(content)
                 .build();
-        BoardDto boardDto2 = BoardDto.builder()
+        BoardDto boardDto3 = BoardDto.builder()
                 .id(1)
-                .user(userDto2)
-                .category(categoryDto2)
+                .user(userDto1)
+                .category(categoryDto1)
                 .memberTier(memberTier)
-                .title("title2")
-                .content("content2")
+                .title("title3")
+                .content("content3")
                 .build();
+
         List<BoardDto> result = new ArrayList<>();
         result.add(boardDto1);
-        result.add(boardDto2);
+        result.add(boardDto3);
 
         //when
+        Mockito.when(categoryRepository.isExistCategory(Mockito.anyInt())).thenReturn(true);
+        Mockito.when(boardRepository.inquiryAllBoardByCategory(Mockito.anyInt(), Mockito.anyInt(), Mockito.anyInt())).thenReturn(result);
         //then
         Assertions.assertAll(
-                () -> Assertions.assertThrows(InvalidRangeException.class, () -> boardManager.inquiryAllBoard(-1, 0)),
-                () -> Assertions.assertThrows(InvalidRangeException.class, () -> boardManager.inquiryAllBoard(5, 4))
+                () -> Assertions.assertEquals(boardDto1.getId(), result.get(0).getId()),
+                () -> Assertions.assertEquals(boardDto1.getTitle(), result.get(0).getTitle()),
+                () -> Assertions.assertEquals(boardDto1.getCategory(), result.get(0).getCategory()),
+                () -> Assertions.assertEquals(boardDto1.getContent(), result.get(0).getContent()),
+                () -> Assertions.assertEquals(boardDto3.getId(), result.get(1).getId()),
+                () -> Assertions.assertEquals(boardDto3.getTitle(), result.get(1).getTitle()),
+                () -> Assertions.assertEquals(boardDto3.getCategory(), result.get(1).getCategory()),
+                () -> Assertions.assertEquals(boardDto3.getContent(), result.get(1).getContent()));
+    }
+
+    @Test
+    @DisplayName("카테고리별 전체 게시글 조회 실패 - 조회 하려는 카테고리가 없는 경우")
+    public void INQUIRY_ALL_BOARD_BY_CATEGORY_FAIL_TEST(){
+
+        //given
+
+        //when
+        Mockito.when(categoryRepository.isExistCategory(Mockito.anyInt())).thenReturn(false);
+        //then
+        Assertions.assertThrows(CategoryDoesNotExistException.class, () -> boardManager.inquiryAllBoardByCategory(2, 1, 2));
+    }
+
+    @Test
+    @DisplayName("카테고리별 전체 게시글 조회 실패 - 올바르지 않은 범위")
+    public void INQUIRY_ALL_BOARD_CATEGORY_FAIL_INVALID_RANGE_TEST(){
+
+        //given
+        int categoryId = 3;
+        //when
+        Mockito.when(categoryRepository.isExistCategory(Mockito.anyInt())).thenReturn(true);
+        //then
+        Assertions.assertAll(
+                () -> Assertions.assertThrows(InvalidRangeException.class, () -> boardManager.inquiryAllBoardByCategory(categoryId, -1, 0)),
+                () -> Assertions.assertThrows(InvalidRangeException.class, () -> boardManager.inquiryAllBoardByCategory(categoryId, 5, 4))
         );
     }
 
