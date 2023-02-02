@@ -3,15 +3,14 @@ package org.waldreg.auth.request;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import javax.validation.constraints.NotBlank;
-import org.waldreg.auth.response.AuthTokenResponse;
 
 public class AuthTokenRequest{
 
-    @NotBlank(message = "user_id cannot be blank")
+    @NotBlank(message = "AUTH-403 user_id cannot be blank")
     @JsonProperty("user_id")
     private String userId;
 
-    @NotBlank(message = "user_password cannot be blank")
+    @NotBlank(message = "AUTH-405 user_password cannot be blank")
     @JsonProperty("user_password")
     private String userPassword;
 
