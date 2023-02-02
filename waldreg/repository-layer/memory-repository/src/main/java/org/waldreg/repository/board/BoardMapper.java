@@ -101,18 +101,4 @@ public class BoardMapper{
                 .build();
     }
 
-    private String findTier(Character character){
-        List<Permission> permissionList = character.getPermissionList();
-        for (Permission permission : permissionList){
-            if (isPermissionTierTrue(permission)){
-                return permission.getName();
-            }
-        }
-        throw new IllegalStateException();
-    }
-
-    private boolean isPermissionTierTrue(Permission permission){
-        return permission.getName().contains("TIER") && permission.getStatus().equals("true");
-    }
-
 }

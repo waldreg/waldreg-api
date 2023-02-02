@@ -113,6 +113,7 @@ public final class Board{
         private int views;
 
         {
+            commentList.remove()
             createdAt = LocalDateTime.now();
             lastModifiedAt = createdAt;
             imagePathList = new ArrayList<>();

@@ -9,7 +9,7 @@ public interface BoardRepository{
 
     BoardDto inquiryBoardById(int boardId);
 
-    Boolean isExistBoard(int id);
+    boolean isExistBoard(int id);
 
     int getBoardMaxIdx(String userTier);
 

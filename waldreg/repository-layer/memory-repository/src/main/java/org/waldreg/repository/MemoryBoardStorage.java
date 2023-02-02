@@ -25,6 +25,10 @@ public class MemoryBoardStorage{
         return board;
     }
 
+    public Board inquiryBoardById(int id){
+        return storage.get(id);
+    }
+
     public void deleteAllBoard(){
         storage.clear();
     }
