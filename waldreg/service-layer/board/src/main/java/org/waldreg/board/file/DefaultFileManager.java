@@ -1,5 +1,6 @@
 package org.waldreg.board.file;
 
+import java.nio.file.FileAlreadyExistsException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -13,6 +14,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.MimeType;
 import org.springframework.util.MimeTypeUtils;
 import org.springframework.web.multipart.MultipartFile;
+import org.waldreg.board.file.exception.DuplicateFileId;
 
 @Service
 public class DefaultFileManager implements FileManager{
@@ -27,19 +29,18 @@ public class DefaultFileManager implements FileManager{
 
     @Override
     public Future<String> saveFile(MultipartFile multipartFile){
-        System.out.println("path : " + path);
         Callable<String> callable = createCallable(multipartFile);
         return executorService.submit(callable);
     }
 
     private Callable<String> createCallable(MultipartFile multipartFile){
-        return ()->{
+        return () -> {
             String id = UUID.randomUUID().toString();
             String path = getPath(id, multipartFile);
             Path filePath = Paths.get(path);
             Path target = Files.createFile(filePath);
             multipartFile.transferTo(target);
-            return id;
+            return path;
         };
     }
 
@@ -48,6 +49,24 @@ public class DefaultFileManager implements FileManager{
         MimeType mimeType = MimeTypeUtils.parseMimeType(multipartFile.getContentType());
         stringBuilder.append(path).append(id).append(".").append(mimeType.getSubtype());
         return stringBuilder.toString();
+    }
+
+    @Override
+    public Future<Boolean> renameFile(String targetPath, String renameTo){
+        Callable<Boolean> callable = renameCallable(targetPath, renameTo);
+        return executorService.submit(callable);
+    }
+
+    private Callable<Boolean> renameCallable(String targetPath, String renameTo){
+        return () -> {
+            Path existSource = Paths.get(targetPath);
+            try{
+                Files.move(existSource, existSource.resolveSibling(renameTo));
+            } catch (FileAlreadyExistsException FAEE){
+                throw new DuplicateFileId(renameTo);
+            }
+            return true;
+        };
     }
 
 }

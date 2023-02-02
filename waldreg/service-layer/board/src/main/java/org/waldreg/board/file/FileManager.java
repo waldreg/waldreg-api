@@ -7,4 +7,6 @@ public interface FileManager{
 
     Future<String> saveFile(MultipartFile multipartFile);
 
+    Future<Boolean> renameFile(String targetPath, String renameTo);
+
 }

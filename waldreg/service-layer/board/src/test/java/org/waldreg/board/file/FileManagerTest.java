@@ -39,4 +39,21 @@ public class FileManagerTest{
         Assertions.assertNotNull(future.get());
     }
 
+    @Test
+    @DisplayName("파일 이름 변경 테스트")
+    public void RENAME_FILE_SUCCESS_TEST() throws Exception{
+        // given
+        String id = "1.png";
+        MultipartFile multipartFile = new MockMultipartFile("image",
+                "EGG.png",
+                "image/png",
+                new FileInputStream("./src/test/java/org/waldreg/board/file/EGG.png"));
+
+        // when
+        Future<String> future = fileManager.saveFile(multipartFile);
+
+        // then
+        Assertions.assertTrue(fileManager.renameFile(future.get(), id).get());
+    }
+
 }
