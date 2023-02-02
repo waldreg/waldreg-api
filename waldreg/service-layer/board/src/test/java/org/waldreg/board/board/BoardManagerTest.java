@@ -15,7 +15,7 @@ import org.waldreg.board.board.management.DefaultBoardManager;
 import org.waldreg.board.board.spi.BoardRepository;
 import org.waldreg.board.board.spi.CategoryRepository;
 import org.waldreg.board.board.spi.UserRepository;
-import org.waldreg.board.dto.MemberTier;
+import org.waldreg.board.dto.BoardServiceMemberTier;
 
 @ExtendWith(SpringExtension.class)
 @ContextConfiguration(classes = {DefaultBoardManager.class})
@@ -42,14 +42,14 @@ public class BoardManagerTest{
 
         int id = 1;
         int categoryId = 1;
-        MemberTier memberTier = MemberTier.TIER_3;
+        BoardServiceMemberTier boardServiceMemberTier = BoardServiceMemberTier.TIER_3;
 
         BoardRequest boardRequest = BoardRequest.builder()
                 .authorId(id)
                 .title(title)
                 .content(content)
                 .categoryId(categoryId)
-                .memberTier(memberTier)
+                .memberTier(boardServiceMemberTier)
                 .imageCount(2)
                 .fileCount(3)
                 .build();

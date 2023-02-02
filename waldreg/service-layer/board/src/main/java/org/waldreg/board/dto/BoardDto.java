@@ -15,7 +15,7 @@ public class BoardDto{
     private LocalDateTime lastModifiedAt;
     private List<String> fileUrls;
     private List<String> imageUrls;
-    private MemberTier memberTier;
+    private BoardServiceMemberTier boardServiceMemberTier;
     private ReactionDto reactions;
     private List<CommentDto> commentList;
     private int views;
@@ -30,7 +30,7 @@ public class BoardDto{
         this.user = builder.user;
         this.createdAt = builder.createdAt;
         this.lastModifiedAt = builder.lastModifiedAt;
-        this.memberTier = builder.memberTier;
+        this.boardServiceMemberTier = builder.boardServiceMemberTier;
         this.reactions = builder.reactions;
         this.commentList = builder.commentList;
         this.views = builder.views;
@@ -96,12 +96,12 @@ public class BoardDto{
         this.lastModifiedAt = lastModifiedAt;
     }
 
-    public MemberTier getMemberTier(){
-        return memberTier;
+    public BoardServiceMemberTier getMemberTier(){
+        return boardServiceMemberTier;
     }
 
-    public void setMemberTier(MemberTier memberTier){
-        this.memberTier = memberTier;
+    public void setMemberTier(BoardServiceMemberTier boardServiceMemberTier){
+        this.boardServiceMemberTier = boardServiceMemberTier;
     }
 
     public ReactionDto getReactions(){
@@ -135,9 +135,9 @@ public class BoardDto{
         private CategoryDto category;
         private String content;
         private UserDto user;
-        private final LocalDateTime createdAt;
+        private LocalDateTime createdAt;
         private LocalDateTime lastModifiedAt;
-        private MemberTier memberTier;
+        private BoardServiceMemberTier boardServiceMemberTier;
         private ReactionDto reactions;
         private List<CommentDto> commentList;
         private int views;
@@ -177,13 +177,18 @@ public class BoardDto{
             return this;
         }
 
+        public Builder createdAt(LocalDateTime createdAt){
+            this.createdAt = createdAt;
+            return this;
+        }
+
         public Builder lastModifiedAt(LocalDateTime lastModifiedAt){
             this.lastModifiedAt = lastModifiedAt;
             return this;
         }
 
-        public Builder memberTier(MemberTier memberTier){
-            this.memberTier = memberTier;
+        public Builder memberTier(BoardServiceMemberTier boardServiceMemberTier){
+            this.boardServiceMemberTier = boardServiceMemberTier;
             return this;
         }
 
@@ -194,6 +199,11 @@ public class BoardDto{
 
         public Builder views(int views){
             this.views = views;
+            return this;
+        }
+
+        public Builder commentList(List<CommentDto> comments){
+            this.commentList = commentList;
             return this;
         }
 

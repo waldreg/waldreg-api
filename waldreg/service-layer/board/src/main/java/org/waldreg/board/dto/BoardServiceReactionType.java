@@ -1,6 +1,6 @@
 package org.waldreg.board.dto;
 
-public enum ReactionType{
+public enum BoardServiceReactionType{
 
     GOOD,
     BAD,

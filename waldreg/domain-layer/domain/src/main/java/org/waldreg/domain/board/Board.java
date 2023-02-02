@@ -1,6 +1,7 @@
 package org.waldreg.domain.board;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import org.waldreg.domain.board.comment.Comment;
 import org.waldreg.domain.board.reaction.Reaction;
@@ -10,11 +11,11 @@ import org.waldreg.domain.user.User;
 
 public final class Board{
 
-    private final int id;
+    private int id;
     private final String title;
     private final Category category;
     private final String content;
-    private final User user;
+    private User user;
     private final LocalDateTime createdAt;
     private final LocalDateTime lastModifiedAt;
     private final MemberTier memberTier;
@@ -52,6 +53,8 @@ public final class Board{
         return id;
     }
 
+    public void setId(int id){this.id = id;}
+
     public String getTitle(){
         return title;
     }
@@ -67,6 +70,8 @@ public final class Board{
     public User getUser(){
         return user;
     }
+
+    public void setUser(User user){this.user = user;}
 
     public LocalDateTime getCreatedAt(){
         return createdAt;
@@ -88,9 +93,7 @@ public final class Board{
         return filePathList;
     }
 
-    public Reaction getReactions(){
-        return reactions;
-    }
+    public Reaction getReactions(){return reactions;}
 
     public List<Comment> getCommentList(){
         return commentList;
@@ -99,6 +102,7 @@ public final class Board{
     public int getViews(){
         return views;
     }
+
 
     public static final class Builder{
 
@@ -116,10 +120,13 @@ public final class Board{
         private List<Comment> commentList;
         private int views;
 
-
         {
             createdAt = LocalDateTime.now();
             lastModifiedAt = createdAt;
+            imagePathList = new ArrayList<>();
+            filePathList = new ArrayList<>();
+            reactions = Reaction.builder().build();
+            commentList = new ArrayList<>();
             views = 0;
         }
 
@@ -179,6 +186,7 @@ public final class Board{
             this.commentList = commentList;
             return this;
         }
+
         public Builder views(int views){
             this.views = views;
             return this;
