@@ -29,6 +29,7 @@ public class ScheduleControllerAdvice{
     @ExceptionHandler({InvalidDateFormatException.class})
     public ResponseEntity<ExceptionTemplate> catchInvalidDateFormatException(InvalidDateFormatException invalidDateFormatException){
         ExceptionTemplate exceptionTemplate = ExceptionTemplate.builder()
+                .code(invalidDateFormatException.getCode())
                 .message(invalidDateFormatException.getMessage())
                 .documentUrl(documentUrl)
                 .build();
@@ -38,6 +39,7 @@ public class ScheduleControllerAdvice{
     @ExceptionHandler({InvalidRepeatException.class})
     public ResponseEntity<ExceptionTemplate> catchInvalidRepeatException(InvalidRepeatException invalidRepeatException){
         ExceptionTemplate exceptionTemplate = ExceptionTemplate.builder()
+                .code(invalidRepeatException.getCode())
                 .message(invalidRepeatException.getMessage())
                 .documentUrl(documentUrl)
                 .build();
@@ -47,6 +49,7 @@ public class ScheduleControllerAdvice{
     @ExceptionHandler({InvalidSchedulePeriodException.class})
     public ResponseEntity<ExceptionTemplate> catchInvalidSchedulePeriodException(InvalidSchedulePeriodException invalidSchedulePeriodException){
         ExceptionTemplate exceptionTemplate = ExceptionTemplate.builder()
+                .code(invalidSchedulePeriodException.getCode())
                 .message(invalidSchedulePeriodException.getMessage())
                 .documentUrl(documentUrl)
                 .build();
@@ -56,6 +59,7 @@ public class ScheduleControllerAdvice{
     @ExceptionHandler({UnknownScheduleException.class})
     public ResponseEntity<ExceptionTemplate> catchUnknownScheduleException(UnknownScheduleException unknownScheduleException){
         ExceptionTemplate exceptionTemplate = ExceptionTemplate.builder()
+                .code(unknownScheduleException.getCode())
                 .message(unknownScheduleException.getMessage())
                 .documentUrl(documentUrl)
                 .build();
