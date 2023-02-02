@@ -269,13 +269,14 @@ public class BoardManagerTest{
                 .content("content3")
                 .build();
 
-        List<BoardDto> result = new ArrayList<>();
-        result.add(boardDto1);
-        result.add(boardDto3);
+        List<BoardDto> result2 = new ArrayList<>();
+        result2.add(boardDto1);
+        result2.add(boardDto3);
 
         //when
         Mockito.when(categoryRepository.isExistCategory(Mockito.anyInt())).thenReturn(true);
-        Mockito.when(boardRepository.inquiryAllBoardByCategory(Mockito.anyInt(), Mockito.anyInt(), Mockito.anyInt())).thenReturn(result);
+        Mockito.when(boardRepository.inquiryAllBoardByCategory(Mockito.anyInt(), Mockito.anyInt(), Mockito.anyInt())).thenReturn(result2);
+        List<BoardDto> result = boardManager.inquiryAllBoardByCategory(1, 1, 2);
         //then
         Assertions.assertAll(
                 () -> Assertions.assertEquals(boardDto1.getId(), result.get(0).getId()),
@@ -312,6 +313,238 @@ public class BoardManagerTest{
         Assertions.assertAll(
                 () -> Assertions.assertThrows(InvalidRangeException.class, () -> boardManager.inquiryAllBoardByCategory(categoryId, -1, 0)),
                 () -> Assertions.assertThrows(InvalidRangeException.class, () -> boardManager.inquiryAllBoardByCategory(categoryId, 5, 4))
+        );
+    }
+
+
+    @Test
+    @DisplayName("제목으로 게시글 검색 성공")
+    public void SEARCH_BOARD_BY_TITLE_TEST(){
+        //given
+        String title = "title";
+        String content = "content";
+        int id1 = 1;
+        int id2 = 2;
+        int categoryId1 = 1;
+        int categoryId2 = 2;
+        MemberTier memberTier = MemberTier.TIER_3;
+
+        UserDto userDto1 = UserDto.builder()
+                .id(id1)
+                .build();
+        UserDto userDto2 = UserDto.builder()
+                .id(id2)
+                .build();
+        CategoryDto categoryDto1 = CategoryDto.builder()
+                .id(categoryId1)
+                .categoryName("categoryName1")
+                .build();
+        CategoryDto categoryDto2 = CategoryDto.builder()
+                .id(categoryId2)
+                .categoryName("categoryName2")
+                .build();
+
+        BoardDto boardDto1 = BoardDto.builder()
+                .id(1)
+                .user(userDto1)
+                .category(categoryDto1)
+                .memberTier(memberTier)
+                .title(title)
+                .content(content)
+                .build();
+        BoardDto boardDto2 = BoardDto.builder()
+                .id(1)
+                .user(userDto2)
+                .category(categoryDto2)
+                .memberTier(memberTier)
+                .title("title2")
+                .content("content2")
+                .build();
+        List<BoardDto> resultRepo = new ArrayList<>();
+        resultRepo.add(boardDto1);
+        resultRepo.add(boardDto2);
+
+        //when
+        String searchKeyword = "title";
+        Mockito.when(boardRepository.searchByTitle(Mockito.anyString(), Mockito.anyInt(), Mockito.anyInt())).thenReturn(resultRepo);
+        List<BoardDto> result = boardManager.searchBoardByTitle(searchKeyword, 1, 2);
+        //then
+        Assertions.assertAll(
+                () -> Assertions.assertEquals(boardDto1.getId(), result.get(0).getId()),
+                () -> Assertions.assertEquals(boardDto1.getTitle(), result.get(0).getTitle()),
+                () -> Assertions.assertEquals(boardDto1.getCategory(), result.get(0).getCategory()),
+                () -> Assertions.assertEquals(boardDto1.getContent(), result.get(0).getContent()),
+                () -> Assertions.assertEquals(boardDto2.getId(), result.get(1).getId()),
+                () -> Assertions.assertEquals(boardDto2.getTitle(), result.get(1).getTitle()),
+                () -> Assertions.assertEquals(boardDto2.getCategory(), result.get(1).getCategory()),
+                () -> Assertions.assertEquals(boardDto2.getContent(), result.get(1).getContent())
+        );
+
+    }
+
+    @Test
+    @DisplayName("제목으로 검색 실패 - 올바르지 않은 범위")
+    public void SEARCH_BOARD_BY_TITLE_INVALID_RANGE_TEST(){
+        //given
+        String searchKeyword = "title";
+        //when
+        //then
+        Assertions.assertAll(
+                () -> Assertions.assertThrows(InvalidRangeException.class, () -> boardManager.searchBoardByTitle(searchKeyword, -1, 0)),
+                () -> Assertions.assertThrows(InvalidRangeException.class, () -> boardManager.searchBoardByTitle(searchKeyword, 5, 4))
+        );
+    }
+
+    @Test
+    @DisplayName("내용으로 게시글 검색 성공")
+    public void SEARCH_BOARD_BY_CONTENT_TEST(){
+        //given
+        String title = "title";
+        String content = "content";
+        int id1 = 1;
+        int id2 = 2;
+        int categoryId1 = 1;
+        int categoryId2 = 2;
+        MemberTier memberTier = MemberTier.TIER_3;
+
+        UserDto userDto1 = UserDto.builder()
+                .id(id1)
+                .build();
+        UserDto userDto2 = UserDto.builder()
+                .id(id2)
+                .build();
+        CategoryDto categoryDto1 = CategoryDto.builder()
+                .id(categoryId1)
+                .categoryName("categoryName1")
+                .build();
+        CategoryDto categoryDto2 = CategoryDto.builder()
+                .id(categoryId2)
+                .categoryName("categoryName2")
+                .build();
+
+        BoardDto boardDto1 = BoardDto.builder()
+                .id(1)
+                .user(userDto1)
+                .category(categoryDto1)
+                .memberTier(memberTier)
+                .title(title)
+                .content(content)
+                .build();
+        BoardDto boardDto2 = BoardDto.builder()
+                .id(1)
+                .user(userDto2)
+                .category(categoryDto2)
+                .memberTier(memberTier)
+                .title("title2")
+                .content("content2")
+                .build();
+        List<BoardDto> resultRepo = new ArrayList<>();
+        resultRepo.add(boardDto1);
+        resultRepo.add(boardDto2);
+
+        //when
+        String searchKeyword = "content";
+        Mockito.when(boardRepository.searchByContent(Mockito.anyString(), Mockito.anyInt(), Mockito.anyInt())).thenReturn(resultRepo);
+        List<BoardDto> result = boardManager.searchBoardByContent(searchKeyword, 1, 2);
+        //then
+        Assertions.assertAll(
+                () -> Assertions.assertEquals(boardDto1.getId(), result.get(0).getId()),
+                () -> Assertions.assertEquals(boardDto1.getTitle(), result.get(0).getTitle()),
+                () -> Assertions.assertEquals(boardDto1.getCategory(), result.get(0).getCategory()),
+                () -> Assertions.assertEquals(boardDto1.getContent(), result.get(0).getContent()),
+                () -> Assertions.assertEquals(boardDto2.getId(), result.get(1).getId()),
+                () -> Assertions.assertEquals(boardDto2.getTitle(), result.get(1).getTitle()),
+                () -> Assertions.assertEquals(boardDto2.getCategory(), result.get(1).getCategory()),
+                () -> Assertions.assertEquals(boardDto2.getContent(), result.get(1).getContent())
+        );
+
+    }
+
+    @Test
+    @DisplayName("내용으로 검색 실패 - 올바르지 않은 범위")
+    public void SEARCH_BOARD_BY_CONTENT_INVALID_RANGE_TEST(){
+        //given
+        String searchKeyword = "content";
+        //when
+        //then
+        Assertions.assertAll(
+                () -> Assertions.assertThrows(InvalidRangeException.class, () -> boardManager.searchBoardByContent(searchKeyword, -1, 0)),
+                () -> Assertions.assertThrows(InvalidRangeException.class, () -> boardManager.searchBoardByContent(searchKeyword, 5, 4))
+        );
+    }
+
+    @Test
+    @DisplayName("유저아이디으로 게시글 검색 성공")
+    public void SEARCH_BOARD_BY_AUTHOR_USER_ID_TEST(){
+        //given
+        String title = "title";
+        String content = "content";
+        int id1 = 1;
+        int id2 = 2;
+        int categoryId1 = 1;
+        int categoryId2 = 2;
+        MemberTier memberTier = MemberTier.TIER_3;
+
+        UserDto userDto1 = UserDto.builder()
+                .id(id1)
+                .userId("Fixtar")
+                .build();
+        UserDto userDto2 = UserDto.builder()
+                .id(id2)
+                .build();
+        CategoryDto categoryDto1 = CategoryDto.builder()
+                .id(categoryId1)
+                .categoryName("categoryName1")
+                .build();
+        CategoryDto categoryDto2 = CategoryDto.builder()
+                .id(categoryId2)
+                .categoryName("categoryName2")
+                .build();
+
+        BoardDto boardDto1 = BoardDto.builder()
+                .id(1)
+                .user(userDto1)
+                .category(categoryDto1)
+                .memberTier(memberTier)
+                .title(title)
+                .content(content)
+                .build();
+        BoardDto boardDto2 = BoardDto.builder()
+                .id(1)
+                .user(userDto2)
+                .category(categoryDto2)
+                .memberTier(memberTier)
+                .title("title2")
+                .content("content2")
+                .build();
+        List<BoardDto> resultRepo = new ArrayList<>();
+        resultRepo.add(boardDto1);
+
+        //when
+        String searchKeyword = "Fixtar";
+        Mockito.when(boardRepository.searchByAuthorUserId(Mockito.anyString(), Mockito.anyInt(), Mockito.anyInt())).thenReturn(resultRepo);
+        List<BoardDto> result = boardManager.searchBoardByAuthorUserId(searchKeyword, 1, 2);
+        //then
+        Assertions.assertAll(
+                () -> Assertions.assertEquals(boardDto1.getId(), result.get(0).getId()),
+                () -> Assertions.assertEquals(boardDto1.getTitle(), result.get(0).getTitle()),
+                () -> Assertions.assertEquals(boardDto1.getCategory(), result.get(0).getCategory()),
+                () -> Assertions.assertEquals(boardDto1.getContent(), result.get(0).getContent()),
+                () -> Assertions.assertEquals(boardDto1.getUser().getUserId(), result.get(0).getUser().getUserId())
+
+        );
+    }
+
+    @Test
+    @DisplayName("유저 아이디로 검색 실패 - 올바르지 않은 범위")
+    public void SEARCH_BOARD_BY_AUTHOR_INVALID_RANGE_TEST(){
+        //given
+        String searchKeyword = "Fixtar";
+        //when
+        //then
+        Assertions.assertAll(
+                () -> Assertions.assertThrows(InvalidRangeException.class, () -> boardManager.searchBoardByAuthorUserId(searchKeyword, -1, 0)),
+                () -> Assertions.assertThrows(InvalidRangeException.class, () -> boardManager.searchBoardByAuthorUserId(searchKeyword, 5, 4))
         );
     }
 

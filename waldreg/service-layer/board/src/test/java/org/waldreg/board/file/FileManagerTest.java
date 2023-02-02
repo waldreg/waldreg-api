@@ -75,4 +75,46 @@ public class FileManagerTest{
         Assertions.assertTrue(result.get());
     }
 
+    @Test
+    @DisplayName("파일 조회 테스트 - byte[]")
+    public void READ_FILE_SUCCESS_BYTE_TEST() throws Exception{
+        // given
+        String id = "1.png";
+        MultipartFile multipartFile = new MockMultipartFile("image",
+                "EGG.png",
+                "image/png",
+                new FileInputStream("./src/test/java/org/waldreg/board/file/EGG.png"));
+
+        // when
+        Future<String> future = fileManager.saveFile(multipartFile);
+        Future<Boolean> result = fileManager.renameFile(future.get(), id);
+        deleteQueue.add(id);
+
+        result.get();
+
+        // then
+        Assertions.assertDoesNotThrow(() -> fileManager.getFileIntoByteArray(id));
+    }
+
+    @Test
+    @DisplayName("파일 조회 테스트 - File")
+    public void READ_FILE_SUCCESS_FILE_TEST() throws Exception{
+        // given
+        String id = "1.png";
+        MultipartFile multipartFile = new MockMultipartFile("image",
+                "EGG.png",
+                "image/png",
+                new FileInputStream("./src/test/java/org/waldreg/board/file/EGG.png"));
+
+        // when
+        Future<String> future = fileManager.saveFile(multipartFile);
+        Future<Boolean> result = fileManager.renameFile(future.get(), id);
+        deleteQueue.add(id);
+
+        result.get();
+
+        // then
+        Assertions.assertDoesNotThrow(() -> fileManager.getFileIntoFile(id));
+    }
+
 }
