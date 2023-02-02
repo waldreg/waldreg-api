@@ -2,9 +2,13 @@ package org.waldreg.board.file;
 
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.util.LinkedList;
+import java.util.Queue;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -23,6 +27,17 @@ public class FileManagerTest{
     @Autowired
     private FileManager fileManager;
 
+    private final Queue<String> deleteQueue = new LinkedList<>();
+
+    @BeforeEach
+    @AfterEach
+    public void DELETE_FILE(){
+        while(!deleteQueue.isEmpty()){
+            String target = deleteQueue.poll();
+            fileManager.deleteFile(target);
+        }
+    }
+
     @Test
     @DisplayName("파일 저장 테스트")
     public void CREATE_FILE_SUCCESS_TEST() throws IOException, ExecutionException, InterruptedException{
@@ -34,9 +49,11 @@ public class FileManagerTest{
 
         // when
         Future<String> future = fileManager.saveFile(multipartFile);
+        String id = future.get();
+        deleteQueue.add(id);
 
         // then
-        Assertions.assertNotNull(future.get());
+        Assertions.assertNotNull(id);
     }
 
     @Test
@@ -51,9 +68,11 @@ public class FileManagerTest{
 
         // when
         Future<String> future = fileManager.saveFile(multipartFile);
+        Future<Boolean> result = fileManager.renameFile(future.get(), id);
+        deleteQueue.add(id);
 
         // then
-        Assertions.assertTrue(fileManager.renameFile(future.get(), id).get());
+        Assertions.assertTrue(result.get());
     }
 
 }
