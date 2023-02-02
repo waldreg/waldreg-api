@@ -5,11 +5,11 @@ import javax.validation.constraints.NotNull;
 
 public final class RewardTagRequest{
 
-    @NotNull(message = "Reward tag title cannot be null")
+    @NotNull(message = "REWARD-413 Reward tag title cannot be null")
     @JsonProperty("reward_tag_title")
     private String rewardTagTitle;
 
-    @NotNull(message = "Reward point cannot be null")
+    @NotNull(message = "REWARD-414 Reward point cannot be null")
     @JsonProperty("reward_point")
     private int rewardPoint;
 

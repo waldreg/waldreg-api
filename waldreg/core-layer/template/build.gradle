@@ -17,23 +17,17 @@ repositories {
 }
 
 dependencyManagement {
-    imports {
+    imports{
         mavenBom SpringBootPlugin.BOM_COORDINATES
     }
 }
 
 dependencies {
-    implementation project(':core-layer:template')
-    implementation project(':repository-layer:memory-repository')
-    implementation project(':stable-service-layer:character')
-    implementation project(':service-layer:auth')
-
     implementation 'org.springframework.boot:spring-boot-starter'
+
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
 
-    implementation 'org.springframework.boot:spring-boot-starter-web'
-
-    implementation 'org.springframework.boot:spring-boot-starter-validation'
+    implementation 'com.fasterxml.jackson.core:jackson-annotations'
 
     testImplementation 'org.junit.jupiter:junit-jupiter-api:5.8.1'
     testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.8.1'

@@ -6,15 +6,15 @@ import javax.validation.constraints.NotNull;
 
 public final class PermissionRequest{
 
-    @NotNull(message = "permission_id cannot be null")
+    @NotNull(message = "CHARACTER-415 permission_id cannot be null")
     @JsonProperty("permission_id")
-    private int id;
+    private Integer id;
 
-    @NotBlank(message = "permission_name cannot be blank")
+    @NotBlank(message = "CHARACTER-416 permission_name cannot be blank")
     @JsonProperty("permission_name")
     private String name;
 
-    @NotBlank(message = "permission_status cannot be blank")
+    @NotBlank(message = "CHARACTER-417 permission_status cannot be blank")
     @JsonProperty("permission_status")
     private String status;
 
@@ -46,23 +46,23 @@ public final class PermissionRequest{
         this.status = status;
     }
 
-    public int getId(){
+    public Integer getId(){
         return id;
     }
 
-    public void setId(int id){
+    public void setId(Integer id){
         this.id = id;
     }
 
     public final static class Builder{
 
-        private int id;
+        private Integer id;
         private String name;
         private String status;
 
         private Builder(){}
 
-        public Builder id(int id){
+        public Builder id(Integer id){
             this.id = id;
             return this;
         }
