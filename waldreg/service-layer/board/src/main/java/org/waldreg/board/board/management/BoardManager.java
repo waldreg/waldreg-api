@@ -20,6 +20,8 @@ public interface BoardManager{
 
     List<BoardDto> searchBoardByAuthorUserId(String keyword, int from, int to);
 
+    BoardDto modifyBoard(BoardDto boardDto);
+
 
     final class BoardRequest{
 

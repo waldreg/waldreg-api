@@ -13,6 +13,7 @@ import org.waldreg.board.board.spi.UserRepository;
 import org.waldreg.board.dto.BoardDto;
 import org.waldreg.board.dto.CategoryDto;
 import org.waldreg.board.dto.UserDto;
+import org.waldreg.util.token.DecryptedTokenContextGetter;
 
 @Service
 public class DefaultBoardManager implements BoardManager{
@@ -22,12 +23,14 @@ public class DefaultBoardManager implements BoardManager{
     private BoardRepository boardRepository;
     private UserRepository userRepository;
     private CategoryRepository categoryRepository;
+    private DecryptedTokenContextGetter decryptedTokenContextGetter;
 
     @Autowired
-    public DefaultBoardManager(BoardRepository boardRepository, CategoryRepository categoryRepository, UserRepository userRepository){
+    public DefaultBoardManager(BoardRepository boardRepository, CategoryRepository categoryRepository, UserRepository userRepository, DecryptedTokenContextGetter decryptedTokenContextGetter){
         this.boardRepository = boardRepository;
         this.categoryRepository = categoryRepository;
         this.userRepository = userRepository;
+        this.decryptedTokenContextGetter = decryptedTokenContextGetter;
     }
 
     @Override
@@ -76,9 +79,15 @@ public class DefaultBoardManager implements BoardManager{
     @Override
     public List<BoardDto> inquiryAllBoard(int from, int to){
         throwIfInvalidRangeDetected(from, to);
-        int maxIdx = boardRepository.getBoardMaxIdx();
+        String userTier = getUserTier();
+        int maxIdx = boardRepository.getBoardMaxIdx(userTier);
         to = adjustEndIdx(from, to, maxIdx);
-        return boardRepository.inquiryAllBoard(from, to);
+        return boardRepository.inquiryAllBoard(userTier, from, to);
+    }
+
+    private String getUserTier(){
+        int id = decryptedTokenContextGetter.get();
+        return userRepository.getUserTier(id);
     }
 
     private void throwIfInvalidRangeDetected(int from, int to){
@@ -101,33 +110,44 @@ public class DefaultBoardManager implements BoardManager{
     public List<BoardDto> inquiryAllBoardByCategory(int categoryId, int from, int to){
         throwIfCategoryDoesNotExist(categoryId);
         throwIfInvalidRangeDetected(from, to);
-        int maxIdx = boardRepository.getBoardMaxIdxByCategory(categoryId);
+        String userTier = getUserTier();
+        int maxIdx = boardRepository.getBoardMaxIdxByCategory(userTier, categoryId);
         to = adjustEndIdx(from, to, maxIdx);
-        return boardRepository.inquiryAllBoardByCategory(categoryId, from, to);
+        return boardRepository.inquiryAllBoardByCategory(userTier, categoryId, from, to);
     }
 
     @Override
     public List<BoardDto> searchBoardByTitle(String keyword, int from, int to){
         throwIfInvalidRangeDetected(from, to);
-        int maxIdx = boardRepository.getSearchMaxIdx(keyword);
+        String userTier = getUserTier();
+        int maxIdx = boardRepository.getSearchMaxIdx(userTier, keyword);
         to = adjustEndIdx(from, to, maxIdx);
-        return boardRepository.searchByTitle(keyword, from, to);
+        return boardRepository.searchByTitle(userTier, keyword, from, to);
     }
 
     @Override
     public List<BoardDto> searchBoardByContent(String keyword, int from, int to){
         throwIfInvalidRangeDetected(from, to);
-        int maxIdx = boardRepository.getSearchMaxIdx(keyword);
+        String userTier = getUserTier();
+        int maxIdx = boardRepository.getSearchMaxIdx(userTier, keyword);
         to = adjustEndIdx(from, to, maxIdx);
-        return boardRepository.searchByContent(keyword, from, to);
+        return boardRepository.searchByContent(userTier, keyword, from, to);
     }
 
     @Override
     public List<BoardDto> searchBoardByAuthorUserId(String keyword, int from, int to){
         throwIfInvalidRangeDetected(from, to);
-        int maxIdx = boardRepository.getSearchMaxIdx(keyword);
+        String userTier = getUserTier();
+        int maxIdx = boardRepository.getSearchMaxIdx(userTier, keyword);
         to = adjustEndIdx(from, to, maxIdx);
-        return boardRepository.searchByAuthorUserId(keyword, from, to);
+        return boardRepository.searchByAuthorUserId(userTier, keyword, from, to);
+    }
+
+    @Override
+    public BoardDto modifyBoard(BoardDto boardDto){
+        throwIfBoardDoesNotExist(boardDto.getId());
+        throwIfCategoryDoesNotExist(boardDto.getCategory().getId());
+        return boardRepository.modifyBoard(boardDto);
     }
 
 }
