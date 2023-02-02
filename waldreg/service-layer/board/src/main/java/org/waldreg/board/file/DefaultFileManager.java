@@ -2,6 +2,7 @@ package org.waldreg.board.file;
 
 import java.nio.file.FileAlreadyExistsException;
 import java.nio.file.Files;
+import java.nio.file.InvalidPathException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.UUID;
@@ -15,6 +16,7 @@ import org.springframework.util.MimeType;
 import org.springframework.util.MimeTypeUtils;
 import org.springframework.web.multipart.MultipartFile;
 import org.waldreg.board.file.exception.DuplicateFileId;
+import org.waldreg.board.file.exception.UnknownFileId;
 
 @Service
 public class DefaultFileManager implements FileManager{
@@ -59,14 +61,37 @@ public class DefaultFileManager implements FileManager{
 
     private Callable<Boolean> renameCallable(String targetPath, String renameTo){
         return () -> {
-            Path existSource = Paths.get(targetPath);
             try{
+                Path existSource = Paths.get(targetPath);
                 Files.move(existSource, existSource.resolveSibling(renameTo));
             } catch (FileAlreadyExistsException FAEE){
                 throw new DuplicateFileId(renameTo);
             }
             return true;
         };
+    }
+
+    @Override
+    public Future<Boolean> deleteFile(String target){
+        Callable<Boolean> callable = deleteCallable(target);
+        return executorService.submit(callable);
+    }
+
+    private Callable<Boolean> deleteCallable(String target){
+        return () -> {
+            try{
+                String path = getPath(target);
+                Path existSource = Paths.get(path);
+                Files.delete(existSource);
+            } catch (InvalidPathException IPE){
+                throw new UnknownFileId(target);
+            }
+            return true;
+        };
+    }
+
+    private String getPath(String id){
+        return path + id;
     }
 
 }
