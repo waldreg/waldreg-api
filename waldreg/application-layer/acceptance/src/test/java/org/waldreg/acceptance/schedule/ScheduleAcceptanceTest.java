@@ -58,6 +58,7 @@ public class ScheduleAcceptanceTest{
                                 MockMvcResultMatchers.status().isBadRequest(),
                                 MockMvcResultMatchers.header().string("api-version", apiVersion),
                                 MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON),
+                                MockMvcResultMatchers.jsonPath("$.code").value("SCHEDULE-410"),
                                 MockMvcResultMatchers.jsonPath("$.messages").value("Cannot find schedule with id \""+scheduleResponse.getId()+"\""),
                                 MockMvcResultMatchers.jsonPath("$.document_url").value("docs.waldreg.org")
                         );
@@ -81,6 +82,7 @@ public class ScheduleAcceptanceTest{
                     MockMvcResultMatchers.header().string(HttpHeaders.CONTENT_TYPE, "application/json"),
                     MockMvcResultMatchers.header().string("api-version", apiVersion),
                     MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON),
+                    MockMvcResultMatchers.jsonPath("$.code").value("USER-406"),
                     MockMvcResultMatchers.jsonPath("$.messages").value("Unknown user_id \""+request.getUserId()+"\""),
                     MockMvcResultMatchers.jsonPath("$.document_url").value("docs.waldreg.org")
             );
@@ -185,6 +187,7 @@ public class ScheduleAcceptanceTest{
                 MockMvcResultMatchers.header().string(HttpHeaders.CONTENT_TYPE, "application/json"),
                 MockMvcResultMatchers.header().string("api-version", apiVersion),
                 MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON),
+                MockMvcResultMatchers.jsonPath("$.code").value("SCHEDULE-403"),
                 MockMvcResultMatchers.jsonPath("$.messages").value("Invalid date format detected Schedule start date \""+scheduleRequest.getStartedAt()+"\" Schedule finish date \""+scheduleRequest.getFinishAt()+"\""),
                 MockMvcResultMatchers.jsonPath("$.document_url").value("docs.waldreg.org")
         ).andDo(MockMvcResultHandlers.print());
@@ -226,6 +229,7 @@ public class ScheduleAcceptanceTest{
                 MockMvcResultMatchers.header().string(HttpHeaders.CONTENT_TYPE, "application/json"),
                 MockMvcResultMatchers.header().string("api-version", apiVersion),
                 MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON),
+                MockMvcResultMatchers.jsonPath("$.code").value("SCHEDULE-404"),
                 MockMvcResultMatchers.jsonPath("$.messages").value("Year cannot be under 2000 current Schedule start year \""+startYear+"\" finish year \""+finishYear+"\""),
                 MockMvcResultMatchers.jsonPath("$.document_url").value("docs.waldreg.org")
         ).andDo(MockMvcResultHandlers.print());
@@ -265,6 +269,7 @@ public class ScheduleAcceptanceTest{
                 MockMvcResultMatchers.header().string(HttpHeaders.CONTENT_TYPE, "application/json"),
                 MockMvcResultMatchers.header().string("api-version", apiVersion),
                 MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON),
+                MockMvcResultMatchers.jsonPath("$.code").value("SCHEDULE-405"),
                 MockMvcResultMatchers.jsonPath("$.messages").value("Cycle cannot be less than or equal to zero, current cycle \""+wrongCycle+"\""),
                 MockMvcResultMatchers.jsonPath("$.document_url").value("docs.waldreg.org")
         ).andDo(MockMvcResultHandlers.print());
@@ -304,6 +309,7 @@ public class ScheduleAcceptanceTest{
                 MockMvcResultMatchers.header().string(HttpHeaders.CONTENT_TYPE, "application/json"),
                 MockMvcResultMatchers.header().string("api-version", apiVersion),
                 MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON),
+                MockMvcResultMatchers.jsonPath("$.code").value("SCHEDULE-406"),
                 MockMvcResultMatchers.jsonPath("$.messages").value("Repeat finish date \""+wrongRepeatFinishAt+"\" cannot precede schedule start date \""+scheduleRequest.getStartedAt()+"\" or finish date \""+scheduleRequest.getFinishAt()+"\""),
                 MockMvcResultMatchers.jsonPath("$.document_url").value("docs.waldreg.org")
         ).andDo(MockMvcResultHandlers.print());
@@ -343,6 +349,7 @@ public class ScheduleAcceptanceTest{
                 MockMvcResultMatchers.header().string(HttpHeaders.CONTENT_TYPE, "application/json"),
                 MockMvcResultMatchers.header().string("api-version", apiVersion),
                 MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON),
+                MockMvcResultMatchers.jsonPath("$.code").value("SCHEDULE-403"),
                 MockMvcResultMatchers.jsonPath("$.messages").value("Invalid date format detected Schedule repeat finish date \"" + wrongRepeatFinishAt + "\""),
                 MockMvcResultMatchers.jsonPath("$.document_url").value("docs.waldreg.org")
         ).andDo(MockMvcResultHandlers.print());
@@ -382,6 +389,7 @@ public class ScheduleAcceptanceTest{
                 MockMvcResultMatchers.header().string(HttpHeaders.CONTENT_TYPE, "application/json"),
                 MockMvcResultMatchers.header().string("api-version", apiVersion),
                 MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON),
+                MockMvcResultMatchers.jsonPath("$.code").value("SCHEDULE-407"),
                 MockMvcResultMatchers.jsonPath("$.messages").value("Schedule title cannot be blank"),
                 MockMvcResultMatchers.jsonPath("$.document_url").value("docs.waldreg.org")
         ).andDo(MockMvcResultHandlers.print());
@@ -421,6 +429,7 @@ public class ScheduleAcceptanceTest{
                 MockMvcResultMatchers.header().string(HttpHeaders.CONTENT_TYPE, "application/json"),
                 MockMvcResultMatchers.header().string("api-version", apiVersion),
                 MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON),
+                MockMvcResultMatchers.jsonPath("$.code").value("SCHEDULE-408"),
                 MockMvcResultMatchers.jsonPath("$.messages").value("Schedule finish date \"" + finishAt + "\" cannot precede start date \"" + startedAt + "\""),
                 MockMvcResultMatchers.jsonPath("$.document_url").value("docs.waldreg.org")
         ).andDo(MockMvcResultHandlers.print());
@@ -470,6 +479,7 @@ public class ScheduleAcceptanceTest{
                 MockMvcResultMatchers.header().string(HttpHeaders.CONTENT_TYPE, "application/json"),
                 MockMvcResultMatchers.header().string("api-version", apiVersion),
                 MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON),
+                MockMvcResultMatchers.jsonPath("$.code").value("CHARACTER-403"),
                 MockMvcResultMatchers.jsonPath("$.messages").value("No permission"),
                 MockMvcResultMatchers.jsonPath("$.document_url").value("docs.waldreg.org")
         ).andDo(MockMvcResultHandlers.print());
@@ -509,6 +519,7 @@ public class ScheduleAcceptanceTest{
                 MockMvcResultMatchers.header().string(HttpHeaders.CONTENT_TYPE, "application/json"),
                 MockMvcResultMatchers.header().string("api-version", apiVersion),
                 MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON),
+                MockMvcResultMatchers.jsonPath("$.code").value("SCHEDULE-409"),
                 MockMvcResultMatchers.jsonPath("$.messages").value("Schedule length content cannot be more than 1000 current length \"" + scheduleContent.length() + "\""),
                 MockMvcResultMatchers.jsonPath("$.document_url").value("docs.waldreg.org")
         ).andDo(MockMvcResultHandlers.print());
@@ -581,6 +592,7 @@ public class ScheduleAcceptanceTest{
                 MockMvcResultMatchers.header().string(HttpHeaders.CONTENT_TYPE, "application/json"),
                 MockMvcResultMatchers.header().string("api-version", apiVersion),
                 MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON),
+                MockMvcResultMatchers.jsonPath("$.code").value("SCHEDULE-410"),
                 MockMvcResultMatchers.jsonPath("$.messages").value("Cannot find schedule with id \"" + id + "\""),
                 MockMvcResultMatchers.jsonPath("$.document_url").value("docs.waldreg.org")
         ).andDo(MockMvcResultHandlers.print());
@@ -716,6 +728,7 @@ public class ScheduleAcceptanceTest{
                 MockMvcResultMatchers.header().string(HttpHeaders.CONTENT_TYPE, "application/json"),
                 MockMvcResultMatchers.header().string("api-version", apiVersion),
                 MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON),
+                MockMvcResultMatchers.jsonPath("$.code").value("SCHEDULE-401"),
                 MockMvcResultMatchers.jsonPath("$.messages").value("Month cannot be under 1 or over 12 current month \""+wrongMonth+"\""),
                 MockMvcResultMatchers.jsonPath("$.document_url").value("docs.waldreg.org")
         ).andDo(MockMvcResultHandlers.print());
@@ -779,6 +792,7 @@ public class ScheduleAcceptanceTest{
                 MockMvcResultMatchers.header().string(HttpHeaders.CONTENT_TYPE, "application/json"),
                 MockMvcResultMatchers.header().string("api-version", apiVersion),
                 MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON),
+                MockMvcResultMatchers.jsonPath("$.code").value("SCHEDULE-400"),
                 MockMvcResultMatchers.jsonPath("$.messages").value("Year cannot be under 2000 current year \"" + wrongYear + "\""),
                 MockMvcResultMatchers.jsonPath("$.document_url").value("docs.waldreg.org")
         ).andDo(MockMvcResultHandlers.print());
@@ -885,6 +899,7 @@ public class ScheduleAcceptanceTest{
                 MockMvcResultMatchers.header().string(HttpHeaders.CONTENT_TYPE, "application/json"),
                 MockMvcResultMatchers.header().string("api-version", apiVersion),
                 MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON),
+                MockMvcResultMatchers.jsonPath("$.code").value("SCHEDULE-403"),
                 MockMvcResultMatchers.jsonPath("$.messages").value("Invalid date format detected Schedule start date \""+modifiedScheduleRequest.getStartedAt()+"\" Schedule finish date \""+modifiedScheduleRequest.getFinishAt()+"\""),
                 MockMvcResultMatchers.jsonPath("$.document_url").value("docs.waldreg.org")
         ).andDo(MockMvcResultHandlers.print());
@@ -943,6 +958,7 @@ public class ScheduleAcceptanceTest{
                 MockMvcResultMatchers.header().string(HttpHeaders.CONTENT_TYPE, "application/json"),
                 MockMvcResultMatchers.header().string("api-version", apiVersion),
                 MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON),
+                MockMvcResultMatchers.jsonPath("$.code").value("SCHEDULE-404"),
                 MockMvcResultMatchers.jsonPath("$.messages").value("Year cannot be under 2000 current Schedule start year \""+startedYear+"\" finish year \""+finishYear+"\""),
                 MockMvcResultMatchers.jsonPath("$.document_url").value("docs.waldreg.org")
         ).andDo(MockMvcResultHandlers.print());
@@ -998,6 +1014,7 @@ public class ScheduleAcceptanceTest{
                 MockMvcResultMatchers.header().string(HttpHeaders.CONTENT_TYPE, "application/json"),
                 MockMvcResultMatchers.header().string("api-version", apiVersion),
                 MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON),
+                MockMvcResultMatchers.jsonPath("$.code").value("SCHEDULE-405"),
                 MockMvcResultMatchers.jsonPath("$.messages").value("Cycle cannot be less than or equal to zero, current cycle \""+wrongModifiedCycle+"\""),
                 MockMvcResultMatchers.jsonPath("$.document_url").value("docs.waldreg.org")
         ).andDo(MockMvcResultHandlers.print());
@@ -1053,6 +1070,7 @@ public class ScheduleAcceptanceTest{
                 MockMvcResultMatchers.header().string(HttpHeaders.CONTENT_TYPE, "application/json"),
                 MockMvcResultMatchers.header().string("api-version", apiVersion),
                 MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON),
+                MockMvcResultMatchers.jsonPath("$.code").value("SCHEDULE-406"),
                 MockMvcResultMatchers.jsonPath("$.messages").value("Repeat finish date \""+wrongModifiedRepeatFinishAt+"\" cannot precede schedule start date \""+modifiedScheduleRequest.getStartedAt()+"\" or finish date \""+scheduleRequest.getFinishAt()+"\""),
                 MockMvcResultMatchers.jsonPath("$.document_url").value("docs.waldreg.org")
         ).andDo(MockMvcResultHandlers.print());
@@ -1108,6 +1126,7 @@ public class ScheduleAcceptanceTest{
                 MockMvcResultMatchers.header().string(HttpHeaders.CONTENT_TYPE, "application/json"),
                 MockMvcResultMatchers.header().string("api-version", apiVersion),
                 MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON),
+                MockMvcResultMatchers.jsonPath("$.code").value("SCHEDULE-407"),
                 MockMvcResultMatchers.jsonPath("$.messages").value("Schedule title cannot be blank"),
                 MockMvcResultMatchers.jsonPath("$.document_url").value("docs.waldreg.org")
         ).andDo(MockMvcResultHandlers.print());
@@ -1163,6 +1182,7 @@ public class ScheduleAcceptanceTest{
                 MockMvcResultMatchers.header().string(HttpHeaders.CONTENT_TYPE, "application/json"),
                 MockMvcResultMatchers.header().string("api-version", apiVersion),
                 MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON),
+                MockMvcResultMatchers.jsonPath("$.code").value("SCHEDULE-408"),
                 MockMvcResultMatchers.jsonPath("$.messages").value("Schedule finish date \"" + modifiedfinishAt + "\" cannot precede start date \"" + modifiedStartedAt + "\""),
                 MockMvcResultMatchers.jsonPath("$.document_url").value("docs.waldreg.org")
         ).andDo(MockMvcResultHandlers.print());
@@ -1229,6 +1249,7 @@ public class ScheduleAcceptanceTest{
                 MockMvcResultMatchers.header().string(HttpHeaders.CONTENT_TYPE, "application/json"),
                 MockMvcResultMatchers.header().string("api-version", apiVersion),
                 MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON),
+                MockMvcResultMatchers.jsonPath("$.code").value("CHARACTER-403"),
                 MockMvcResultMatchers.jsonPath("$.messages").value("No permission"),
                 MockMvcResultMatchers.jsonPath("$.document_url").value("docs.waldreg.org")
         ).andDo(MockMvcResultHandlers.print());
@@ -1284,6 +1305,7 @@ public class ScheduleAcceptanceTest{
                 MockMvcResultMatchers.header().string(HttpHeaders.CONTENT_TYPE, "application/json"),
                 MockMvcResultMatchers.header().string("api-version", apiVersion),
                 MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON),
+                MockMvcResultMatchers.jsonPath("$.code").value("SCHEDULE-409"),
                 MockMvcResultMatchers.jsonPath("$.messages").value("Schedule length content cannot be more than 1000 current length \"" + wrongModifiedScheduleContent.length() + "\""),
                 MockMvcResultMatchers.jsonPath("$.document_url").value("docs.waldreg.org")
         ).andDo(MockMvcResultHandlers.print());
@@ -1323,6 +1345,7 @@ public class ScheduleAcceptanceTest{
                 MockMvcResultMatchers.header().string(HttpHeaders.CONTENT_TYPE, "application/json"),
                 MockMvcResultMatchers.header().string("api-version", apiVersion),
                 MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON),
+                MockMvcResultMatchers.jsonPath("$.code").value("SCHEDULE-410"),
                 MockMvcResultMatchers.jsonPath("$.messages").value("Cannot find schedule with id \"" + id + "\""),
                 MockMvcResultMatchers.jsonPath("$.document_url").value("docs.waldreg.org")
         ).andDo(MockMvcResultHandlers.print());
@@ -1420,6 +1443,7 @@ public class ScheduleAcceptanceTest{
                 MockMvcResultMatchers.header().string(HttpHeaders.CONTENT_TYPE, "application/json"),
                 MockMvcResultMatchers.header().string("api-version", apiVersion),
                 MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON),
+                MockMvcResultMatchers.jsonPath("$.code").value("CHARACTER-403"),
                 MockMvcResultMatchers.jsonPath("$.messages").value("No permission"),
                 MockMvcResultMatchers.jsonPath("$.document_url").value("docs.waldreg.org")
         ).andDo(MockMvcResultHandlers.print());
@@ -1442,6 +1466,7 @@ public class ScheduleAcceptanceTest{
                 MockMvcResultMatchers.header().string(HttpHeaders.CONTENT_TYPE, "application/json"),
                 MockMvcResultMatchers.header().string("api-version", apiVersion),
                 MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON),
+                MockMvcResultMatchers.jsonPath("$.code").value("SCHEDULE-410"),
                 MockMvcResultMatchers.jsonPath("$.messages").value("Cannot find schedule with id \"" + id + "\""),
                 MockMvcResultMatchers.jsonPath("$.document_url").value("docs.waldreg.org")
         ).andDo(MockMvcResultHandlers.print());
