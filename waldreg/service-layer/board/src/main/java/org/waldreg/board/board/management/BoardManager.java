@@ -1,5 +1,6 @@
 package org.waldreg.board.board.management;
 
+import java.util.List;
 import org.waldreg.board.dto.BoardDto;
 import org.waldreg.board.dto.MemberTier;
 
@@ -9,6 +10,7 @@ public interface BoardManager{
 
     BoardDto inquiryBoardById(int id);
 
+    List<BoardDto> inquiryAllBoard(int from, int to);
 
     final class BoardRequest{
 

@@ -1,9 +1,11 @@
 package org.waldreg.board.board.management;
 
+import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.waldreg.board.board.exception.BoardDoesNotExistException;
 import org.waldreg.board.board.exception.CategoryDoesNotExistException;
+import org.waldreg.board.board.exception.InvalidRangeException;
 import org.waldreg.board.board.exception.UserDoesNotExistException;
 import org.waldreg.board.board.spi.BoardRepository;
 import org.waldreg.board.board.spi.CategoryRepository;
@@ -14,6 +16,8 @@ import org.waldreg.board.dto.UserDto;
 
 @Service
 public class DefaultBoardManager implements BoardManager{
+
+    private final int perPage = 20;
 
     private BoardRepository boardRepository;
     private UserRepository userRepository;
@@ -68,5 +72,30 @@ public class DefaultBoardManager implements BoardManager{
             throw new BoardDoesNotExistException(boardId);
         }
     }
+
+    @Override
+    public List<BoardDto> inquiryAllBoard(int from, int to){
+        throwIfInvalidRangeDetected(from, to);
+        int maxIdx = boardRepository.getBoardMaxIndex();
+        to = adjustEndIdx(from, to, maxIdx);
+        return boardRepository.inquiryAllBoard(from, to);
+    }
+
+    private void throwIfInvalidRangeDetected(int from, int to){
+        if (from > to || from < 0){
+            throw new InvalidRangeException(from, to);
+        }
+    }
+
+    private int adjustEndIdx(int from, int to, int maxIdx){
+        if (maxIdx < to){
+            to = maxIdx;
+        }
+        if (to - from + 1 > perPage){
+            return from + perPage - 1;
+        }
+        return to;
+    }
+
 
 }
