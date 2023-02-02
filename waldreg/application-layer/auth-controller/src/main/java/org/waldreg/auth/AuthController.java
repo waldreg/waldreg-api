@@ -1,6 +1,7 @@
 package org.waldreg.auth;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
@@ -28,7 +29,7 @@ public class AuthController{
     }
 
     @PostMapping("/token")
-    public AuthTokenResponse getToken(@RequestBody AuthTokenRequest authRequest){
+    public AuthTokenResponse getToken(@RequestBody @Validated AuthTokenRequest authRequest){
         TokenUserDto tokenUserDto = tokenUserFindUserIdAndPassword.findUserByUserIdPassword(authRequest.getUserId(), authRequest.getUserPassword());
         TokenDto tokenDto = TokenDto.builder().id(tokenUserDto.getId()).build();
         String accessToken = tokenPublisher.publish(tokenDto);

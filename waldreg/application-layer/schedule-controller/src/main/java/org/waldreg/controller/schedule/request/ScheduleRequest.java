@@ -5,7 +5,7 @@ import javax.validation.constraints.NotBlank;
 
 public class ScheduleRequest{
 
-    @NotBlank(message = "Schedule title cannot be blank")
+    @NotBlank(message = "SCHEDULE-407 Schedule title cannot be blank")
     @JsonProperty("schedule_title")
     private String scheduleTitle;
     @JsonProperty("scheduleContent")

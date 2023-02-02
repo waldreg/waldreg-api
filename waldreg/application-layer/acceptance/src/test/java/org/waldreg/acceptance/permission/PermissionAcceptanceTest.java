@@ -60,6 +60,9 @@ public class PermissionAcceptanceTest{
                             MockMvcResultMatchers
                                     .header().string("Api-version", apiVersion),
                             MockMvcResultMatchers
+                                    .jsonPath("$.code")
+                                    .value("CHARACTER-420"),
+                            MockMvcResultMatchers
                                     .jsonPath("$.messages")
                                     .value("Can not find character named \"" + characterName + "\""),
                             MockMvcResultMatchers
@@ -87,7 +90,8 @@ public class PermissionAcceptanceTest{
                     MockMvcResultMatchers.header().string(HttpHeaders.CONTENT_TYPE, "application/json"),
                     MockMvcResultMatchers.header().string("api-version", apiVersion),
                     MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON),
-                    MockMvcResultMatchers.jsonPath("$.messages").value("Unknown user_id"),
+                    MockMvcResultMatchers.jsonPath("$.code").value("USER-406"),
+                    MockMvcResultMatchers.jsonPath("$.messages").value("Unknown user_id \""+request.getUserId()+"\""),
                     MockMvcResultMatchers.jsonPath("$.document_url").value("docs.waldreg.org")
             );
         }
@@ -160,6 +164,7 @@ public class PermissionAcceptanceTest{
                 MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON),
                 MockMvcResultMatchers.header().string(HttpHeaders.CONTENT_TYPE, "application/json"),
                 MockMvcResultMatchers.header().string("Api-version", apiVersion),
+                MockMvcResultMatchers.jsonPath("$.code").value("CHARACTER-403"),
                 MockMvcResultMatchers.jsonPath("$.messages").value("No permission"),
                 MockMvcResultMatchers.jsonPath("$.document_url").value("docs.waldreg.org")
         );
@@ -201,6 +206,7 @@ public class PermissionAcceptanceTest{
                 MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON),
                 MockMvcResultMatchers.header().string(HttpHeaders.CONTENT_TYPE, "application/json"),
                 MockMvcResultMatchers.header().string("Api-version", apiVersion),
+                MockMvcResultMatchers.jsonPath("$.code").value("CHARACTER-410"),
                 MockMvcResultMatchers.jsonPath("$.messages").value("Unknown permission name \"" + permissionResponseList.get(0).getName() + "!?" + "\""),
                 MockMvcResultMatchers.jsonPath("$.document_url").value("docs.waldreg.org")
         );
@@ -242,6 +248,7 @@ public class PermissionAcceptanceTest{
                 MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON),
                 MockMvcResultMatchers.header().string(HttpHeaders.CONTENT_TYPE, "application/json"),
                 MockMvcResultMatchers.header().string("Api-version", apiVersion),
+                MockMvcResultMatchers.jsonPath("$.code").value("CHARACTER-411"),
                 MockMvcResultMatchers.jsonPath("$.messages").value("Unknown permission id \"" + permissionResponseList.get(1).getId()
                         + "\" name \"" + permissionResponseList.get(1).getName() + "\" status \"Go lang\""),
                 MockMvcResultMatchers.jsonPath("$.document_url").value("docs.waldreg.org")
@@ -276,6 +283,7 @@ public class PermissionAcceptanceTest{
                 MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON),
                 MockMvcResultMatchers.header().string(HttpHeaders.CONTENT_TYPE, "application/json"),
                 MockMvcResultMatchers.header().string("Api-version", apiVersion),
+                MockMvcResultMatchers.jsonPath("$.code").value("CHARACTER-412"),
                 MockMvcResultMatchers.jsonPath("$.messages").value("Duplicated character name detected \"duplicate\""),
                 MockMvcResultMatchers.jsonPath("$.document_url").value("docs.waldreg.org")
         );
@@ -328,6 +336,7 @@ public class PermissionAcceptanceTest{
                 MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON),
                 MockMvcResultMatchers.header().string(HttpHeaders.CONTENT_TYPE, "application/json"),
                 MockMvcResultMatchers.header().string("Api-version", apiVersion),
+                MockMvcResultMatchers.jsonPath("$.code").value("CHARACTER-403"),
                 MockMvcResultMatchers.jsonPath("$.messages").value("No permission"),
                 MockMvcResultMatchers.jsonPath("$.document_url").value("docs.waldreg.org")
         );
@@ -381,6 +390,7 @@ public class PermissionAcceptanceTest{
                 MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON),
                 MockMvcResultMatchers.header().string(HttpHeaders.CONTENT_TYPE, "application/json"),
                 MockMvcResultMatchers.header().string("api-version", apiVersion),
+                MockMvcResultMatchers.jsonPath("$.code").value("CHARACTER-403"),
                 MockMvcResultMatchers.jsonPath("$.messages").value("No permission"),
                 MockMvcResultMatchers.jsonPath("$.document_url").value("docs.waldreg.org")
         );
@@ -404,6 +414,7 @@ public class PermissionAcceptanceTest{
                 MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON),
                 MockMvcResultMatchers.header().string(HttpHeaders.CONTENT_TYPE, "application/json"),
                 MockMvcResultMatchers.header().string("api-version", apiVersion),
+                MockMvcResultMatchers.jsonPath("$.code").value("CHARACTER-420"),
                 MockMvcResultMatchers.jsonPath("$.messages").value("Can not find character named \"unknown_character_name\""),
                 MockMvcResultMatchers.jsonPath("$.document_url").value("docs.waldreg.org")
         );
@@ -472,6 +483,7 @@ public class PermissionAcceptanceTest{
                 MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON),
                 MockMvcResultMatchers.header().string(HttpHeaders.CONTENT_TYPE, "application/json"),
                 MockMvcResultMatchers.header().string("api-version", apiVersion),
+                MockMvcResultMatchers.jsonPath("$.code").value("CHARACTER-403"),
                 MockMvcResultMatchers.jsonPath("$.messages").value("No permission"),
                 MockMvcResultMatchers.jsonPath("$.document_url").value("docs.waldreg.org")
         );
@@ -512,6 +524,7 @@ public class PermissionAcceptanceTest{
                 MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON),
                 MockMvcResultMatchers.header().string(HttpHeaders.CONTENT_TYPE, "application/json"),
                 MockMvcResultMatchers.header().string("api-version", apiVersion),
+                MockMvcResultMatchers.jsonPath("$.code").value("CHARACTER-412"),
                 MockMvcResultMatchers.jsonPath("$.messages").value("Duplicated character name detected \"duplicated_character\""),
                 MockMvcResultMatchers.jsonPath("$.document_url").value("docs.waldreg.org")
         );
@@ -537,6 +550,7 @@ public class PermissionAcceptanceTest{
                 MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON),
                 MockMvcResultMatchers.header().string(HttpHeaders.CONTENT_TYPE, "application/json"),
                 MockMvcResultMatchers.header().string("api-version", apiVersion),
+                MockMvcResultMatchers.jsonPath("$.code").value("CHARACTER-420"),
                 MockMvcResultMatchers.jsonPath("$.messages").value("Can not find character named \"hello world character name\""),
                 MockMvcResultMatchers.jsonPath("$.document_url").value("docs.waldreg.org")
         );
@@ -547,6 +561,7 @@ public class PermissionAcceptanceTest{
     public void MODIFY_CHARACTER_BY_NAME_FAIL_INVALID_PERMISSION_NAME_ACCEPTANCE_TEST()
             throws Exception{
         // given
+        List<PermissionResponse> permissionResponseList = getPermissionResponseList();
         String token = AuthenticationAcceptanceTestHelper.getAdminToken(mvc, objectMapper);
         String characterName = "mock_character_name";
         String permissionName = "Character manager";
@@ -555,6 +570,7 @@ public class PermissionAcceptanceTest{
                 .characterName(characterName)
                 .permissionList(List.of(
                         PermissionRequest.builder()
+                                .id(permissionResponseList.get(0).getId())
                                 .name(permissionName)
                                 .status(permissionStatus)
                                 .build()
@@ -563,6 +579,7 @@ public class PermissionAcceptanceTest{
                 .characterName(characterName)
                 .permissionList(List.of(
                         PermissionRequest.builder()
+                                .id(permissionResponseList.get(0).getId())
                                 .name("invalid_permission_name")
                                 .status(permissionStatus)
                                 .build()
@@ -630,6 +647,7 @@ public class PermissionAcceptanceTest{
                 MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON),
                 MockMvcResultMatchers.header().string(HttpHeaders.CONTENT_TYPE, "application/json"),
                 MockMvcResultMatchers.header().string("api-version", apiVersion),
+                MockMvcResultMatchers.jsonPath("$.code").value("CHARACTER-411"),
                 MockMvcResultMatchers.jsonPath("$.messages").value("Unknown permission id \"" + permissionResponseList.get(0).getId()
                         + "\" name \"" + permissionResponseList.get(0).getName() + "\" status \"wrong_status\""),
                 MockMvcResultMatchers.jsonPath("$.document_url").value("docs.waldreg.org")
@@ -675,6 +693,7 @@ public class PermissionAcceptanceTest{
                 MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON),
                 MockMvcResultMatchers.header().string(HttpHeaders.CONTENT_TYPE, "application/json"),
                 MockMvcResultMatchers.header().string("api-version", apiVersion),
+                MockMvcResultMatchers.jsonPath("$.code").value("CHARACTER-403"),
                 MockMvcResultMatchers.jsonPath("$.messages").value("No permission"),
                 MockMvcResultMatchers.jsonPath("$.document_url").value("docs.waldreg.org")
         );
@@ -726,6 +745,7 @@ public class PermissionAcceptanceTest{
         result.andExpectAll(
                 MockMvcResultMatchers.status().isForbidden(),
                 MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON),
+                MockMvcResultMatchers.jsonPath("$.code").value("CHARACTER-403"),
                 MockMvcResultMatchers.header().string(HttpHeaders.CONTENT_TYPE, "application/json"),
                 MockMvcResultMatchers.header().string("api-version", apiVersion),
                 MockMvcResultMatchers.jsonPath("$.messages").value("No permission"),
@@ -750,6 +770,7 @@ public class PermissionAcceptanceTest{
                 MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON),
                 MockMvcResultMatchers.header().string(HttpHeaders.CONTENT_TYPE, "application/json"),
                 MockMvcResultMatchers.header().string("api-version", apiVersion),
+                MockMvcResultMatchers.jsonPath("$.code").value("CHARACTER-420"),
                 MockMvcResultMatchers.jsonPath("$.messages").value("Can not find character named \"mock_character\""),
                 MockMvcResultMatchers.jsonPath("$.document_url").value("docs.waldreg.org")
         );
@@ -771,7 +792,8 @@ public class PermissionAcceptanceTest{
         // then
         resultActions.andExpectAll(
                 MockMvcResultMatchers.status().isBadRequest(),
-                MockMvcResultMatchers.header().string("Api-version", "1.0")
+                MockMvcResultMatchers.header().string("Api-version", "1.0"),
+                MockMvcResultMatchers.jsonPath("$.code").value("CHARACTER-413")
         ).andDo(MockMvcResultHandlers.print());
     }
 
@@ -820,6 +842,7 @@ public class PermissionAcceptanceTest{
                 MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON),
                 MockMvcResultMatchers.header().string(HttpHeaders.CONTENT_TYPE, "application/json"),
                 MockMvcResultMatchers.header().string("Api-version", apiVersion),
+                MockMvcResultMatchers.jsonPath("$.code").value("CHARACTER-403"),
                 MockMvcResultMatchers.jsonPath("$.messages").value("No permission"),
                 MockMvcResultMatchers.jsonPath("$.document_url").value("docs.waldreg.org")
         );
