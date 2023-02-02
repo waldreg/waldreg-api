@@ -1,5 +1,7 @@
 package org.waldreg.board.file;
 
+import java.io.File;
+import java.io.IOException;
 import java.nio.file.FileAlreadyExistsException;
 import java.nio.file.Files;
 import java.nio.file.InvalidPathException;
@@ -88,6 +90,34 @@ public class DefaultFileManager implements FileManager{
             }
             return true;
         };
+    }
+
+    @Override
+    public byte[] getFileIntoByteArray(String target){
+        try{
+            String path = getPath(target);
+            Path existSource = Paths.get(path);
+            return Files.readAllBytes(existSource);
+        } catch(InvalidPathException IPE){
+            throw new UnknownFileId(target);
+        }
+        catch(Exception e){
+            throw new IllegalStateException(e);
+        }
+    }
+
+    @Override
+    public File getFileIntoFile(String target){
+        try{
+            String path = getPath(target);
+            Path existSource = Paths.get(path);
+            return existSource.toFile();
+        } catch(InvalidPathException IPE){
+            throw new UnknownFileId(target);
+        }
+        catch(Exception e){
+            throw new IllegalStateException(e);
+        }
     }
 
     private String getPath(String id){
