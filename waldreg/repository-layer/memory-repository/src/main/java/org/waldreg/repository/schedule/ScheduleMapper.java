@@ -12,6 +12,7 @@ public class ScheduleMapper{
 
     public Schedule scheduleDtoToScheduleDomain(ScheduleDto scheduleDto){
         Schedule.Builder builder = Schedule.builder()
+                .id(scheduleDto.getId())
                 .scheduleTitle(scheduleDto.getScheduleTitle())
                 .scheduleContent(scheduleDto.getScheduleContent())
                 .startedAt(LocalDateTime.parse(scheduleDto.getStartedAt()))

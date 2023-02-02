@@ -1,40 +1,53 @@
 package org.waldreg.board.file;
 
-import java.io.File;
-import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.nio.file.StandardCopyOption;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.UUID;
+import java.util.concurrent.Callable;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Service;
+import org.springframework.util.MimeType;
+import org.springframework.util.MimeTypeUtils;
 import org.springframework.web.multipart.MultipartFile;
 
-public class DefaultFileManager{
+@Service
+public class DefaultFileManager implements FileManager{
 
-    private String uploadLocation = "./src/main/java/org/waldreg/";
+    @Value("${file.path}")
+    private String path;
+    private final ExecutorService executorService;
 
-
-    public List<String> storeFiles(List<MultipartFile> files, String uploadPackageName){
-        List<String> filePaths = new ArrayList<>();
-        for (MultipartFile file : files){
-            try{
-                String uuid = getRandomUUID();
-                StringBuilder uploadDir = new StringBuilder(uploadLocation).append(uploadPackageName).append("/");
-                Path copyOfLocation = Paths.get(uploadDir + File.separator + uuid);
-                Files.copy(file.getInputStream(), copyOfLocation, StandardCopyOption.REPLACE_EXISTING);
-                filePaths.add(String.valueOf(copyOfLocation));
-            } catch (IOException IOE){
-
-            }
-        }
-        return filePaths;
+    public DefaultFileManager(){
+        executorService = Executors.newFixedThreadPool(3);
     }
 
+    @Override
+    public Future<String> saveFile(MultipartFile multipartFile){
+        System.out.println("path : " + path);
+        Callable<String> callable = createCallable(multipartFile);
+        return executorService.submit(callable);
+    }
 
-    private String getRandomUUID(){
-        return UUID.randomUUID().toString();
+    private Callable<String> createCallable(MultipartFile multipartFile){
+        return ()->{
+            String id = UUID.randomUUID().toString();
+            String path = getPath(id, multipartFile);
+            Path filePath = Paths.get(path);
+            Path target = Files.createFile(filePath);
+            multipartFile.transferTo(target);
+            return id;
+        };
+    }
+
+    private String getPath(String id, MultipartFile multipartFile){
+        StringBuilder stringBuilder = new StringBuilder();
+        MimeType mimeType = MimeTypeUtils.parseMimeType(multipartFile.getContentType());
+        stringBuilder.append(path).append(id).append(".").append(mimeType.getSubtype());
+        return stringBuilder.toString();
     }
 
 }

@@ -22,6 +22,7 @@ public class CharacterMapper{
         List<Permission> permissionList = new ArrayList<>();
         for (PermissionDto permissionDto : permissionDtoList){
             permissionList.add(Permission.builder()
+                    .id(permissionDto.getId())
                     .name(permissionDto.getName())
                     .status(permissionDto.getStatus())
                     .build());
@@ -31,6 +32,7 @@ public class CharacterMapper{
 
     public CharacterDto characterDomainToDto(Character character){
         return CharacterDto.builder()
+                .id(character.getId())
                 .characterName(character.getCharacterName())
                 .permissionDtoList(permissionDomainToDto(character.getPermissionList()))
                 .build();
@@ -40,6 +42,7 @@ public class CharacterMapper{
         List<PermissionDto> permissionDtoList = new ArrayList<>();
         for (Permission permission : permissionList){
             permissionDtoList.add(PermissionDto.builder()
+                    .id(permission.getId())
                     .name(permission.getName())
                     .status(permission.getStatus())
                     .build());

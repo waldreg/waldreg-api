@@ -1,6 +1,5 @@
 package org.waldreg.character.permission.management;
 
-import com.google.common.annotations.VisibleForTesting;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
@@ -51,10 +50,10 @@ public class PermissionUnitManager implements PermissionChecker, PermissionUnitA
     }
 
     @Override
-    public boolean isPossiblePermissionStatus(String name, String status){
+    public boolean isPossiblePermission(int id, String name, String status){
         throwIfDoesNotFindPermission(name);
         PermissionUnit permissionUnit = permissionUnitMap.get(name);
-        return permissionUnit.isPossibleStatus(status);
+        return permissionUnit.isPossible(id, status);
     }
 
     private void throwIfDoesNotFindPermission(String name){
@@ -63,7 +62,6 @@ public class PermissionUnitManager implements PermissionChecker, PermissionUnitA
         }
     }
 
-    @VisibleForTesting
     public void deleteAllPermission(){
         permissionUnitMap.clear();
     }

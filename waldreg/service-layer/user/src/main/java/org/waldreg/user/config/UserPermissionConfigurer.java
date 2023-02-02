@@ -26,7 +26,7 @@ public class UserPermissionConfigurer{
 
     private void configFireOtherUserPermission(){
         permissionExtension.extend(DefaultPermissionUnit.builder()
-                .name("Fire other user permission")
+                .name("User fire manager")
                 .info("If set true, can fire other user")
                 .permissionVerifiable((s) -> s.equals("true"))
                 .statusList(List.of("true", "false"))
@@ -35,7 +35,7 @@ public class UserPermissionConfigurer{
 
     private void configUpdateUserCharacterPermission(){
         permissionExtension.extend(DefaultPermissionUnit.builder()
-                .name("Update other user's character permission")
+                .name("User's character update manager")
                 .info("If set true, can update user's character")
                 .permissionVerifiable((s) -> s.equals("true"))
                 .statusList(List.of("true", "false"))
@@ -44,7 +44,7 @@ public class UserPermissionConfigurer{
 
     private void configReadOtherUserPermission(){
         permissionExtension.extend(DefaultPermissionUnit.builder()
-                .name("Read other user info permission")
+                .name("User info read manager")
                 .info("If set true, can read other user's information")
                 .permissionVerifiable((s) -> s.equals("true"))
                 .statusList(List.of("true", "false"))

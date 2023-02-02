@@ -5,6 +5,7 @@ import java.util.List;
 
 public final class CharacterResponse{
 
+    private final int id;
     @JsonProperty("character_name")
     private final String characterName;
     @JsonProperty("permissions")
@@ -15,12 +16,17 @@ public final class CharacterResponse{
     }
 
     private CharacterResponse(Builder builder){
+        this.id = builder.id;
         this.characterName = builder.characterName;
         this.permissionList = builder.permissionList;
     }
 
     public static Builder builder(){
         return new Builder();
+    }
+
+    public int getId(){
+        return id;
     }
 
     public String getCharacterName(){
@@ -33,10 +39,16 @@ public final class CharacterResponse{
 
     public final static class Builder{
 
+        private int id;
         private String characterName;
         private List<SpecifyStatusPermissionResponse> permissionList;
 
         private Builder(){}
+
+        public Builder id(int id){
+            this.id = id;
+            return this;
+        }
 
         public Builder characterName(String characterName){
             this.characterName = characterName;
