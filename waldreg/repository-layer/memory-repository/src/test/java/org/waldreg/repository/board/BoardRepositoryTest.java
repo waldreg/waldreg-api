@@ -91,7 +91,7 @@ public class BoardRepositoryTest{
                 .title(title)
                 .userDto(userDto)
                 .content(content)
-                .categoryDto(categoryDto)
+                .categoryId(categoryDto.getId())
                 .build();
 
         //when
@@ -103,7 +103,7 @@ public class BoardRepositoryTest{
                 () -> Assertions.assertEquals(boardRequest.getContent(), result.getContent()),
                 () -> Assertions.assertEquals(boardRequest.getUserDto().getUserId(), result.getUserDto().getUserId()),
                 () -> Assertions.assertEquals(boardRequest.getUserDto().getName(), result.getUserDto().getName()),
-                () -> Assertions.assertEquals(boardRequest.getCategoryDto().getCategoryName(), result.getCategoryDto().getCategoryName())
+                () -> Assertions.assertEquals(boardRequest.getCategoryId(), result.getCategoryId())
         );
     }
 

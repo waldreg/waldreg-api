@@ -26,7 +26,7 @@ public class BoardMapper{
         return Board.builder()
                 .title(boardDto.getTitle())
                 .content(boardDto.getContent())
-                .category(categoryDtoToCategoryDomain(boardDto.getCategoryDto()))
+                .categoryId(boardDto.getCategoryId())
                 .build();
     }
 
@@ -40,7 +40,7 @@ public class BoardMapper{
         return BoardDto.builder()
                 .id(board.getId())
                 .title(board.getTitle())
-                .categoryDto(categoryDomainToCategoryDto(board.getCategory()))
+                .categoryId(board.getCategoryId())
                 .content(board.getContent())
                 .userDto(userDomainToUserDto(board.getUser()))
                 .createdAt(board.getCreatedAt())

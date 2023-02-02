@@ -7,7 +7,7 @@ public class BoardDto{
 
     private int id;
     private String title;
-    private CategoryDto categoryDto;
+    private int categoryId;
     private String content;
     private UserDto userDto;
     private LocalDateTime createdAt;
@@ -23,7 +23,7 @@ public class BoardDto{
     private BoardDto(Builder builder){
         this.id = builder.id;
         this.title = builder.title;
-        this.categoryDto = builder.categoryDto;
+        this.categoryId = builder.categoryId;
         this.content = builder.content;
         this.userDto = builder.userDto;
         this.createdAt = builder.createdAt;
@@ -47,8 +47,8 @@ public class BoardDto{
         return title;
     }
 
-    public CategoryDto getCategoryDto(){
-        return categoryDto;
+    public int getCategoryId(){
+        return categoryId;
     }
 
     public String getContent(){
@@ -91,7 +91,7 @@ public class BoardDto{
 
         private int id;
         private String title;
-        private CategoryDto categoryDto;
+        private int categoryId;
         private String content;
         private UserDto userDto;
         private LocalDateTime createdAt;
@@ -114,8 +114,8 @@ public class BoardDto{
             return this;
         }
 
-        public Builder categoryDto(CategoryDto categoryDto){
-            this.categoryDto = categoryDto;
+        public Builder categoryId(int categoryId){
+            this.categoryId = categoryId;
             return this;
         }
 

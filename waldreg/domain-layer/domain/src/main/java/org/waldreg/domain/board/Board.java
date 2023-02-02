@@ -134,7 +134,7 @@ public final class Board{
             return this;
         }
 
-        public Builder category(int categoryId){
+        public Builder categoryId(int categoryId){
             this.categoryId = categoryId;
             return this;
         }
