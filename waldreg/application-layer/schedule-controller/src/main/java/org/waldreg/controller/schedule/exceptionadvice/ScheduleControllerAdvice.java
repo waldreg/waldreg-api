@@ -19,6 +19,7 @@ public class ScheduleControllerAdvice{
     @ExceptionHandler({ContentOverflowException.class})
     public ResponseEntity<ExceptionTemplate> catchContentOverflowException(ContentOverflowException contentOverflowException){
         ExceptionTemplate exceptionTemplate = ExceptionTemplate.builder()
+                .code(contentOverflowException.getCode())
                 .message(contentOverflowException.getMessage())
                 .documentUrl(documentUrl)
                 .build();

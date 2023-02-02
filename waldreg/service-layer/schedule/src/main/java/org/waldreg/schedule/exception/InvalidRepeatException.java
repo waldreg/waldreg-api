@@ -1,7 +1,16 @@
 package org.waldreg.schedule.exception;
 
-public class InvalidRepeatException extends RuntimeException{
+public final class InvalidRepeatException extends RuntimeException{
 
-    public InvalidRepeatException(String message){super(message);}
+    private final String code;
+
+    public InvalidRepeatException(String code, String message){
+        super(message);
+        this.code = code;
+    }
+
+    public String getCode(){
+        return code;
+    }
 
 }
