@@ -89,7 +89,7 @@ public class UserAcceptanceTest{
                     MockMvcResultMatchers.header().string(HttpHeaders.CONTENT_TYPE, "application/json"),
                     MockMvcResultMatchers.header().string("api-version", apiVersion),
                     MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON),
-                    MockMvcResultMatchers.jsonPath("$.messages").value("Unknown user_id"),
+                    MockMvcResultMatchers.jsonPath("$.messages").value("Unknown user_id \""+request.getUserId()+"\""),
                     MockMvcResultMatchers.jsonPath("$.document_url").value("docs.waldreg.org")
             );
         }
@@ -160,7 +160,7 @@ public class UserAcceptanceTest{
                 MockMvcResultMatchers.header().string(HttpHeaders.CONTENT_TYPE, "application/json"),
                 MockMvcResultMatchers.header().string("api-version", apiVersion),
                 MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON),
-                MockMvcResultMatchers.jsonPath("$.messages").value("Duplicated user_id"),
+                MockMvcResultMatchers.jsonPath("$.messages").value("Duplicated user_id \""+userId1+"\""),
                 MockMvcResultMatchers.jsonPath("$.document_url").value("docs.waldreg.org")
         ).andDo(MockMvcResultHandlers.print());
 
@@ -377,7 +377,7 @@ public class UserAcceptanceTest{
                 MockMvcResultMatchers.header().string(HttpHeaders.CONTENT_TYPE, "application/json"),
                 MockMvcResultMatchers.header().string("api-version", apiVersion),
                 MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON),
-                MockMvcResultMatchers.jsonPath("$.messages").value("Unknown user_id"),
+                MockMvcResultMatchers.jsonPath("$.messages").value("Unknown user_id \""+unknownUserId+"\""),
                 MockMvcResultMatchers.jsonPath("$.document_url").value("docs.waldreg.org")
         ).andDo(MockMvcResultHandlers.print());
 
@@ -871,7 +871,7 @@ public class UserAcceptanceTest{
                 MockMvcResultMatchers.header().string(HttpHeaders.CONTENT_TYPE, "application/json"),
                 MockMvcResultMatchers.header().string("api-version", apiVersion),
                 MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON),
-                MockMvcResultMatchers.jsonPath("$.messages").value("Unknown id"),
+                MockMvcResultMatchers.jsonPath("$.messages").value("Unknown id \""+unknownId+"\""),
                 MockMvcResultMatchers.jsonPath("$.document_url").value("docs.waldreg.org")
         ).andDo(MockMvcResultHandlers.print());
     }
@@ -1158,7 +1158,7 @@ public class UserAcceptanceTest{
                 MockMvcResultMatchers.header().string(HttpHeaders.CONTENT_TYPE, "application/json"),
                 MockMvcResultMatchers.header().string("api-version", apiVersion),
                 MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON),
-                MockMvcResultMatchers.jsonPath("$.messages").value("Unknown id"),
+                MockMvcResultMatchers.jsonPath("$.messages").value("Unknown id \""+subjectId+"\""),
                 MockMvcResultMatchers.jsonPath("$.document_url").value("docs.waldreg.org")
         ).andDo(MockMvcResultHandlers.print());
 
@@ -1385,7 +1385,7 @@ public class UserAcceptanceTest{
                 MockMvcResultMatchers.header().string(HttpHeaders.CONTENT_TYPE, "application/json"),
                 MockMvcResultMatchers.header().string("api-version", apiVersion),
                 MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON),
-                MockMvcResultMatchers.jsonPath("$.messages").value("Invalid range"),
+                MockMvcResultMatchers.jsonPath("$.messages").value("Invalid range start-idx \""+0+"\", end-idx \""+0+"\""),
                 MockMvcResultMatchers.jsonPath("$.document_url").value("docs.waldreg.org")
         ).andDo(MockMvcResultHandlers.print());
 

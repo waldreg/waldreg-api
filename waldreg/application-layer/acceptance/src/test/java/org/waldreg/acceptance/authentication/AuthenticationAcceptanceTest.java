@@ -1,7 +1,5 @@
 package org.waldreg.acceptance.authentication;
 
-
-import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.util.ArrayList;
 import org.junit.jupiter.api.AfterEach;
@@ -57,7 +55,7 @@ public class AuthenticationAcceptanceTest{
                     MockMvcResultMatchers.header().string(HttpHeaders.CONTENT_TYPE, "application/json"),
                     MockMvcResultMatchers.header().string("api-version", apiVersion),
                     MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON),
-                    MockMvcResultMatchers.jsonPath("$.messages").value("Unknown user_id"),
+                    MockMvcResultMatchers.jsonPath("$.messages").value("Unknown user_id \"" + request.getUserId() + "\""),
                     MockMvcResultMatchers.jsonPath("$.document_url").value("docs.waldreg.org")
             ).andDo(MockMvcResultHandlers.print());
         }
@@ -116,8 +114,7 @@ public class AuthenticationAcceptanceTest{
 
         //then
         result.andExpectAll(MockMvcResultMatchers.status().isBadRequest(),
-                            MockMvcResultMatchers.header().string(HttpHeaders.CONTENT_TYPE,
-                                                                  "application/json"),
+                            MockMvcResultMatchers.header().string(HttpHeaders.CONTENT_TYPE, "application/json"),
                             MockMvcResultMatchers.jsonPath("$.code").value("USER-406"),
                             MockMvcResultMatchers.jsonPath("$.messages").value("Unknown user_id \"" + userId + "\""),
                             MockMvcResultMatchers.jsonPath("$.document_url").value("docs.waldreg.org"))
