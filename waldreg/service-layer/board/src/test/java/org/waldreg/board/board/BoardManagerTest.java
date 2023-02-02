@@ -24,7 +24,6 @@ import org.waldreg.board.board.spi.BoardRepository;
 import org.waldreg.board.board.spi.CategoryRepository;
 import org.waldreg.board.board.spi.UserRepository;
 import org.waldreg.board.dto.BoardDto;
-import org.waldreg.board.dto.CategoryDto;
 import org.waldreg.board.dto.UserDto;
 import org.waldreg.util.token.DecryptedTokenContext;
 
@@ -90,15 +89,11 @@ public class BoardManagerTest{
         UserDto userDto = UserDto.builder()
                 .id(id)
                 .build();
-        CategoryDto categoryDto = CategoryDto.builder()
-                .id(categoryId)
-                .categoryName("categoryName")
-                .build();
 
         BoardDto boardDto = BoardDto.builder()
                 .id(1)
                 .userDto(userDto)
-                .categoryDto(categoryDto)
+                .categoryId(categoryId)
                 .title(title)
                 .content(content)
                 .build();
@@ -113,7 +108,7 @@ public class BoardManagerTest{
                 () -> Assertions.assertEquals(boardDto.getId(), result.getId()),
                 () -> Assertions.assertEquals(boardDto.getTitle(), result.getTitle()),
                 () -> Assertions.assertEquals(boardDto.getContent(), result.getContent()),
-                () -> Assertions.assertEquals(boardDto.getCategoryDto(), result.getCategoryDto()),
+                () -> Assertions.assertEquals(boardDto.getCategoryId(), result.getCategoryId()),
                 () -> Assertions.assertEquals(boardDto.getUserDto(), result.getUserDto())
         );
 
@@ -131,15 +126,11 @@ public class BoardManagerTest{
         UserDto userDto = UserDto.builder()
                 .id(id)
                 .build();
-        CategoryDto categoryDto = CategoryDto.builder()
-                .id(categoryId)
-                .categoryName("categoryName")
-                .build();
 
         BoardDto boardDto = BoardDto.builder()
                 .id(1)
                 .userDto(userDto)
-                .categoryDto(categoryDto)
+                .categoryId(categoryId)
                 .title(title)
                 .content(content)
                 .build();
@@ -171,26 +162,17 @@ public class BoardManagerTest{
         UserDto userDto2 = UserDto.builder()
                 .id(id2)
                 .build();
-        CategoryDto categoryDto1 = CategoryDto.builder()
-                .id(categoryId1)
-                .categoryName("categoryName1")
-                .build();
-        CategoryDto categoryDto2 = CategoryDto.builder()
-                .id(categoryId2)
-                .categoryName("categoryName2")
-                .build();
-
         BoardDto boardDto1 = BoardDto.builder()
                 .id(1)
                 .userDto(userDto1)
-                .categoryDto(categoryDto1)
+                .categoryId(categoryId1)
                 .title(title)
                 .content(content)
                 .build();
         BoardDto boardDto2 = BoardDto.builder()
                 .id(1)
                 .userDto(userDto2)
-                .categoryDto(categoryDto2)
+                .categoryId(categoryId2)
                 .title("title2")
                 .content("content2")
                 .build();
@@ -206,11 +188,11 @@ public class BoardManagerTest{
         Assertions.assertAll(
                 () -> Assertions.assertEquals(boardDto1.getId(), result.get(0).getId()),
                 () -> Assertions.assertEquals(boardDto1.getTitle(), result.get(0).getTitle()),
-                () -> Assertions.assertEquals(boardDto1.getCategoryDto(), result.get(0).getCategoryDto()),
+                () -> Assertions.assertEquals(boardDto1.getCategoryId(), result.get(0).getCategoryId()),
                 () -> Assertions.assertEquals(boardDto1.getContent(), result.get(0).getContent()),
                 () -> Assertions.assertEquals(boardDto2.getId(), result.get(1).getId()),
                 () -> Assertions.assertEquals(boardDto2.getTitle(), result.get(1).getTitle()),
-                () -> Assertions.assertEquals(boardDto2.getCategoryDto(), result.get(1).getCategoryDto()),
+                () -> Assertions.assertEquals(boardDto2.getCategoryId(), result.get(1).getCategoryId()),
                 () -> Assertions.assertEquals(boardDto2.getContent(), result.get(1).getContent()));
 
     }
@@ -228,6 +210,7 @@ public class BoardManagerTest{
                 () -> Assertions.assertThrows(InvalidRangeException.class, () -> boardManager.inquiryAllBoard(5, 4))
         );
     }
+
     @Test
     @DisplayName("카테고리별 전체 게시글 조회 성공")
     public void INQUIRY_ALL_BOARD_BY_CATEGORY_SUCCESS_TEST(){
@@ -243,22 +226,17 @@ public class BoardManagerTest{
                 .id(id1)
                 .build();
 
-        CategoryDto categoryDto1 = CategoryDto.builder()
-                .id(categoryId1)
-                .categoryName("categoryName1")
-                .build();
-
         BoardDto boardDto1 = BoardDto.builder()
                 .id(1)
                 .userDto(userDto1)
-                .categoryDto(categoryDto1)
+                .categoryId(categoryId1)
                 .title(title)
                 .content(content)
                 .build();
         BoardDto boardDto3 = BoardDto.builder()
                 .id(1)
                 .userDto(userDto1)
-                .categoryDto(categoryDto1)
+                .categoryId(categoryId1)
                 .title("title3")
                 .content("content3")
                 .build();
@@ -277,11 +255,11 @@ public class BoardManagerTest{
         Assertions.assertAll(
                 () -> Assertions.assertEquals(boardDto1.getId(), result.get(0).getId()),
                 () -> Assertions.assertEquals(boardDto1.getTitle(), result.get(0).getTitle()),
-                () -> Assertions.assertEquals(boardDto1.getCategoryDto(), result.get(0).getCategoryDto()),
+                () -> Assertions.assertEquals(boardDto1.getCategoryId(), result.get(0).getCategoryId()),
                 () -> Assertions.assertEquals(boardDto1.getContent(), result.get(0).getContent()),
                 () -> Assertions.assertEquals(boardDto3.getId(), result.get(1).getId()),
                 () -> Assertions.assertEquals(boardDto3.getTitle(), result.get(1).getTitle()),
-                () -> Assertions.assertEquals(boardDto3.getCategoryDto(), result.get(1).getCategoryDto()),
+                () -> Assertions.assertEquals(boardDto3.getCategoryId(), result.get(1).getCategoryId()),
                 () -> Assertions.assertEquals(boardDto3.getContent(), result.get(1).getContent()));
     }
 
@@ -330,26 +308,18 @@ public class BoardManagerTest{
         UserDto userDto2 = UserDto.builder()
                 .id(id2)
                 .build();
-        CategoryDto categoryDto1 = CategoryDto.builder()
-                .id(categoryId1)
-                .categoryName("categoryName1")
-                .build();
-        CategoryDto categoryDto2 = CategoryDto.builder()
-                .id(categoryId2)
-                .categoryName("categoryName2")
-                .build();
 
         BoardDto boardDto1 = BoardDto.builder()
                 .id(1)
                 .userDto(userDto1)
-                .categoryDto(categoryDto1)
+                .categoryId(categoryId1)
                 .title(title)
                 .content(content)
                 .build();
         BoardDto boardDto2 = BoardDto.builder()
                 .id(1)
                 .userDto(userDto2)
-                .categoryDto(categoryDto2)
+                .categoryId(categoryId2)
                 .title("title2")
                 .content("content2")
                 .build();
@@ -368,11 +338,11 @@ public class BoardManagerTest{
         Assertions.assertAll(
                 () -> Assertions.assertEquals(boardDto1.getId(), result.get(0).getId()),
                 () -> Assertions.assertEquals(boardDto1.getTitle(), result.get(0).getTitle()),
-                () -> Assertions.assertEquals(boardDto1.getCategoryDto(), result.get(0).getCategoryDto()),
+                () -> Assertions.assertEquals(boardDto1.getCategoryId(), result.get(0).getCategoryId()),
                 () -> Assertions.assertEquals(boardDto1.getContent(), result.get(0).getContent()),
                 () -> Assertions.assertEquals(boardDto2.getId(), result.get(1).getId()),
                 () -> Assertions.assertEquals(boardDto2.getTitle(), result.get(1).getTitle()),
-                () -> Assertions.assertEquals(boardDto2.getCategoryDto(), result.get(1).getCategoryDto()),
+                () -> Assertions.assertEquals(boardDto2.getCategoryId(), result.get(1).getCategoryId()),
                 () -> Assertions.assertEquals(boardDto2.getContent(), result.get(1).getContent())
         );
 
@@ -408,26 +378,18 @@ public class BoardManagerTest{
         UserDto userDto2 = UserDto.builder()
                 .id(id2)
                 .build();
-        CategoryDto categoryDto1 = CategoryDto.builder()
-                .id(categoryId1)
-                .categoryName("categoryName1")
-                .build();
-        CategoryDto categoryDto2 = CategoryDto.builder()
-                .id(categoryId2)
-                .categoryName("categoryName2")
-                .build();
 
         BoardDto boardDto1 = BoardDto.builder()
                 .id(1)
                 .userDto(userDto1)
-                .categoryDto(categoryDto1)
+                .categoryId(categoryId1)
                 .title(title)
                 .content(content)
                 .build();
         BoardDto boardDto2 = BoardDto.builder()
                 .id(1)
                 .userDto(userDto2)
-                .categoryDto(categoryDto2)
+                .categoryId(categoryId2)
                 .title("title2")
                 .content("content2")
                 .build();
@@ -445,11 +407,11 @@ public class BoardManagerTest{
         Assertions.assertAll(
                 () -> Assertions.assertEquals(boardDto1.getId(), result.get(0).getId()),
                 () -> Assertions.assertEquals(boardDto1.getTitle(), result.get(0).getTitle()),
-                () -> Assertions.assertEquals(boardDto1.getCategoryDto(), result.get(0).getCategoryDto()),
+                () -> Assertions.assertEquals(boardDto1.getCategoryId(), result.get(0).getCategoryId()),
                 () -> Assertions.assertEquals(boardDto1.getContent(), result.get(0).getContent()),
                 () -> Assertions.assertEquals(boardDto2.getId(), result.get(1).getId()),
                 () -> Assertions.assertEquals(boardDto2.getTitle(), result.get(1).getTitle()),
-                () -> Assertions.assertEquals(boardDto2.getCategoryDto(), result.get(1).getCategoryDto()),
+                () -> Assertions.assertEquals(boardDto2.getCategoryId(), result.get(1).getCategoryId()),
                 () -> Assertions.assertEquals(boardDto2.getContent(), result.get(1).getContent())
         );
 
@@ -486,26 +448,18 @@ public class BoardManagerTest{
         UserDto userDto2 = UserDto.builder()
                 .id(id2)
                 .build();
-        CategoryDto categoryDto1 = CategoryDto.builder()
-                .id(categoryId1)
-                .categoryName("categoryName1")
-                .build();
-        CategoryDto categoryDto2 = CategoryDto.builder()
-                .id(categoryId2)
-                .categoryName("categoryName2")
-                .build();
 
         BoardDto boardDto1 = BoardDto.builder()
                 .id(1)
                 .userDto(userDto1)
-                .categoryDto(categoryDto1)
+                .categoryId(categoryId1)
                 .title(title)
                 .content(content)
                 .build();
         BoardDto boardDto2 = BoardDto.builder()
                 .id(1)
                 .userDto(userDto2)
-                .categoryDto(categoryDto2)
+                .categoryId(categoryId2)
                 .title("title2")
                 .content("content2")
                 .build();
@@ -523,7 +477,7 @@ public class BoardManagerTest{
         Assertions.assertAll(
                 () -> Assertions.assertEquals(boardDto1.getId(), result.get(0).getId()),
                 () -> Assertions.assertEquals(boardDto1.getTitle(), result.get(0).getTitle()),
-                () -> Assertions.assertEquals(boardDto1.getCategoryDto(), result.get(0).getCategoryDto()),
+                () -> Assertions.assertEquals(boardDto1.getCategoryId(), result.get(0).getCategoryId()),
                 () -> Assertions.assertEquals(boardDto1.getContent(), result.get(0).getContent()),
                 () -> Assertions.assertEquals(boardDto1.getUserDto().getUserId(), result.get(0).getUserDto().getUserId())
 
@@ -556,14 +510,10 @@ public class BoardManagerTest{
         UserDto userDto1 = UserDto.builder()
                 .id(id)
                 .build();
-        CategoryDto categoryDto1 = CategoryDto.builder()
-                .id(categoryId)
-                .categoryName("categoryName1")
-                .build();
         BoardDto boardDto = BoardDto.builder()
                 .id(1)
                 .userDto(userDto1)
-                .categoryDto(categoryDto1)
+                .categoryId(categoryId)
                 .title(title)
                 .content(content)
                 .build();
@@ -575,7 +525,7 @@ public class BoardManagerTest{
                 .userDto(boardDto.getUserDto())
                 .title(modifyTitle)
                 .content(modifyContent)
-                .categoryDto(boardDto.getCategoryDto())
+                .categoryId(boardDto.getCategoryId())
                 .build();
 
         Mockito.when(userRepository.isExistUser(Mockito.anyInt())).thenReturn(true);
@@ -588,7 +538,7 @@ public class BoardManagerTest{
         Assertions.assertAll(
                 () -> Assertions.assertEquals(boardDto.getId(), result.getId()),
                 () -> Assertions.assertEquals(boardDto.getUserDto(), result.getUserDto()),
-                () -> Assertions.assertEquals(boardDto.getCategoryDto(), result.getCategoryDto()),
+                () -> Assertions.assertEquals(boardDto.getCategoryId(), result.getCategoryId()),
                 () -> Assertions.assertNotEquals(boardDto.getTitle(), result.getTitle()),
                 () -> Assertions.assertNotEquals(boardDto.getContent(), result.getContent())
         );
@@ -609,14 +559,11 @@ public class BoardManagerTest{
         UserDto userDto1 = UserDto.builder()
                 .id(id)
                 .build();
-        CategoryDto categoryDto1 = CategoryDto.builder()
-                .id(categoryId)
-                .categoryName("categoryName1")
-                .build();
+
         BoardDto boardDto = BoardDto.builder()
                 .id(1)
                 .userDto(userDto1)
-                .categoryDto(categoryDto1)
+                .categoryId(categoryId)
                 .title(title)
                 .content(content)
                 .build();
@@ -629,7 +576,7 @@ public class BoardManagerTest{
                 .userDto(boardDto.getUserDto())
                 .title(modifyTitle)
                 .content(modifyContent)
-                .categoryDto(boardDto.getCategoryDto())
+                .categoryId(boardDto.getCategoryId())
                 .build();
 
         Mockito.when(categoryRepository.isExistCategory(Mockito.anyInt())).thenReturn(true);
@@ -641,7 +588,7 @@ public class BoardManagerTest{
         Assertions.assertAll(
                 () -> Assertions.assertEquals(boardDto.getId(), result.getId()),
                 () -> Assertions.assertEquals(boardDto.getUserDto(), result.getUserDto()),
-                () -> Assertions.assertEquals(boardDto.getCategoryDto(), result.getCategoryDto()),
+                () -> Assertions.assertEquals(boardDto.getCategoryId(), result.getCategoryId()),
                 () -> Assertions.assertNotEquals(boardDto.getTitle(), result.getTitle()),
                 () -> Assertions.assertNotEquals(boardDto.getContent(), result.getContent())
         );
@@ -667,7 +614,7 @@ public class BoardManagerTest{
         //when
         Mockito.when(boardRepository.isExistBoard(Mockito.anyInt())).thenReturn(false);
         //then
-        Assertions.assertThrows(BoardDoesNotExistException.class,() -> boardManager.deleteBoard(boardId));
+        Assertions.assertThrows(BoardDoesNotExistException.class, () -> boardManager.deleteBoard(boardId));
     }
 
 }

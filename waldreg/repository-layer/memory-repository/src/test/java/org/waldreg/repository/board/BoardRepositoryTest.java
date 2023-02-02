@@ -1,6 +1,5 @@
 package org.waldreg.repository.board;
 
-import java.util.ArrayList;
 import java.util.List;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Assertions;
@@ -50,7 +49,7 @@ public class BoardRepositoryTest{
 
     @BeforeEach
     @AfterEach
-    private void DELETE_ALL_CHARACTER() { memoryCharacterStorage.deleteAllCharacter();}
+    private void DELETE_ALL_CHARACTER(){memoryCharacterStorage.deleteAllCharacter();}
 
     @BeforeEach
     @AfterEach
@@ -95,7 +94,7 @@ public class BoardRepositoryTest{
                 .title(title)
                 .userDto(userDto)
                 .content(content)
-                .categoryDto(categoryDto)
+                .categoryId(categoryDto.getId())
                 .build();
 
         //when
@@ -107,9 +106,9 @@ public class BoardRepositoryTest{
                 () -> Assertions.assertEquals(boardRequest.getContent(), result.getContent()),
                 () -> Assertions.assertEquals(boardRequest.getUserDto().getUserId(), result.getUserDto().getUserId()),
                 () -> Assertions.assertEquals(boardRequest.getUserDto().getName(), result.getUserDto().getName()),
-                () -> Assertions.assertEquals(boardRequest.getCategoryDto().getCategoryName(), result.getCategoryDto().getCategoryName()),
                 () -> Assertions.assertSame(result.getCreatedAt(), result.getLastModifiedAt()),
-                () -> Assertions.assertEquals(0, result.getViews())
+                () -> Assertions.assertEquals(0, result.getViews()),
+                () -> Assertions.assertEquals(boardRequest.getCategoryId(), result.getCategoryId())
         );
     }
 
@@ -146,7 +145,7 @@ public class BoardRepositoryTest{
                 .title(title)
                 .userDto(userDto)
                 .content(content)
-                .categoryDto(categoryDto)
+                .categoryId(categoryDto.getId())
                 .build();
 
         //when
@@ -155,16 +154,16 @@ public class BoardRepositoryTest{
 
         //then
         Assertions.assertAll(
-                () -> Assertions.assertEquals(boardRequest.getTitle(), result.getTitle()),
-                () -> Assertions.assertEquals(boardRequest.getContent(), result.getContent()),
-                () -> Assertions.assertEquals(boardRequest.getUserDto().getUserId(), result.getUserDto().getUserId()),
-                () -> Assertions.assertEquals(boardRequest.getUserDto().getName(), result.getUserDto().getName()),
-                () -> Assertions.assertEquals(boardRequest.getCategoryDto().getCategoryName(), result.getCategoryDto().getCategoryName()),
-                () -> Assertions.assertEquals(boardRequest.getCreatedAt(), result.getCreatedAt()),
-                () -> Assertions.assertEquals(boardRequest.getLastModifiedAt(), result.getLastModifiedAt()),
-                () -> Assertions.assertEquals(boardRequest.getCommentList(), result.getCommentList()),
-                () -> Assertions.assertEquals(boardRequest.getReactions().getReactionMap(), result.getReactions().getReactionMap()),
-                () -> Assertions.assertEquals(boardRequest.getViews(), result.getViews())
+                () -> Assertions.assertEquals(boardDto.getTitle(), result.getTitle()),
+                () -> Assertions.assertEquals(boardDto.getContent(), result.getContent()),
+                () -> Assertions.assertEquals(boardDto.getUserDto().getUserId(), result.getUserDto().getUserId()),
+                () -> Assertions.assertEquals(boardDto.getUserDto().getName(), result.getUserDto().getName()),
+                () -> Assertions.assertEquals(boardDto.getCategoryId(), result.getCategoryId()),
+                () -> Assertions.assertEquals(boardDto.getCreatedAt(), result.getCreatedAt()),
+                () -> Assertions.assertEquals(boardDto.getLastModifiedAt(), result.getLastModifiedAt()),
+                () -> Assertions.assertEquals(boardDto.getCommentList(), result.getCommentList()),
+                () -> Assertions.assertEquals(boardDto.getReactions().getReactionMap(), result.getReactions().getReactionMap()),
+                () -> Assertions.assertEquals(boardDto.getViews(), result.getViews())
         );
 
     }

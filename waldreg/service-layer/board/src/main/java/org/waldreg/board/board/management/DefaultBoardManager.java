@@ -54,12 +54,11 @@ public class DefaultBoardManager implements BoardManager{
     }
 
     private BoardDto buildBoardDto(BoardRequest request){
-        CategoryDto categoryDto = categoryRepository.inquiryCategory(request.getCategoryId());
         UserDto userDto = userRepository.getUserInfo(request.getAuthorId());
         return BoardDto.builder()
                 .title(request.getTitle())
                 .content(request.getContent())
-                .categoryDto(categoryDto)
+                .categoryId(request.getCategoryId())
                 .userDto(userDto)
                 .build();
     }
@@ -146,7 +145,7 @@ public class DefaultBoardManager implements BoardManager{
     @Override
     public BoardDto modifyBoard(BoardDto boardDto){
         throwIfBoardDoesNotExist(boardDto.getId());
-        throwIfCategoryDoesNotExist(boardDto.getCategoryDto().getId());
+        throwIfCategoryDoesNotExist(boardDto.getCategoryId());
         return boardRepository.modifyBoard(boardDto);
     }
 

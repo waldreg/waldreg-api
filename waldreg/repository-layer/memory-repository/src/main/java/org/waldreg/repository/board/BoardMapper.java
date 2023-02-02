@@ -15,8 +15,6 @@ import org.waldreg.domain.board.Board;
 import org.waldreg.domain.board.comment.Comment;
 import org.waldreg.domain.board.reaction.ReactionType;
 import org.waldreg.domain.category.Category;
-import org.waldreg.domain.character.Character;
-import org.waldreg.domain.character.Permission;
 import org.waldreg.domain.user.User;
 
 @Service
@@ -26,7 +24,7 @@ public class BoardMapper{
         return Board.builder()
                 .title(boardDto.getTitle())
                 .content(boardDto.getContent())
-                .category(categoryDtoToCategoryDomain(boardDto.getCategoryDto()))
+                .categoryId(boardDto.getCategoryId())
                 .build();
     }
 
@@ -40,7 +38,7 @@ public class BoardMapper{
         return BoardDto.builder()
                 .id(board.getId())
                 .title(board.getTitle())
-                .categoryDto(categoryDomainToCategoryDto(board.getCategory()))
+                .categoryId(board.getCategoryId())
                 .content(board.getContent())
                 .userDto(userDomainToUserDto(board.getUser()))
                 .createdAt(board.getCreatedAt())

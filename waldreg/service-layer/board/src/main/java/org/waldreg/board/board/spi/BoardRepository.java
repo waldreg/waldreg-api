@@ -17,7 +17,7 @@ public interface BoardRepository{
 
     List<BoardDto> inquiryAllBoardByCategory(String userTier, int categoryId, int from, int to);
 
-    int getBoardMaxIdxByCategory(String userTier,int categoryId);
+    int getBoardMaxIdxByCategory(String userTier, int categoryId);
 
     BoardDto modifyBoard(BoardDto boardDto);
 
