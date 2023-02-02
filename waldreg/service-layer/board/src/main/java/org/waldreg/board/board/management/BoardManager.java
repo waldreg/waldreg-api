@@ -22,6 +22,8 @@ public interface BoardManager{
 
     BoardDto modifyBoard(BoardDto boardDto);
 
+    void deleteBoard(int boardId);
+
 
     final class BoardRequest{
 

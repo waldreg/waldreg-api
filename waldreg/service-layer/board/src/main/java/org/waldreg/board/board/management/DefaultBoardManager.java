@@ -150,4 +150,10 @@ public class DefaultBoardManager implements BoardManager{
         return boardRepository.modifyBoard(boardDto);
     }
 
+    @Override
+    public void deleteBoard(int boardId){
+        throwIfBoardDoesNotExist(boardId);
+        boardRepository.deleteBoard(boardId);
+    }
+
 }

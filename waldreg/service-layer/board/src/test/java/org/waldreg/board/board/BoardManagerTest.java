@@ -9,11 +9,9 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.core.annotation.AliasFor;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.waldreg.board.board.exception.BoardDoesNotExistException;
@@ -30,7 +28,6 @@ import org.waldreg.board.dto.CategoryDto;
 import org.waldreg.board.dto.MemberTier;
 import org.waldreg.board.dto.UserDto;
 import org.waldreg.util.token.DecryptedTokenContext;
-import org.waldreg.util.token.DecryptedTokenContextHolder;
 
 @ExtendWith(SpringExtension.class)
 @ContextConfiguration(classes = {DefaultBoardManager.class, DecryptedTokenContext.class})
@@ -38,7 +35,6 @@ public class BoardManagerTest{
 
     @Autowired
     private BoardManager boardManager;
-
     @Autowired
     private DecryptedTokenContext decryptedTokenContext;
     @MockBean
@@ -632,7 +628,7 @@ public class BoardManagerTest{
 
 
     @Test
-    @DisplayName("게시글 수정 실패")
+    @DisplayName("게시글 수정 실패 - 카테고리가 없을 때")
     public void MODIFY_BOARD_Fail_CATEGORY_NOT_EXIST_TEST(){
         //given
         String title = "title";
@@ -685,6 +681,28 @@ public class BoardManagerTest{
                 () -> Assertions.assertNotEquals(boardDto.getContent(), result.getContent())
         );
 
+    }
+
+    @Test
+    @DisplayName("게시글 삭제 성공")
+    public void DELETE_BOARD_SUCCESS_TEST(){
+        //given
+        int boardId = 1;
+        //when
+        Mockito.when(boardRepository.isExistBoard(Mockito.anyInt())).thenReturn(true);
+        //then
+        Assertions.assertDoesNotThrow(() -> boardManager.deleteBoard(boardId));
+    }
+
+    @Test
+    @DisplayName("게시글 삭제 실패 - 없는 게시글")
+    public void DELETE_BOARD_FAIL_TEST(){
+        //given
+        int boardId = 1;
+        //when
+        Mockito.when(boardRepository.isExistBoard(Mockito.anyInt())).thenReturn(false);
+        //then
+        Assertions.assertThrows(BoardDoesNotExistException.class,() -> boardManager.deleteBoard(boardId));
     }
 
 }
