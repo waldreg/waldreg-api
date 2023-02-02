@@ -20,6 +20,10 @@ public class CommentDto{
         this.content = builder.content;
     }
 
+    public static Builder builder(){
+        return new Builder();
+    }
+
     public int getId(){
         return id;
     }
@@ -62,6 +66,11 @@ public class CommentDto{
 
         public Builder userDto(UserDto userDto){
             this.userDto = userDto;
+            return this;
+        }
+
+        public Builder createdAt(LocalDateTime createdAt){
+            this.createdAt = createdAt;
             return this;
         }
 

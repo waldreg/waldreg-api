@@ -21,6 +21,10 @@ public final class Reaction{
         return reactionMap;
     }
 
+    public static Builder builder(){
+        return new Builder();
+    }
+
     public final static class Builder{
 
         private Map<ReactionType, List<User>> reactionMap;

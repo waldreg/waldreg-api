@@ -1,6 +1,6 @@
 package org.waldreg.board.dto;
 
-public enum MemberTier{
+public enum BoardServiceMemberTier{
 
     TIER_1,
     TIER_2,
