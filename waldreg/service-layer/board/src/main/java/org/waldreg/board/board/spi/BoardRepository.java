@@ -9,6 +9,8 @@ public interface BoardRepository{
 
     BoardDto inquiryBoardById(int boardId);
 
+    Boolean isExistBoard(int id);
+
     int getBoardMaxIndex();
 
     List<BoardDto> inquiryAllBoard(int from, int to);
