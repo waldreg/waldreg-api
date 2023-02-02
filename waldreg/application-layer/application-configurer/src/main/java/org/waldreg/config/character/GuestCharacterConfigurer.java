@@ -52,6 +52,7 @@ public class GuestCharacterConfigurer{
         List<PermissionDto> permissionDtoList = new ArrayList<>();
         for(PermissionUnit permissionUnit : permissionUnitList){
             PermissionDto permissionDto = PermissionDto.builder()
+                    .id(permissionUnit.getId())
                     .name(permissionUnit.getName())
                     .status(getFailStatusOfPermissionUnit(permissionUnit))
                     .build();

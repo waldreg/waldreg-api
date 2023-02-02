@@ -4,6 +4,8 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 
 public final class SpecifyStatusPermissionResponse{
 
+    @JsonProperty("permission_id")
+    private final int id;
     @JsonProperty("permission_name")
     private final String name;
     @JsonProperty("permission_status")
@@ -14,12 +16,17 @@ public final class SpecifyStatusPermissionResponse{
     }
 
     private SpecifyStatusPermissionResponse(Builder builder){
+        this.id = builder.id;
         this.name = builder.name;
         this.status = builder.status;
     }
 
     public static Builder builder(){
         return new Builder();
+    }
+
+    public int getId(){
+        return id;
     }
 
     public String getName(){
@@ -32,10 +39,16 @@ public final class SpecifyStatusPermissionResponse{
 
     public static final class Builder{
 
+        private int id;
         private String name;
         private String status;
 
         private Builder(){}
+
+        public Builder id(int id){
+            this.id = id;
+            return this;
+        }
 
         public Builder name(String name){
             this.name = name;

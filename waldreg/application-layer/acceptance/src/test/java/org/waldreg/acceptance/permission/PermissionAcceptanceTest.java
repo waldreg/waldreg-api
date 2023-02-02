@@ -1,8 +1,10 @@
 package org.waldreg.acceptance.permission;
 
+import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -21,6 +23,7 @@ import org.waldreg.acceptance.user.UserAcceptanceTestHelper;
 import org.waldreg.auth.request.AuthTokenRequest;
 import org.waldreg.controller.character.request.CharacterRequest;
 import org.waldreg.controller.character.request.PermissionRequest;
+import org.waldreg.controller.character.response.PermissionResponse;
 import org.waldreg.controller.user.request.UserRequest;
 import org.waldreg.controller.user.response.UserResponse;
 
@@ -56,6 +59,9 @@ public class PermissionAcceptanceTest{
                                     .string(HttpHeaders.CONTENT_TYPE, "application/json"),
                             MockMvcResultMatchers
                                     .header().string("Api-version", apiVersion),
+                            MockMvcResultMatchers
+                                    .jsonPath("$.code")
+                                    .value("CHARACTER-420"),
                             MockMvcResultMatchers
                                     .jsonPath("$.messages")
                                     .value("Can not find character named \"" + characterName + "\""),
@@ -95,6 +101,7 @@ public class PermissionAcceptanceTest{
     @DisplayName("새로운 역할 추가 성공 인수 테스트")
     public void CREATE_NEW_CHARACTER_SUCCESS_ACCEPTANCE_TEST() throws Exception{
         // given
+        List<PermissionResponse> permissionResponseList = getPermissionResponseList();
         String token = AuthenticationAcceptanceTestHelper.getAdminToken(mvc, objectMapper);
         String characterName = "new character";
         CharacterRequest request = CharacterRequest.builder()
@@ -102,12 +109,14 @@ public class PermissionAcceptanceTest{
                 .permissionList(
                         List.of(
                                 PermissionRequest.builder()
-                                        .name("Character manager")
-                                        .status("true")
+                                        .id(permissionResponseList.get(0).getId())
+                                        .name(permissionResponseList.get(0).getName())
+                                        .status(permissionResponseList.get(0).getStatusList().get(0))
                                         .build(),
                                 PermissionRequest.builder()
-                                        .name("Fire other user permission")
-                                        .status("false")
+                                        .id(permissionResponseList.get(1).getId())
+                                        .name(permissionResponseList.get(1).getName())
+                                        .status(permissionResponseList.get(1).getStatusList().get(0))
                                         .build()
                         )
                 ).build();
@@ -128,6 +137,7 @@ public class PermissionAcceptanceTest{
     @DisplayName("새로운 역할 추가 실패 인수 테스트 - 최고 관리자가 아닐때")
     public void CREATE_NEW_CHARACTER_FAIL_CAUSE_NOT_ADMIN_ACCEPTANCE_TEST() throws Exception{
         // given
+        List<PermissionResponse> permissionResponseList = getPermissionResponseList();
         String token = createUserAndGetToken("hong gil dong", "hello world", "abc1234!!!");
         String characterName = "something new character";
         CharacterRequest request = CharacterRequest.builder()
@@ -135,8 +145,9 @@ public class PermissionAcceptanceTest{
                 .permissionList(
                         List.of(
                                 PermissionRequest.builder()
-                                        .name("Character manager")
-                                        .status("true")
+                                        .id(permissionResponseList.get(0).getId())
+                                        .name(permissionResponseList.get(0).getName())
+                                        .status(permissionResponseList.get(0).getStatusList().get(0))
                                         .build()
                         )
                 ).build();
@@ -152,6 +163,7 @@ public class PermissionAcceptanceTest{
                 MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON),
                 MockMvcResultMatchers.header().string(HttpHeaders.CONTENT_TYPE, "application/json"),
                 MockMvcResultMatchers.header().string("Api-version", apiVersion),
+                MockMvcResultMatchers.jsonPath("$.code").value("CHARACTER-403"),
                 MockMvcResultMatchers.jsonPath("$.messages").value("No permission"),
                 MockMvcResultMatchers.jsonPath("$.document_url").value("docs.waldreg.org")
         );
@@ -162,6 +174,7 @@ public class PermissionAcceptanceTest{
     public void CREATE_NEW_CHARACTER_FAIL_INVALID_PERMISSION_NAME_ACCEPTANCE_TEST()
             throws Exception{
         // given
+        List<PermissionResponse> permissionResponseList = getPermissionResponseList();
         String token = AuthenticationAcceptanceTestHelper.getAdminToken(mvc, objectMapper);
         String characterName = "New manager";
         CharacterRequest request = CharacterRequest.builder()
@@ -169,12 +182,14 @@ public class PermissionAcceptanceTest{
                 .permissionList(
                         List.of(
                                 PermissionRequest.builder()
-                                        .name("Character manager")
-                                        .status("true")
+                                        .id(permissionResponseList.get(0).getId())
+                                        .name(permissionResponseList.get(0).getName() + "!?")
+                                        .status(getPermissionResponseList().get(0).getStatusList().get(0))
                                         .build(),
                                 PermissionRequest.builder()
-                                        .name("invalid_permission_name")
-                                        .status("false")
+                                        .id(permissionResponseList.get(1).getId())
+                                        .name(permissionResponseList.get(1).getName())
+                                        .status(getPermissionResponseList().get(1).getStatusList().get(0))
                                         .build()
                         )
                 ).build();
@@ -190,7 +205,8 @@ public class PermissionAcceptanceTest{
                 MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON),
                 MockMvcResultMatchers.header().string(HttpHeaders.CONTENT_TYPE, "application/json"),
                 MockMvcResultMatchers.header().string("Api-version", apiVersion),
-                MockMvcResultMatchers.jsonPath("$.messages").value("Unknown permission name \"invalid_permission_name\""),
+                MockMvcResultMatchers.jsonPath("$.code").value("CHARACTER-410"),
+                MockMvcResultMatchers.jsonPath("$.messages").value("Unknown permission name \"" + permissionResponseList.get(0).getName() + "!?" + "\""),
                 MockMvcResultMatchers.jsonPath("$.document_url").value("docs.waldreg.org")
         );
     }
@@ -200,6 +216,7 @@ public class PermissionAcceptanceTest{
     public void CREATE_NEW_CHARACTER_FAIL_INVALID_PERMISSION_STATUS_ACCEPTANCE_TEST()
             throws Exception{
         // given
+        List<PermissionResponse> permissionResponseList = getPermissionResponseList();
         String token = AuthenticationAcceptanceTestHelper.getAdminToken(mvc, objectMapper);
         String characterName = "new Character";
         CharacterRequest request = CharacterRequest.builder()
@@ -207,12 +224,14 @@ public class PermissionAcceptanceTest{
                 .permissionList(
                         List.of(
                                 PermissionRequest.builder()
-                                        .name("Character manager")
-                                        .status("invalid_status")
+                                        .id(permissionResponseList.get(0).getId())
+                                        .name(permissionResponseList.get(0).getName())
+                                        .status(getPermissionResponseList().get(0).getStatusList().get(0))
                                         .build(),
                                 PermissionRequest.builder()
-                                        .name("Character manager")
-                                        .status("false")
+                                        .id(permissionResponseList.get(1).getId())
+                                        .name(permissionResponseList.get(1).getName())
+                                        .status("Go lang")
                                         .build()
                         )
                 ).build();
@@ -228,7 +247,9 @@ public class PermissionAcceptanceTest{
                 MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON),
                 MockMvcResultMatchers.header().string(HttpHeaders.CONTENT_TYPE, "application/json"),
                 MockMvcResultMatchers.header().string("Api-version", apiVersion),
-                MockMvcResultMatchers.jsonPath("$.messages").value("Unknown permission \"Character manager\" status \"invalid_status\""),
+                MockMvcResultMatchers.jsonPath("$.code").value("CHARACTER-411"),
+                MockMvcResultMatchers.jsonPath("$.messages").value("Unknown permission id \"" + permissionResponseList.get(1).getId()
+                        + "\" name \"" + permissionResponseList.get(1).getName() + "\" status \"Go lang\""),
                 MockMvcResultMatchers.jsonPath("$.document_url").value("docs.waldreg.org")
         );
     }
@@ -261,6 +282,7 @@ public class PermissionAcceptanceTest{
                 MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON),
                 MockMvcResultMatchers.header().string(HttpHeaders.CONTENT_TYPE, "application/json"),
                 MockMvcResultMatchers.header().string("Api-version", apiVersion),
+                MockMvcResultMatchers.jsonPath("$.code").value("CHARACTER-412"),
                 MockMvcResultMatchers.jsonPath("$.messages").value("Duplicated character name detected \"duplicate\""),
                 MockMvcResultMatchers.jsonPath("$.document_url").value("docs.waldreg.org")
         );
@@ -289,9 +311,12 @@ public class PermissionAcceptanceTest{
                 MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON),
                 MockMvcResultMatchers.header().string(HttpHeaders.CONTENT_TYPE, "application/json"),
                 MockMvcResultMatchers.header().string("Api-version", apiVersion),
-                MockMvcResultMatchers.jsonPath("$.character_name.[0]").value("mock acceptance"),
-                MockMvcResultMatchers.jsonPath("$.character_name.[1]").value("Guest"),
-                MockMvcResultMatchers.jsonPath("$.character_name.[2]").value("Admin")
+                MockMvcResultMatchers.jsonPath("$.characters.[0].id").isNumber(),
+                MockMvcResultMatchers.jsonPath("$.characters.[0].character_name").value("mock acceptance"),
+                MockMvcResultMatchers.jsonPath("$.characters.[1].id").isNumber(),
+                MockMvcResultMatchers.jsonPath("$.characters.[1].character_name").value("Guest"),
+                MockMvcResultMatchers.jsonPath("$.characters.[2].id").isNumber(),
+                MockMvcResultMatchers.jsonPath("$.characters.[2].character_name").value("Admin")
         );
     }
 
@@ -300,7 +325,6 @@ public class PermissionAcceptanceTest{
     public void INQUIRY_CHARACTER_LIST_FAIL_NOT_ADMIN_ACCEPTANCE_TEST() throws Exception{
         // given
         String token = createUserAndGetToken("helloow", "hello world", "1234abcd!");
-        String url = "/character";
 
         // when
         ResultActions result = PermissionAcceptanceTestHelper.inquiryCharacterList(mvc, token);
@@ -311,6 +335,7 @@ public class PermissionAcceptanceTest{
                 MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON),
                 MockMvcResultMatchers.header().string(HttpHeaders.CONTENT_TYPE, "application/json"),
                 MockMvcResultMatchers.header().string("Api-version", apiVersion),
+                MockMvcResultMatchers.jsonPath("$.code").value("CHARACTER-403"),
                 MockMvcResultMatchers.jsonPath("$.messages").value("No permission"),
                 MockMvcResultMatchers.jsonPath("$.document_url").value("docs.waldreg.org")
         );
@@ -322,16 +347,9 @@ public class PermissionAcceptanceTest{
         // given
         String token = AuthenticationAcceptanceTestHelper.getAdminToken(mvc, objectMapper);
         String characterName = "something new";
-        String permissionName = "Character manager";
-        String permissionStatus = "true";
         CharacterRequest request = CharacterRequest.builder()
                 .characterName(characterName)
-                .permissionList(List.of(
-                        PermissionRequest.builder()
-                                .name(permissionName)
-                                .status(permissionStatus)
-                                .build()
-                ))
+                .permissionList(List.of())
                 .build();
 
         // when
@@ -346,7 +364,11 @@ public class PermissionAcceptanceTest{
                 MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON),
                 MockMvcResultMatchers.header().string(HttpHeaders.CONTENT_TYPE, "application/json"),
                 MockMvcResultMatchers.header().string("Api-version", apiVersion),
-                MockMvcResultMatchers.jsonPath("$.character_name").value(characterName)
+                MockMvcResultMatchers.jsonPath("$.id").isNumber(),
+                MockMvcResultMatchers.jsonPath("$.character_name").value(characterName),
+                MockMvcResultMatchers.jsonPath("$.permissions.[0].permission_id").isNumber(),
+                MockMvcResultMatchers.jsonPath("$.permissions.[0].permission_name").isString(),
+                MockMvcResultMatchers.jsonPath("$.permissions.[0].permission_status").isString()
         );
     }
 
@@ -367,6 +389,7 @@ public class PermissionAcceptanceTest{
                 MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON),
                 MockMvcResultMatchers.header().string(HttpHeaders.CONTENT_TYPE, "application/json"),
                 MockMvcResultMatchers.header().string("api-version", apiVersion),
+                MockMvcResultMatchers.jsonPath("$.code").value("CHARACTER-403"),
                 MockMvcResultMatchers.jsonPath("$.messages").value("No permission"),
                 MockMvcResultMatchers.jsonPath("$.document_url").value("docs.waldreg.org")
         );
@@ -390,6 +413,7 @@ public class PermissionAcceptanceTest{
                 MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON),
                 MockMvcResultMatchers.header().string(HttpHeaders.CONTENT_TYPE, "application/json"),
                 MockMvcResultMatchers.header().string("api-version", apiVersion),
+                MockMvcResultMatchers.jsonPath("$.code").value("CHARACTER-420"),
                 MockMvcResultMatchers.jsonPath("$.messages").value("Can not find character named \"unknown_character_name\""),
                 MockMvcResultMatchers.jsonPath("$.document_url").value("docs.waldreg.org")
         );
@@ -399,6 +423,7 @@ public class PermissionAcceptanceTest{
     @DisplayName("특정 역할 수정 성공 인수테스트")
     public void MODIFY_CHARACTER_BY_NAME_SUCCESS_ACCEPTANCE_TEST() throws Exception{
         // given
+        List<PermissionResponse> permissionResponseList = getPermissionResponseList();
         String token = AuthenticationAcceptanceTestHelper.getAdminToken(mvc, objectMapper);
         String characterName = "mock_character_name";
         String permissionName = "Character manager";
@@ -407,8 +432,9 @@ public class PermissionAcceptanceTest{
                 .characterName(characterName)
                 .permissionList(List.of(
                         PermissionRequest.builder()
-                                .name(permissionName)
-                                .status(permissionStatus)
+                                .id(permissionResponseList.get(0).getId())
+                                .name(permissionResponseList.get(0).getName())
+                                .status(permissionResponseList.get(0).getStatusList().get(0))
                                 .build()
                 )).build();
 
@@ -416,8 +442,9 @@ public class PermissionAcceptanceTest{
                 .characterName("modified name")
                 .permissionList(List.of(
                         PermissionRequest.builder()
-                                .name(permissionName)
-                                .status("false")
+                                .id(permissionResponseList.get(0).getId())
+                                .name(permissionResponseList.get(0).getName())
+                                .status(permissionResponseList.get(0).getStatusList().get(1))
                                 .build()
                 )).build();
 
@@ -455,6 +482,7 @@ public class PermissionAcceptanceTest{
                 MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON),
                 MockMvcResultMatchers.header().string(HttpHeaders.CONTENT_TYPE, "application/json"),
                 MockMvcResultMatchers.header().string("api-version", apiVersion),
+                MockMvcResultMatchers.jsonPath("$.code").value("CHARACTER-403"),
                 MockMvcResultMatchers.jsonPath("$.messages").value("No permission"),
                 MockMvcResultMatchers.jsonPath("$.document_url").value("docs.waldreg.org")
         );
@@ -495,6 +523,7 @@ public class PermissionAcceptanceTest{
                 MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON),
                 MockMvcResultMatchers.header().string(HttpHeaders.CONTENT_TYPE, "application/json"),
                 MockMvcResultMatchers.header().string("api-version", apiVersion),
+                MockMvcResultMatchers.jsonPath("$.code").value("CHARACTER-412"),
                 MockMvcResultMatchers.jsonPath("$.messages").value("Duplicated character name detected \"duplicated_character\""),
                 MockMvcResultMatchers.jsonPath("$.document_url").value("docs.waldreg.org")
         );
@@ -520,6 +549,7 @@ public class PermissionAcceptanceTest{
                 MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON),
                 MockMvcResultMatchers.header().string(HttpHeaders.CONTENT_TYPE, "application/json"),
                 MockMvcResultMatchers.header().string("api-version", apiVersion),
+                MockMvcResultMatchers.jsonPath("$.code").value("CHARACTER-420"),
                 MockMvcResultMatchers.jsonPath("$.messages").value("Can not find character named \"hello world character name\""),
                 MockMvcResultMatchers.jsonPath("$.document_url").value("docs.waldreg.org")
         );
@@ -530,6 +560,7 @@ public class PermissionAcceptanceTest{
     public void MODIFY_CHARACTER_BY_NAME_FAIL_INVALID_PERMISSION_NAME_ACCEPTANCE_TEST()
             throws Exception{
         // given
+        List<PermissionResponse> permissionResponseList = getPermissionResponseList();
         String token = AuthenticationAcceptanceTestHelper.getAdminToken(mvc, objectMapper);
         String characterName = "mock_character_name";
         String permissionName = "Character manager";
@@ -538,6 +569,7 @@ public class PermissionAcceptanceTest{
                 .characterName(characterName)
                 .permissionList(List.of(
                         PermissionRequest.builder()
+                                .id(permissionResponseList.get(0).getId())
                                 .name(permissionName)
                                 .status(permissionStatus)
                                 .build()
@@ -546,6 +578,7 @@ public class PermissionAcceptanceTest{
                 .characterName(characterName)
                 .permissionList(List.of(
                         PermissionRequest.builder()
+                                .id(permissionResponseList.get(0).getId())
                                 .name("invalid_permission_name")
                                 .status(permissionStatus)
                                 .build()
@@ -575,6 +608,7 @@ public class PermissionAcceptanceTest{
     public void MODIFY_CHARACTER_BY_NAME_FAIL_INVALID_PERMISSION_STATUS_ACCEPTANCE_TEST()
             throws Exception{
         // given
+        List<PermissionResponse> permissionResponseList = getPermissionResponseList();
         String token = AuthenticationAcceptanceTestHelper.getAdminToken(mvc, objectMapper);
         String characterName = "mock_character_name";
         String permissionName = "Character manager";
@@ -583,15 +617,17 @@ public class PermissionAcceptanceTest{
                 .characterName(characterName)
                 .permissionList(List.of(
                         PermissionRequest.builder()
-                                .name(permissionName)
-                                .status(permissionStatus)
+                                .id(permissionResponseList.get(0).getId())
+                                .name(permissionResponseList.get(0).getName())
+                                .status(permissionResponseList.get(0).getStatusList().get(0))
                                 .build()
                 )).build();
         CharacterRequest changeRequest = CharacterRequest.builder()
                 .characterName(characterName)
                 .permissionList(List.of(
                         PermissionRequest.builder()
-                                .name(permissionName)
+                                .id(permissionResponseList.get(0).getId())
+                                .name(permissionResponseList.get(0).getName())
                                 .status("wrong_status")
                                 .build()
                 )).build();
@@ -610,7 +646,9 @@ public class PermissionAcceptanceTest{
                 MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON),
                 MockMvcResultMatchers.header().string(HttpHeaders.CONTENT_TYPE, "application/json"),
                 MockMvcResultMatchers.header().string("api-version", apiVersion),
-                MockMvcResultMatchers.jsonPath("$.messages").value("Unknown permission \"Character manager\" status \"wrong_status\""),
+                MockMvcResultMatchers.jsonPath("$.code").value("CHARACTER-411"),
+                MockMvcResultMatchers.jsonPath("$.messages").value("Unknown permission id \"" + permissionResponseList.get(0).getId()
+                        + "\" name \"" + permissionResponseList.get(0).getName() + "\" status \"wrong_status\""),
                 MockMvcResultMatchers.jsonPath("$.document_url").value("docs.waldreg.org")
         );
     }
@@ -630,7 +668,11 @@ public class PermissionAcceptanceTest{
                 MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON),
                 MockMvcResultMatchers.header().string(HttpHeaders.CONTENT_TYPE, "application/json"),
                 MockMvcResultMatchers.header().string("Api-version", apiVersion),
-                MockMvcResultMatchers.jsonPath("$.permissions").isArray()
+                MockMvcResultMatchers.jsonPath("$.permissions").isArray(),
+                MockMvcResultMatchers.jsonPath("$.permissions.[0].permission_id").isNumber(),
+                MockMvcResultMatchers.jsonPath("$.permissions.[0].permission_name").isString(),
+                MockMvcResultMatchers.jsonPath("$.permissions.[0].permission_info").isString(),
+                MockMvcResultMatchers.jsonPath("$.permissions.[0].permission_status").isArray()
         ).andDo(MockMvcResultHandlers.print());
     }
 
@@ -650,6 +692,7 @@ public class PermissionAcceptanceTest{
                 MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON),
                 MockMvcResultMatchers.header().string(HttpHeaders.CONTENT_TYPE, "application/json"),
                 MockMvcResultMatchers.header().string("api-version", apiVersion),
+                MockMvcResultMatchers.jsonPath("$.code").value("CHARACTER-403"),
                 MockMvcResultMatchers.jsonPath("$.messages").value("No permission"),
                 MockMvcResultMatchers.jsonPath("$.document_url").value("docs.waldreg.org")
         );
@@ -701,6 +744,7 @@ public class PermissionAcceptanceTest{
         result.andExpectAll(
                 MockMvcResultMatchers.status().isForbidden(),
                 MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON),
+                MockMvcResultMatchers.jsonPath("$.code").value("CHARACTER-403"),
                 MockMvcResultMatchers.header().string(HttpHeaders.CONTENT_TYPE, "application/json"),
                 MockMvcResultMatchers.header().string("api-version", apiVersion),
                 MockMvcResultMatchers.jsonPath("$.messages").value("No permission"),
@@ -725,6 +769,7 @@ public class PermissionAcceptanceTest{
                 MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON),
                 MockMvcResultMatchers.header().string(HttpHeaders.CONTENT_TYPE, "application/json"),
                 MockMvcResultMatchers.header().string("api-version", apiVersion),
+                MockMvcResultMatchers.jsonPath("$.code").value("CHARACTER-420"),
                 MockMvcResultMatchers.jsonPath("$.messages").value("Can not find character named \"mock_character\""),
                 MockMvcResultMatchers.jsonPath("$.document_url").value("docs.waldreg.org")
         );
@@ -746,7 +791,8 @@ public class PermissionAcceptanceTest{
         // then
         resultActions.andExpectAll(
                 MockMvcResultMatchers.status().isBadRequest(),
-                MockMvcResultMatchers.header().string("Api-version", "1.0")
+                MockMvcResultMatchers.header().string("Api-version", "1.0"),
+                MockMvcResultMatchers.jsonPath("$.code").value("CHARACTER-413")
         ).andDo(MockMvcResultHandlers.print());
     }
 
@@ -795,6 +841,7 @@ public class PermissionAcceptanceTest{
                 MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON),
                 MockMvcResultMatchers.header().string(HttpHeaders.CONTENT_TYPE, "application/json"),
                 MockMvcResultMatchers.header().string("Api-version", apiVersion),
+                MockMvcResultMatchers.jsonPath("$.code").value("CHARACTER-403"),
                 MockMvcResultMatchers.jsonPath("$.messages").value("No permission"),
                 MockMvcResultMatchers.jsonPath("$.document_url").value("docs.waldreg.org")
         );
@@ -814,6 +861,13 @@ public class PermissionAcceptanceTest{
                 .userId(userId)
                 .userPassword(userPassword)
                 .build());
+    }
+
+    private List<PermissionResponse> getPermissionResponseList() throws Exception{
+        String token = AuthenticationAcceptanceTestHelper.getAdminToken(mvc, objectMapper);
+        String content = PermissionAcceptanceTestHelper.inquiryPermissionList(mvc, token).andReturn().getResponse().getContentAsString();
+        Map<String, List<PermissionResponse>> permissionResponseMap = objectMapper.readValue(content, new TypeReference<>(){});
+        return permissionResponseMap.get("permissions");
     }
 
 }

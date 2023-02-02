@@ -17,6 +17,7 @@ public class ControllerPermissionMapper{
         for(PermissionUnit permissionUnit : permissionUnitList){
             permissionResponseDtoList.add(
                     PermissionResponse.builder()
+                            .id(permissionUnit.getId())
                             .name(permissionUnit.getName())
                             .info(permissionUnit.getInfo())
                             .statusList(permissionUnit.getStatusList())
@@ -30,6 +31,7 @@ public class ControllerPermissionMapper{
         List<PermissionDto> permissionDtoList = new ArrayList<>();
         for(PermissionRequest permissionRequest : permissionRequestList){
             permissionDtoList.add(PermissionDto.builder()
+                    .id(permissionRequest.getId())
                     .name(permissionRequest.getName())
                     .status(permissionRequest.getStatus())
                     .build());
@@ -42,6 +44,7 @@ public class ControllerPermissionMapper{
         for(PermissionDto permissionDto : permissionDtoList){
             permissionResponseList.add(
                     SpecifyStatusPermissionResponse.builder()
+                            .id(permissionDto.getId())
                             .name(permissionDto.getName())
                             .status(permissionDto.getStatus())
                             .build()

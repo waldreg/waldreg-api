@@ -5,18 +5,19 @@ import java.util.List;
 
 public final class PermissionResponse{
 
+    @JsonProperty("permission_id")
+    private int id;
     @JsonProperty("permission_name")
-    private final String name;
+    private String name;
     @JsonProperty("permission_info")
-    private final String info;
+    private String info;
     @JsonProperty("permission_status")
-    private final List<String> statusList;
+    private List<String> statusList;
 
-    private PermissionResponse(){
-        throw new UnsupportedOperationException("Can not invoke constructor \"PermissionResponse()\"");
-    }
+    public PermissionResponse(){}
 
     private PermissionResponse(Builder builder){
+        this.id = builder.id;
         this.name = builder.name;
         this.info = builder.info;
         this.statusList = builder.statusList;
@@ -38,13 +39,39 @@ public final class PermissionResponse{
         return statusList;
     }
 
+    public void setId(int id){
+        this.id = id;
+    }
+
+    public void setName(String name){
+        this.name = name;
+    }
+
+    public void setInfo(String info){
+        this.info = info;
+    }
+
+    public void setStatusList(List<String> statusList){
+        this.statusList = statusList;
+    }
+
+    public int getId(){
+        return id;
+    }
+
     public static final class Builder{
 
+        private int id;
         private String name;
         private String info;
         private List<String> statusList;
 
         private Builder(){}
+
+        public Builder id(int id){
+            this.id = id;
+            return this;
+        }
 
         public Builder name(String name){
             this.name = name;
