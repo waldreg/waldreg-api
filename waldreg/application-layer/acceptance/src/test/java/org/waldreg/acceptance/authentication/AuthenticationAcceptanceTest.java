@@ -56,7 +56,7 @@ public class AuthenticationAcceptanceTest{
                     MockMvcResultMatchers.header().string(HttpHeaders.CONTENT_TYPE, "application/json"),
                     MockMvcResultMatchers.header().string("api-version", apiVersion),
                     MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON),
-                    MockMvcResultMatchers.jsonPath("$.messages").value("Unknown user_id"),
+                    MockMvcResultMatchers.jsonPath("$.messages").value("Unknown user_id \""+request.getUserId()+"\""),
                     MockMvcResultMatchers.jsonPath("$.document_url").value("docs.waldreg.org")
             ).andDo(MockMvcResultHandlers.print());
         }
@@ -117,7 +117,7 @@ public class AuthenticationAcceptanceTest{
         result.andExpectAll(MockMvcResultMatchers.status().isBadRequest(),
                         MockMvcResultMatchers.header().string(HttpHeaders.CONTENT_TYPE,
                                 "application/json"),
-                        MockMvcResultMatchers.jsonPath("$.messages").value("Unknown user_id"),
+                        MockMvcResultMatchers.jsonPath("$.messages").value("Unknown user_id \""+userId+"\""),
                         MockMvcResultMatchers.jsonPath("$.document_url").value("docs.waldreg.org"))
                 .andDo(MockMvcResultHandlers.print());
     }
