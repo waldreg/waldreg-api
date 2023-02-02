@@ -11,13 +11,13 @@ public interface BoardRepository{
 
     Boolean isExistBoard(int id);
 
-    int getBoardMaxIndex();
+    int getBoardMaxIdx();
 
     List<BoardDto> inquiryAllBoard(int from, int to);
 
     List<BoardDto> inquiryAllBoardByCategory(int categoryId, int from, int to);
 
-    int getBoardMaxIndexByCategory(int categoryId);
+    int getBoardMaxIdxByCategory(int categoryId);
 
     BoardDto modifyBoard(BoardDto boardDto);
 
@@ -29,6 +29,6 @@ public interface BoardRepository{
 
     List<BoardDto> searchByAuthorUserId(String keyword, int from, int to);
 
-    int getSearchMaxIndex(String keyword);
+    int getSearchMaxIdx(String keyword);
 
 }

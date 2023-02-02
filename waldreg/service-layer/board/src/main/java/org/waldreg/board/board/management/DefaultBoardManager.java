@@ -76,7 +76,7 @@ public class DefaultBoardManager implements BoardManager{
     @Override
     public List<BoardDto> inquiryAllBoard(int from, int to){
         throwIfInvalidRangeDetected(from, to);
-        int maxIdx = boardRepository.getBoardMaxIndex();
+        int maxIdx = boardRepository.getBoardMaxIdx();
         to = adjustEndIdx(from, to, maxIdx);
         return boardRepository.inquiryAllBoard(from, to);
     }
@@ -101,7 +101,7 @@ public class DefaultBoardManager implements BoardManager{
     public List<BoardDto> inquiryAllBoardByCategory(int categoryId, int from, int to){
         throwIfCategoryDoesNotExist(categoryId);
         throwIfInvalidRangeDetected(from, to);
-        int maxIdx = boardRepository.getBoardMaxIndexByCategory(categoryId);
+        int maxIdx = boardRepository.getBoardMaxIdxByCategory(categoryId);
         to = adjustEndIdx(from, to, maxIdx);
         return boardRepository.inquiryAllBoardByCategory(categoryId, from, to);
     }
@@ -109,7 +109,7 @@ public class DefaultBoardManager implements BoardManager{
     @Override
     public List<BoardDto> searchBoardByTitle(String keyword, int from, int to){
         throwIfInvalidRangeDetected(from, to);
-        int maxIdx = boardRepository.getSearchMaxIndex(keyword);
+        int maxIdx = boardRepository.getSearchMaxIdx(keyword);
         to = adjustEndIdx(from, to, maxIdx);
         return boardRepository.searchByTitle(keyword, from, to);
     }
@@ -117,7 +117,7 @@ public class DefaultBoardManager implements BoardManager{
     @Override
     public List<BoardDto> searchBoardByContent(String keyword, int from, int to){
         throwIfInvalidRangeDetected(from, to);
-        int maxIdx = boardRepository.getSearchMaxIndex(keyword);
+        int maxIdx = boardRepository.getSearchMaxIdx(keyword);
         to = adjustEndIdx(from, to, maxIdx);
         return boardRepository.searchByContent(keyword, from, to);
     }
@@ -125,7 +125,7 @@ public class DefaultBoardManager implements BoardManager{
     @Override
     public List<BoardDto> searchBoardByAuthorUserId(String keyword, int from, int to){
         throwIfInvalidRangeDetected(from, to);
-        int maxIdx = boardRepository.getSearchMaxIndex(keyword);
+        int maxIdx = boardRepository.getSearchMaxIdx(keyword);
         to = adjustEndIdx(from, to, maxIdx);
         return boardRepository.searchByAuthorUserId(keyword, from, to);
     }
