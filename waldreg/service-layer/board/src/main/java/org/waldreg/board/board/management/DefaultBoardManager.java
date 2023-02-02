@@ -146,7 +146,7 @@ public class DefaultBoardManager implements BoardManager{
     @Override
     public BoardDto modifyBoard(BoardDto boardDto){
         throwIfBoardDoesNotExist(boardDto.getId());
-        throwIfCategoryDoesNotExist(boardDto.getCategory().getId());
+        throwIfCategoryDoesNotExist(boardDto.getCategoryDto().getId());
         return boardRepository.modifyBoard(boardDto);
     }
 
