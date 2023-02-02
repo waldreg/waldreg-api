@@ -39,9 +39,15 @@ public class MemoryBoardRepository implements BoardRepository{
     }
 
     @Override
-    public int getBoardMaxIndex(){
+    public Boolean isExistBoard(int id){
+        return null;
+    }
+
+    @Override
+    public int getBoardMaxIdx(){
         return 0;
     }
+
 
     @Override
     public List<BoardDto> inquiryAllBoard(int from, int to){
@@ -51,6 +57,11 @@ public class MemoryBoardRepository implements BoardRepository{
     @Override
     public List<BoardDto> inquiryAllBoardByCategory(int categoryId, int from, int to){
         return null;
+    }
+
+    @Override
+    public int getBoardMaxIdxByCategory(int categoryId){
+        return 0;
     }
 
     @Override
@@ -76,6 +87,11 @@ public class MemoryBoardRepository implements BoardRepository{
     @Override
     public List<BoardDto> searchByAuthorUserId(String keyword, int from, int to){
         return null;
+    }
+
+    @Override
+    public int getSearchMaxIdx(String keyword){
+        return 0;
     }
 
 }

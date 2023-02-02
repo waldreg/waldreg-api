@@ -9,11 +9,15 @@ public interface BoardRepository{
 
     BoardDto inquiryBoardById(int boardId);
 
-    int getBoardMaxIndex();
+    Boolean isExistBoard(int id);
+
+    int getBoardMaxIdx();
 
     List<BoardDto> inquiryAllBoard(int from, int to);
 
     List<BoardDto> inquiryAllBoardByCategory(int categoryId, int from, int to);
+
+    int getBoardMaxIdxByCategory(int categoryId);
 
     BoardDto modifyBoard(BoardDto boardDto);
 
@@ -24,5 +28,7 @@ public interface BoardRepository{
     List<BoardDto> searchByContent(String keyword, int from, int to);
 
     List<BoardDto> searchByAuthorUserId(String keyword, int from, int to);
+
+    int getSearchMaxIdx(String keyword);
 
 }

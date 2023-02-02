@@ -6,4 +6,6 @@ public interface UserRepository{
 
     UserDto getUserInfo(int id);
 
+    Boolean isExistUser(int authorId);
+
 }

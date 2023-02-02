@@ -9,6 +9,7 @@ import org.waldreg.character.exception.NoPermissionException;
 import org.waldreg.character.exception.UnknownCharacterException;
 import org.waldreg.character.exception.UnknownPermissionException;
 import org.waldreg.character.exception.UnknownPermissionStatusException;
+import org.waldreg.core.template.exception.ExceptionTemplate;
 
 @RestControllerAdvice
 public class CharacterControllerAdvice{
@@ -18,16 +19,28 @@ public class CharacterControllerAdvice{
     @ExceptionHandler({NoPermissionException.class})
     public ResponseEntity<ExceptionTemplate> catchNoPermissionException(NoPermissionException noPermissionException){
         ExceptionTemplate exceptionTemplate = ExceptionTemplate.builder()
+                .code("CHARACTER-403")
                 .message("No permission")
                 .documentUrl(documentUrl)
                 .build();
         return new ResponseEntity<>(exceptionTemplate, HttpStatus.FORBIDDEN);
     }
 
-    @ExceptionHandler({UnknownPermissionException.class, UnknownPermissionStatusException.class})
-    public ResponseEntity<ExceptionTemplate> catchUnknownPermissionExceptions(RuntimeException unknownPermissionException){
+    @ExceptionHandler({UnknownPermissionException.class})
+    public ResponseEntity<ExceptionTemplate> catchUnknownPermissionExceptions(UnknownPermissionException unknownPermissionException){
         ExceptionTemplate exceptionTemplate = ExceptionTemplate.builder()
+                .code("CHARACTER-410")
                 .message(unknownPermissionException.getMessage())
+                .documentUrl(documentUrl)
+                .build();
+        return new ResponseEntity<>(exceptionTemplate, HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(UnknownPermissionStatusException.class)
+    public ResponseEntity<ExceptionTemplate> catchUnknownPermissionStatusException(UnknownPermissionStatusException unknownPermissionStatusException){
+        ExceptionTemplate exceptionTemplate = ExceptionTemplate.builder()
+                .code("CHARACTER-411")
+                .message(unknownPermissionStatusException.getMessage())
                 .documentUrl(documentUrl)
                 .build();
         return new ResponseEntity<>(exceptionTemplate, HttpStatus.BAD_REQUEST);
@@ -36,6 +49,7 @@ public class CharacterControllerAdvice{
     @ExceptionHandler({DuplicatedCharacterException.class})
     public ResponseEntity<ExceptionTemplate> catchDuplicatedCharacterException(DuplicatedCharacterException duplicatedCharacterException){
         ExceptionTemplate exceptionTemplate = ExceptionTemplate.builder()
+                .code("CHARACTER-412")
                 .message(duplicatedCharacterException.getMessage())
                 .documentUrl(documentUrl)
                 .build();
@@ -45,6 +59,7 @@ public class CharacterControllerAdvice{
     @ExceptionHandler({UnknownCharacterException.class})
     public ResponseEntity<ExceptionTemplate> catchUnknownCharacterException(UnknownCharacterException unknownCharacterException){
         ExceptionTemplate exceptionTemplate = ExceptionTemplate.builder()
+                .code("CHARACTER-420")
                 .message(unknownCharacterException.getMessage())
                 .documentUrl(documentUrl)
                 .build();

@@ -1,11 +1,24 @@
 package org.waldreg.board.board.management;
 
+import java.util.List;
 import org.waldreg.board.dto.BoardDto;
 import org.waldreg.board.dto.BoardServiceMemberTier;
 
 public interface BoardManager{
 
     BoardDto createBoard(BoardRequest request);
+
+    BoardDto inquiryBoardById(int id);
+
+    List<BoardDto> inquiryAllBoard(int from, int to);
+
+    List<BoardDto> inquiryAllBoardByCategory(int categoryId, int from, int to);
+
+    List<BoardDto> searchBoardByTitle(String keyword, int from, int to);
+
+    List<BoardDto> searchBoardByContent(String keyword, int from, int to);
+
+    List<BoardDto> searchBoardByAuthorUserId(String keyword, int from, int to);
 
 
     final class BoardRequest{

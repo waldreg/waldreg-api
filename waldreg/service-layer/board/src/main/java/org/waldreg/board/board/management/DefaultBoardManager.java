@@ -1,8 +1,12 @@
 package org.waldreg.board.board.management;
 
+import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.waldreg.board.board.exception.BlankTitleException;
+import org.waldreg.board.board.exception.BoardDoesNotExistException;
+import org.waldreg.board.board.exception.CategoryDoesNotExistException;
+import org.waldreg.board.board.exception.InvalidRangeException;
+import org.waldreg.board.board.exception.UserDoesNotExistException;
 import org.waldreg.board.board.spi.BoardRepository;
 import org.waldreg.board.board.spi.CategoryRepository;
 import org.waldreg.board.board.spi.UserRepository;
@@ -12,6 +16,8 @@ import org.waldreg.board.dto.UserDto;
 
 @Service
 public class DefaultBoardManager implements BoardManager{
+
+    private final int perPage = 20;
 
     private BoardRepository boardRepository;
     private UserRepository userRepository;
@@ -24,19 +30,23 @@ public class DefaultBoardManager implements BoardManager{
         this.userRepository = userRepository;
     }
 
+
     @Override
     public BoardDto createBoard(BoardRequest request){
-        try{
-            throwIfTitleIsBlank(request.getTitle());
-            return boardRepository.createBoard(buildBoardDto(request));
-        } catch (RuntimeException e){
-            throw new RuntimeException(e.getMessage());
+        throwIfCategoryDoesNotExist(request.getCategoryId());
+        throwIfUserDoesNotExist(request.getAuthorId());
+        return boardRepository.createBoard(buildBoardDto(request));
+    }
+
+    private void throwIfCategoryDoesNotExist(int categoryId){
+        if (!categoryRepository.isExistCategory(categoryId)){
+            throw new CategoryDoesNotExistException(categoryId);
         }
     }
 
-    private void throwIfTitleIsBlank(String title){
-        if (title.isBlank() || title.isEmpty()){
-            throw new BlankTitleException();
+    private void throwIfUserDoesNotExist(int authorId){
+        if (!userRepository.isExistUser(authorId)){
+            throw new UserDoesNotExistException(authorId);
         }
     }
 
@@ -48,8 +58,77 @@ public class DefaultBoardManager implements BoardManager{
                 .content(request.getContent())
                 .category(categoryDto)
                 .user(userDto)
-                .memberTier(request.getMemberTier())
+                .boardServiceMemberTier(request.getMemberTier())
                 .build();
+    }
+
+    @Override
+    public BoardDto inquiryBoardById(int id){
+        throwIfBoardDoesNotExist(id);
+        return boardRepository.inquiryBoardById(id);
+    }
+
+    private void throwIfBoardDoesNotExist(int boardId){
+        if (!boardRepository.isExistBoard(boardId)){
+            throw new BoardDoesNotExistException(boardId);
+        }
+    }
+
+    @Override
+    public List<BoardDto> inquiryAllBoard(int from, int to){
+        throwIfInvalidRangeDetected(from, to);
+        int maxIdx = boardRepository.getBoardMaxIdx();
+        to = adjustEndIdx(from, to, maxIdx);
+        return boardRepository.inquiryAllBoard(from, to);
+    }
+
+    private void throwIfInvalidRangeDetected(int from, int to){
+        if (from > to || from < 0){
+            throw new InvalidRangeException(from, to);
+        }
+    }
+
+    private int adjustEndIdx(int from, int to, int maxIdx){
+        if (maxIdx < to){
+            to = maxIdx;
+        }
+        if (to - from + 1 > perPage){
+            return from + perPage - 1;
+        }
+        return to;
+    }
+
+    @Override
+    public List<BoardDto> inquiryAllBoardByCategory(int categoryId, int from, int to){
+        throwIfCategoryDoesNotExist(categoryId);
+        throwIfInvalidRangeDetected(from, to);
+        int maxIdx = boardRepository.getBoardMaxIdxByCategory(categoryId);
+        to = adjustEndIdx(from, to, maxIdx);
+        return boardRepository.inquiryAllBoardByCategory(categoryId, from, to);
+    }
+
+    @Override
+    public List<BoardDto> searchBoardByTitle(String keyword, int from, int to){
+        throwIfInvalidRangeDetected(from, to);
+        int maxIdx = boardRepository.getSearchMaxIdx(keyword);
+        to = adjustEndIdx(from, to, maxIdx);
+        return boardRepository.searchByTitle(keyword, from, to);
+    }
+
+    @Override
+    public List<BoardDto> searchBoardByContent(String keyword, int from, int to){
+        throwIfInvalidRangeDetected(from, to);
+        int maxIdx = boardRepository.getSearchMaxIdx(keyword);
+        to = adjustEndIdx(from, to, maxIdx);
+        return boardRepository.searchByContent(keyword, from, to);
+    }
+
+    @Override
+    public List<BoardDto> searchBoardByAuthorUserId(String keyword, int from, int to){
+        throwIfInvalidRangeDetected(from, to);
+        int maxIdx = boardRepository.getSearchMaxIdx(keyword);
+        to = adjustEndIdx(from, to, maxIdx);
+        return boardRepository.searchByAuthorUserId(keyword, from, to);
     }
 
 }

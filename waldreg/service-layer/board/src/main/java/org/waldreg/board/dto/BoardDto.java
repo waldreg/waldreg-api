@@ -1,7 +1,6 @@
 package org.waldreg.board.dto;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.List;
 
 public class BoardDto{
@@ -31,6 +30,8 @@ public class BoardDto{
         this.createdAt = builder.createdAt;
         this.lastModifiedAt = builder.lastModifiedAt;
         this.boardServiceMemberTier = builder.boardServiceMemberTier;
+        this.imageUrls = builder.imageUrls;
+        this.fileUrls = builder.fileUrls;
         this.reactions = builder.reactions;
         this.commentList = builder.commentList;
         this.views = builder.views;
@@ -44,88 +45,56 @@ public class BoardDto{
         return id;
     }
 
-    public void setId(int id){
-        this.id = id;
-    }
-
     public String getTitle(){
         return title;
-    }
-
-    public void setTitle(String title){
-        this.title = title;
     }
 
     public CategoryDto getCategory(){
         return category;
     }
 
-    public void setCategory(CategoryDto category){
-        this.category = category;
-    }
-
     public String getContent(){
         return content;
-    }
-
-    public void setContent(String content){
-        this.content = content;
     }
 
     public UserDto getUser(){
         return user;
     }
 
-    public void setUser(UserDto user){
-        this.user = user;
-    }
-
     public LocalDateTime getCreatedAt(){
         return createdAt;
-    }
-
-    public void setCreatedAt(LocalDateTime createdAt){
-        this.createdAt = createdAt;
     }
 
     public LocalDateTime getLastModifiedAt(){
         return lastModifiedAt;
     }
 
-    public void setLastModifiedAt(LocalDateTime lastModifiedAt){
-        this.lastModifiedAt = lastModifiedAt;
+    public List<String> getFileUrls(){
+        return fileUrls;
     }
 
     public BoardServiceMemberTier getMemberTier(){
         return boardServiceMemberTier;
     }
 
-    public void setMemberTier(BoardServiceMemberTier boardServiceMemberTier){
+    public void setBoardServiceMemberTier(BoardServiceMemberTier boardServiceMemberTier){
         this.boardServiceMemberTier = boardServiceMemberTier;
+    }
+
+    public List<String> getImageUrls(){
+        return imageUrls;
     }
 
     public ReactionDto getReactions(){
         return reactions;
     }
 
-    public void setReactions(ReactionDto reactions){
-        this.reactions = reactions;
-    }
-
     public List<CommentDto> getCommentList(){
         return commentList;
     }
 
-    public void setCommentList(List<CommentDto> commentList){
-        this.commentList = commentList;
-    }
-
     public int getViews(){
         return views;
-    }
-
-    public void setViews(int views){
-        this.views = views;
     }
 
     public static final class Builder{
@@ -138,17 +107,11 @@ public class BoardDto{
         private LocalDateTime createdAt;
         private LocalDateTime lastModifiedAt;
         private BoardServiceMemberTier boardServiceMemberTier;
+        private List<String> fileUrls;
+        private List<String> imageUrls;
         private ReactionDto reactions;
         private List<CommentDto> commentList;
         private int views;
-
-
-        {
-            createdAt = LocalDateTime.now();
-            lastModifiedAt = createdAt;
-            views = 0;
-            commentList = new ArrayList<>();
-        }
 
         private Builder(){}
 
@@ -187,8 +150,18 @@ public class BoardDto{
             return this;
         }
 
-        public Builder memberTier(BoardServiceMemberTier boardServiceMemberTier){
+        public Builder boardServiceMemberTier(BoardServiceMemberTier boardServiceMemberTier){
             this.boardServiceMemberTier = boardServiceMemberTier;
+            return this;
+        }
+
+        public Builder imageUrls(List<String> imageUrls){
+            this.imageUrls = imageUrls;
+            return this;
+        }
+
+        public Builder fileUrls(List<String> fileUrls){
+            this.fileUrls = fileUrls;
             return this;
         }
 

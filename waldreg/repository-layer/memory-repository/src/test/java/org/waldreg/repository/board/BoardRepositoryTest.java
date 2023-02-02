@@ -99,12 +99,10 @@ public class BoardRepositoryTest{
                 .user(userDto)
                 .content(content)
                 .category(categoryDto)
-                .memberTier(BoardServiceMemberTier.TIER_3)
+                .boardServiceMemberTier(BoardServiceMemberTier.TIER_3)
                 .build();
 
-        //when
-
-        //then
+        //when&then
         Assertions.assertDoesNotThrow(() -> boardRepository.createBoard(boardRequest));
 
     }

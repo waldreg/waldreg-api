@@ -52,7 +52,7 @@ public class BoardMapper{
                 .user(userDomainToUserDto(board.getUser()))
                 .createdAt(board.getCreatedAt())
                 .lastModifiedAt(board.getLastModifiedAt())
-                .memberTier(memberTierToBoardServiceMemberTier(board.getMemberTier()))
+                .boardServiceMemberTier(memberTierToBoardServiceMemberTier(board.getMemberTier()))
                 .reactions(reactionDomainToReactionDto(board.getReactions().getReactionMap()))
                 .commentList(commentDomainListToCommentDtoList(board.getCommentList()))
                 .views(board.getViews())
