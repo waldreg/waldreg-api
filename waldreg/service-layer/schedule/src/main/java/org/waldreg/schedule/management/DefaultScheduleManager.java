@@ -35,7 +35,7 @@ public class DefaultScheduleManager implements ScheduleManager{
             throwIfRepeatExist(startedAt, finishAt, scheduleDto.getRepeatDto());
             scheduleRepository.createSchedule(scheduleDto);
         } catch (DateTimeParseException DTPE){
-            throw new InvalidDateFormatException("Invalid date format detected Schedule start date \"" + scheduleDto.getStartedAt() + "\" Schedule finish date \"" + scheduleDto.getFinishAt() + "\"");
+            throw new InvalidDateFormatException("SCHEDULE-403", "Invalid date format detected Schedule start date \"" + scheduleDto.getStartedAt() + "\" Schedule finish date \"" + scheduleDto.getFinishAt() + "\"");
         }
     }
 
@@ -58,13 +58,13 @@ public class DefaultScheduleManager implements ScheduleManager{
 
     private void throwIfInvalidYear(int year){
         if (year < 2000){
-            throw new InvalidDateFormatException("Year cannot be under 2000 current year \"" + year + "\"");
+            throw new InvalidDateFormatException("SCHEDULE-400", "Year cannot be under 2000 current year \"" + year + "\"");
         }
     }
 
     private void throwIfInvalidMonth(int month){
         if (month < 1 || month > 12){
-            throw new InvalidDateFormatException("Month cannot be under 1 or over 12 current month \"" + month + "\"");
+            throw new InvalidDateFormatException("SCHEDULE-401", "Month cannot be under 1 or over 12 current month \"" + month + "\"");
         }
     }
 
@@ -80,26 +80,26 @@ public class DefaultScheduleManager implements ScheduleManager{
             throwIfRepeatExist(startedAt, finishAt, scheduleDto.getRepeatDto());
             scheduleRepository.updateScheduleById(id, scheduleDto);
         } catch (DateTimeParseException DTPE){
-            throw new InvalidDateFormatException("Invalid date format detected Schedule start date \"" + scheduleDto.getStartedAt() + "\" Schedule finish date \"" + scheduleDto.getFinishAt() + "\"");
+            throw new InvalidDateFormatException("SCHEDULE-403", "Invalid date format detected Schedule start date \"" + scheduleDto.getStartedAt() + "\" Schedule finish date \"" + scheduleDto.getFinishAt() + "\"");
         }
     }
 
     private void throwIfUnderYearLimit(int startedYear, int finishYear){
         if (startedYear < 2000 || finishYear < 2000){
-            throw new InvalidDateFormatException("Year cannot be under 2000 current Schedule start year \"" + startedYear + "\" finish year \"" + finishYear + "\"");
+            throw new InvalidDateFormatException("SCHEDULE-404", "Year cannot be under 2000 current Schedule start year \"" + startedYear + "\" finish year \"" + finishYear + "\"");
         }
     }
 
     private void throwIfContentOverflow(String content){
         int length = content.length();
         if (length > 1000){
-            throw new ContentOverflowException("Schedule length content cannot be more than 1000 current length \"" + length + "\"");
+            throw new ContentOverflowException("SCHEDULE-409", "Schedule length content cannot be more than 1000 current length \"" + length + "\"");
         }
     }
 
     private void throwIfFinishAtPrecedeStartedAt(LocalDateTime startedAt, LocalDateTime finishAt){
         if (startedAt.isAfter(finishAt)){
-            throw new InvalidSchedulePeriodException("Schedule finish date \"" + finishAt + "\" cannot precede start date \"" + startedAt + "\"");
+            throw new InvalidSchedulePeriodException("SCHEDULE-408", "Schedule finish date \"" + finishAt + "\" cannot precede start date \"" + startedAt + "\"");
         }
     }
 
@@ -119,19 +119,19 @@ public class DefaultScheduleManager implements ScheduleManager{
             throwIfCycleIsLessThanOrEqualToZero(repeatDto.getCycle());
             throwIfRepeatFinishAtPrecedeSchedulePeriod(startedAt, finishAt, repeatFinishAt);
         } catch (DateTimeParseException DTPE){
-            throw new InvalidDateFormatException("Invalid date format detected Schedule repeat finish date \"" + repeatDto.getRepeatFinishAt() + "\"");
+            throw new InvalidDateFormatException("SCHEDULE-403", "Invalid date format detected Schedule repeat finish date \"" + repeatDto.getRepeatFinishAt() + "\"");
         }
     }
 
     private void throwIfCycleIsLessThanOrEqualToZero(int cycle){
         if (cycle <= 0){
-            throw new InvalidRepeatException("Cycle cannot be less than or equal to zero, current cycle \"" + cycle + "\"");
+            throw new InvalidRepeatException("SCHEDULE-405", "Cycle cannot be less than or equal to zero, current cycle \"" + cycle + "\"");
         }
     }
 
     private void throwIfRepeatFinishAtPrecedeSchedulePeriod(LocalDateTime startedAt, LocalDateTime finishAt, LocalDateTime repeatFinishAt){
         if (repeatFinishAt.isBefore(finishAt) || repeatFinishAt.isBefore(startedAt)){
-            throw new InvalidRepeatException("Repeat finish date \"" + repeatFinishAt + "\" cannot precede schedule start date \"" + startedAt + "\" or finish date \"" + finishAt + "\"");
+            throw new InvalidRepeatException("SCHEDULE-406", "Repeat finish date \"" + repeatFinishAt + "\" cannot precede schedule start date \"" + startedAt + "\" or finish date \"" + finishAt + "\"");
         }
     }
 
@@ -143,7 +143,7 @@ public class DefaultScheduleManager implements ScheduleManager{
 
     private void throwIfScheduleIdDoesNotExist(int id){
         if (!scheduleRepository.isExistScheduleId(id)){
-            throw new UnknownScheduleException("Cannot find schedule with id \"" + id + "\"");
+            throw new UnknownScheduleException("SCHEDULE-410", "Cannot find schedule with id \"" + id + "\"");
         }
     }
 
