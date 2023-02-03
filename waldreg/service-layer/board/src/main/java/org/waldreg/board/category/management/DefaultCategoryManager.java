@@ -21,7 +21,7 @@ public class DefaultCategoryManager implements CategoryManager{
     }
 
     private void throwIfCategoryNameDuplicated(String categoryName){
-        if(categoryRepository.isDuplicateCategoryName(categoryName)){
+        if (categoryRepository.isDuplicateCategoryName(categoryName)){
             throw new DuplicateCategoryNameException(categoryName);
         }
     }
@@ -44,5 +44,12 @@ public class DefaultCategoryManager implements CategoryManager{
             throw new CategoryDoesNotExistException(categoryId);
         }
     }
+
+    @Override
+    public void deleteCategory(int id){
+        throwIfCategoryDoesNotExist(id);
+        categoryRepository.deleteCategory(id);
+    }
+
 
 }

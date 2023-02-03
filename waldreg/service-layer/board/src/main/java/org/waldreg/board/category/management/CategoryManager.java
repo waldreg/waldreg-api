@@ -11,5 +11,6 @@ public interface CategoryManager{
 
     void modifyCategory(CategoryDto categoryDto);
 
+    void deleteCategory(int id);
 
 }
