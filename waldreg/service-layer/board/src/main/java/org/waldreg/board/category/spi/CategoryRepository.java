@@ -11,10 +11,12 @@ public interface CategoryRepository{
 
     CategoryDto inquiryCategoryById(int id);
 
-    void modifyCategory(int id, CategoryDto categoryDto);
+    void modifyCategory(CategoryDto categoryDto);
 
     void deleteCategory(int id);
 
     boolean isDuplicateCategoryName(String categoryName);
+
+    boolean isExistCategory(int categoryId);
 
 }
