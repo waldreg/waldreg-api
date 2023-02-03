@@ -4,6 +4,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+import org.waldreg.core.template.exception.ExceptionTemplate;
 import org.waldreg.user.exception.DuplicatedUserIdException;
 import org.waldreg.user.exception.InvalidRangeException;
 import org.waldreg.user.exception.UnknownIdException;
@@ -17,7 +18,8 @@ public class UserControllerAdvice{
     @ExceptionHandler({DuplicatedUserIdException.class})
     public ResponseEntity<ExceptionTemplate> catchDuplicatedUserIdException(DuplicatedUserIdException duplicatedUserIdException){
         ExceptionTemplate exceptionTemplate = ExceptionTemplate.builder()
-                .message("Duplicated user_id")
+                .code("USER-400")
+                .message(duplicatedUserIdException.getMessage())
                 .documentUrl(documentUrl)
                 .build();
         return new ResponseEntity<>(exceptionTemplate, HttpStatus.BAD_REQUEST);
@@ -26,7 +28,8 @@ public class UserControllerAdvice{
     @ExceptionHandler({InvalidRangeException.class})
     public ResponseEntity<ExceptionTemplate> catchInvalidRangeException(InvalidRangeException invalidRangeException){
         ExceptionTemplate exceptionTemplate = ExceptionTemplate.builder()
-                .message("Invalid range")
+                .code("USER-407")
+                .message(invalidRangeException.getMessage())
                 .documentUrl(documentUrl)
                 .build();
         return new ResponseEntity<>(exceptionTemplate, HttpStatus.BAD_REQUEST);
@@ -35,7 +38,8 @@ public class UserControllerAdvice{
     @ExceptionHandler({UnknownIdException.class})
     public ResponseEntity<ExceptionTemplate> catchUnknownIdException(UnknownIdException unknownIdException){
         ExceptionTemplate exceptionTemplate = ExceptionTemplate.builder()
-                .message("Unknown id")
+                .code("USER-408")
+                .message(unknownIdException.getMessage())
                 .documentUrl(documentUrl)
                 .build();
         return new ResponseEntity<>(exceptionTemplate, HttpStatus.BAD_REQUEST);
@@ -44,7 +48,8 @@ public class UserControllerAdvice{
     @ExceptionHandler({UnknownUserIdException.class})
     public ResponseEntity<ExceptionTemplate> catchUnknownUserIdException(UnknownUserIdException unknownUserIdException){
         ExceptionTemplate exceptionTemplate = ExceptionTemplate.builder()
-                .message("Unknown user_id")
+                .code("USER-406")
+                .message(unknownUserIdException.getMessage())
                 .documentUrl(documentUrl)
                 .build();
         return new ResponseEntity<>(exceptionTemplate, HttpStatus.BAD_REQUEST);
