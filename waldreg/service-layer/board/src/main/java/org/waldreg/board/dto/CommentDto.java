@@ -5,7 +5,7 @@ import java.time.LocalDateTime;
 public class CommentDto{
 
     private int id;
-    private UserDto user;
+    private UserDto userDto;
     private LocalDateTime createdAt;
     private LocalDateTime lastModifiedAt;
     private String content;
@@ -14,18 +14,22 @@ public class CommentDto{
 
     private CommentDto(Builder builder){
         this.id = builder.id;
-        this.user = builder.user;
+        this.userDto = builder.userDto;
         this.createdAt = builder.createdAt;
         this.lastModifiedAt = builder.lastModifiedAt;
         this.content = builder.content;
+    }
+
+    public static Builder builder(){
+        return new Builder();
     }
 
     public int getId(){
         return id;
     }
 
-    public UserDto getUser(){
-        return user;
+    public UserDto getUserDto(){
+        return userDto;
     }
 
     public LocalDateTime getCreatedAt(){
@@ -43,8 +47,8 @@ public class CommentDto{
     public final static class Builder{
 
         private int id;
-        private UserDto user;
-        private final LocalDateTime createdAt;
+        private UserDto userDto;
+        private LocalDateTime createdAt;
         private LocalDateTime lastModifiedAt;
         private String content;
 
@@ -60,8 +64,13 @@ public class CommentDto{
             return this;
         }
 
-        public Builder user(UserDto user){
-            this.user = user;
+        public Builder userDto(UserDto userDto){
+            this.userDto = userDto;
+            return this;
+        }
+
+        public Builder createdAt(LocalDateTime createdAt){
+            this.createdAt = createdAt;
             return this;
         }
 

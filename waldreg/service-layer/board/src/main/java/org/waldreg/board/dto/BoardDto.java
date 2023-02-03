@@ -1,21 +1,20 @@
 package org.waldreg.board.dto;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.List;
 
 public class BoardDto{
 
     private int id;
     private String title;
-    private CategoryDto category;
+    private CategoryDto categoryDto;
     private String content;
-    private UserDto user;
+    private UserDto userDto;
     private LocalDateTime createdAt;
     private LocalDateTime lastModifiedAt;
     private List<String> fileUrls;
     private List<String> imageUrls;
-    private MemberTier memberTier;
+    private BoardServiceMemberTier boardServiceMemberTier;
     private ReactionDto reactions;
     private List<CommentDto> commentList;
     private int views;
@@ -25,14 +24,14 @@ public class BoardDto{
     private BoardDto(Builder builder){
         this.id = builder.id;
         this.title = builder.title;
-        this.category = builder.category;
+        this.categoryDto = builder.categoryDto;
         this.content = builder.content;
-        this.user = builder.user;
+        this.userDto = builder.userDto;
         this.createdAt = builder.createdAt;
         this.lastModifiedAt = builder.lastModifiedAt;
+        this.boardServiceMemberTier = builder.boardServiceMemberTier;
         this.imageUrls = builder.imageUrls;
         this.fileUrls = builder.fileUrls;
-        this.memberTier = builder.memberTier;
         this.reactions = builder.reactions;
         this.commentList = builder.commentList;
         this.views = builder.views;
@@ -50,16 +49,16 @@ public class BoardDto{
         return title;
     }
 
-    public CategoryDto getCategory(){
-        return category;
+    public CategoryDto getCategoryDto(){
+        return categoryDto;
     }
 
     public String getContent(){
         return content;
     }
 
-    public UserDto getUser(){
-        return user;
+    public UserDto getUserDto(){
+        return userDto;
     }
 
     public LocalDateTime getCreatedAt(){
@@ -74,12 +73,16 @@ public class BoardDto{
         return fileUrls;
     }
 
-    public List<String> getImageUrls(){
-        return imageUrls;
+    public BoardServiceMemberTier getMemberTier(){
+        return boardServiceMemberTier;
     }
 
-    public MemberTier getMemberTier(){
-        return memberTier;
+    public void setBoardServiceMemberTier(BoardServiceMemberTier boardServiceMemberTier){
+        this.boardServiceMemberTier = boardServiceMemberTier;
+    }
+
+    public List<String> getImageUrls(){
+        return imageUrls;
     }
 
     public ReactionDto getReactions(){
@@ -98,15 +101,14 @@ public class BoardDto{
 
         private int id;
         private String title;
-        private CategoryDto category;
+        private CategoryDto categoryDto;
         private String content;
-        private UserDto user;
+        private UserDto userDto;
         private LocalDateTime createdAt;
         private LocalDateTime lastModifiedAt;
-
+        private BoardServiceMemberTier boardServiceMemberTier;
         private List<String> fileUrls;
         private List<String> imageUrls;
-        private MemberTier memberTier;
         private ReactionDto reactions;
         private List<CommentDto> commentList;
         private int views;
@@ -123,8 +125,8 @@ public class BoardDto{
             return this;
         }
 
-        public Builder category(CategoryDto category){
-            this.category = category;
+        public Builder categoryDto(CategoryDto categoryDto){
+            this.categoryDto = categoryDto;
             return this;
         }
 
@@ -133,8 +135,8 @@ public class BoardDto{
             return this;
         }
 
-        public Builder user(UserDto user){
-            this.user = user;
+        public Builder userDto(UserDto userDto){
+            this.userDto = userDto;
             return this;
         }
 
@@ -148,6 +150,11 @@ public class BoardDto{
             return this;
         }
 
+        public Builder boardServiceMemberTier(BoardServiceMemberTier boardServiceMemberTier){
+            this.boardServiceMemberTier = boardServiceMemberTier;
+            return this;
+        }
+
         public Builder imageUrls(List<String> imageUrls){
             this.imageUrls = imageUrls;
             return this;
@@ -158,11 +165,6 @@ public class BoardDto{
             return this;
         }
 
-        public Builder memberTier(MemberTier memberTier){
-            this.memberTier = memberTier;
-            return this;
-        }
-
         public Builder reactions(ReactionDto reactions){
             this.reactions = reactions;
             return this;
@@ -170,6 +172,11 @@ public class BoardDto{
 
         public Builder views(int views){
             this.views = views;
+            return this;
+        }
+
+        public Builder commentList(List<CommentDto> comments){
+            this.commentList = commentList;
             return this;
         }
 

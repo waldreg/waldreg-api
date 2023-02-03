@@ -2,7 +2,7 @@ package org.waldreg.board.board.management;
 
 import java.util.List;
 import org.waldreg.board.dto.BoardDto;
-import org.waldreg.board.dto.MemberTier;
+import org.waldreg.board.dto.BoardServiceMemberTier;
 
 public interface BoardManager{
 
@@ -31,7 +31,7 @@ public interface BoardManager{
         private String title;
         private int categoryId;
         private String content;
-        private MemberTier memberTier;
+        private BoardServiceMemberTier boardServiceMemberTier;
         private int fileCount;
         private int imageCount;
 
@@ -42,7 +42,7 @@ public interface BoardManager{
             this.categoryId = builder.categoryId;
             this.title = builder.title;
             this.content = builder.content;
-            this.memberTier = builder.memberTier;
+            this.boardServiceMemberTier = builder.boardServiceMemberTier;
             this.fileCount = builder.fileCount;
             this.imageCount = builder.imageCount;
         }
@@ -83,12 +83,12 @@ public interface BoardManager{
             this.content = content;
         }
 
-        public MemberTier getMemberTier(){
-            return memberTier;
+        public BoardServiceMemberTier getMemberTier(){
+            return boardServiceMemberTier;
         }
 
-        public void setMemberTier(MemberTier memberTier){
-            this.memberTier = memberTier;
+        public void setMemberTier(BoardServiceMemberTier boardServiceMemberTier){
+            this.boardServiceMemberTier = boardServiceMemberTier;
         }
 
         public int getFileCount(){
@@ -113,7 +113,7 @@ public interface BoardManager{
             private String title;
             private int categoryId;
             private String content;
-            private MemberTier memberTier;
+            private BoardServiceMemberTier boardServiceMemberTier;
             private int fileCount;
             private int imageCount;
 
@@ -137,8 +137,8 @@ public interface BoardManager{
                 return this;
             }
 
-            public Builder memberTier(MemberTier memberTier){
-                this.memberTier = memberTier;
+            public Builder memberTier(BoardServiceMemberTier boardServiceMemberTier){
+                this.boardServiceMemberTier = boardServiceMemberTier;
                 return this;
             }
 

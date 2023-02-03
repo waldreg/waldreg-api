@@ -33,6 +33,7 @@ public class DefaultBoardManager implements BoardManager{
         this.decryptedTokenContextGetter = decryptedTokenContextGetter;
     }
 
+
     @Override
     public BoardDto createBoard(BoardRequest request){
         throwIfCategoryDoesNotExist(request.getCategoryId());
@@ -58,9 +59,9 @@ public class DefaultBoardManager implements BoardManager{
         return BoardDto.builder()
                 .title(request.getTitle())
                 .content(request.getContent())
-                .category(categoryDto)
-                .user(userDto)
-                .memberTier(request.getMemberTier())
+                .categoryDto(categoryDto)
+                .userDto(userDto)
+                .boardServiceMemberTier(request.getMemberTier())
                 .build();
     }
 
@@ -146,7 +147,7 @@ public class DefaultBoardManager implements BoardManager{
     @Override
     public BoardDto modifyBoard(BoardDto boardDto){
         throwIfBoardDoesNotExist(boardDto.getId());
-        throwIfCategoryDoesNotExist(boardDto.getCategory().getId());
+        throwIfCategoryDoesNotExist(boardDto.getCategoryDto().getId());
         return boardRepository.modifyBoard(boardDto);
     }
 

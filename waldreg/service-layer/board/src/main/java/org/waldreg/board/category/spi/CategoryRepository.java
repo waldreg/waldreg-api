@@ -15,4 +15,6 @@ public interface CategoryRepository{
 
     void deleteCategory(int id);
 
+    boolean isDuplicateCategoryName(String categoryName);
+
 }
