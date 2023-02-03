@@ -11,24 +11,24 @@ public interface BoardRepository{
 
     boolean isExistBoard(int id);
 
-    int getBoardMaxIdx(String userTier);
+    int getBoardMaxIdx();
 
-    List<BoardDto> inquiryAllBoard(String userTier, int from, int to);
+    List<BoardDto> inquiryAllBoard(int from, int to);
 
-    List<BoardDto> inquiryAllBoardByCategory(String userTier, int categoryId, int from, int to);
+    List<BoardDto> inquiryAllBoardByCategory(int categoryId, int from, int to);
 
-    int getBoardMaxIdxByCategory(String userTier, int categoryId);
+    int getBoardMaxIdxByCategory(int categoryId);
 
     BoardDto modifyBoard(BoardDto boardDto);
 
     void deleteBoard(int id);
 
-    List<BoardDto> searchByTitle(String userTier, String keyword, int from, int to);
+    List<BoardDto> searchByTitle(String keyword, int from, int to);
 
-    List<BoardDto> searchByContent(String userTier, String keyword, int from, int to);
+    List<BoardDto> searchByContent(String keyword, int from, int to);
 
-    List<BoardDto> searchByAuthorUserId(String userTier, String keyword, int from, int to);
+    List<BoardDto> searchByAuthorUserId(String keyword, int from, int to);
 
-    int getSearchMaxIdx(String userTier, String keyword);
+    int getSearchMaxIdx(String keyword);
 
 }

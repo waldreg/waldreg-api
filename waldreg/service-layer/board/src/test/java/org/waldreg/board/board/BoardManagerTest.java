@@ -181,9 +181,8 @@ public class BoardManagerTest{
         result.add(boardDto2);
 
         //when
-        Mockito.when(boardRepository.getBoardMaxIdx(Mockito.anyString())).thenReturn(2);
-        Mockito.when(userRepository.getUserTier(Mockito.anyInt())).thenReturn("tier 3");
-        Mockito.when(boardRepository.inquiryAllBoard(Mockito.anyString(), Mockito.anyInt(), Mockito.anyInt())).thenReturn(result);
+        Mockito.when(boardRepository.getBoardMaxIdx()).thenReturn(2);
+        Mockito.when(boardRepository.inquiryAllBoard(Mockito.anyInt(), Mockito.anyInt())).thenReturn(result);
         //then
         Assertions.assertAll(
                 () -> Assertions.assertEquals(boardDto1.getId(), result.get(0).getId()),
@@ -246,10 +245,9 @@ public class BoardManagerTest{
         result2.add(boardDto3);
 
         //when
-        Mockito.when(boardRepository.getBoardMaxIdxByCategory(Mockito.anyString(), Mockito.anyInt())).thenReturn(2);
-        Mockito.when(userRepository.getUserTier(Mockito.anyInt())).thenReturn("tier 3");
+        Mockito.when(boardRepository.getBoardMaxIdxByCategory(Mockito.anyInt())).thenReturn(2);
         Mockito.when(categoryRepository.isExistCategory(Mockito.anyInt())).thenReturn(true);
-        Mockito.when(boardRepository.inquiryAllBoardByCategory(Mockito.anyString(), Mockito.anyInt(), Mockito.anyInt(), Mockito.anyInt())).thenReturn(result2);
+        Mockito.when(boardRepository.inquiryAllBoardByCategory(Mockito.anyInt(), Mockito.anyInt(), Mockito.anyInt())).thenReturn(result2);
         List<BoardDto> result = boardManager.inquiryAllBoardByCategory(1, 1, 2);
         //then
         Assertions.assertAll(
@@ -330,9 +328,8 @@ public class BoardManagerTest{
         //when
         String searchKeyword = "title";
 
-        Mockito.when(boardRepository.getSearchMaxIdx(Mockito.anyString(), Mockito.anyString())).thenReturn(2);
-        Mockito.when(userRepository.getUserTier(Mockito.anyInt())).thenReturn("tier 3");
-        Mockito.when(boardRepository.searchByTitle(Mockito.anyString(), Mockito.anyString(), Mockito.anyInt(), Mockito.anyInt())).thenReturn(resultRepo);
+        Mockito.when(boardRepository.getSearchMaxIdx(Mockito.anyString())).thenReturn(2);
+        Mockito.when(boardRepository.searchByTitle(Mockito.anyString(), Mockito.anyInt(), Mockito.anyInt())).thenReturn(resultRepo);
         List<BoardDto> result = boardManager.searchBoardByTitle(searchKeyword, 1, 2);
         //then
         Assertions.assertAll(
@@ -399,9 +396,8 @@ public class BoardManagerTest{
 
         //when
         String searchKeyword = "content";
-        Mockito.when(boardRepository.getSearchMaxIdx(Mockito.anyString(), Mockito.anyString())).thenReturn(2);
-        Mockito.when(userRepository.getUserTier(Mockito.anyInt())).thenReturn("tier 3");
-        Mockito.when(boardRepository.searchByContent(Mockito.anyString(), Mockito.anyString(), Mockito.anyInt(), Mockito.anyInt())).thenReturn(resultRepo);
+        Mockito.when(boardRepository.getSearchMaxIdx(Mockito.anyString())).thenReturn(2);
+        Mockito.when(boardRepository.searchByContent(Mockito.anyString(), Mockito.anyInt(), Mockito.anyInt())).thenReturn(resultRepo);
         List<BoardDto> result = boardManager.searchBoardByContent(searchKeyword, 1, 2);
         //then
         Assertions.assertAll(
@@ -468,9 +464,8 @@ public class BoardManagerTest{
 
         //when
         String searchKeyword = "Fixtar";
-        Mockito.when(boardRepository.getSearchMaxIdx(Mockito.anyString(), Mockito.anyString())).thenReturn(1);
-        Mockito.when(userRepository.getUserTier(Mockito.anyInt())).thenReturn("tier 3");
-        Mockito.when(boardRepository.searchByAuthorUserId(Mockito.anyString(), Mockito.anyString(), Mockito.anyInt(), Mockito.anyInt())).thenReturn(List.of(boardDto1));
+        Mockito.when(boardRepository.getSearchMaxIdx(Mockito.anyString())).thenReturn(1);
+        Mockito.when(boardRepository.searchByAuthorUserId(Mockito.anyString(), Mockito.anyInt(), Mockito.anyInt())).thenReturn(List.of(boardDto1));
         List<BoardDto> result = boardManager.searchBoardByAuthorUserId(searchKeyword, 1, 2);
 
         //then
