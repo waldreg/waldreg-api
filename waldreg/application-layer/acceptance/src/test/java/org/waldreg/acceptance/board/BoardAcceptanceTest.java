@@ -103,8 +103,7 @@ public class BoardAcceptanceTest{
         String adminToken = AuthenticationAcceptanceTestHelper.getAdminToken(mvc, objectMapper);
 
         String categoryName = "cate1";
-        String memberTier = "tier 1";
-        CategoryRequest categoryRequest = CategoryRequest.builder().categoryName(categoryName).memberTier(memberTier).build();
+        CategoryRequest categoryRequest = CategoryRequest.builder().categoryName(categoryName).build();
         BoardAcceptanceTestHelper.createCategory(mvc, adminToken, objectMapper.writeValueAsString(categoryRequest));
         CategoryListResponse categoryResult = objectMapper.readValue(BoardAcceptanceTestHelper.inquiryAllCategory(mvc, adminToken)
                                                                              .andReturn()
@@ -116,10 +115,10 @@ public class BoardAcceptanceTest{
 
         String title = "notice";
         String content = "content";
-        String memberTier1 = "tier 3";
+
         BoardCreateRequest boardCreateRequest = BoardCreateRequest.builder()
                 .title(title)
-                .content(content).categoryId(categoryId).memberTier(memberTier1).build();
+                .content(content).categoryId(categoryId).build();
 
         String imgName = "TestImage.jpg";
         String imgContentType = "jpg";
@@ -152,8 +151,7 @@ public class BoardAcceptanceTest{
         String adminToken = AuthenticationAcceptanceTestHelper.getAdminToken(mvc, objectMapper);
 
         String categoryName = "cate1";
-        String memberTier = "tier 1";
-        CategoryRequest categoryRequest = CategoryRequest.builder().categoryName(categoryName).memberTier(memberTier).build();
+        CategoryRequest categoryRequest = CategoryRequest.builder().categoryName(categoryName).build();
         BoardAcceptanceTestHelper.createCategory(mvc, adminToken, objectMapper.writeValueAsString(categoryRequest));
         CategoryListResponse categoryResult = objectMapper.readValue(BoardAcceptanceTestHelper.inquiryAllCategory(mvc, adminToken)
                                                                              .andReturn()
@@ -165,10 +163,9 @@ public class BoardAcceptanceTest{
 
         String title = "notice";
         String content = "content";
-        String memberTier1 = "tier 3";
         BoardCreateRequest boardCreateRequest = BoardCreateRequest.builder()
                 .title(title)
-                .content(content).categoryId(categoryId).memberTier(memberTier1).build();
+                .content(content).categoryId(categoryId).build();
 
         MockPart jsonContent = new MockPart("boardCreateRequest", objectMapper.writeValueAsString(boardCreateRequest).getBytes());
         //when
@@ -191,8 +188,7 @@ public class BoardAcceptanceTest{
         String adminToken = AuthenticationAcceptanceTestHelper.getAdminToken(mvc, objectMapper);
 
         String categoryName = "cate1";
-        String memberTier = "tier 1";
-        CategoryRequest categoryRequest = CategoryRequest.builder().categoryName(categoryName).memberTier(memberTier).build();
+        CategoryRequest categoryRequest = CategoryRequest.builder().categoryName(categoryName).build();
         BoardAcceptanceTestHelper.createCategory(mvc, adminToken, objectMapper.writeValueAsString(categoryRequest));
         CategoryListResponse categoryResult = objectMapper.readValue(BoardAcceptanceTestHelper.inquiryAllCategory(mvc, adminToken)
                                                                              .andReturn()
@@ -204,10 +200,9 @@ public class BoardAcceptanceTest{
 
         String title = "notice";
         String content = "content";
-        String memberTier1 = "tier 3";
         BoardCreateRequest boardCreateRequest = BoardCreateRequest.builder()
                 .title(title)
-                .content(content).categoryId(categoryId).memberTier(memberTier1).build();
+                .content(content).categoryId(categoryId).build();
 
         String imgName = "TestImage.jpg";
         String imgContentType = "jpg";
@@ -235,8 +230,7 @@ public class BoardAcceptanceTest{
         String adminToken = AuthenticationAcceptanceTestHelper.getAdminToken(mvc, objectMapper);
 
         String categoryName = "cate1";
-        String memberTier = "tier 1";
-        CategoryRequest categoryRequest = CategoryRequest.builder().categoryName(categoryName).memberTier(memberTier).build();
+        CategoryRequest categoryRequest = CategoryRequest.builder().categoryName(categoryName).build();
         BoardAcceptanceTestHelper.createCategory(mvc, adminToken, objectMapper.writeValueAsString(categoryRequest));
         CategoryListResponse categoryResult = objectMapper.readValue(BoardAcceptanceTestHelper.inquiryAllCategory(mvc, adminToken)
                                                                              .andReturn()
@@ -248,10 +242,9 @@ public class BoardAcceptanceTest{
 
         String title = "notice";
         String content = "content";
-        String memberTier1 = "tier 3";
         BoardCreateRequest boardCreateRequest = BoardCreateRequest.builder()
                 .title(title)
-                .content(content).categoryId(categoryId).memberTier(memberTier1).build();
+                .content(content).categoryId(categoryId).build();
 
         String fileName = "TestDocx";
         String fileContentType = "docx";
@@ -279,8 +272,7 @@ public class BoardAcceptanceTest{
         String adminToken = AuthenticationAcceptanceTestHelper.getAdminToken(mvc, objectMapper);
 
         String categoryName = "cate1";
-        String memberTier = "tier 1";
-        CategoryRequest categoryRequest = CategoryRequest.builder().categoryName(categoryName).memberTier(memberTier).build();
+        CategoryRequest categoryRequest = CategoryRequest.builder().categoryName(categoryName).build();
         BoardAcceptanceTestHelper.createCategory(mvc, adminToken, objectMapper.writeValueAsString(categoryRequest));
         CategoryListResponse categoryResult = objectMapper.readValue(BoardAcceptanceTestHelper.inquiryAllCategory(mvc, adminToken)
                                                                              .andReturn()
@@ -292,10 +284,9 @@ public class BoardAcceptanceTest{
 
         String title = "notice";
         String content = "content";
-        String memberTier1 = "tier 1";
         BoardCreateRequest boardCreateRequest = BoardCreateRequest.builder()
                 .title(title)
-                .content(content).categoryId(categoryId).memberTier(memberTier1).build();
+                .content(content).categoryId(categoryId).build();
 
         MockPart jsonContent = new MockPart("boardCreateRequest", objectMapper.writeValueAsString(boardCreateRequest).getBytes());
         //when
@@ -321,8 +312,7 @@ public class BoardAcceptanceTest{
         String adminToken = AuthenticationAcceptanceTestHelper.getAdminToken(mvc, objectMapper);
 
         String categoryName = "cate1";
-        String memberTier = "tier 1";
-        CategoryRequest categoryRequest = CategoryRequest.builder().categoryName(categoryName).memberTier(memberTier).build();
+        CategoryRequest categoryRequest = CategoryRequest.builder().categoryName(categoryName).build();
         BoardAcceptanceTestHelper.createCategory(mvc, adminToken, objectMapper.writeValueAsString(categoryRequest));
         CategoryListResponse categoryResult = objectMapper.readValue(BoardAcceptanceTestHelper.inquiryAllCategory(mvc, adminToken)
                                                                              .andReturn()
@@ -334,10 +324,9 @@ public class BoardAcceptanceTest{
 
         String title = "";
         String content = "content";
-        String memberTier1 = "tier 3";
         BoardCreateRequest boardCreateRequest = BoardCreateRequest.builder()
                 .title(title)
-                .content(content).categoryId(categoryId).memberTier(memberTier1).build();
+                .content(content).categoryId(categoryId).build();
 
         MockPart jsonContent = new MockPart("boardCreateRequest", objectMapper.writeValueAsString(boardCreateRequest).getBytes());
         //when
@@ -363,8 +352,7 @@ public class BoardAcceptanceTest{
         String adminToken = AuthenticationAcceptanceTestHelper.getAdminToken(mvc, objectMapper);
 
         String categoryName = "cate1";
-        String memberTier = "tier 1";
-        CategoryRequest categoryRequest = CategoryRequest.builder().categoryName(categoryName).memberTier(memberTier).build();
+        CategoryRequest categoryRequest = CategoryRequest.builder().categoryName(categoryName).build();
         BoardAcceptanceTestHelper.createCategory(mvc, adminToken, objectMapper.writeValueAsString(categoryRequest));
         CategoryListResponse categoryResult = objectMapper.readValue(BoardAcceptanceTestHelper.inquiryAllCategory(mvc, adminToken)
                                                                              .andReturn()
@@ -379,10 +367,9 @@ public class BoardAcceptanceTest{
 
         String title = "notice";
         String content = "content";
-        String memberTier1 = "tier 3";
         BoardCreateRequest boardCreateRequest = BoardCreateRequest.builder()
                 .title(title)
-                .content(content).categoryId(categoryId).memberTier(memberTier1).build();
+                .content(content).categoryId(categoryId).build();
         MockPart jsonContent = new MockPart("boardCreateRequest", objectMapper.writeValueAsString(boardCreateRequest).getBytes());
 
         //when
@@ -405,7 +392,6 @@ public class BoardAcceptanceTest{
                 MockMvcResultMatchers.jsonPath("$.title").value(title),
                 MockMvcResultMatchers.jsonPath("$.content").value(content),
                 MockMvcResultMatchers.jsonPath("$.category").value(categoryId),
-                MockMvcResultMatchers.jsonPath("$.member_tier").value(memberTier),
                 MockMvcResultMatchers.jsonPath("$.author.user_id").value(userId),
                 MockMvcResultMatchers.jsonPath("$.author.name").value(name),
                 MockMvcResultMatchers.jsonPath("$.created_at").isNotEmpty(),
@@ -429,8 +415,7 @@ public class BoardAcceptanceTest{
         String adminToken = AuthenticationAcceptanceTestHelper.getAdminToken(mvc, objectMapper);
 
         String categoryName = "cate1";
-        String memberTier = "tier 1";
-        CategoryRequest categoryRequest = CategoryRequest.builder().categoryName(categoryName).memberTier(memberTier).build();
+        CategoryRequest categoryRequest = CategoryRequest.builder().categoryName(categoryName).build();
         BoardAcceptanceTestHelper.createCategory(mvc, adminToken, objectMapper.writeValueAsString(categoryRequest));
         CategoryListResponse categoryResult = objectMapper.readValue(BoardAcceptanceTestHelper.inquiryAllCategory(mvc, adminToken)
                                                                              .andReturn()
@@ -445,10 +430,9 @@ public class BoardAcceptanceTest{
 
         String title = "notice";
         String content = "content";
-        String memberTier1 = "tier 3";
         BoardCreateRequest boardCreateRequest = BoardCreateRequest.builder()
                 .title(title)
-                .content(content).categoryId(categoryId).memberTier(memberTier1).build();
+                .content(content).categoryId(categoryId).build();
         MockPart jsonContent = new MockPart("boardCreateRequest", objectMapper.writeValueAsString(boardCreateRequest).getBytes());
 
         //when
@@ -474,8 +458,7 @@ public class BoardAcceptanceTest{
         String adminToken = AuthenticationAcceptanceTestHelper.getAdminToken(mvc, objectMapper);
 
         String categoryName = "cate1";
-        String memberTier = "tier 1";
-        CategoryRequest categoryRequest = CategoryRequest.builder().categoryName(categoryName).memberTier(memberTier).build();
+        CategoryRequest categoryRequest = CategoryRequest.builder().categoryName(categoryName).build();
         BoardAcceptanceTestHelper.createCategory(mvc, adminToken, objectMapper.writeValueAsString(categoryRequest));
         CategoryListResponse categoryResult = objectMapper.readValue(BoardAcceptanceTestHelper.inquiryAllCategory(mvc, adminToken)
                                                                              .andReturn()
@@ -490,10 +473,9 @@ public class BoardAcceptanceTest{
 
         String title = "notice";
         String content = "content";
-        String memberTier1 = "tier 1";
         BoardCreateRequest boardCreateRequest = BoardCreateRequest.builder()
                 .title(title)
-                .content(content).categoryId(categoryId).memberTier(memberTier1).build();
+                .content(content).categoryId(categoryId).build();
         MockPart jsonContent = new MockPart("boardCreateRequest", objectMapper.writeValueAsString(boardCreateRequest).getBytes());
 
         //when
@@ -530,7 +512,6 @@ public class BoardAcceptanceTest{
 
         String title2 = "notice";
         String content2 = "content";
-        String memberTier2 = "tier 3";
 
         ResultActions resultActions = BoardAcceptanceTestHelper.inquiryAllBoard(mvc, adminToken);
         BoardResponse[] boards = objectMapper.readValue(resultActions.andReturn().getResponse().getContentAsString(), BoardListResponse.class).getBoards();
@@ -552,7 +533,7 @@ public class BoardAcceptanceTest{
                 .title(title2)
                 .content(content2)
                 .categoryId(categoryId)
-                .memberTier(memberTier2)
+
                 .deleteImageIdList(imageIdList)
                 .deleteFileIdList(fileIdList)
                 .build();
@@ -591,7 +572,6 @@ public class BoardAcceptanceTest{
 
         String title2 = "notice";
         String content2 = "content";
-        String memberTier2 = "tier 3";
 
         ResultActions resultActions = BoardAcceptanceTestHelper.inquiryAllBoard(mvc, adminToken);
         BoardResponse[] boards = objectMapper.readValue(resultActions.andReturn().getResponse().getContentAsString(), BoardListResponse.class).getBoards();
@@ -613,7 +593,7 @@ public class BoardAcceptanceTest{
                 .title(title2)
                 .content(content2)
                 .categoryId(categoryId)
-                .memberTier(memberTier2)
+
                 .deleteImageIdList(imageIdList)
                 .deleteFileIdList(fileIdList)
                 .build();
@@ -642,7 +622,6 @@ public class BoardAcceptanceTest{
 
         String title2 = "notice";
         String content2 = "content";
-        String memberTier2 = "tier 3";
 
         ResultActions resultActions = BoardAcceptanceTestHelper.inquiryAllBoard(mvc, adminToken);
         BoardResponse[] boards = objectMapper.readValue(resultActions.andReturn().getResponse().getContentAsString(), BoardListResponse.class).getBoards();
@@ -664,7 +643,7 @@ public class BoardAcceptanceTest{
                 .title(title2)
                 .content(content2)
                 .categoryId(categoryId)
-                .memberTier(memberTier2)
+
                 .deleteImageIdList(imageIdList)
                 .deleteFileIdList(fileIdList)
                 .build();
@@ -698,7 +677,6 @@ public class BoardAcceptanceTest{
 
         String title2 = "notice";
         String content2 = "content";
-        String memberTier2 = "tier 3";
 
         ResultActions resultActions = BoardAcceptanceTestHelper.inquiryAllBoard(mvc, adminToken);
         BoardResponse[] boards = objectMapper.readValue(resultActions.andReturn().getResponse().getContentAsString(), BoardListResponse.class).getBoards();
@@ -720,7 +698,7 @@ public class BoardAcceptanceTest{
                 .title(title2)
                 .content(content2)
                 .categoryId(categoryId)
-                .memberTier(memberTier2)
+
                 .deleteImageIdList(imageIdList)
                 .deleteFileIdList(fileIdList)
                 .build();
@@ -755,7 +733,6 @@ public class BoardAcceptanceTest{
 
         String title2 = "notice";
         String content2 = "content";
-        String memberTier2 = "tier 3";
 
         ResultActions resultActions = BoardAcceptanceTestHelper.inquiryAllBoard(mvc, adminToken);
         BoardResponse[] boards = objectMapper.readValue(resultActions.andReturn().getResponse().getContentAsString(), BoardListResponse.class).getBoards();
@@ -777,7 +754,7 @@ public class BoardAcceptanceTest{
                 .title(title2)
                 .content(content2)
                 .categoryId(categoryId)
-                .memberTier(memberTier2)
+
                 .deleteImageIdList(imageIdList)
                 .deleteFileIdList(fileIdList)
                 .build();
@@ -819,7 +796,6 @@ public class BoardAcceptanceTest{
 
         String title2 = "notice";
         String content2 = "content";
-        String memberTier2 = "tier 3";
 
         ResultActions resultActions = BoardAcceptanceTestHelper.inquiryAllBoard(mvc, token);
         BoardResponse[] boards = objectMapper.readValue(resultActions.andReturn().getResponse().getContentAsString(), BoardListResponse.class).getBoards();
@@ -841,7 +817,7 @@ public class BoardAcceptanceTest{
                 .title(title2)
                 .content(content2)
                 .categoryId(categoryId)
-                .memberTier(memberTier2)
+
                 .deleteImageIdList(imageIdList)
                 .deleteFileIdList(fileIdList)
                 .build();
@@ -878,8 +854,7 @@ public class BoardAcceptanceTest{
         String adminToken = AuthenticationAcceptanceTestHelper.getAdminToken(mvc, objectMapper);
 
         String categoryName = "cate1";
-        String memberTier = "tier 1";
-        CategoryRequest categoryRequest = CategoryRequest.builder().categoryName(categoryName).memberTier(memberTier).build();
+        CategoryRequest categoryRequest = CategoryRequest.builder().categoryName(categoryName).build();
         BoardAcceptanceTestHelper.createCategory(mvc, adminToken, objectMapper.writeValueAsString(categoryRequest));
         CategoryListResponse categoryResult = objectMapper.readValue(BoardAcceptanceTestHelper.inquiryAllCategory(mvc, adminToken)
                                                                              .andReturn()
@@ -891,10 +866,9 @@ public class BoardAcceptanceTest{
 
         String title = "notice";
         String content = "content";
-        String memberTier1 = "tier 3";
         BoardCreateRequest boardCreateRequest = BoardCreateRequest.builder()
                 .title(title)
-                .content(content).categoryId(categoryId).memberTier(memberTier1).build();
+                .content(content).categoryId(categoryId).build();
 
         String imgName = "TestImage.jpg";
         String imgContentType = "jpg";
@@ -933,8 +907,7 @@ public class BoardAcceptanceTest{
         String adminToken = AuthenticationAcceptanceTestHelper.getAdminToken(mvc, objectMapper);
 
         String categoryName = "cate1";
-        String memberTier = "tier 1";
-        CategoryRequest categoryRequest = CategoryRequest.builder().categoryName(categoryName).memberTier(memberTier).build();
+        CategoryRequest categoryRequest = CategoryRequest.builder().categoryName(categoryName).build();
         BoardAcceptanceTestHelper.createCategory(mvc, adminToken, objectMapper.writeValueAsString(categoryRequest));
         CategoryListResponse categoryResult = objectMapper.readValue(BoardAcceptanceTestHelper.inquiryAllCategory(mvc, adminToken)
                                                                              .andReturn()
@@ -946,10 +919,9 @@ public class BoardAcceptanceTest{
 
         String title = "notice";
         String content = "content";
-        String memberTier1 = "tier 3";
         BoardCreateRequest boardCreateRequest = BoardCreateRequest.builder()
                 .title(title)
-                .content(content).categoryId(categoryId).memberTier(memberTier1).build();
+                .content(content).categoryId(categoryId).build();
 
         String imgName = "TestImage.jpg";
         String imgContentType = "jpg";
@@ -994,36 +966,31 @@ public class BoardAcceptanceTest{
         String title1 = "notice1";
         String content1 = "content";
         int category1 = 1;
-        String memberTier1 = "tier 3";
         BoardCreateRequest boardCreateRequest1 = BoardCreateRequest.builder()
                 .title(title1)
                 .content(content1)
                 .categoryId(category1)
-                .memberTier(memberTier1)
                 .build();
         MockPart jsonContent1 = new MockPart("boardCreateRequest", objectMapper.writeValueAsString(boardCreateRequest1).getBytes());
 
         String title2 = "notice2";
         String content2 = "content";
         int category2 = 1;
-        String memberTier2 = "tier 3";
         BoardCreateRequest boardCreateRequest2 = BoardCreateRequest.builder()
                 .title(title2)
                 .content(content2)
                 .categoryId(category2)
-                .memberTier(memberTier2)
+
                 .build();
         MockPart jsonContent2 = new MockPart("boardCreateRequest", objectMapper.writeValueAsString(boardCreateRequest2).getBytes());
 
         String title3 = "notice3";
         String content3 = "content";
         int category3 = 1;
-        String memberTier3 = "tier 3";
         BoardCreateRequest boardCreateRequest3 = BoardCreateRequest.builder()
                 .title(title3)
                 .content(content3)
                 .categoryId(category3)
-                .memberTier(memberTier3)
                 .build();
         MockPart jsonContent3 = new MockPart("boardCreateRequest", objectMapper.writeValueAsString(boardCreateRequest3).getBytes());
 
@@ -1044,7 +1011,6 @@ public class BoardAcceptanceTest{
                 MockMvcResultMatchers.jsonPath("$.boards.[0].title").value(title1),
                 MockMvcResultMatchers.jsonPath("$.boards.[0].content").value(content1),
                 MockMvcResultMatchers.jsonPath("$.boards.[0].category").value(category1),
-                MockMvcResultMatchers.jsonPath("$.boards.[0].member_tier").value(memberTier1),
                 MockMvcResultMatchers.jsonPath("$.boards.[0].author.user_id").value(userId),
                 MockMvcResultMatchers.jsonPath("$.boards.[0].author.name").value(name),
                 MockMvcResultMatchers.jsonPath("$.boards.[0].created_at").isNotEmpty(),
@@ -1068,8 +1034,8 @@ public class BoardAcceptanceTest{
         String adminToken = AuthenticationAcceptanceTestHelper.getAdminToken(mvc, objectMapper);
 
         String categoryName = "cate1";
-        String memberTier = "tier 1";
-        CategoryRequest categoryRequest = CategoryRequest.builder().categoryName(categoryName).memberTier(memberTier).build();
+
+        CategoryRequest categoryRequest = CategoryRequest.builder().categoryName(categoryName).build();
         BoardAcceptanceTestHelper.createCategory(mvc, adminToken, objectMapper.writeValueAsString(categoryRequest));
         CategoryListResponse categoryResult = objectMapper.readValue(BoardAcceptanceTestHelper.inquiryAllCategory(mvc, adminToken)
                                                                              .andReturn()
@@ -1084,35 +1050,33 @@ public class BoardAcceptanceTest{
 
         String title1 = "notice1";
         String content1 = "content";
-        String memberTier1 = "tier 3";
+
         BoardCreateRequest boardCreateRequest1 = BoardCreateRequest.builder()
                 .title(title1)
                 .content(content1)
                 .categoryId(category1)
-                .memberTier(memberTier1)
                 .build();
         MockPart jsonContent1 = new MockPart("boardCreateRequest", objectMapper.writeValueAsString(boardCreateRequest1).getBytes());
 
         String title2 = "notice2";
         String content2 = "content";
-        String memberTier2 = "tier 3";
+
         BoardCreateRequest boardCreateRequest2 = BoardCreateRequest.builder()
                 .title(title2)
                 .content(content2)
                 .categoryId(category1)
-                .memberTier(memberTier2)
                 .build();
         MockPart jsonContent2 = new MockPart("boardCreateRequest", objectMapper.writeValueAsString(boardCreateRequest2).getBytes());
 
         String title3 = "notice3";
         String content3 = "content";
         int category3 = 3;
-        String memberTier3 = "tier 3";
+
         BoardCreateRequest boardCreateRequest3 = BoardCreateRequest.builder()
                 .title(title3)
                 .content(content3)
                 .categoryId(category3)
-                .memberTier(memberTier3)
+
                 .build();
         MockPart jsonContent3 = new MockPart("boardCreateRequest", objectMapper.writeValueAsString(boardCreateRequest3).getBytes());
 
@@ -1133,7 +1097,6 @@ public class BoardAcceptanceTest{
                 MockMvcResultMatchers.jsonPath("$.boards.[0].title").value(title1),
                 MockMvcResultMatchers.jsonPath("$.boards.[0].content").value(content1),
                 MockMvcResultMatchers.jsonPath("$.boards.[0].category").value(category1),
-                MockMvcResultMatchers.jsonPath("$.boards.[0].member_tier").value(memberTier1),
                 MockMvcResultMatchers.jsonPath("$.boards.[0].author.user_id").value(userId),
                 MockMvcResultMatchers.jsonPath("$.boards.[0].author.name").value(name),
                 MockMvcResultMatchers.jsonPath("$.boards.[0].created_at").isNotEmpty(),
@@ -1165,36 +1128,36 @@ public class BoardAcceptanceTest{
         String title1 = "notice1";
         String content1 = "content";
         int category1 = 1;
-        String memberTier1 = "tier 3";
+
         BoardCreateRequest boardCreateRequest1 = BoardCreateRequest.builder()
                 .title(title1)
                 .content(content1)
                 .categoryId(category1)
-                .memberTier(memberTier1)
+
                 .build();
         MockPart jsonContent1 = new MockPart("boardCreateRequest", objectMapper.writeValueAsString(boardCreateRequest1).getBytes());
 
         String title2 = "notice2";
         String content2 = "content";
         int category2 = 1;
-        String memberTier2 = "tier 3";
+
         BoardCreateRequest boardCreateRequest2 = BoardCreateRequest.builder()
                 .title(title2)
                 .content(content2)
                 .categoryId(category2)
-                .memberTier(memberTier2)
+
                 .build();
         MockPart jsonContent2 = new MockPart("boardCreateRequest", objectMapper.writeValueAsString(boardCreateRequest2).getBytes());
 
         String title3 = "notice3";
         String content3 = "content";
         int category3 = 3;
-        String memberTier3 = "tier 3";
+
         BoardCreateRequest boardCreateRequest3 = BoardCreateRequest.builder()
                 .title(title3)
                 .content(content3)
                 .categoryId(category3)
-                .memberTier(memberTier3)
+
                 .build();
         MockPart jsonContent3 = new MockPart("boardCreateRequest", objectMapper.writeValueAsString(boardCreateRequest3).getBytes());
 
@@ -1215,7 +1178,7 @@ public class BoardAcceptanceTest{
                 MockMvcResultMatchers.jsonPath("$.boards.[0].title").value(title2),
                 MockMvcResultMatchers.jsonPath("$.boards.[0].content").value(content2),
                 MockMvcResultMatchers.jsonPath("$.boards.[0].category").value(category2),
-                MockMvcResultMatchers.jsonPath("$.boards.[0].member_tier").value(memberTier2),
+
                 MockMvcResultMatchers.jsonPath("$.boards.[0].author.user_id").value(userId),
                 MockMvcResultMatchers.jsonPath("$.boards.[0].author.name").value(name),
                 MockMvcResultMatchers.jsonPath("$.boards.[0].created_at").isNotEmpty(),
@@ -1241,8 +1204,8 @@ public class BoardAcceptanceTest{
         String adminToken = AuthenticationAcceptanceTestHelper.getAdminToken(mvc, objectMapper);
 
         String categoryName = "cate1";
-        String memberTier = "tier 1";
-        CategoryRequest categoryRequest = CategoryRequest.builder().categoryName(categoryName).memberTier(memberTier).build();
+
+        CategoryRequest categoryRequest = CategoryRequest.builder().categoryName(categoryName).build();
         BoardAcceptanceTestHelper.createCategory(mvc, adminToken, objectMapper.writeValueAsString(categoryRequest));
         CategoryListResponse categoryResult = objectMapper.readValue(BoardAcceptanceTestHelper.inquiryAllCategory(mvc, adminToken)
                                                                              .andReturn()
@@ -1257,35 +1220,35 @@ public class BoardAcceptanceTest{
 
         String title1 = "notice1";
         String content1 = "content";
-        String memberTier1 = "tier 3";
+
         BoardCreateRequest boardCreateRequest1 = BoardCreateRequest.builder()
                 .title(title1)
                 .content(content1)
                 .categoryId(category1)
-                .memberTier(memberTier1)
+
                 .build();
         MockPart jsonContent1 = new MockPart("boardCreateRequest", objectMapper.writeValueAsString(boardCreateRequest1).getBytes());
 
         String title2 = "notice2";
         String content2 = "content";
-        String memberTier2 = "tier 3";
+
         BoardCreateRequest boardCreateRequest2 = BoardCreateRequest.builder()
                 .title(title2)
                 .content(content2)
                 .categoryId(category1)
-                .memberTier(memberTier2)
+
                 .build();
         MockPart jsonContent2 = new MockPart("boardCreateRequest", objectMapper.writeValueAsString(boardCreateRequest2).getBytes());
 
         String title3 = "notice3";
         String content3 = "content";
         int category3 = 3;
-        String memberTier3 = "tier 3";
+
         BoardCreateRequest boardCreateRequest3 = BoardCreateRequest.builder()
                 .title(title3)
                 .content(content3)
                 .categoryId(category3)
-                .memberTier(memberTier3)
+
                 .build();
         MockPart jsonContent3 = new MockPart("boardCreateRequest", objectMapper.writeValueAsString(boardCreateRequest3).getBytes());
 
@@ -1317,7 +1280,6 @@ public class BoardAcceptanceTest{
                 MockMvcResultMatchers.jsonPath("$.boards.[0].title").value(title2),
                 MockMvcResultMatchers.jsonPath("$.boards.[0].content").value(content2),
                 MockMvcResultMatchers.jsonPath("$.boards.[0].category").value(category1),
-                MockMvcResultMatchers.jsonPath("$.boards.[0].member_tier").value(memberTier2),
                 MockMvcResultMatchers.jsonPath("$.boards.[0].author.user_id").value(userId),
                 MockMvcResultMatchers.jsonPath("$.boards.[0].author.name").value(name),
                 MockMvcResultMatchers.jsonPath("$.boards.[0].created_at").isNotEmpty(),
@@ -1340,8 +1302,8 @@ public class BoardAcceptanceTest{
         String adminToken = AuthenticationAcceptanceTestHelper.getAdminToken(mvc, objectMapper);
 
         String categoryName = "cate1";
-        String memberTier = "tier 1";
-        CategoryRequest categoryRequest = CategoryRequest.builder().categoryName(categoryName).memberTier(memberTier).build();
+
+        CategoryRequest categoryRequest = CategoryRequest.builder().categoryName(categoryName).build();
         BoardAcceptanceTestHelper.createCategory(mvc, adminToken, objectMapper.writeValueAsString(categoryRequest));
         CategoryListResponse categoryResult = objectMapper.readValue(BoardAcceptanceTestHelper.inquiryAllCategory(mvc, adminToken)
                                                                              .andReturn()
@@ -1356,34 +1318,33 @@ public class BoardAcceptanceTest{
 
         String title1 = "notice1";
         String content1 = "content";
-        String memberTier1 = "tier 3";
+
         BoardCreateRequest boardCreateRequest1 = BoardCreateRequest.builder()
                 .title(title1)
                 .content(content1)
                 .categoryId(category1)
-                .memberTier(memberTier1)
+
                 .build();
         MockPart jsonContent1 = new MockPart("boardCreateRequest", objectMapper.writeValueAsString(boardCreateRequest1).getBytes());
 
         String title2 = "notice2";
         String content2 = "content";
-        String memberTier2 = "tier 3";
+
         BoardCreateRequest boardCreateRequest2 = BoardCreateRequest.builder()
                 .title(title2)
                 .content(content2)
                 .categoryId(category1)
-                .memberTier(memberTier2)
                 .build();
         MockPart jsonContent2 = new MockPart("boardCreateRequest", objectMapper.writeValueAsString(boardCreateRequest2).getBytes());
 
         String title3 = "notice3";
         String content3 = "content";
-        String memberTier3 = "tier 3";
+
         BoardCreateRequest boardCreateRequest3 = BoardCreateRequest.builder()
                 .title(title3)
                 .content(content3)
                 .categoryId(category1)
-                .memberTier(memberTier3)
+
                 .build();
         MockPart jsonContent3 = new MockPart("boardCreateRequest", objectMapper.writeValueAsString(boardCreateRequest3).getBytes());
 
@@ -1412,8 +1373,8 @@ public class BoardAcceptanceTest{
         String adminToken = AuthenticationAcceptanceTestHelper.getAdminToken(mvc, objectMapper);
 
         String categoryName = "cate1";
-        String memberTier = "tier 1";
-        CategoryRequest categoryRequest = CategoryRequest.builder().categoryName(categoryName).memberTier(memberTier).build();
+
+        CategoryRequest categoryRequest = CategoryRequest.builder().categoryName(categoryName).build();
         BoardAcceptanceTestHelper.createCategory(mvc, adminToken, objectMapper.writeValueAsString(categoryRequest));
         CategoryListResponse categoryResult = objectMapper.readValue(BoardAcceptanceTestHelper.inquiryAllCategory(mvc, adminToken)
                                                                              .andReturn()
@@ -1428,34 +1389,33 @@ public class BoardAcceptanceTest{
 
         String title1 = "notice1";
         String content1 = "content";
-        String memberTier1 = "tier 3";
+
         BoardCreateRequest boardCreateRequest1 = BoardCreateRequest.builder()
                 .title(title1)
                 .content(content1)
                 .categoryId(category1)
-                .memberTier(memberTier1)
+
                 .build();
         MockPart jsonContent1 = new MockPart("boardCreateRequest", objectMapper.writeValueAsString(boardCreateRequest1).getBytes());
 
         String title2 = "notice2";
         String content2 = "content";
-        String memberTier2 = "tier 3";
+
         BoardCreateRequest boardCreateRequest2 = BoardCreateRequest.builder()
                 .title(title2)
                 .content(content2)
                 .categoryId(category1)
-                .memberTier(memberTier2)
                 .build();
         MockPart jsonContent2 = new MockPart("boardCreateRequest", objectMapper.writeValueAsString(boardCreateRequest2).getBytes());
 
         String title3 = "notice3";
         String content3 = "content";
-        String memberTier3 = "tier 3";
+
         BoardCreateRequest boardCreateRequest3 = BoardCreateRequest.builder()
                 .title(title3)
                 .content(content3)
                 .categoryId(category1)
-                .memberTier(memberTier3)
+
                 .build();
         MockPart jsonContent3 = new MockPart("boardCreateRequest", objectMapper.writeValueAsString(boardCreateRequest3).getBytes());
 
@@ -1489,36 +1449,36 @@ public class BoardAcceptanceTest{
         String title1 = "notice1";
         String content1 = "content";
         int category1 = 1;
-        String memberTier1 = "tier 3";
+
         BoardCreateRequest boardCreateRequest1 = BoardCreateRequest.builder()
                 .title(title1)
                 .content(content1)
                 .categoryId(category1)
-                .memberTier(memberTier1)
+
                 .build();
         MockPart jsonContent1 = new MockPart("boardCreateRequest", objectMapper.writeValueAsString(boardCreateRequest1).getBytes());
 
         String title2 = "notice2";
         String content2 = "content";
         int category2 = 1;
-        String memberTier2 = "tier 3";
+
         BoardCreateRequest boardCreateRequest2 = BoardCreateRequest.builder()
                 .title(title2)
                 .content(content2)
                 .categoryId(category2)
-                .memberTier(memberTier2)
+
                 .build();
         MockPart jsonContent2 = new MockPart("boardCreateRequest", objectMapper.writeValueAsString(boardCreateRequest2).getBytes());
 
         String title3 = "notice3";
         String content3 = "content";
         int category3 = 1;
-        String memberTier3 = "tier 3";
+
         BoardCreateRequest boardCreateRequest3 = BoardCreateRequest.builder()
                 .title(title3)
                 .content(content3)
                 .categoryId(category3)
-                .memberTier(memberTier3)
+
                 .build();
         MockPart jsonContent3 = new MockPart("boardCreateRequest", objectMapper.writeValueAsString(boardCreateRequest3).getBytes());
 
@@ -1539,7 +1499,6 @@ public class BoardAcceptanceTest{
                 MockMvcResultMatchers.jsonPath("$.boards.[0].title").value(title1),
                 MockMvcResultMatchers.jsonPath("$.boards.[0].content").value(content1),
                 MockMvcResultMatchers.jsonPath("$.boards.[0].category").value(category1),
-                MockMvcResultMatchers.jsonPath("$.boards.[0].member_tier").value(memberTier1),
                 MockMvcResultMatchers.jsonPath("$.boards.[0].author.user_id").value(userId),
                 MockMvcResultMatchers.jsonPath("$.boards.[0].author.name").value(name),
                 MockMvcResultMatchers.jsonPath("$.boards.[0].created_at").isNotEmpty(),
@@ -1554,7 +1513,6 @@ public class BoardAcceptanceTest{
                 MockMvcResultMatchers.jsonPath("$.boards.[1].title").value(title2),
                 MockMvcResultMatchers.jsonPath("$.boards.[1].content").value(content2),
                 MockMvcResultMatchers.jsonPath("$.boards.[1].category").value(category2),
-                MockMvcResultMatchers.jsonPath("$.boards.[1].member_tier").value(memberTier2),
                 MockMvcResultMatchers.jsonPath("$.boards.[1].author.user_id").value(userId),
                 MockMvcResultMatchers.jsonPath("$.boards.[1].author.name").value(name),
                 MockMvcResultMatchers.jsonPath("$.boards.[1].created_at").isNotEmpty(),
@@ -1581,36 +1539,36 @@ public class BoardAcceptanceTest{
         String title1 = "notice1";
         String content1 = "content";
         int category1 = 1;
-        String memberTier1 = "tier 3";
+
         BoardCreateRequest boardCreateRequest1 = BoardCreateRequest.builder()
                 .title(title1)
                 .content(content1)
                 .categoryId(category1)
-                .memberTier(memberTier1)
+
                 .build();
         MockPart jsonContent1 = new MockPart("boardCreateRequest", objectMapper.writeValueAsString(boardCreateRequest1).getBytes());
 
         String title2 = "notice2";
         String content2 = "content2";
         int category2 = 1;
-        String memberTier2 = "tier 3";
+
         BoardCreateRequest boardCreateRequest2 = BoardCreateRequest.builder()
                 .title(title2)
                 .content(content2)
                 .categoryId(category2)
-                .memberTier(memberTier2)
+
                 .build();
         MockPart jsonContent2 = new MockPart("boardCreateRequest", objectMapper.writeValueAsString(boardCreateRequest2).getBytes());
 
         String title3 = "notice3";
         String content3 = "content3";
         int category3 = 1;
-        String memberTier3 = "tier 3";
+
         BoardCreateRequest boardCreateRequest3 = BoardCreateRequest.builder()
                 .title(title3)
                 .content(content3)
                 .categoryId(category3)
-                .memberTier(memberTier3)
+
                 .build();
         MockPart jsonContent3 = new MockPart("boardCreateRequest", objectMapper.writeValueAsString(boardCreateRequest3).getBytes());
 
@@ -1631,7 +1589,6 @@ public class BoardAcceptanceTest{
                 MockMvcResultMatchers.jsonPath("$.boards.[0].title").value(title1),
                 MockMvcResultMatchers.jsonPath("$.boards.[0].content").value(content1),
                 MockMvcResultMatchers.jsonPath("$.boards.[0].category").value(category1),
-                MockMvcResultMatchers.jsonPath("$.boards.[0].member_tier").value(memberTier1),
                 MockMvcResultMatchers.jsonPath("$.boards.[0].author.user_id").value(userId),
                 MockMvcResultMatchers.jsonPath("$.boards.[0].author.name").value(name),
                 MockMvcResultMatchers.jsonPath("$.boards.[0].created_at").isNotEmpty(),
@@ -1646,7 +1603,7 @@ public class BoardAcceptanceTest{
                 MockMvcResultMatchers.jsonPath("$.boards.[1].title").value(title2),
                 MockMvcResultMatchers.jsonPath("$.boards.[1].content").value(content2),
                 MockMvcResultMatchers.jsonPath("$.boards.[1].category").value(category2),
-                MockMvcResultMatchers.jsonPath("$.boards.[1].member_tier").value(memberTier2),
+
                 MockMvcResultMatchers.jsonPath("$.boards.[1].author.user_id").value(userId),
                 MockMvcResultMatchers.jsonPath("$.boards.[1].author.name").value(name),
                 MockMvcResultMatchers.jsonPath("$.boards.[1].created_at").isNotEmpty(),
@@ -1673,36 +1630,36 @@ public class BoardAcceptanceTest{
         String title1 = "notice1";
         String content1 = "content";
         int category1 = 1;
-        String memberTier1 = "tier 3";
+
         BoardCreateRequest boardCreateRequest1 = BoardCreateRequest.builder()
                 .title(title1)
                 .content(content1)
                 .categoryId(category1)
-                .memberTier(memberTier1)
+
                 .build();
         MockPart jsonContent1 = new MockPart("boardCreateRequest", objectMapper.writeValueAsString(boardCreateRequest1).getBytes());
 
         String title2 = "notice2";
         String content2 = "content";
         int category2 = 1;
-        String memberTier2 = "tier 3";
+
         BoardCreateRequest boardCreateRequest2 = BoardCreateRequest.builder()
                 .title(title2)
                 .content(content2)
                 .categoryId(category2)
-                .memberTier(memberTier2)
+
                 .build();
         MockPart jsonContent2 = new MockPart("boardCreateRequest", objectMapper.writeValueAsString(boardCreateRequest2).getBytes());
 
         String title3 = "notice3";
         String content3 = "content";
         int category3 = 1;
-        String memberTier3 = "tier 3";
+
         BoardCreateRequest boardCreateRequest3 = BoardCreateRequest.builder()
                 .title(title3)
                 .content(content3)
                 .categoryId(category3)
-                .memberTier(memberTier3)
+
                 .build();
         MockPart jsonContent3 = new MockPart("boardCreateRequest", objectMapper.writeValueAsString(boardCreateRequest3).getBytes());
 
@@ -1723,7 +1680,6 @@ public class BoardAcceptanceTest{
                 MockMvcResultMatchers.jsonPath("$.boards.[0].title").value(title1),
                 MockMvcResultMatchers.jsonPath("$.boards.[0].content").value(content1),
                 MockMvcResultMatchers.jsonPath("$.boards.[0].category").value(category1),
-                MockMvcResultMatchers.jsonPath("$.boards.[0].member_tier").value(memberTier1),
                 MockMvcResultMatchers.jsonPath("$.boards.[0].author.user_id").value(userId),
                 MockMvcResultMatchers.jsonPath("$.boards.[0].author.name").value(name),
                 MockMvcResultMatchers.jsonPath("$.boards.[0].created_at").isNotEmpty(),
@@ -1738,7 +1694,7 @@ public class BoardAcceptanceTest{
                 MockMvcResultMatchers.jsonPath("$.boards.[1].title").value(title2),
                 MockMvcResultMatchers.jsonPath("$.boards.[1].content").value(content2),
                 MockMvcResultMatchers.jsonPath("$.boards.[1].category").value(category2),
-                MockMvcResultMatchers.jsonPath("$.boards.[1].member_tier").value(memberTier2),
+
                 MockMvcResultMatchers.jsonPath("$.boards.[1].author.user_id").value(userId),
                 MockMvcResultMatchers.jsonPath("$.boards.[1].author.name").value(name),
                 MockMvcResultMatchers.jsonPath("$.boards.[1].created_at").isNotEmpty(),
@@ -1765,36 +1721,36 @@ public class BoardAcceptanceTest{
         String title1 = "notice1";
         String content1 = "content";
         int category1 = 1;
-        String memberTier1 = "tier 3";
+
         BoardCreateRequest boardCreateRequest1 = BoardCreateRequest.builder()
                 .title(title1)
                 .content(content1)
                 .categoryId(category1)
-                .memberTier(memberTier1)
+
                 .build();
         MockPart jsonContent1 = new MockPart("boardCreateRequest", objectMapper.writeValueAsString(boardCreateRequest1).getBytes());
 
         String title2 = "notice2";
         String content2 = "content";
         int category2 = 1;
-        String memberTier2 = "tier 3";
+
         BoardCreateRequest boardCreateRequest2 = BoardCreateRequest.builder()
                 .title(title2)
                 .content(content2)
                 .categoryId(category2)
-                .memberTier(memberTier2)
+
                 .build();
         MockPart jsonContent2 = new MockPart("boardCreateRequest", objectMapper.writeValueAsString(boardCreateRequest2).getBytes());
 
         String title3 = "notice3";
         String content3 = "content";
         int category3 = 1;
-        String memberTier3 = "tier 3";
+
         BoardCreateRequest boardCreateRequest3 = BoardCreateRequest.builder()
                 .title(title3)
                 .content(content3)
                 .categoryId(category3)
-                .memberTier(memberTier3)
+
                 .build();
         MockPart jsonContent3 = new MockPart("boardCreateRequest", objectMapper.writeValueAsString(boardCreateRequest3).getBytes());
 
@@ -1828,36 +1784,36 @@ public class BoardAcceptanceTest{
         String title1 = "notice1";
         String content1 = "content";
         int category1 = 1;
-        String memberTier1 = "tier 3";
+
         BoardCreateRequest boardCreateRequest1 = BoardCreateRequest.builder()
                 .title(title1)
                 .content(content1)
                 .categoryId(category1)
-                .memberTier(memberTier1)
+
                 .build();
         MockPart jsonContent1 = new MockPart("boardCreateRequest", objectMapper.writeValueAsString(boardCreateRequest1).getBytes());
 
         String title2 = "notice2";
         String content2 = "content";
         int category2 = 1;
-        String memberTier2 = "tier 3";
+
         BoardCreateRequest boardCreateRequest2 = BoardCreateRequest.builder()
                 .title(title2)
                 .content(content2)
                 .categoryId(category2)
-                .memberTier(memberTier2)
+
                 .build();
         MockPart jsonContent2 = new MockPart("boardCreateRequest", objectMapper.writeValueAsString(boardCreateRequest2).getBytes());
 
         String title3 = "notice3";
         String content3 = "content";
         int category3 = 1;
-        String memberTier3 = "tier 3";
+
         BoardCreateRequest boardCreateRequest3 = BoardCreateRequest.builder()
                 .title(title3)
                 .content(content3)
                 .categoryId(category3)
-                .memberTier(memberTier3)
+
                 .build();
         MockPart jsonContent3 = new MockPart("boardCreateRequest", objectMapper.writeValueAsString(boardCreateRequest3).getBytes());
 
@@ -2292,6 +2248,7 @@ public class BoardAcceptanceTest{
         );
 
     }
+
     @Test
     @DisplayName("특정 게시글의 리액션 취소 성공")
     public void REACTION_CANCEL_SUCCESS_TEST() throws Exception{
@@ -2307,7 +2264,7 @@ public class BoardAcceptanceTest{
         //when
         BoardAcceptanceTestHelper.createReaction(mvc, adminToken, boardId, reactionType);
         BoardAcceptanceTestHelper.createReaction(mvc, adminToken, boardId, reactionType);
-        ResultActions result = BoardAcceptanceTestHelper.inquiryBoardById(mvc,adminToken,boardId);
+        ResultActions result = BoardAcceptanceTestHelper.inquiryBoardById(mvc, adminToken, boardId);
 
         //then
         result.andExpectAll(
@@ -2318,6 +2275,7 @@ public class BoardAcceptanceTest{
         );
 
     }
+
     @Test
     @DisplayName("특정 게시글의 리액션 수정 성공")
     public void REACTION_MODIFY_SUCCESS_TEST() throws Exception{
@@ -2335,7 +2293,7 @@ public class BoardAcceptanceTest{
         BoardAcceptanceTestHelper.createReaction(mvc, adminToken, boardId, reactionType);
         BoardAcceptanceTestHelper.createReaction(mvc, adminToken, boardId, modifyReactionType);
 
-        ResultActions result = BoardAcceptanceTestHelper.inquiryBoardById(mvc,adminToken,boardId);
+        ResultActions result = BoardAcceptanceTestHelper.inquiryBoardById(mvc, adminToken, boardId);
 
         //then
         result.andExpectAll(
@@ -2346,6 +2304,7 @@ public class BoardAcceptanceTest{
                 MockMvcResultMatchers.jsonPath("$.reactions.bad").value(1)
         );
     }
+
     @Test
     @DisplayName("특정 게시글의 리액션 실패 - 없는 게시글 아이디")
     public void REACTION_CREATE_FAIL_UNKNOWN_ID_TEST() throws Exception{
@@ -2422,8 +2381,8 @@ public class BoardAcceptanceTest{
         String adminToken = AuthenticationAcceptanceTestHelper.getAdminToken(mvc, objectMapper);
 
         String categoryName = "cate1";
-        String memberTier = "tier 1";
-        CategoryRequest categoryRequest = CategoryRequest.builder().categoryName(categoryName).memberTier(memberTier).build();
+
+        CategoryRequest categoryRequest = CategoryRequest.builder().categoryName(categoryName).build();
 
         //when
         ResultActions result = BoardAcceptanceTestHelper.createCategory(mvc, adminToken, objectMapper.writeValueAsString(categoryRequest));
@@ -2469,8 +2428,8 @@ public class BoardAcceptanceTest{
         String adminToken = AuthenticationAcceptanceTestHelper.getAdminToken(mvc, objectMapper);
 
         String categoryName = "";
-        String memberTier = "tier 1";
-        CategoryRequest categoryRequest = CategoryRequest.builder().categoryName(categoryName).memberTier(memberTier).build();
+
+        CategoryRequest categoryRequest = CategoryRequest.builder().categoryName(categoryName).build();
 
         //when
         ResultActions result = BoardAcceptanceTestHelper.createCategory(mvc, adminToken, objectMapper.writeValueAsString(categoryRequest));
@@ -2494,8 +2453,8 @@ public class BoardAcceptanceTest{
         String adminToken = AuthenticationAcceptanceTestHelper.getAdminToken(mvc, objectMapper);
 
         String categoryName = "cate1";
-        String memberTier = "tier 1";
-        CategoryRequest categoryRequest = CategoryRequest.builder().categoryName(categoryName).memberTier(memberTier).build();
+
+        CategoryRequest categoryRequest = CategoryRequest.builder().categoryName(categoryName).build();
 
         //when
         BoardAcceptanceTestHelper.createCategory(mvc, adminToken, objectMapper.writeValueAsString(categoryRequest));
@@ -2520,7 +2479,7 @@ public class BoardAcceptanceTest{
 
         String categoryName1 = "cate1";
         String memberTier1 = "tier 1";
-        CategoryRequest categoryRequest1 = CategoryRequest.builder().categoryName(categoryName1).memberTier(memberTier1).build();
+        CategoryRequest categoryRequest1 = CategoryRequest.builder().categoryName(categoryName1).build();
 
         String categoryName2 = "cate2";
         String memberTier2 = "tier 2";
@@ -2555,14 +2514,14 @@ public class BoardAcceptanceTest{
         String adminToken = AuthenticationAcceptanceTestHelper.getAdminToken(mvc, objectMapper);
 
         String categoryName = "cate1";
-        String memberTier = "tier 1";
-        CategoryRequest categoryRequest = CategoryRequest.builder().categoryName(categoryName).memberTier(memberTier).build();
+
+        CategoryRequest categoryRequest = CategoryRequest.builder().categoryName(categoryName).build();
         BoardAcceptanceTestHelper.createCategory(mvc, adminToken, objectMapper.writeValueAsString(categoryRequest));
         CategoryListResponse categoryListResponse = objectMapper.readValue(BoardAcceptanceTestHelper.inquiryAllCategory(mvc, adminToken).andReturn().getResponse().getContentAsString(), CategoryListResponse.class);
         int categoryId = categoryListResponse.getCategories()[0].getCategoryId();
 
         String modifyName = "modified name";
-        CategoryRequest modifyCategoryRequest = CategoryRequest.builder().categoryName(modifyName).memberTier(memberTier).build();
+        CategoryRequest modifyCategoryRequest = CategoryRequest.builder().categoryName(modifyName).build();
         //when
         ResultActions result = BoardAcceptanceTestHelper.modifyCategory(mvc, adminToken, categoryId, objectMapper.writeValueAsString(modifyCategoryRequest));
 
@@ -2581,8 +2540,8 @@ public class BoardAcceptanceTest{
         String adminToken = AuthenticationAcceptanceTestHelper.getAdminToken(mvc, objectMapper);
 
         String categoryName = "cate1";
-        String memberTier = "tier 1";
-        CategoryRequest categoryRequest = CategoryRequest.builder().categoryName(categoryName).memberTier(memberTier).build();
+
+        CategoryRequest categoryRequest = CategoryRequest.builder().categoryName(categoryName).build();
         BoardAcceptanceTestHelper.createCategory(mvc, adminToken, objectMapper.writeValueAsString(categoryRequest));
         CategoryListResponse categoryListResponse = objectMapper.readValue(BoardAcceptanceTestHelper.inquiryAllCategory(mvc, adminToken).andReturn().getResponse().getContentAsString(), CategoryListResponse.class);
         int categoryId = categoryListResponse.getCategories()[0].getCategoryId();
@@ -2590,7 +2549,7 @@ public class BoardAcceptanceTest{
         String token = createUserAndGetToken("alcuk", "alcuk_id", "2gdddddd!");
 
         String modifyName = "modified name";
-        CategoryRequest modifyCategoryRequest = CategoryRequest.builder().categoryName(modifyName).memberTier(memberTier).build();
+        CategoryRequest modifyCategoryRequest = CategoryRequest.builder().categoryName(modifyName).build();
         //when
         ResultActions result = BoardAcceptanceTestHelper.modifyCategory(mvc, token, categoryId, objectMapper.writeValueAsString(modifyCategoryRequest));
 
@@ -2612,14 +2571,14 @@ public class BoardAcceptanceTest{
         String adminToken = AuthenticationAcceptanceTestHelper.getAdminToken(mvc, objectMapper);
 
         String categoryName = "cate1";
-        String memberTier = "tier 1";
-        CategoryRequest categoryRequest = CategoryRequest.builder().categoryName(categoryName).memberTier(memberTier).build();
+
+        CategoryRequest categoryRequest = CategoryRequest.builder().categoryName(categoryName).build();
         BoardAcceptanceTestHelper.createCategory(mvc, adminToken, objectMapper.writeValueAsString(categoryRequest));
         CategoryListResponse categoryListResponse = objectMapper.readValue(BoardAcceptanceTestHelper.inquiryAllCategory(mvc, adminToken).andReturn().getResponse().getContentAsString(), CategoryListResponse.class);
         int categoryId = categoryListResponse.getCategories()[0].getCategoryId();
 
         String modifyName = "";
-        CategoryRequest modifyCategoryRequest = CategoryRequest.builder().categoryName(modifyName).memberTier(memberTier).build();
+        CategoryRequest modifyCategoryRequest = CategoryRequest.builder().categoryName(modifyName).build();
         //when
         ResultActions result = BoardAcceptanceTestHelper.modifyCategory(mvc, adminToken, categoryId, objectMapper.writeValueAsString(modifyCategoryRequest));
 
@@ -2641,8 +2600,8 @@ public class BoardAcceptanceTest{
         String adminToken = AuthenticationAcceptanceTestHelper.getAdminToken(mvc, objectMapper);
 
         String categoryName = "cate1";
-        String memberTier = "tier 1";
-        CategoryRequest categoryRequest = CategoryRequest.builder().categoryName(categoryName).memberTier(memberTier).build();
+
+        CategoryRequest categoryRequest = CategoryRequest.builder().categoryName(categoryName).build();
         BoardAcceptanceTestHelper.createCategory(mvc, adminToken, objectMapper.writeValueAsString(categoryRequest));
 
         String categoryName2 = "cate2";
@@ -2654,7 +2613,7 @@ public class BoardAcceptanceTest{
         int categoryId = categoryListResponse.getCategories()[0].getCategoryId();
 
         String modifyName = "cate2";
-        CategoryRequest modifyCategoryRequest = CategoryRequest.builder().categoryName(modifyName).memberTier(memberTier).build();
+        CategoryRequest modifyCategoryRequest = CategoryRequest.builder().categoryName(modifyName).build();
         //when
         ResultActions result = BoardAcceptanceTestHelper.modifyCategory(mvc, adminToken, categoryId, objectMapper.writeValueAsString(modifyCategoryRequest));
 
@@ -2676,8 +2635,8 @@ public class BoardAcceptanceTest{
         String adminToken = AuthenticationAcceptanceTestHelper.getAdminToken(mvc, objectMapper);
 
         String categoryName = "cate1";
-        String memberTier = "tier 1";
-        CategoryRequest categoryRequest = CategoryRequest.builder().categoryName(categoryName).memberTier(memberTier).build();
+
+        CategoryRequest categoryRequest = CategoryRequest.builder().categoryName(categoryName).build();
         BoardAcceptanceTestHelper.createCategory(mvc, adminToken, objectMapper.writeValueAsString(categoryRequest));
         CategoryListResponse categoryListResponse = objectMapper.readValue(BoardAcceptanceTestHelper.inquiryAllCategory(mvc, adminToken).andReturn().getResponse().getContentAsString(), CategoryListResponse.class);
         int categoryId = categoryListResponse.getCategories()[0].getCategoryId();
@@ -2700,8 +2659,8 @@ public class BoardAcceptanceTest{
         String adminToken = AuthenticationAcceptanceTestHelper.getAdminToken(mvc, objectMapper);
 
         String categoryName = "cate1";
-        String memberTier = "tier 1";
-        CategoryRequest categoryRequest = CategoryRequest.builder().categoryName(categoryName).memberTier(memberTier).build();
+
+        CategoryRequest categoryRequest = CategoryRequest.builder().categoryName(categoryName).build();
         BoardAcceptanceTestHelper.createCategory(mvc, adminToken, objectMapper.writeValueAsString(categoryRequest));
         CategoryListResponse categoryListResponse = objectMapper.readValue(BoardAcceptanceTestHelper.inquiryAllCategory(mvc, adminToken).andReturn().getResponse().getContentAsString(), CategoryListResponse.class);
         int categoryId = categoryListResponse.getCategories()[0].getCategoryId();
@@ -2908,13 +2867,13 @@ public class BoardAcceptanceTest{
         BoardResponse[] boards = objectMapper.readValue(resultActions.andReturn().getResponse().getContentAsString(), BoardListResponse.class).getBoards();
         int boardId = boards[0].getId();
 
-        ResultActions categoryResult = BoardAcceptanceTestHelper.inquiryAllCategory(mvc,adminToken);
-        int categoryId = objectMapper.readValue(categoryResult.andReturn().getResponse().getContentAsString(),CategoryListResponse.class).getCategories()[0].getCategoryId();
+        ResultActions categoryResult = BoardAcceptanceTestHelper.inquiryAllCategory(mvc, adminToken);
+        int categoryId = objectMapper.readValue(categoryResult.andReturn().getResponse().getContentAsString(), CategoryListResponse.class).getCategories()[0].getCategoryId();
 
         //when
-         BoardAcceptanceTestHelper.deleteCategory(mvc,adminToken,categoryId);
+        BoardAcceptanceTestHelper.deleteCategory(mvc, adminToken, categoryId);
 
-        ResultActions result = BoardAcceptanceTestHelper.inquiryBoardById(mvc,adminToken,boardId);
+        ResultActions result = BoardAcceptanceTestHelper.inquiryBoardById(mvc, adminToken, boardId);
 
         //then
         result.andExpectAll(
@@ -2948,8 +2907,8 @@ public class BoardAcceptanceTest{
         String adminToken = AuthenticationAcceptanceTestHelper.getAdminToken(mvc, objectMapper);
 
         String categoryName = "cate1";
-        String memberTier = "tier 1";
-        CategoryRequest categoryRequest = CategoryRequest.builder().categoryName(categoryName).memberTier(memberTier).build();
+
+        CategoryRequest categoryRequest = CategoryRequest.builder().categoryName(categoryName).build();
         BoardAcceptanceTestHelper.createCategory(mvc, adminToken, objectMapper.writeValueAsString(categoryRequest));
         CategoryListResponse categoryResult = objectMapper.readValue(BoardAcceptanceTestHelper.inquiryAllCategory(mvc, adminToken)
                                                                              .andReturn()
@@ -2961,7 +2920,7 @@ public class BoardAcceptanceTest{
         String content = "content";
         BoardCreateRequest boardCreateRequest = BoardCreateRequest.builder()
                 .title(title)
-                .content(content).categoryId(categoryId).memberTier(memberTier).build();
+                .content(content).categoryId(categoryId).build();
 
         String imgName = "TestImage.jpg";
         String imgContentType = "jpg";

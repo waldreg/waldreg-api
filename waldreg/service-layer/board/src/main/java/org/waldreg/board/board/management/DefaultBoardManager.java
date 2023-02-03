@@ -61,7 +61,6 @@ public class DefaultBoardManager implements BoardManager{
                 .content(request.getContent())
                 .categoryDto(categoryDto)
                 .userDto(userDto)
-                .boardServiceMemberTier(request.getMemberTier())
                 .build();
     }
 

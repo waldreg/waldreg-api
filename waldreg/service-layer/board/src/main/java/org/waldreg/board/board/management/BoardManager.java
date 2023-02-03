@@ -2,7 +2,6 @@ package org.waldreg.board.board.management;
 
 import java.util.List;
 import org.waldreg.board.dto.BoardDto;
-import org.waldreg.board.dto.BoardServiceMemberTier;
 
 public interface BoardManager{
 
@@ -31,7 +30,6 @@ public interface BoardManager{
         private String title;
         private int categoryId;
         private String content;
-        private BoardServiceMemberTier boardServiceMemberTier;
         private int fileCount;
         private int imageCount;
 
@@ -42,7 +40,6 @@ public interface BoardManager{
             this.categoryId = builder.categoryId;
             this.title = builder.title;
             this.content = builder.content;
-            this.boardServiceMemberTier = builder.boardServiceMemberTier;
             this.fileCount = builder.fileCount;
             this.imageCount = builder.imageCount;
         }
@@ -83,14 +80,6 @@ public interface BoardManager{
             this.content = content;
         }
 
-        public BoardServiceMemberTier getMemberTier(){
-            return boardServiceMemberTier;
-        }
-
-        public void setMemberTier(BoardServiceMemberTier boardServiceMemberTier){
-            this.boardServiceMemberTier = boardServiceMemberTier;
-        }
-
         public int getFileCount(){
             return fileCount;
         }
@@ -113,7 +102,6 @@ public interface BoardManager{
             private String title;
             private int categoryId;
             private String content;
-            private BoardServiceMemberTier boardServiceMemberTier;
             private int fileCount;
             private int imageCount;
 
@@ -134,11 +122,6 @@ public interface BoardManager{
 
             public Builder content(String content){
                 this.content = content;
-                return this;
-            }
-
-            public Builder memberTier(BoardServiceMemberTier boardServiceMemberTier){
-                this.boardServiceMemberTier = boardServiceMemberTier;
                 return this;
             }
 
