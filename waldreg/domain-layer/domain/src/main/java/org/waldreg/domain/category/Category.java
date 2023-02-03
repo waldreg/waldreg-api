@@ -1,12 +1,14 @@
 package org.waldreg.domain.category;
 
-import org.waldreg.domain.tier.MemberTier;
+import java.util.List;
+import org.waldreg.domain.board.Board;
 
 public final class Category{
 
     private final int id;
     private final String categoryName;
-    private final MemberTier memberTier;
+
+    private final List<Board> boardList;
 
     private Category(){
         throw new UnsupportedOperationException("Can not invoke constructor \"Category()\"");
@@ -15,7 +17,7 @@ public final class Category{
     private Category(Builder builder){
         this.id = builder.id;
         this.categoryName = builder.categoryName;
-        this.memberTier = builder.memberTier;
+        this.boardList = builder.boardList;
     }
 
     public static Builder builder(){
@@ -30,15 +32,19 @@ public final class Category{
         return categoryName;
     }
 
-    public MemberTier getMemberTier(){
-        return memberTier;
+    public List<Board> getBoardList(){
+        return boardList;
+    }
+
+    public void addBoard(Board board){
+        this.boardList.add(board);
     }
 
     public final static class Builder{
 
         private int id;
         private String categoryName;
-        private MemberTier memberTier;
+        private List<Board> boardList;
 
         private Builder(){}
 
@@ -52,8 +58,8 @@ public final class Category{
             return this;
         }
 
-        public Builder memberTier(MemberTier memberTier){
-            this.memberTier = memberTier;
+        public Builder boardList(List<Board> boardList){
+            this.boardList = boardList;
             return this;
         }
 
