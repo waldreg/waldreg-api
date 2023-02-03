@@ -25,4 +25,8 @@ public class MemoryBoardStorage{
         return board;
     }
 
+    public void deleteAllBoard(){
+        storage.clear();
+    }
+
 }

@@ -29,17 +29,18 @@ public class BoardMapper{
                 .title(boardDto.getTitle())
                 .content(boardDto.getContent())
                 .category(categoryDtoToCategoryDomain(boardDto.getCategoryDto()))
-                .memberTier(BoardServiceMemberTierToMemberTier(boardDto.getMemberTier()))
+                .memberTier(boardServiceMemberTierToMemberTier(boardDto.getMemberTier()))
                 .build();
     }
 
     private Category categoryDtoToCategoryDomain(CategoryDto categoryDto){
         return Category.builder()
                 .categoryName(categoryDto.getCategoryName())
+                .memberTier(boardServiceMemberTierToMemberTier(categoryDto.getMemberTier()))
                 .build();
     }
 
-    private MemberTier BoardServiceMemberTierToMemberTier(BoardServiceMemberTier boardServiceMemberTier){
+    private MemberTier boardServiceMemberTierToMemberTier(BoardServiceMemberTier boardServiceMemberTier){
         return MemberTier.valueOf(boardServiceMemberTier.name());
     }
 
@@ -62,6 +63,7 @@ public class BoardMapper{
     private CategoryDto categoryDomainToCategoryDto(Category category){
         return CategoryDto.builder()
                 .categoryName(category.getCategoryName())
+                .memberTier(memberTierToBoardServiceMemberTier(category.getMemberTier()))
                 .build();
     }
 
@@ -71,7 +73,6 @@ public class BoardMapper{
 
     private ReactionDto reactionDomainToReactionDto(Map<ReactionType, List<User>> reactionMap){
         Map<BoardServiceReactionType, List<UserDto>> reactionTypeListMap = new HashMap<>();
-        List<UserDto> userDtoList = new ArrayList<>();
         for (Map.Entry<ReactionType, List<User>> reactionEntry : reactionMap.entrySet()){
             reactionTypeListMap.put(boardServiceReactionTypeToReactionType(reactionEntry.getKey()), userDomainListToUserDtoList(reactionEntry.getValue()));
         }
@@ -119,7 +120,6 @@ public class BoardMapper{
         List<Permission> permissionList = character.getPermissionList();
         for (Permission permission : permissionList){
             if (isPermissionTierTrue(permission)){
-                System.out.println("######" + permission.getName());
                 return permission.getName();
             }
         }

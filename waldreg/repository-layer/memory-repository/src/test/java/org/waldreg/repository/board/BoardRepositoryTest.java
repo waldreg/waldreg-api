@@ -52,9 +52,13 @@ public class BoardRepositoryTest{
 
     @BeforeEach
     @AfterEach
-    private void DELETE_ALL(){
+    private void DELETE_ALL_USER(){
         memoryUserStorage.deleteAllUser();
     }
+
+    @BeforeEach
+    @AfterEach
+    private void DELETE_ALL_BOARD(){memoryBoardStorage.deleteAllBoard();}
 
     @Test
     @DisplayName("새로운 보드 생성 성공 테스트")
@@ -102,10 +106,21 @@ public class BoardRepositoryTest{
                 .boardServiceMemberTier(BoardServiceMemberTier.TIER_3)
                 .build();
 
-        //when&then
-        Assertions.assertDoesNotThrow(() -> boardRepository.createBoard(boardRequest));
+        //when
+        BoardDto result = boardRepository.createBoard(boardRequest);
 
+        //then
+        Assertions.assertAll(
+                () -> Assertions.assertEquals(boardRequest.getTitle(), result.getTitle()),
+                () -> Assertions.assertEquals(boardRequest.getContent(), result.getContent()),
+                () -> Assertions.assertEquals(boardRequest.getUserDto().getUserId(), result.getUserDto().getUserId()),
+                () -> Assertions.assertEquals(boardRequest.getUserDto().getName(), result.getUserDto().getName()),
+                () -> Assertions.assertEquals(boardRequest.getUserDto().getMemberTier(), result.getUserDto().getMemberTier()),
+                () -> Assertions.assertEquals(boardRequest.getCategoryDto().getCategoryName(), result.getCategoryDto().getCategoryName()),
+                () -> Assertions.assertEquals(boardRequest.getCategoryDto().getMemberTier(), result.getCategoryDto().getMemberTier()),
+                () -> Assertions.assertEquals(boardRequest.getMemberTier(), result.getMemberTier())
+
+        );
     }
-
 
 }
