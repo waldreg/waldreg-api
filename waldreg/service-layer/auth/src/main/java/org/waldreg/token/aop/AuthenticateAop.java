@@ -12,6 +12,7 @@ import org.springframework.core.annotation.Order;
 import org.springframework.http.HttpHeaders;
 import org.springframework.stereotype.Service;
 import org.waldreg.token.aop.annotation.Authenticating;
+import org.waldreg.token.aop.annotation.BoardIdAuthenticating;
 import org.waldreg.token.aop.annotation.HeaderPasswordAuthenticating;
 import org.waldreg.token.aop.annotation.IdAuthenticating;
 import org.waldreg.token.aop.annotation.UserIdAuthenticating;
@@ -36,6 +37,7 @@ public class AuthenticateAop{
     private final AnnotationExtractor<HeaderPasswordAuthenticating> headerPasswordAuthenticatingAnnotationExtractor;
     private final AnnotationExtractor<UserIdAuthenticating> userIdAuthenticatingAnnotationExtractor;
     private final AnnotationExtractor<IdAuthenticating> idAuthenticatingAnnotationExtractor;
+    private final AnnotationExtractor<BoardIdAuthenticating> boardIdAuthenticatingAnnotationExtractor;
 
     @Autowired
     public AuthenticateAop(TokenUserFindable tokenUserFindable,
@@ -44,7 +46,8 @@ public class AuthenticateAop{
                            AnnotationExtractor<Authenticating> authenticatingAnnotationExtractor,
                            AnnotationExtractor<HeaderPasswordAuthenticating> headerPasswordAuthenticatingAnnotationExtractor,
                            AnnotationExtractor<UserIdAuthenticating> userIdAuthenticatingAnnotationExtractor,
-                           AnnotationExtractor<IdAuthenticating> idAuthenticatingAnnotationExtractor) {
+                           AnnotationExtractor<IdAuthenticating> idAuthenticatingAnnotationExtractor,
+                           AnnotationExtractor<BoardIdAuthenticating> boardIdAuthenticatingAnnotationExtractor) {
         this.tokenUserFindable = tokenUserFindable;
         this.tokenAuthenticator = tokenAuthenticator;
         this.httpServletRequest = httpServletRequest;
@@ -52,6 +55,7 @@ public class AuthenticateAop{
         this.headerPasswordAuthenticatingAnnotationExtractor = headerPasswordAuthenticatingAnnotationExtractor;
         this.userIdAuthenticatingAnnotationExtractor = userIdAuthenticatingAnnotationExtractor;
         this.idAuthenticatingAnnotationExtractor = idAuthenticatingAnnotationExtractor;
+        this.boardIdAuthenticatingAnnotationExtractor = boardIdAuthenticatingAnnotationExtractor;
     }
 
     @Around("@annotation(org.waldreg.token.aop.annotation.Authenticating)")
@@ -117,6 +121,46 @@ public class AuthenticateAop{
         }
     }
 
+    @Around("@annotation(org.waldreg.token.aop.annotation.IdAuthenticating)")
+    public Object authenticateById(ProceedingJoinPoint proceedingJoinPoint) throws Throwable{
+        IdAuthenticating idAuthenticating = idAuthenticatingAnnotationExtractor
+                .extractAnnotation(proceedingJoinPoint, IdAuthenticating.class);
+        boolean verifyState = true;
+        try{
+            TokenUserDto tokenUserDto = tokenUserFindable.findUserById(getDecryptedId(getToken()));
+            throwIfIdDoesNotSame(tokenUserDto.getId(), (int)proceedingJoinPoint.getArgs()[idAuthenticating.idx()]);
+        }catch(Exception E){
+            idAuthenticating.fail().behave();
+            verifyState = false;
+        }
+        return proceedingJoinPoint.proceed(setPermissionVerifyStateParameter(proceedingJoinPoint, verifyState));
+    }
+
+    @Around("@annotation(org.waldreg.token.aop.annotation.BoardIdAuthenticating)")
+    public Object authenticateByBoardId(ProceedingJoinPoint proceedingJoinPoint) throws Throwable{
+        BoardIdAuthenticating boardIdAuthenticating = boardIdAuthenticatingAnnotationExtractor
+                .extractAnnotation(proceedingJoinPoint, BoardIdAuthenticating.class);
+        boolean verifyState = true;
+        try{
+            int id = getDecryptedId(getToken());
+            int boardId = getParameterArgument(proceedingJoinPoint, boardIdAuthenticating.idx(), Integer.class);
+            TokenUserDto tokenUserDto = tokenUserFindable.findUserByBoardId(boardId);
+            throwIfIdDoesNotSame(id, tokenUserDto.getId());
+        }catch(Exception E){
+            boardIdAuthenticating.fail().behave();
+            verifyState = false;
+        }
+        return proceedingJoinPoint.proceed(setPermissionVerifyStateParameter(proceedingJoinPoint, verifyState));
+    }
+
+    private String getToken(){
+        return httpServletRequest.getHeader(HttpHeaders.AUTHORIZATION);
+    }
+
+    private int getDecryptedId(String token) throws TokenExpiredException{
+        return tokenAuthenticator.authenticate(token);
+    }
+
     private <T> T getParameterArgument(ProceedingJoinPoint proceedingJoinPoint, int idx, Class<T> type){
         Object[] parameterArguments = proceedingJoinPoint.getArgs();
         throwIfParameterLengthLessThen(parameterArguments, idx);
@@ -136,29 +180,6 @@ public class AuthenticateAop{
         }catch(ClassCastException CCE){
             throw new IllegalArgumentException("Can not cast parameter type to " + type.getSimpleName());
         }
-    }
-
-    @Around("@annotation(org.waldreg.token.aop.annotation.IdAuthenticating)")
-    public Object authenticateById(ProceedingJoinPoint proceedingJoinPoint) throws Throwable{
-        IdAuthenticating idAuthenticating = idAuthenticatingAnnotationExtractor
-                .extractAnnotation(proceedingJoinPoint, IdAuthenticating.class);
-        boolean verifyState = true;
-        try{
-            TokenUserDto tokenUserDto = tokenUserFindable.findUserById(getDecryptedId(getToken()));
-            throwIfIdDoesNotSame(tokenUserDto.getId(), (int)proceedingJoinPoint.getArgs()[idAuthenticating.idx()]);
-        }catch(Exception E){
-            idAuthenticating.fail().behave();
-            verifyState = false;
-        }
-        return proceedingJoinPoint.proceed(setPermissionVerifyStateParameter(proceedingJoinPoint, verifyState));
-    }
-
-    private String getToken(){
-        return httpServletRequest.getHeader(HttpHeaders.AUTHORIZATION);
-    }
-
-    private int getDecryptedId(String token) throws TokenExpiredException{
-        return tokenAuthenticator.authenticate(token);
     }
 
     private void throwIfIdDoesNotSame(int authorizedId, int targetId){
