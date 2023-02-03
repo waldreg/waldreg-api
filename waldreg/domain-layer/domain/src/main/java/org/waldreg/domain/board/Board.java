@@ -12,7 +12,7 @@ public final class Board{
 
     private int id;
     private final String title;
-    private final Category category;
+    private final int categoryId;
     private final String content;
     private User user;
     private final LocalDateTime createdAt;
@@ -30,7 +30,7 @@ public final class Board{
     private Board(Builder builder){
         this.id = builder.id;
         this.title = builder.title;
-        this.category = builder.category;
+        this.categoryId = builder.categoryId;
         this.content = builder.content;
         this.user = builder.user;
         this.createdAt = builder.createdAt;
@@ -56,8 +56,8 @@ public final class Board{
         return title;
     }
 
-    public Category getCategory(){
-        return category;
+    public int getCategoryId(){
+        return categoryId;
     }
 
     public String getContent(){
@@ -101,7 +101,7 @@ public final class Board{
 
         private int id;
         private String title;
-        private Category category;
+        private int categoryId;
         private String content;
         private User user;
         private final LocalDateTime createdAt;
@@ -134,8 +134,8 @@ public final class Board{
             return this;
         }
 
-        public Builder category(Category category){
-            this.category = category;
+        public Builder category(int categoryId){
+            this.categoryId = categoryId;
             return this;
         }
 
