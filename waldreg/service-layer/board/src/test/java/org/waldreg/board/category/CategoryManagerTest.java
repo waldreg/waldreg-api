@@ -18,7 +18,6 @@ import org.waldreg.board.category.exception.DuplicateCategoryNameException;
 import org.waldreg.board.category.management.CategoryManager;
 import org.waldreg.board.category.management.DefaultCategoryManager;
 import org.waldreg.board.category.spi.CategoryRepository;
-import org.waldreg.board.dto.BoardServiceMemberTier;
 import org.waldreg.board.dto.CategoryDto;
 import org.waldreg.util.token.DecryptedTokenContext;
 
@@ -47,10 +46,8 @@ public class CategoryManagerTest{
     public void CREATE_CATEGORY_SUCCESS_TEST(){
         //given
         String categoryName = "title";
-        BoardServiceMemberTier boardServiceMemberTier = BoardServiceMemberTier.TIER_3;
         CategoryDto categoryDto = CategoryDto.builder()
                 .categoryName(categoryName)
-                .memberTier(boardServiceMemberTier)
                 .build();
         //when
         Mockito.when(categoryRepository.isDuplicateCategoryName(Mockito.anyString())).thenReturn(false);
@@ -63,10 +60,8 @@ public class CategoryManagerTest{
     public void CREATE_CATEGORY_DUPLICATE_CATEGORY_NAME_TEST(){
         //given
         String categoryName = "title";
-        BoardServiceMemberTier boardServiceMemberTier = BoardServiceMemberTier.TIER_3;
         CategoryDto categoryDto = CategoryDto.builder()
                 .categoryName(categoryName)
-                .memberTier(boardServiceMemberTier)
                 .build();
         //when
         Mockito.when(categoryRepository.isDuplicateCategoryName(Mockito.anyString())).thenReturn(true);

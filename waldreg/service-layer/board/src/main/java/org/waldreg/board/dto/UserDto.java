@@ -5,7 +5,6 @@ public class UserDto{
     private int id;
     private String name;
     private String userId;
-    private BoardServiceMemberTier boardServiceMemberTier;
 
     private UserDto(){}
 
@@ -13,7 +12,6 @@ public class UserDto{
         this.id = builder.id;
         this.name = builder.name;
         this.userId = builder.userId;
-        this.boardServiceMemberTier = builder.boardServiceMemberTier;
     }
 
     public static Builder builder(){
@@ -44,20 +42,11 @@ public class UserDto{
         this.userId = userId;
     }
 
-    public BoardServiceMemberTier getMemberTier(){
-        return boardServiceMemberTier;
-    }
-
-    public void setMemberTier(BoardServiceMemberTier boardServiceMemberTier){
-        this.boardServiceMemberTier = boardServiceMemberTier;
-    }
-
     public final static class Builder{
 
         private int id;
         private String name;
         private String userId;
-        private BoardServiceMemberTier boardServiceMemberTier;
 
         private Builder(){}
 
@@ -73,11 +62,6 @@ public class UserDto{
 
         public Builder userId(String userId){
             this.userId = userId;
-            return this;
-        }
-
-        public Builder memberTier(BoardServiceMemberTier boardServiceMemberTier){
-            this.boardServiceMemberTier = boardServiceMemberTier;
             return this;
         }
 

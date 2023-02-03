@@ -13,11 +13,9 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.waldreg.board.board.spi.BoardRepository;
 import org.waldreg.board.dto.BoardDto;
-import org.waldreg.board.dto.BoardServiceMemberTier;
 import org.waldreg.board.dto.CategoryDto;
 import org.waldreg.board.dto.UserDto;
 import org.waldreg.character.dto.CharacterDto;
-import org.waldreg.character.dto.PermissionDto;
 import org.waldreg.character.spi.CharacterRepository;
 import org.waldreg.repository.MemoryBoardStorage;
 import org.waldreg.repository.MemoryCharacterStorage;
@@ -52,9 +50,13 @@ public class BoardRepositoryTest{
 
     @BeforeEach
     @AfterEach
-    private void DELETE_ALL(){
+    private void DELETE_ALL_USER(){
         memoryUserStorage.deleteAllUser();
     }
+
+    @BeforeEach
+    @AfterEach
+    private void DELETE_ALL_BOARD(){memoryBoardStorage.deleteAllBoard();}
 
     @Test
     @DisplayName("새로운 보드 생성 성공 테스트")
@@ -66,17 +68,10 @@ public class BoardRepositoryTest{
                 .userPassword("alcuk123!")
                 .phoneNumber("010-1234-1234")
                 .build();
-        PermissionDto permissionDto = PermissionDto.builder()
-                .id(1)
-                .name("TIER_3")
-                .status("true")
-                .build();
-        List<PermissionDto> permissionDtoList = new ArrayList<>();
-        permissionDtoList.add(permissionDto);
         CharacterDto characterDto = CharacterDto.builder()
                 .id(1)
                 .characterName("Guest")
-                .permissionDtoList(permissionDtoList)
+                .permissionDtoList(List.of())
                 .build();
         characterRepository.createCharacter(characterDto);
         userRepository.createUser(user);
@@ -87,25 +82,29 @@ public class BoardRepositoryTest{
                 .id(userResponse.getId())
                 .userId("alcuk_id")
                 .name("alcuk")
-                .memberTier(BoardServiceMemberTier.TIER_3)
                 .build();
         CategoryDto categoryDto = CategoryDto.builder()
                 .id(1)
                 .categoryName("cate")
-                .memberTier(BoardServiceMemberTier.TIER_3)
                 .build();
         BoardDto boardRequest = BoardDto.builder()
                 .title(title)
                 .userDto(userDto)
                 .content(content)
                 .categoryDto(categoryDto)
-                .boardServiceMemberTier(BoardServiceMemberTier.TIER_3)
                 .build();
 
-        //when&then
-        Assertions.assertDoesNotThrow(() -> boardRepository.createBoard(boardRequest));
+        //when
+        BoardDto result = boardRepository.createBoard(boardRequest);
 
+        //then
+        Assertions.assertAll(
+                () -> Assertions.assertEquals(boardRequest.getTitle(), result.getTitle()),
+                () -> Assertions.assertEquals(boardRequest.getContent(), result.getContent()),
+                () -> Assertions.assertEquals(boardRequest.getUserDto().getUserId(), result.getUserDto().getUserId()),
+                () -> Assertions.assertEquals(boardRequest.getUserDto().getName(), result.getUserDto().getName()),
+                () -> Assertions.assertEquals(boardRequest.getCategoryDto().getCategoryName(), result.getCategoryDto().getCategoryName())
+        );
     }
-
 
 }

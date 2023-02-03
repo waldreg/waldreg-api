@@ -6,7 +6,6 @@ import java.util.List;
 import org.waldreg.domain.board.comment.Comment;
 import org.waldreg.domain.board.reaction.Reaction;
 import org.waldreg.domain.category.Category;
-import org.waldreg.domain.tier.MemberTier;
 import org.waldreg.domain.user.User;
 
 public final class Board{
@@ -18,7 +17,6 @@ public final class Board{
     private User user;
     private final LocalDateTime createdAt;
     private final LocalDateTime lastModifiedAt;
-    private final MemberTier memberTier;
     private final List<String> imagePathList;
     private final List<String> filePathList;
     private final Reaction reactions;
@@ -37,7 +35,6 @@ public final class Board{
         this.user = builder.user;
         this.createdAt = builder.createdAt;
         this.lastModifiedAt = builder.lastModifiedAt;
-        this.memberTier = builder.memberTier;
         this.imagePathList = builder.imagePathList;
         this.filePathList = builder.filePathList;
         this.reactions = builder.reactions;
@@ -81,10 +78,6 @@ public final class Board{
         return lastModifiedAt;
     }
 
-    public MemberTier getMemberTier(){
-        return memberTier;
-    }
-
     public List<String> getImagePathList(){
         return imagePathList;
     }
@@ -113,7 +106,6 @@ public final class Board{
         private User user;
         private final LocalDateTime createdAt;
         private LocalDateTime lastModifiedAt;
-        private MemberTier memberTier;
         private List<String> imagePathList;
         private List<String> filePathList;
         private Reaction reactions;
@@ -162,10 +154,6 @@ public final class Board{
             return this;
         }
 
-        public Builder memberTier(MemberTier memberTier){
-            this.memberTier = memberTier;
-            return this;
-        }
 
         public Builder imagePathList(List<String> imagePathList){
             this.imagePathList = imagePathList;
