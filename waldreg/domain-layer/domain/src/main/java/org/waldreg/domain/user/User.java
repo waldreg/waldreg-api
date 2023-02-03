@@ -4,6 +4,7 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import org.waldreg.domain.character.Character;
+import org.waldreg.domain.rewardtag.RewardTagWrapper;
 
 @SuppressWarnings("unused")
 public final class User{
@@ -14,14 +15,9 @@ public final class User{
     private String userPassword;
     private String phoneNumber;
     private final LocalDate createdAt;
-    private final int advantage;
-    private final int penalty;
+    private final List<RewardTagWrapper> rewardTagWrapperList;
     private Character character;
-    private List<String> socialLogin;
-
-    {
-        socialLogin = new ArrayList<>();
-    }
+    private final List<String> socialLogin;
 
     private User(){
         throw new UnsupportedOperationException("Can not invoke constructor \"User()\"");
@@ -33,9 +29,8 @@ public final class User{
         this.userId = builder.userId;
         this.userPassword = builder.userPassword;
         this.phoneNumber = builder.phoneNumber;
-        this.createdAt = builder.createdAt;
-        this.advantage = builder.advantage;
-        this.penalty = builder.penalty;
+        this.createdAt = builder.createdAt;;
+        this.rewardTagWrapperList = builder.rewardTagWrapperList;
         this.character = builder.character;
         this.socialLogin = builder.socialLogin;
     }
@@ -72,12 +67,8 @@ public final class User{
         return createdAt;
     }
 
-    public int getAdvantage(){
-        return advantage;
-    }
-
-    public int getPenalty(){
-        return penalty;
+    public List<RewardTagWrapper> getRewardTagWrapperList(){
+        return rewardTagWrapperList;
     }
 
     public Character getCharacter(){
@@ -98,7 +89,19 @@ public final class User{
         this.character = character;
     }
 
-    @SuppressWarnings("unused")
+    public void addRewardTagWrapper(RewardTagWrapper rewardTagWrapper){
+        this.rewardTagWrapperList.add(rewardTagWrapper);
+    }
+
+    public void deleteRewardTagWrapper(RewardTagWrapper rewardTagWrapper){
+        for(RewardTagWrapper element : rewardTagWrapperList){
+            if(element.getRewardId() == rewardTagWrapper.getRewardId()){
+                rewardTagWrapperList.remove(element);
+                break;
+            }
+        }
+    }
+
     public final static class Builder{
 
         private int id;
@@ -107,14 +110,12 @@ public final class User{
         private String userPassword;
         private String phoneNumber;
         private final LocalDate createdAt;
-        private final int advantage;
-        private final int penalty;
+        private final List<RewardTagWrapper> rewardTagWrapperList;
         private List<String> socialLogin;
 
         {
             createdAt = LocalDate.now();
-            advantage = 0;
-            penalty = 0;
+            rewardTagWrapperList = new ArrayList<>();
             socialLogin = new ArrayList<>();
         }
 

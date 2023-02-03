@@ -3,18 +3,22 @@ package org.waldreg.controller.user;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.lang.Nullable;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.waldreg.character.aop.annotation.PermissionVerifying;
 import org.waldreg.character.aop.behavior.VerifyingFailBehavior;
 import org.waldreg.character.aop.parameter.PermissionVerifyState;
 import org.waldreg.controller.user.mapper.ControllerUserMapper;
+import org.waldreg.controller.user.request.CharacterRequest;
+import org.waldreg.controller.user.request.UpdateUserRequest;
 import org.waldreg.controller.user.request.UserRequest;
 import org.waldreg.controller.user.response.UserListResponse;
 import org.waldreg.controller.user.response.UserResponse;
@@ -40,12 +44,13 @@ public class UserController{
     }
 
     @PostMapping("/user")
-    public void createUser(@RequestBody UserRequest createRequest){
+    public void createUser(@RequestBody @Validated UserRequest createRequest){
+        UserDto userDto = controllerUserMapper.userRequestToUserDto(createRequest);
         userManager.createUser(controllerUserMapper.userRequestToUserDto(createRequest));
     }
 
     @Authenticating(fail = AuthFailBehavior.PASS)
-    @PermissionVerifying(value = "Read other user info permission", fail = VerifyingFailBehavior.PASS)
+    @PermissionVerifying(value = "User info read manager", fail = VerifyingFailBehavior.PASS)
     @GetMapping("/user/{user-id}")
     public UserResponse readSpecificUser(@PathVariable("user-id") String userId, @Nullable PermissionVerifyState permissionVerifyState){
         UserDto userDto = userManager.readUserByUserId(userId);
@@ -56,11 +61,11 @@ public class UserController{
     }
 
     @Authenticating(fail = AuthFailBehavior.PASS)
-    @PermissionVerifying(value = "Read other user info permission", fail = VerifyingFailBehavior.PASS)
-    @GetMapping("/user?from={start-id}&to={end-id}")
-    public UserListResponse readAllUser(@PathVariable("start-id") int startId, @PathVariable("end-id") int endId, @Nullable PermissionVerifyState permissionVerifyState){
+    @PermissionVerifying(value = "User info read manager", fail = VerifyingFailBehavior.PASS)
+    @RequestMapping(value = "/users")
+    public UserListResponse readAllUser(@RequestParam("from") int startIdx, @RequestParam("to") int endIdx, @Nullable PermissionVerifyState permissionVerifyState){
         int maxIdx = userManager.readMaxIdx();
-        List<UserDto> userDtoList = userManager.readUserList(startId, endId);
+        List<UserDto> userDtoList = userManager.readUserList(startIdx, endIdx);
         if (permissionVerifyState.isVerified()){
             List<UserResponse> userResponseList = controllerUserMapper.userDtoListToUserListResponseWithPermission(userDtoList);
             return controllerUserMapper.createUserListResponse(maxIdx, userResponseList);
@@ -78,20 +83,18 @@ public class UserController{
     }
 
     @HeaderPasswordAuthenticating
-    @PatchMapping("/user")
-    public void updateUser(@RequestBody UserRequest userRequest){
+    @PutMapping("/user")
+    public void updateUser(@RequestBody @Validated UpdateUserRequest updateUserRequest){
         int id = decryptedTokenContextGetter.get();
-        UserDto update = controllerUserMapper.userRequestToUserDto(userRequest);
+        UserDto update = controllerUserMapper.updateUserRequestToUserDto(updateUserRequest);
         userManager.updateUser(id, update);
     }
 
     @Authenticating
-    @PermissionVerifying(value = "Fire other user permission", fail = VerifyingFailBehavior.PASS)
+    @PermissionVerifying(value = "User fire manager")
     @DeleteMapping("/user/{id}")
-    public void deleteUser(@PathVariable("id") int id, @Nullable PermissionVerifyState permissionVerifyState){
-        if (permissionVerifyState.isVerified()){
-            userManager.deleteById(id);
-        }
+    public void deleteUser(@PathVariable("id") int id){
+        userManager.deleteById(id);
     }
 
     @HeaderPasswordAuthenticating
@@ -102,12 +105,11 @@ public class UserController{
     }
 
     @Authenticating
-    @PermissionVerifying(value = "Update other user's character permission", fail = VerifyingFailBehavior.PASS)
+    @PermissionVerifying("User's character update manager")
     @PutMapping("/user/character/{id}")
-    public void updateUserCharacter(@PathVariable("id") int id, String character, @Nullable PermissionVerifyState permissionVerifyState){
-        if (permissionVerifyState.isVerified()){
-            userManager.updateCharacter(id, character);
-        }
+    public void updateUserCharacter(@PathVariable("id") int id, @RequestBody @Validated CharacterRequest characterRequest){
+        String character = characterRequest.getCharacter();
+        userManager.updateCharacter(id, character);
     }
 
 }

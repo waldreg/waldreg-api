@@ -21,6 +21,7 @@ import org.waldreg.controller.character.mapper.ControllerPermissionMapper;
 import org.waldreg.controller.character.request.CharacterRequest;
 import org.waldreg.controller.character.response.CharacterResponse;
 import org.waldreg.controller.character.response.PermissionResponse;
+import org.waldreg.controller.character.response.SimpleCharacterResponse;
 import org.waldreg.token.aop.annotation.Authenticating;
 
 @RestController
@@ -47,16 +48,16 @@ public class CharacterController{
     @GetMapping("/permission")
     public Map<String, List<PermissionResponse>> getAllPermissions(){
         List<PermissionUnit> permissionUnits = permissionUnitListReadable.getPermissionUnitList();
-        List<PermissionResponse> permissionResponseDtoList = controllerPermissionMapper.permissionUnitToPermissionResponse(permissionUnits);
-        return Map.of("permissions", permissionResponseDtoList);
+        List<PermissionResponse> permissionResponseList = controllerPermissionMapper.permissionUnitToPermissionResponse(permissionUnits);
+        return Map.of("permissions", permissionResponseList);
     }
 
     @Authenticating
     @PermissionVerifying("Character manager")
     @GetMapping("/character")
-    public Map<String, List<String>> getAllCharacters(){
-        List<String> characterNameList = controllerCharacterMapper.characterDtoListToCharacterNameList(characterManager.readCharacterList());
-        return Map.of("character_name", characterNameList);
+    public Map<String, List<SimpleCharacterResponse>> getAllCharacters(){
+        List<SimpleCharacterResponse> simpleCharacterResponseList = controllerCharacterMapper.characterDtoListToSimpleCharacterResponseList(characterManager.readCharacterList());
+        return Map.of("characters", simpleCharacterResponseList);
     }
 
     @Authenticating

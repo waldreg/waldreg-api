@@ -2,6 +2,7 @@ package org.waldreg.repository;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.atomic.AtomicInteger;
 import org.springframework.stereotype.Repository;
 import org.waldreg.domain.character.Character;
 
@@ -9,12 +10,15 @@ import org.waldreg.domain.character.Character;
 public class MemoryCharacterStorage{
 
     private final Map<String, Character> storage;
+    private final AtomicInteger atomicInteger;
 
     {
         storage = new HashMap<>();
+        atomicInteger = new AtomicInteger(1);
     }
 
     public void createCharacter(Character character){
+        character.setId(atomicInteger.getAndIncrement());
         this.storage.put(character.getCharacterName(), character);
     }
 

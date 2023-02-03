@@ -45,4 +45,8 @@ public class MemoryAuthRepository implements AuthRepository{
                 .build();
     }
 
+    @Override
+    public TokenUserDto findUserByBoardId(int boardId){
+    }
+
 }

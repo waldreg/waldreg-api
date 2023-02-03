@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 import org.waldreg.character.exception.UnknownCharacterException;
 import org.waldreg.domain.character.Character;
+import org.waldreg.domain.rewardtag.RewardTagWrapper;
 import org.waldreg.domain.user.User;
 import org.waldreg.user.exception.UnknownIdException;
 import org.waldreg.user.exception.UnknownUserIdException;
@@ -68,7 +69,7 @@ public class MemoryUserStorage{
                 return userEntry.getValue();
             }
         }
-        throw new UnknownIdException(id);
+        throw new UnknownIdException("Unknown id \"" + id + "\"");
     }
 
     public User readUserByUserId(String userId){
@@ -77,13 +78,13 @@ public class MemoryUserStorage{
                 return userEntry.getValue();
             }
         }
-        throw new UnknownUserIdException(userId);
+        throw new UnknownUserIdException("Unknown user_id \"" + userId + "\"");
     }
 
     public List<User> readUserList(int startIdx, int endIdx){
         int cnt = startIndex;
-        startIdx -= 1;
-        endIdx -= 1;
+        startIdx--;
+        endIdx--;
         List<User> userList = new ArrayList<>();
         for (Map.Entry<String, User> userEntry : storage.entrySet()){
             if (cnt >= startIdx && cnt <= endIdx){
@@ -94,17 +95,39 @@ public class MemoryUserStorage{
         return userList;
     }
 
-    public int readMaxIdx(){
-        return storage.size();
-    }
+    public int readMaxIdx(){return storage.size();}
 
     public void updateUser(int id, User user){
         for (Map.Entry<String, User> userEntry : storage.entrySet()){
             if (userEntry.getValue().getId() == id){
-                if (user.getName() != null){userEntry.getValue().setName(user.getName());}
-                if (user.getUserPassword() != null){userEntry.getValue().setUserPassword(user.getUserPassword());}
-                if (user.getPhoneNumber() != null){userEntry.getValue().setPhoneNumber(user.getPhoneNumber());}
+                userEntry.getValue().setName(user.getName());
+                userEntry.getValue().setUserPassword(user.getUserPassword());
+                userEntry.getValue().setPhoneNumber(user.getPhoneNumber());
             }
+        }
+    }
+
+    public void updateUsersRewardTag(int id, RewardTagWrapper rewardTagWrapper){
+        for (Map.Entry<String, User> userEntry : storage.entrySet()){
+            if (userEntry.getValue().getId() == id){
+                rewardTagWrapper.setRewardId(atomicInteger.getAndIncrement());
+                userEntry.getValue().addRewardTagWrapper(rewardTagWrapper);
+            }
+        }
+    }
+
+    public void deleteRewardToUser(int id, int rewardId){
+        for (Map.Entry<String, User> userEntry : storage.entrySet()){
+            if (userEntry.getValue().getId() == id){
+                userEntry.getValue().getRewardTagWrapperList()
+                        .removeIf(rewardTagWrapper -> (rewardTagWrapper.getRewardId() == rewardId));
+            }
+        }
+    }
+
+    public void deleteAllUsersReward(){
+        for (Map.Entry<String, User> userEntry : storage.entrySet()){
+            userEntry.getValue().getRewardTagWrapperList().clear();
         }
     }
 
@@ -115,6 +138,7 @@ public class MemoryUserStorage{
                 return;
             }
         }
+        throw new UnknownIdException("Unknown id \"" + id + "\"");
     }
 
 }

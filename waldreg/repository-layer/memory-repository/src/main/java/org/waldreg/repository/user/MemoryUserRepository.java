@@ -40,7 +40,7 @@ public class MemoryUserRepository implements UserRepository{
         } catch (RuntimeException isNotDuplicated){
             return;
         }
-        throw new DuplicatedUserIdException(userId);
+        throw new DuplicatedUserIdException("Duplicated user_id \""+userId+"\"");
     }
 
     @Override
@@ -61,7 +61,10 @@ public class MemoryUserRepository implements UserRepository{
 
     @Override
     public void updateUser(int id, UserDto userDto){
-        User user = userMapper.userDtoToUserDomain(userDto);
+        User user = memoryUserStorage.readUserById(id);
+        user.setUserPassword(userDto.getUserPassword());
+        user.setPhoneNumber(userDto.getPhoneNumber());
+        user.setName(userDto.getName());
         memoryUserStorage.updateUser(id, user);
     }
 

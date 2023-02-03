@@ -6,8 +6,11 @@ plugins {
     id 'java'
 }
 
-group 'xb.note'
+group 'org.waldreg'
 version '1.0-SNAPSHOT'
+
+sourceCompatibility = '11'
+targetCompatibility = '11'
 
 repositories {
     mavenCentral()
@@ -20,6 +23,7 @@ dependencyManagement {
 }
 
 dependencies {
+    implementation project(':core-layer:template')
     implementation project(':core-layer:util')
     implementation project(':repository-layer:memory-repository')
     implementation project(':service-layer:user')

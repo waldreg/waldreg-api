@@ -3,6 +3,7 @@ package org.waldreg.controller.user.mapper;
 import java.util.ArrayList;
 import java.util.List;
 import org.springframework.stereotype.Service;
+import org.waldreg.controller.user.request.UpdateUserRequest;
 import org.waldreg.controller.user.response.UserListResponse;
 import org.waldreg.user.dto.UserDto;
 import org.waldreg.controller.user.request.UserRequest;
@@ -20,6 +21,14 @@ public class ControllerUserMapper{
                 .build();
     }
 
+    public UserDto updateUserRequestToUserDto(UpdateUserRequest updateUserRequest){
+        return UserDto.builder()
+                .name(updateUserRequest.getName())
+                .userPassword(updateUserRequest.getUserPassword())
+                .phoneNumber(updateUserRequest.getPhoneNumber())
+                .build();
+    }
+
     public UserResponse userDtoToUserResponseWithPermission(UserDto userDto){
         return UserResponse.builder()
                 .id(userDto.getId())
@@ -28,8 +37,7 @@ public class ControllerUserMapper{
                 .phoneNumber(userDto.getPhoneNumber())
                 .character(userDto.getCharacter())
                 .createdAt(userDto.getCreatedAt())
-                .advantage(userDto.getAdvantage())
-                .penalty(userDto.getPenalty())
+                .rewardPoint(userDto.getRewardPoint())
                 .socialLogin(userDto.getSocialLogin())
                 .build();
     }
@@ -54,8 +62,7 @@ public class ControllerUserMapper{
                     .phoneNumber(userDto.getPhoneNumber())
                     .character(userDto.getCharacter())
                     .createdAt(userDto.getCreatedAt())
-                    .advantage(userDto.getAdvantage())
-                    .penalty(userDto.getPenalty())
+                    .rewardPoint(userDto.getRewardPoint())
                     .socialLogin(userDto.getSocialLogin())
                     .build());
         }

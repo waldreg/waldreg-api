@@ -13,7 +13,8 @@ public class DefaultUserManager implements UserManager{
     private final int perPage = 20;
     private final UserRepository userRepository;
 
-    public DefaultUserManager(@Autowired UserRepository userRepository){this.userRepository = userRepository;}
+    @Autowired
+    public DefaultUserManager(UserRepository userRepository){this.userRepository = userRepository;}
 
     @Override
     public void createUser(UserDto userDto){
@@ -34,8 +35,39 @@ public class DefaultUserManager implements UserManager{
     public List<UserDto> readUserList(int startIdx, int endIdx){
         int maxIdx = readMaxIdx();
         throwIfInvalidRangeDetected(startIdx, endIdx, maxIdx);
-        endIdx = adjustRange(startIdx, endIdx);
+        endIdx = adjustEndIdx(startIdx, endIdx, maxIdx);
         return userRepository.readUserList(startIdx, endIdx);
+    }
+
+    @Override
+    public int readMaxIdx(){
+        return userRepository.readMaxIdx();
+    }
+
+    private void throwIfInvalidRangeDetected(int startIdx, int endIdx, int maxIdx){
+        if (endIdx > maxIdx || startIdx > endIdx || 1 > endIdx){
+            throw new InvalidRangeException("Invalid range start-idx \"" + startIdx + "\", end-idx \"" + endIdx + "\"");
+        }
+    }
+
+    private int adjustEndIdx(int startIdx, int endIdx, int maxIdx){
+        endIdx = adjustEndIdxToMaxIdx(endIdx, maxIdx);
+        endIdx = adjustEndIdxToPerPage(startIdx, endIdx);
+        return endIdx;
+    }
+
+    private int adjustEndIdxToPerPage(int startIdx, int endIdx){
+        if (endIdx - startIdx + 1 > perPage){
+            return startIdx + perPage - 1;
+        }
+        return endIdx;
+    }
+
+    private int adjustEndIdxToMaxIdx(int endIdx, int maxIdx){
+        if(endIdx>maxIdx){
+            return maxIdx;
+        }
+        return endIdx;
     }
 
     @Override
@@ -45,33 +77,12 @@ public class DefaultUserManager implements UserManager{
 
     @Override
     public void updateCharacter(int id, String character){
-        UserDto characterUserDto = UserDto.builder()
-                .character(character)
-                .build();
-        userRepository.updateUser(id, characterUserDto);
+        userRepository.updateCharacter(id, character);
     }
 
     @Override
     public void deleteById(int id){
         userRepository.deleteById(id);
-    }
-
-    @Override
-    public int readMaxIdx(){
-        return userRepository.readMaxIdx();
-    }
-
-    private void throwIfInvalidRangeDetected(int startIdx, int endIdx, int maxIdx){
-        if (endIdx > maxIdx || startIdx > endIdx){
-            throw new InvalidRangeException(startIdx, endIdx);
-        }
-    }
-
-    private int adjustRange(int startIdx, int endIdx){
-        if (endIdx - startIdx + 1 >= perPage){
-            return startIdx + perPage - 1;
-        }
-        return endIdx;
     }
 
 }
