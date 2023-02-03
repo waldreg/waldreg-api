@@ -29,7 +29,7 @@ import org.waldreg.util.annotation.AnnotationExtractor;
 @Service
 public class AuthenticateAop{
 
-    private final TokenUserFindById tokenUserFindById;
+    private final TokenUserFindable tokenUserFindable;
     private final TokenAuthenticator tokenAuthenticator;
     private final HttpServletRequest httpServletRequest;
     private final AnnotationExtractor<Authenticating> authenticatingAnnotationExtractor;
@@ -38,14 +38,14 @@ public class AuthenticateAop{
     private final AnnotationExtractor<IdAuthenticating> idAuthenticatingAnnotationExtractor;
 
     @Autowired
-    public AuthenticateAop(TokenUserFindById tokenUserFindById,
-            TokenAuthenticator tokenAuthenticator,
-            HttpServletRequest httpServletRequest,
-            AnnotationExtractor<Authenticating> authenticatingAnnotationExtractor,
-            AnnotationExtractor<HeaderPasswordAuthenticating> headerPasswordAuthenticatingAnnotationExtractor,
-            AnnotationExtractor<UserIdAuthenticating> userIdAuthenticatingAnnotationExtractor,
-            AnnotationExtractor<IdAuthenticating> idAuthenticatingAnnotationExtractor) {
-        this.tokenUserFindById = tokenUserFindById;
+    public AuthenticateAop(TokenUserFindable tokenUserFindable,
+                           TokenAuthenticator tokenAuthenticator,
+                           HttpServletRequest httpServletRequest,
+                           AnnotationExtractor<Authenticating> authenticatingAnnotationExtractor,
+                           AnnotationExtractor<HeaderPasswordAuthenticating> headerPasswordAuthenticatingAnnotationExtractor,
+                           AnnotationExtractor<UserIdAuthenticating> userIdAuthenticatingAnnotationExtractor,
+                           AnnotationExtractor<IdAuthenticating> idAuthenticatingAnnotationExtractor) {
+        this.tokenUserFindable = tokenUserFindable;
         this.tokenAuthenticator = tokenAuthenticator;
         this.httpServletRequest = httpServletRequest;
         this.authenticatingAnnotationExtractor = authenticatingAnnotationExtractor;
@@ -60,7 +60,7 @@ public class AuthenticateAop{
         boolean verifyState = true;
         try{
             int id = getDecryptedId(getToken());
-            TokenUserDto tokenUserDto = tokenUserFindById.findUserById(id);
+            TokenUserDto tokenUserDto = tokenUserFindable.findUserById(id);
         }catch(Exception E){
             verifyState = false;
             authenticating.fail().behave();
@@ -75,7 +75,7 @@ public class AuthenticateAop{
         boolean verifyState = true;
         try{
             int id = getDecryptedId(getToken());
-            TokenUserDto tokenUserDto = tokenUserFindById.findUserById(id);
+            TokenUserDto tokenUserDto = tokenUserFindable.findUserById(id);
             throwIfUserPasswordDoesNotSame(tokenUserDto, getRequestPassword());
         }catch(Exception E){
             verifyState = false;
@@ -101,7 +101,7 @@ public class AuthenticateAop{
         boolean verifyState = true;
         try{
             int id = getDecryptedId(getToken());
-            TokenUserDto tokenUserDto = tokenUserFindById.findUserById(id);
+            TokenUserDto tokenUserDto = tokenUserFindable.findUserById(id);
             throwIfUserIdDoesNotSame(tokenUserDto, proceedingJoinPoint, userIdAuthenticating.idx());
         }catch(Exception E){
             verifyState = false;
@@ -144,7 +144,7 @@ public class AuthenticateAop{
                 .extractAnnotation(proceedingJoinPoint, IdAuthenticating.class);
         boolean verifyState = true;
         try{
-            TokenUserDto tokenUserDto = tokenUserFindById.findUserById(getDecryptedId(getToken()));
+            TokenUserDto tokenUserDto = tokenUserFindable.findUserById(getDecryptedId(getToken()));
             throwIfIdDoesNotSame(tokenUserDto.getId(), (int)proceedingJoinPoint.getArgs()[idAuthenticating.idx()]);
         }catch(Exception E){
             idAuthenticating.fail().behave();

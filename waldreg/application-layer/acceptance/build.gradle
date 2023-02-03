@@ -20,6 +20,7 @@ repositories {
 }
 
 dependencies {
+    implementation project(':application-layer:board-controller')
     implementation project(':application-layer:character-controller')
     implementation project(':application-layer:user-controller')
     implementation project(':application-layer:auth-controller')
