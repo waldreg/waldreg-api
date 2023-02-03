@@ -33,6 +33,7 @@ public class DefaultBoardManager implements BoardManager{
         this.decryptedTokenContextGetter = decryptedTokenContextGetter;
     }
 
+
     @Override
     public BoardDto createBoard(BoardRequest request){
         throwIfCategoryDoesNotExist(request.getCategoryId());
@@ -60,7 +61,7 @@ public class DefaultBoardManager implements BoardManager{
                 .content(request.getContent())
                 .categoryDto(categoryDto)
                 .userDto(userDto)
-                .memberTier(request.getMemberTier())
+                .boardServiceMemberTier(request.getMemberTier())
                 .build();
     }
 

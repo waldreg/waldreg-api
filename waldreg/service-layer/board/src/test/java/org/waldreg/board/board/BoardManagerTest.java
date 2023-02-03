@@ -23,9 +23,9 @@ import org.waldreg.board.board.management.DefaultBoardManager;
 import org.waldreg.board.board.spi.BoardRepository;
 import org.waldreg.board.board.spi.CategoryRepository;
 import org.waldreg.board.board.spi.UserRepository;
+import org.waldreg.board.dto.BoardServiceMemberTier;
 import org.waldreg.board.dto.BoardDto;
 import org.waldreg.board.dto.CategoryDto;
-import org.waldreg.board.dto.MemberTier;
 import org.waldreg.board.dto.UserDto;
 import org.waldreg.util.token.DecryptedTokenContext;
 
@@ -61,7 +61,7 @@ public class BoardManagerTest{
 
         int id = 1;
         int categoryId = 1;
-        MemberTier memberTier = MemberTier.TIER_3;
+        BoardServiceMemberTier boardServiceMemberTier = BoardServiceMemberTier.TIER_3;
 
         Mockito.when(userRepository.isExistUser(Mockito.anyInt())).thenReturn(true);
         Mockito.when(categoryRepository.isExistCategory(Mockito.anyInt())).thenReturn(true);
@@ -71,7 +71,7 @@ public class BoardManagerTest{
                 .title(title)
                 .content(content)
                 .categoryId(categoryId)
-                .memberTier(memberTier)
+                .memberTier(boardServiceMemberTier)
                 .imageCount(2)
                 .fileCount(3)
                 .build();
@@ -89,7 +89,7 @@ public class BoardManagerTest{
 
         int id = 1;
         int categoryId = 1;
-        MemberTier memberTier = MemberTier.TIER_3;
+        BoardServiceMemberTier memberTier = BoardServiceMemberTier.TIER_3;
 
         UserDto userDto = UserDto.builder()
                 .id(id)
@@ -103,7 +103,7 @@ public class BoardManagerTest{
                 .id(1)
                 .userDto(userDto)
                 .categoryDto(categoryDto)
-                .memberTier(memberTier)
+                .boardServiceMemberTier(memberTier)
                 .title(title)
                 .content(content)
                 .build();
@@ -134,7 +134,7 @@ public class BoardManagerTest{
 
         int id = 1;
         int categoryId = 1;
-        MemberTier memberTier = MemberTier.TIER_3;
+        BoardServiceMemberTier memberTier = BoardServiceMemberTier.TIER_3;
 
         UserDto userDto = UserDto.builder()
                 .id(id)
@@ -148,7 +148,7 @@ public class BoardManagerTest{
                 .id(1)
                 .userDto(userDto)
                 .categoryDto(categoryDto)
-                .memberTier(memberTier)
+                .boardServiceMemberTier(memberTier)
                 .title(title)
                 .content(content)
                 .build();
@@ -174,7 +174,7 @@ public class BoardManagerTest{
         int categoryId1 = 1;
         int categoryId2 = 2;
 
-        MemberTier memberTier = MemberTier.TIER_3;
+        BoardServiceMemberTier memberTier = BoardServiceMemberTier.TIER_3;
 
         UserDto userDto1 = UserDto.builder()
                 .id(id1)
@@ -195,7 +195,7 @@ public class BoardManagerTest{
                 .id(1)
                 .userDto(userDto1)
                 .categoryDto(categoryDto1)
-                .memberTier(memberTier)
+                .boardServiceMemberTier(memberTier)
                 .title(title)
                 .content(content)
                 .build();
@@ -203,7 +203,7 @@ public class BoardManagerTest{
                 .id(1)
                 .userDto(userDto2)
                 .categoryDto(categoryDto2)
-                .memberTier(memberTier)
+                .boardServiceMemberTier(memberTier)
                 .title("title2")
                 .content("content2")
                 .build();
@@ -253,7 +253,7 @@ public class BoardManagerTest{
 
         int id1 = 1;
         int categoryId1 = 1;
-        MemberTier memberTier = MemberTier.TIER_3;
+        BoardServiceMemberTier memberTier = BoardServiceMemberTier.TIER_3;
 
         UserDto userDto1 = UserDto.builder()
                 .id(id1)
@@ -268,7 +268,7 @@ public class BoardManagerTest{
                 .id(1)
                 .userDto(userDto1)
                 .categoryDto(categoryDto1)
-                .memberTier(memberTier)
+                .boardServiceMemberTier(memberTier)
                 .title(title)
                 .content(content)
                 .build();
@@ -276,7 +276,7 @@ public class BoardManagerTest{
                 .id(1)
                 .userDto(userDto1)
                 .categoryDto(categoryDto1)
-                .memberTier(memberTier)
+                .boardServiceMemberTier(memberTier)
                 .title("title3")
                 .content("content3")
                 .build();
@@ -341,7 +341,7 @@ public class BoardManagerTest{
         int id2 = 2;
         int categoryId1 = 1;
         int categoryId2 = 2;
-        MemberTier memberTier = MemberTier.TIER_3;
+        BoardServiceMemberTier memberTier = BoardServiceMemberTier.TIER_3;
 
         UserDto userDto1 = UserDto.builder()
                 .id(id1)
@@ -362,7 +362,7 @@ public class BoardManagerTest{
                 .id(1)
                 .userDto(userDto1)
                 .categoryDto(categoryDto1)
-                .memberTier(memberTier)
+                .boardServiceMemberTier(memberTier)
                 .title(title)
                 .content(content)
                 .build();
@@ -370,7 +370,7 @@ public class BoardManagerTest{
                 .id(1)
                 .userDto(userDto2)
                 .categoryDto(categoryDto2)
-                .memberTier(memberTier)
+                .boardServiceMemberTier(memberTier)
                 .title("title2")
                 .content("content2")
                 .build();
@@ -422,7 +422,7 @@ public class BoardManagerTest{
         int id2 = 2;
         int categoryId1 = 1;
         int categoryId2 = 2;
-        MemberTier memberTier = MemberTier.TIER_3;
+        BoardServiceMemberTier memberTier = BoardServiceMemberTier.TIER_3;
 
         UserDto userDto1 = UserDto.builder()
                 .id(id1)
@@ -443,7 +443,7 @@ public class BoardManagerTest{
                 .id(1)
                 .userDto(userDto1)
                 .categoryDto(categoryDto1)
-                .memberTier(memberTier)
+                .boardServiceMemberTier(memberTier)
                 .title(title)
                 .content(content)
                 .build();
@@ -451,7 +451,7 @@ public class BoardManagerTest{
                 .id(1)
                 .userDto(userDto2)
                 .categoryDto(categoryDto2)
-                .memberTier(memberTier)
+                .boardServiceMemberTier(memberTier)
                 .title("title2")
                 .content("content2")
                 .build();
@@ -502,7 +502,7 @@ public class BoardManagerTest{
         int id2 = 2;
         int categoryId1 = 1;
         int categoryId2 = 2;
-        MemberTier memberTier = MemberTier.TIER_3;
+        BoardServiceMemberTier memberTier = BoardServiceMemberTier.TIER_3;
 
         UserDto userDto1 = UserDto.builder()
                 .id(id1)
@@ -524,7 +524,7 @@ public class BoardManagerTest{
                 .id(1)
                 .userDto(userDto1)
                 .categoryDto(categoryDto1)
-                .memberTier(memberTier)
+                .boardServiceMemberTier(memberTier)
                 .title(title)
                 .content(content)
                 .build();
@@ -532,7 +532,7 @@ public class BoardManagerTest{
                 .id(1)
                 .userDto(userDto2)
                 .categoryDto(categoryDto2)
-                .memberTier(memberTier)
+                .boardServiceMemberTier(memberTier)
                 .title("title2")
                 .content("content2")
                 .build();
@@ -580,7 +580,7 @@ public class BoardManagerTest{
         int id = 1;
         int categoryId = 1;
 
-        MemberTier memberTier = MemberTier.TIER_3;
+        BoardServiceMemberTier memberTier = BoardServiceMemberTier.TIER_3;
 
         UserDto userDto1 = UserDto.builder()
                 .id(id)
@@ -593,7 +593,7 @@ public class BoardManagerTest{
                 .id(1)
                 .userDto(userDto1)
                 .categoryDto(categoryDto1)
-                .memberTier(memberTier)
+                .boardServiceMemberTier(memberTier)
                 .title(title)
                 .content(content)
                 .build();
@@ -606,7 +606,7 @@ public class BoardManagerTest{
                 .title(modifyTitle)
                 .content(modifyContent)
                 .categoryDto(boardDto.getCategoryDto())
-                .memberTier(boardDto.getMemberTier())
+                .boardServiceMemberTier(boardDto.getMemberTier())
                 .build();
 
         Mockito.when(userRepository.isExistUser(Mockito.anyInt())).thenReturn(true);
@@ -637,7 +637,7 @@ public class BoardManagerTest{
         int id = 1;
         int categoryId = 1;
 
-        MemberTier memberTier = MemberTier.TIER_3;
+        BoardServiceMemberTier memberTier = BoardServiceMemberTier.TIER_3;
 
         UserDto userDto1 = UserDto.builder()
                 .id(id)
@@ -650,7 +650,7 @@ public class BoardManagerTest{
                 .id(1)
                 .userDto(userDto1)
                 .categoryDto(categoryDto1)
-                .memberTier(memberTier)
+                .boardServiceMemberTier(memberTier)
                 .title(title)
                 .content(content)
                 .build();
@@ -664,7 +664,7 @@ public class BoardManagerTest{
                 .title(modifyTitle)
                 .content(modifyContent)
                 .categoryDto(boardDto.getCategoryDto())
-                .memberTier(boardDto.getMemberTier())
+                .boardServiceMemberTier(boardDto.getMemberTier())
                 .build();
 
         Mockito.when(categoryRepository.isExistCategory(Mockito.anyInt())).thenReturn(true);
