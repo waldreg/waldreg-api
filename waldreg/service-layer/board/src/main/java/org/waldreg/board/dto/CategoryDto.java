@@ -4,10 +4,11 @@ import java.util.List;
 
 public class CategoryDto{
 
-    private  int id;
-    private  String categoryName;
+    private int id;
+    private String categoryName;
 
     private List<BoardDto> boardDtoList;
+
     private CategoryDto(){}
 
     private CategoryDto(Builder builder){

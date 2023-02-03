@@ -35,12 +35,13 @@ public class MemoryBoardRepository implements BoardRepository{
 
     @Override
     public BoardDto inquiryBoardById(int boardId){
-        return null;
+        Board board = memoryBoardStorage.inquiryBoardById(boardId);
+        return boardMapper.boardDomainToBoardDto(board);
     }
 
     @Override
-    public Boolean isExistBoard(int id){
-        return null;
+    public boolean isExistBoard(int id){
+        return memoryBoardStorage.inquiryBoardById(id) != null;
     }
 
     @Override

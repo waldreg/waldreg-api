@@ -15,8 +15,6 @@ import org.waldreg.domain.board.Board;
 import org.waldreg.domain.board.comment.Comment;
 import org.waldreg.domain.board.reaction.ReactionType;
 import org.waldreg.domain.category.Category;
-import org.waldreg.domain.character.Character;
-import org.waldreg.domain.character.Permission;
 import org.waldreg.domain.user.User;
 
 @Service
@@ -99,20 +97,6 @@ public class BoardMapper{
                 .userId(user.getUserId())
                 .name(user.getName())
                 .build();
-    }
-
-    private String findTier(Character character){
-        List<Permission> permissionList = character.getPermissionList();
-        for (Permission permission : permissionList){
-            if (isPermissionTierTrue(permission)){
-                return permission.getName();
-            }
-        }
-        throw new IllegalStateException();
-    }
-
-    private boolean isPermissionTierTrue(Permission permission){
-        return permission.getName().contains("TIER") && permission.getStatus().equals("true");
     }
 
 }

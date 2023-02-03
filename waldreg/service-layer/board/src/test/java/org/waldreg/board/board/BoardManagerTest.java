@@ -24,7 +24,6 @@ import org.waldreg.board.board.spi.BoardRepository;
 import org.waldreg.board.board.spi.CategoryRepository;
 import org.waldreg.board.board.spi.UserRepository;
 import org.waldreg.board.dto.BoardDto;
-import org.waldreg.board.dto.CategoryDto;
 import org.waldreg.board.dto.UserDto;
 import org.waldreg.util.token.DecryptedTokenContext;
 
@@ -211,6 +210,7 @@ public class BoardManagerTest{
                 () -> Assertions.assertThrows(InvalidRangeException.class, () -> boardManager.inquiryAllBoard(5, 4))
         );
     }
+
     @Test
     @DisplayName("카테고리별 전체 게시글 조회 성공")
     public void INQUIRY_ALL_BOARD_BY_CATEGORY_SUCCESS_TEST(){
@@ -614,7 +614,7 @@ public class BoardManagerTest{
         //when
         Mockito.when(boardRepository.isExistBoard(Mockito.anyInt())).thenReturn(false);
         //then
-        Assertions.assertThrows(BoardDoesNotExistException.class,() -> boardManager.deleteBoard(boardId));
+        Assertions.assertThrows(BoardDoesNotExistException.class, () -> boardManager.deleteBoard(boardId));
     }
 
 }

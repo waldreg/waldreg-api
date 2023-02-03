@@ -5,7 +5,6 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicInteger;
 import org.springframework.stereotype.Repository;
 import org.waldreg.domain.board.Board;
-import org.waldreg.domain.calendar.Schedule;
 
 @Repository
 public class MemoryBoardStorage{
@@ -23,6 +22,10 @@ public class MemoryBoardStorage{
         board.setId(atomicInteger.getAndIncrement());
         storage.put(board.getId(), board);
         return board;
+    }
+
+    public Board inquiryBoardById(int id){
+        return storage.get(id);
     }
 
     public void deleteAllBoard(){

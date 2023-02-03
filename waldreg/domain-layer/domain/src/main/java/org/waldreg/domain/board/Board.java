@@ -5,7 +5,6 @@ import java.util.ArrayList;
 import java.util.List;
 import org.waldreg.domain.board.comment.Comment;
 import org.waldreg.domain.board.reaction.Reaction;
-import org.waldreg.domain.category.Category;
 import org.waldreg.domain.user.User;
 
 public final class Board{

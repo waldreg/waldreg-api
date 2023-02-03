@@ -9,7 +9,7 @@ public interface BoardRepository{
 
     BoardDto inquiryBoardById(int boardId);
 
-    Boolean isExistBoard(int id);
+    boolean isExistBoard(int id);
 
     int getBoardMaxIdx(String userTier);
 
@@ -17,7 +17,7 @@ public interface BoardRepository{
 
     List<BoardDto> inquiryAllBoardByCategory(String userTier, int categoryId, int from, int to);
 
-    int getBoardMaxIdxByCategory(String userTier,int categoryId);
+    int getBoardMaxIdxByCategory(String userTier, int categoryId);
 
     BoardDto modifyBoard(BoardDto boardDto);
 
