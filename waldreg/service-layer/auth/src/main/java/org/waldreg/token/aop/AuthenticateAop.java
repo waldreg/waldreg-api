@@ -57,27 +57,31 @@ public class AuthenticateAop{
     @Around("@annotation(org.waldreg.token.aop.annotation.Authenticating)")
     public Object authenticate(ProceedingJoinPoint proceedingJoinPoint) throws Throwable{
         Authenticating authenticating = authenticatingAnnotationExtractor.extractAnnotation(proceedingJoinPoint, Authenticating.class);
+        boolean verifyState = true;
         try{
             int id = getDecryptedId(getToken());
             TokenUserDto tokenUserDto = tokenUserFindById.findUserById(id);
         }catch(Exception E){
+            verifyState = false;
             authenticating.fail().behave();
         }
-        return proceedingJoinPoint.proceed(proceedingJoinPoint.getArgs());
+        return proceedingJoinPoint.proceed(setPermissionVerifyStateParameter(proceedingJoinPoint, verifyState));
     }
 
     @Around("@annotation(org.waldreg.token.aop.annotation.HeaderPasswordAuthenticating)")
     public Object authenticateByHeaderPassword(ProceedingJoinPoint proceedingJoinPoint) throws Throwable{
         HeaderPasswordAuthenticating headerPasswordAuthenticating = headerPasswordAuthenticatingAnnotationExtractor
                 .extractAnnotation(proceedingJoinPoint, HeaderPasswordAuthenticating.class);
+        boolean verifyState = true;
         try{
             int id = getDecryptedId(getToken());
             TokenUserDto tokenUserDto = tokenUserFindById.findUserById(id);
             throwIfUserPasswordDoesNotSame(tokenUserDto, getRequestPassword());
         }catch(Exception E){
+            verifyState = false;
             headerPasswordAuthenticating.fail().behave();
         }
-        return proceedingJoinPoint.proceed(proceedingJoinPoint.getArgs());
+        return proceedingJoinPoint.proceed(setPermissionVerifyStateParameter(proceedingJoinPoint, verifyState));
     }
 
     private String getRequestPassword(){
@@ -94,14 +98,16 @@ public class AuthenticateAop{
     public Object authenticateByUserId(ProceedingJoinPoint proceedingJoinPoint) throws Throwable{
         UserIdAuthenticating userIdAuthenticating = userIdAuthenticatingAnnotationExtractor
                 .extractAnnotation(proceedingJoinPoint, UserIdAuthenticating.class);
+        boolean verifyState = true;
         try{
             int id = getDecryptedId(getToken());
             TokenUserDto tokenUserDto = tokenUserFindById.findUserById(id);
             throwIfUserIdDoesNotSame(tokenUserDto, proceedingJoinPoint, userIdAuthenticating.idx());
         }catch(Exception E){
+            verifyState = false;
             userIdAuthenticating.fail().behave();
         }
-        return proceedingJoinPoint.proceed(proceedingJoinPoint.getArgs());
+        return proceedingJoinPoint.proceed(setPermissionVerifyStateParameter(proceedingJoinPoint, verifyState));
     }
 
     private void throwIfUserIdDoesNotSame(TokenUserDto tokenUserDto, ProceedingJoinPoint proceedingJoinPoint, int argumentIdx){
