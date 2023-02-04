@@ -249,6 +249,7 @@ public class BoardRepositoryTest{
 
         //then
         Assertions.assertAll(
+                () -> Assertions.assertEquals(2, result.size()),
                 () -> Assertions.assertEquals(boardRequest.getTitle(), result.get(0).getTitle()),
                 () -> Assertions.assertEquals(boardRequest.getContent(), result.get(0).getContent()),
                 () -> Assertions.assertEquals(boardRequest.getUserDto().getUserId(), result.get(0).getUserDto().getUserId()),
@@ -267,6 +268,105 @@ public class BoardRepositoryTest{
                 () -> Assertions.assertNotNull(result.get(1).getCreatedAt()),
                 () -> Assertions.assertEquals(boardRequest2.getFileUrls().get(0), result.get(1).getFileUrls().get(0)),
                 () -> Assertions.assertEquals(boardRequest2.getImageUrls().get(0), result.get(1).getImageUrls().get(0)),
+                () -> Assertions.assertNotNull(result.get(1).getLastModifiedAt()),
+                () -> Assertions.assertTrue(result.get(1).getViews() == 0)
+        );
+
+    }
+
+    @Test
+    @DisplayName("content로 게시글 목록 조회 성공 테스트")
+    public void INQUIRY_BOARD_LIST_BY_CONTENT_SUCCESS_TEST(){
+        //given
+        org.waldreg.user.dto.UserDto user = org.waldreg.user.dto.UserDto.builder()
+                .userId("alcuk_id")
+                .name("alcuk")
+                .userPassword("alcuk123!")
+                .phoneNumber("010-1234-1234")
+                .build();
+        CharacterDto characterDto = CharacterDto.builder()
+                .id(1)
+                .characterName("Guest")
+                .permissionDtoList(List.of())
+                .build();
+        characterRepository.createCharacter(characterDto);
+        userRepository.createUser(user);
+        org.waldreg.user.dto.UserDto userResponse = userRepository.readUserByUserId("alcuk_id");
+        List<String> fileUrlList = new ArrayList<>();
+        fileUrlList.add("uuid.pptx");
+        List<String> imageUrlList = new ArrayList<>();
+        imageUrlList.add("uuid.png");
+        UserDto userDto = UserDto.builder()
+                .id(userResponse.getId())
+                .userId("alcuk_id")
+                .name("alcuk")
+                .build();
+        CategoryDto categoryDto = CategoryDto.builder()
+                .id(1)
+                .categoryName("cate")
+                .build();
+        List<String> filePathList = new ArrayList<>();
+        filePathList.add("uuid.pptx");
+        List<String> imagePathList = new ArrayList<>();
+        imagePathList.add("uuid.png");
+        String title = "title";
+        String content = "content";
+        BoardDto boardRequest = BoardDto.builder()
+                .title(title)
+                .userDto(userDto)
+                .content(content)
+                .categoryId(categoryDto.getId())
+                .fileUrls(filePathList)
+                .imageUrls(imageUrlList)
+                .build();
+        String title2 = "title2";
+        String content2 = "This is content2!";
+        BoardDto boardRequest2 = BoardDto.builder()
+                .title(title2)
+                .userDto(userDto)
+                .content(content2)
+                .categoryId(categoryDto.getId())
+                .fileUrls(filePathList)
+                .imageUrls(imageUrlList)
+                .build();
+        String title3 = "hihihi";
+        String content3 = "This is content3!";
+        BoardDto boardRequest3 = BoardDto.builder()
+                .title(title3)
+                .userDto(userDto)
+                .content(content3)
+                .categoryId(categoryDto.getId())
+                .fileUrls(filePathList)
+                .imageUrls(imageUrlList)
+                .build();
+
+        //when
+        boardRepository.createBoard(boardRequest);
+        boardRepository.createBoard(boardRequest2);
+        boardRepository.createBoard(boardRequest3);
+        List<BoardDto> result = boardRepository.searchByContent("This");
+
+        //then
+        Assertions.assertAll(
+                () -> Assertions.assertEquals(2, result.size()),
+                () -> Assertions.assertEquals(boardRequest2.getTitle(), result.get(0).getTitle()),
+                () -> Assertions.assertEquals(boardRequest2.getContent(), result.get(0).getContent()),
+                () -> Assertions.assertEquals(boardRequest2.getUserDto().getUserId(), result.get(0).getUserDto().getUserId()),
+                () -> Assertions.assertEquals(boardRequest2.getUserDto().getName(), result.get(0).getUserDto().getName()),
+                () -> Assertions.assertEquals(boardRequest2.getCategoryId(), result.get(0).getCategoryId()),
+                () -> Assertions.assertNotNull(result.get(0).getCreatedAt()),
+                () -> Assertions.assertEquals(boardRequest2.getFileUrls().get(0), result.get(0).getFileUrls().get(0)),
+                () -> Assertions.assertEquals(boardRequest2.getImageUrls().get(0), result.get(0).getImageUrls().get(0)),
+                () -> Assertions.assertNotNull(result.get(0).getLastModifiedAt()),
+                () -> Assertions.assertTrue(result.get(0).getViews() == 0),
+                () -> Assertions.assertEquals(boardRequest3.getTitle(), result.get(1).getTitle()),
+                () -> Assertions.assertEquals(boardRequest3.getContent(), result.get(1).getContent()),
+                () -> Assertions.assertEquals(boardRequest3.getUserDto().getUserId(), result.get(1).getUserDto().getUserId()),
+                () -> Assertions.assertEquals(boardRequest3.getUserDto().getName(), result.get(1).getUserDto().getName()),
+                () -> Assertions.assertEquals(boardRequest3.getCategoryId(), result.get(1).getCategoryId()),
+                () -> Assertions.assertNotNull(result.get(1).getCreatedAt()),
+                () -> Assertions.assertEquals(boardRequest3.getFileUrls().get(0), result.get(1).getFileUrls().get(0)),
+                () -> Assertions.assertEquals(boardRequest3.getImageUrls().get(0), result.get(1).getImageUrls().get(0)),
                 () -> Assertions.assertNotNull(result.get(1).getLastModifiedAt()),
                 () -> Assertions.assertTrue(result.get(1).getViews() == 0)
         );
