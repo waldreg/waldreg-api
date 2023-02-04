@@ -8,6 +8,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.mock.mockito.MockBean;
@@ -269,7 +270,7 @@ public class CommentManagerTest{
         Mockito.when(boardRepository.isExistBoard(Mockito.anyInt())).thenReturn(true);
         Mockito.when(commentRepository.isExistComment(Mockito.anyInt())).thenReturn(true);
         //then
-        Assertions.assertDoesNotThrow(()->commentManager.modifyComment(commentDto));
+        Assertions.assertDoesNotThrow(() -> commentManager.modifyComment(commentDto));
 
     }
 
@@ -294,7 +295,7 @@ public class CommentManagerTest{
         Mockito.when(boardRepository.isExistBoard(Mockito.anyInt())).thenReturn(false);
         Mockito.when(commentRepository.isExistComment(Mockito.anyInt())).thenReturn(true);
         //then
-        Assertions.assertThrows(BoardDoesNotExistException.class,()->commentManager.modifyComment(commentDto));
+        Assertions.assertThrows(BoardDoesNotExistException.class, () -> commentManager.modifyComment(commentDto));
     }
 
 
@@ -319,7 +320,30 @@ public class CommentManagerTest{
         Mockito.when(boardRepository.isExistBoard(Mockito.anyInt())).thenReturn(true);
         Mockito.when(commentRepository.isExistComment(Mockito.anyInt())).thenReturn(false);
         //then
-        Assertions.assertThrows(CommentDoesNotExistException.class, ()->commentManager.modifyComment(commentDto));
+        Assertions.assertThrows(CommentDoesNotExistException.class, () -> commentManager.modifyComment(commentDto));
+    }
+
+    @Test
+    @DisplayName("댓글 삭제 성공 테스트")
+    public void DELETE_COMMENT_SUCCESS_TEST(){
+        //given
+        int commentId = 1;
+
+        //when
+        Mockito.when(commentRepository.isExistComment(Mockito.anyInt())).thenReturn(true);
+        //then
+        Assertions.assertDoesNotThrow(() -> commentManager.deleteComment(commentId));
+    }
+
+    @Test
+    @DisplayName("댓글 삭제 실패 - 없는 댓글")
+    public void DELETE_COMMENT_DOES_NOT_EXIST_TEST(){
+        //given
+        int commentId = 1;
+        //when
+        Mockito.when(commentRepository.isExistComment(Mockito.anyInt())).thenReturn(false);
+        //then
+        Assertions.assertThrows(CommentDoesNotExistException.class, () -> commentManager.deleteComment(commentId));
     }
 
 }

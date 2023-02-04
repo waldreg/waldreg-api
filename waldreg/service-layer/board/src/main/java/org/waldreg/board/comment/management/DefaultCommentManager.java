@@ -85,4 +85,10 @@ public class DefaultCommentManager implements CommentManager{
         }
     }
 
+    @Override
+    public void deleteComment(int commentId){
+        throwIfCommentDoesNotExist(commentId);
+        commentRepository.deleteComment(commentId);
+    }
+
 }
