@@ -23,6 +23,7 @@ dependencyManagement {
 }
 
 dependencies {
+    implementation project(':core-layer:template')
     implementation project(':service-layer:auth')
     implementation project(':repository-layer:memory-repository')
 

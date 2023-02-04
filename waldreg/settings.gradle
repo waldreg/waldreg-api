@@ -44,4 +44,6 @@ include 'application-layer:board-controller'
 findProject(':application-layer:board-controller')?.name = 'board-controller'
 include 'service-layer:board'
 findProject(':service-layer:board')?.name = 'board'
+include 'core-layer:encrypt'
+findProject(':core-layer:encrypt')?.name = 'encrypt'
 

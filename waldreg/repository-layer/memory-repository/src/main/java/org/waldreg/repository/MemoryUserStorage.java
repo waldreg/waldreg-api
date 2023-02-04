@@ -69,7 +69,7 @@ public class MemoryUserStorage{
                 return userEntry.getValue();
             }
         }
-        throw new UnknownIdException(id);
+        throw new UnknownIdException("Unknown id \"" + id + "\"");
     }
 
     public User readUserByUserId(String userId){
@@ -78,7 +78,7 @@ public class MemoryUserStorage{
                 return userEntry.getValue();
             }
         }
-        throw new UnknownUserIdException(userId);
+        throw new UnknownUserIdException("Unknown user_id \"" + userId + "\"");
     }
 
     public List<User> readUserList(int startIdx, int endIdx){
@@ -138,7 +138,7 @@ public class MemoryUserStorage{
                 return;
             }
         }
-        throw new UnknownIdException(id);
+        throw new UnknownIdException("Unknown id \"" + id + "\"");
     }
 
 }

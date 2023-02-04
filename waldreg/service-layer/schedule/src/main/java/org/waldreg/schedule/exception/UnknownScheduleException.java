@@ -1,7 +1,16 @@
 package org.waldreg.schedule.exception;
 
-public class UnknownScheduleException extends RuntimeException{
+public final class UnknownScheduleException extends RuntimeException{
 
-    public UnknownScheduleException(String message){super(message);}
+    private final String code;
+
+    public UnknownScheduleException(String code, String message){
+        super(message);
+        this.code = code;
+    }
+
+    public String getCode(){
+        return code;
+    }
 
 }
