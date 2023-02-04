@@ -52,17 +52,19 @@ public class MemoryBoardRepository implements BoardRepository{
 
     @Override
     public List<BoardDto> inquiryAllBoard(int from, int to){
-        return null;
+        List<Board> boardList = memoryBoardStorage.inquiryAllBoard(from, to);
+        return boardMapper.boardDomainListToBoardDtoList(boardList);
     }
 
     @Override
     public List<BoardDto> inquiryAllBoardByCategory(int categoryId, int from, int to){
-        return null;
+        List<Board> boardList = memoryBoardStorage.inquiryAllBoardByCategory(categoryId, from, to);
+        return boardMapper.boardDomainListToBoardDtoList(boardList);
     }
 
     @Override
     public int getBoardMaxIdxByCategory(int categoryId){
-        return 0;
+        return memoryBoardStorage.getBoardMaxIdxByCategory(categoryId);
     }
 
     @Override
