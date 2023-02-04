@@ -76,7 +76,7 @@ public class MemoryBoardRepository implements BoardRepository{
 
     @Override
     public void deleteBoard(int id){
-
+        memoryBoardStorage.deleteBoardById(id);
     }
 
     @Override

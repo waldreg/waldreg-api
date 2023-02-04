@@ -663,5 +663,84 @@ public class BoardRepositoryTest{
 
     }
 
+    @Test
+    @DisplayName("게시글 삭제 성공 테스트")
+    public void DELETE_BOARD_BY_ID_SUCCESS_TEST(){
+        //given
+        org.waldreg.user.dto.UserDto user = org.waldreg.user.dto.UserDto.builder()
+                .userId("alcuk_id")
+                .name("alcuk")
+                .userPassword("alcuk123!")
+                .phoneNumber("010-1234-1234")
+                .build();
+        CharacterDto characterDto = CharacterDto.builder()
+                .id(1)
+                .characterName("Guest")
+                .permissionDtoList(List.of())
+                .build();
+        characterRepository.createCharacter(characterDto);
+        userRepository.createUser(user);
+        org.waldreg.user.dto.UserDto userResponse = userRepository.readUserByUserId("alcuk_id");
+        String title = "title";
+        String content = "content";
+        List<String> fileUrlList = new ArrayList<>();
+        fileUrlList.add("uuid.pptx");
+        List<String> imageUrlList = new ArrayList<>();
+        imageUrlList.add("uuid.png");
+        UserDto userDto = UserDto.builder()
+                .id(userResponse.getId())
+                .userId("alcuk_id")
+                .name("alcuk")
+                .build();
+        CategoryDto categoryDto = CategoryDto.builder()
+                .id(1)
+                .categoryName("cate")
+                .build();
+        List<String> filePathList = new ArrayList<>();
+        filePathList.add("uuid.pptx");
+        List<String> imagePathList = new ArrayList<>();
+        imagePathList.add("uuid.png");
+        BoardDto boardRequest = BoardDto.builder()
+                .title(title)
+                .userDto(userDto)
+                .content(content)
+                .categoryId(categoryDto.getId())
+                .fileUrls(filePathList)
+                .imageUrls(imageUrlList)
+                .build();
+        String title2 = "title2";
+        BoardDto boardRequest2 = BoardDto.builder()
+                .title(title2)
+                .userDto(userDto)
+                .content(content)
+                .categoryId(categoryDto.getId())
+                .fileUrls(filePathList)
+                .imageUrls(imageUrlList)
+                .build();
+
+        //when
+        boardRepository.createBoard(boardRequest);
+        boardRepository.createBoard(boardRequest2);
+        List<BoardDto> boardDtoList = boardRepository.searchByTitle(title);
+        boardRepository.deleteBoard(boardDtoList.get(0).getId());
+        List<BoardDto> result = boardRepository.searchByTitle(title);
+
+        //then
+        Assertions.assertAll(
+                () -> Assertions.assertEquals(1, result.size()),
+                () -> Assertions.assertEquals(boardRequest2.getTitle(), result.get(0).getTitle()),
+                () -> Assertions.assertEquals(boardRequest2.getContent(), result.get(0).getContent()),
+                () -> Assertions.assertEquals(boardRequest2.getUserDto().getUserId(), result.get(0).getUserDto().getUserId()),
+                () -> Assertions.assertEquals(boardRequest2.getUserDto().getName(), result.get(0).getUserDto().getName()),
+                () -> Assertions.assertEquals(boardRequest2.getCategoryId(), result.get(0).getCategoryId()),
+                () -> Assertions.assertNotNull(result.get(0).getCreatedAt()),
+                () -> Assertions.assertEquals(boardRequest2.getFileUrls().get(0), result.get(0).getFileUrls().get(0)),
+                () -> Assertions.assertEquals(boardRequest2.getImageUrls().get(0), result.get(0).getImageUrls().get(0)),
+                () -> Assertions.assertNotNull(result.get(0).getLastModifiedAt()),
+                () -> Assertions.assertTrue(result.get(0).getViews() == 0)
+        );
+
+    }
+
 
 }

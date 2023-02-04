@@ -35,6 +35,10 @@ public class MemoryBoardStorage{
         storage.clear();
     }
 
+    public void deleteBoardById(int id){
+        storage.remove(id);
+    }
+
     public Board modifyBoard(Board board){
         return storage.replace(board.getId(), board);
     }
