@@ -3,43 +3,36 @@ package org.waldreg.board.comment.management;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.waldreg.board.comment.exception.BoardDoesNotExistException;
+import org.waldreg.board.comment.exception.CommentDoesNotExistException;
 import org.waldreg.board.comment.exception.ContentLengthOverThousandException;
 import org.waldreg.board.comment.exception.InvalidRangeException;
 import org.waldreg.board.comment.exception.UserDoesNotExistException;
 import org.waldreg.board.comment.spi.BoardRepository;
 import org.waldreg.board.comment.spi.CommentRepository;
 import org.waldreg.board.comment.spi.UserRepository;
+import org.waldreg.board.dto.BoardDto;
 import org.waldreg.board.dto.CommentDto;
 
 public class DefaultCommentManager implements CommentManager{
 
     private final int perPage = 20;
     private CommentRepository commentRepository;
-    private UserRepository userRepository;
 
     private BoardRepository boardRepository;
 
     @Autowired
-    public void DefaultBoardManager(CommentRepository commentRepository, UserRepository userRepository, BoardRepository boardRepository){
+    public void DefaultBoardManager(CommentRepository commentRepository , BoardRepository boardRepository){
         this.commentRepository = commentRepository;
-        this.userRepository = userRepository;
         this.boardRepository = boardRepository;
     }
 
 
     @Override
     public void createComment(CommentDto commentDto){
-        throwIfUserDoesNotExist(commentDto.getUserDto().getId());
         throwIfBoardDoesNotExist(commentDto.getBoardId());
         throwIfContentOverFlowThousand(commentDto.getContent());
         CommentDto storedCommentDto = commentRepository.createComment(commentDto);
         boardRepository.addComment(storedCommentDto);
-    }
-
-    private void throwIfUserDoesNotExist(int authorId){
-        if (!userRepository.isExistUser(authorId)){
-            throw new UserDoesNotExistException(authorId);
-        }
     }
 
     private void throwIfBoardDoesNotExist(int boardId){
@@ -77,6 +70,19 @@ public class DefaultCommentManager implements CommentManager{
             return startIdx + perPage - 1;
         }
         return endIdx;
+    }
+
+    @Override
+    public void modifyComment(CommentDto commentDto){
+        throwIfBoardDoesNotExist(commentDto.getBoardId());
+        throwIfCommentDoesNotExist(commentDto.getId());
+        throwIfContentOverFlowThousand(commentDto.getContent());
+        commentRepository.modifyComment(commentDto);
+    }
+    private void throwIfCommentDoesNotExist(int commentId){
+        if(!commentRepository.isExistComment(commentId)){
+            throw new CommentDoesNotExistException(commentId);
+        }
     }
 
 }

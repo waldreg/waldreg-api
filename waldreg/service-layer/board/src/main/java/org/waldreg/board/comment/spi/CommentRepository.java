@@ -13,6 +13,10 @@ public interface CommentRepository{
 
     void modifyComment(CommentDto commentDto);
 
+    boolean isExistComment(int commentId);
+
     void deleteComment(int id);
+
+
 
 }
