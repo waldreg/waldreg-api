@@ -13,7 +13,6 @@ import org.waldreg.board.board.spi.BoardRepository;
 import org.waldreg.board.board.spi.CategoryRepository;
 import org.waldreg.board.board.spi.UserRepository;
 import org.waldreg.board.dto.BoardDto;
-import org.waldreg.board.dto.CategoryDto;
 import org.waldreg.board.dto.UserDto;
 import org.waldreg.util.token.DecryptedTokenContextGetter;
 

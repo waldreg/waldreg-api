@@ -580,13 +580,7 @@ public class BoardManagerTest{
         BoardDto result = boardManager.modifyBoard(modifiedBoardDto);
         //when
         //then
-        Assertions.assertAll(
-                () -> Assertions.assertEquals(boardDto.getId(), result.getId()),
-                () -> Assertions.assertEquals(boardDto.getUserDto(), result.getUserDto()),
-                () -> Assertions.assertEquals(boardDto.getCategoryId(), result.getCategoryId()),
-                () -> Assertions.assertNotEquals(boardDto.getTitle(), result.getTitle()),
-                () -> Assertions.assertNotEquals(boardDto.getContent(), result.getContent())
-        );
+        Assertions.assertThrows(CategoryDoesNotExistException.class,()->boardManager.modifyBoard(modifiedBoardDto));
 
     }
 

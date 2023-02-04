@@ -115,6 +115,10 @@ public class BoardDto{
         this.views = views;
     }
 
+    public void setCommentList(List<CommentDto> commentList){
+        this.commentList = commentList;
+    }
+
     public static final class Builder{
 
         private int id;

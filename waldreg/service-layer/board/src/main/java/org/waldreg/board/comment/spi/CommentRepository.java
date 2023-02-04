@@ -4,7 +4,7 @@ import org.waldreg.board.dto.CommentDto;
 
 public interface CommentRepository{
 
-    void createComment(CommentDto commentDto);
+    CommentDto createComment(CommentDto commentDto);
 
     void modifyComment(CommentDto commentDto);
 
