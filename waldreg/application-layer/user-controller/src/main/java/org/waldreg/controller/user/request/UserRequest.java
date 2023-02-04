@@ -7,19 +7,19 @@ import javax.validation.constraints.Pattern;
 
 public class UserRequest{
 
-    @NotBlank(message = "Invalid name input")
+    @NotBlank(message = "USER-402 Invalid name input")
     @JsonProperty("name")
     private String name;
-    @NotBlank(message = "Invalid user_id input")
+    @NotBlank(message = "USER-403 Invalid user_id input")
     @JsonProperty("user_id")
     private String userId;
-    @NotBlank(message = "Unsecured user_password input")
-    @Pattern(regexp = "(?=.*[0-9])(?=.*[a-zA-Z])(?=.*\\W)(?=\\S+$).{8,16}", message = "Unsecured user_password input")
+    @NotBlank(message = "USER-401 Unsecured user_password input")
+    @Pattern(regexp = "(?=.*[0-9])(?=.*[a-zA-Z])(?=.*\\W)(?=\\S+$).{8,16}", message = "USER-401 Unsecured user_password input")
     @JsonProperty("user_password")
     private String userPassword;
 
-    @NotNull(message = "Invalid phone_number input")
-    @Pattern(regexp = "^01(?:0|1|[6-9])[.-]?(\\d{3}|\\d{4})[.-]?(\\d{4})$", message = "Invalid phone_number input")
+    @NotNull(message = "USER-405 Invalid phone_number input")
+    @Pattern(regexp = "^01(?:0|1|[6-9])[.-]?(\\d{3}|\\d{4})[.-]?(\\d{4})$", message = "USER-405 Invalid phone_number input")
     @JsonProperty("phone_number")
     private String phoneNumber;
 
