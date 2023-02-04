@@ -87,6 +87,34 @@ public class BoardDto{
         return views;
     }
 
+    public void setTitle(String title){
+        this.title = title;
+    }
+
+    public void setCategoryId(int categoryId){
+        this.categoryId = categoryId;
+    }
+
+    public void setContent(String content){
+        this.content = content;
+    }
+
+    public void setLastModifiedAt(LocalDateTime lastModifiedAt){
+        this.lastModifiedAt = lastModifiedAt;
+    }
+
+    public void setFileUrls(List<String> fileUrls){
+        this.fileUrls = fileUrls;
+    }
+
+    public void setImageUrls(List<String> imageUrls){
+        this.imageUrls = imageUrls;
+    }
+
+    public void setViews(int views){
+        this.views = views;
+    }
+
     public static final class Builder{
 
         private int id;

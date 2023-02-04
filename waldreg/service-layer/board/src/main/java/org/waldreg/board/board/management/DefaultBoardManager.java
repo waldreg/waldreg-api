@@ -1,5 +1,7 @@
 package org.waldreg.board.board.management;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -66,7 +68,10 @@ public class DefaultBoardManager implements BoardManager{
     @Override
     public BoardDto inquiryBoardById(int id){
         throwIfBoardDoesNotExist(id);
-        return boardRepository.inquiryBoardById(id);
+        BoardDto boardDto = boardRepository.inquiryBoardById(id);
+        boardDto.setViews(boardDto.getViews() + 1);
+        boardRepository.modifyBoard(boardDto);
+        return boardDto;
     }
 
     private void throwIfBoardDoesNotExist(int boardId){
@@ -133,11 +138,31 @@ public class DefaultBoardManager implements BoardManager{
     }
 
     @Override
-    public BoardDto modifyBoard(BoardDto boardDto){
-        throwIfBoardDoesNotExist(boardDto.getId());
-        throwIfCategoryDoesNotExist(boardDto.getCategoryId());
-
+    public BoardDto modifyBoard(BoardDto boardDtoRequest){
+        throwIfBoardDoesNotExist(boardDtoRequest.getId());
+        throwIfCategoryDoesNotExist(boardDtoRequest.getCategoryId());
+        BoardDto boardDto = boardRepository.inquiryBoardById(boardDtoRequest.getId());
+        setBoardDto(boardDto, boardDtoRequest);
+        deleteFilePath(boardDto.getFileUrls(), boardDtoRequest.getFileUrls());
+        deleteFilePath(boardDto.getImageUrls(), boardDtoRequest.getFileUrls());
         return boardRepository.modifyBoard(boardDto);
+    }
+
+    private BoardDto setBoardDto(BoardDto boardDto, BoardDto boardDtoRequest){
+        boardDto.setCategoryId(boardDtoRequest.getCategoryId());
+        boardDto.setTitle(boardDtoRequest.getTitle());
+        boardDto.setContent(boardDtoRequest.getContent());
+        boardDto.setLastModifiedAt(LocalDateTime.now());
+        return boardDto;
+    }
+
+    private List<String> deleteFilePath(List<String> beforeFilePaths, List<String> requestFilePaths){
+        for (String requestFilePath : requestFilePaths){
+            if (beforeFilePaths.contains(requestFilePath)){
+                beforeFilePaths.remove(requestFilePath);
+            }
+        }
+        return beforeFilePaths;
     }
 
     @Override
