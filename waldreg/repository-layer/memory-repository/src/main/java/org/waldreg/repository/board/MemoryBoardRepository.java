@@ -1,5 +1,7 @@
 package org.waldreg.repository.board;
 
+import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
@@ -17,6 +19,8 @@ public class MemoryBoardRepository implements BoardRepository{
     private final MemoryUserStorage memoryUserStorage;
     private final BoardMapper boardMapper;
 
+    private final int startIndex = 0;
+
     @Autowired
     public MemoryBoardRepository(MemoryBoardStorage memoryBoardStorage, MemoryUserStorage memoryUserStorage, BoardMapper boardMapper){
         this.memoryBoardStorage = memoryBoardStorage;
@@ -25,12 +29,9 @@ public class MemoryBoardRepository implements BoardRepository{
     }
 
     @Override
-    public BoardDto createBoard(BoardDto boardDto){
+    public void createBoard(BoardDto boardDto){
         Board board = boardMapper.boardDtoToBoardDomain(boardDto);
-        User user = memoryUserStorage.readUserById(boardDto.getUserDto().getId());
-        board.setUser(user);
-        board = memoryBoardStorage.createBoard(board);
-        return boardMapper.boardDomainToBoardDto(board);
+        memoryBoardStorage.createBoard(board);
     }
 
     @Override
@@ -46,7 +47,7 @@ public class MemoryBoardRepository implements BoardRepository{
 
     @Override
     public int getBoardMaxIdx(){
-        return 0;
+        return memoryBoardStorage.getBoardMaxIdx();
     }
 
     @Override
@@ -65,8 +66,10 @@ public class MemoryBoardRepository implements BoardRepository{
     }
 
     @Override
-    public BoardDto modifyBoard(BoardDto boardDto){
-        return null;
+    public void modifyBoard(BoardDto boardDto){
+        Board board = boardMapper.boardDtoToBoardDomain(boardDto);
+        board.setLastModifiedAt(LocalDateTime.now());
+        memoryBoardStorage.modifyBoard(board);
     }
 
     @Override
@@ -75,24 +78,21 @@ public class MemoryBoardRepository implements BoardRepository{
     }
 
     @Override
-    public List<BoardDto> searchByTitle(String keyword, int from, int to){
-        return null;
+    public List<BoardDto> searchByTitle(String keyword){
+        List<Board> boardList = memoryBoardStorage.searchByTitle(keyword);
+        return boardMapper.boardDomainListToBoardDtoList(boardList);
     }
 
     @Override
-    public List<BoardDto> searchByContent(String keyword, int from, int to){
-        return null;
+    public List<BoardDto> searchByContent(String keyword){
+        List<Board> boardList = memoryBoardStorage.searchByContent(keyword);
+        return boardMapper.boardDomainListToBoardDtoList(boardList);
     }
 
     @Override
-    public List<BoardDto> searchByAuthorUserId(String keyword, int from, int to){
-        return null;
+    public List<BoardDto> searchByAuthorUserId(String keyword){
+        List<Board> boardList = memoryBoardStorage.searchByAuthorUserId(keyword);
+        return boardMapper.boardDomainListToBoardDtoList(boardList);
     }
-
-    @Override
-    public int getSearchMaxIdx(String keyword){
-        return 0;
-    }
-
 
 }

@@ -1,3 +1,4 @@
+/*
 package org.waldreg.board.board.management;
 
 import java.time.LocalDate;
@@ -172,3 +173,4 @@ public class DefaultBoardManager implements BoardManager{
     }
 
 }
+*/

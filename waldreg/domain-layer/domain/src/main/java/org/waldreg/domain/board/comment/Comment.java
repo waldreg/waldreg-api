@@ -1,6 +1,8 @@
 package org.waldreg.domain.board.comment;
 
 import java.time.LocalDateTime;
+import org.waldreg.domain.board.Board;
+import org.waldreg.domain.board.Board.Builder;
 import org.waldreg.domain.user.User;
 
 public final class Comment{
@@ -21,6 +23,10 @@ public final class Comment{
         this.createdAt = builder.createdAt;
         this.lastModifiedAt = builder.lastModifiedAt;
         this.content = builder.content;
+    }
+
+    public static Builder builder(){
+        return new Builder();
     }
 
     public int getId(){

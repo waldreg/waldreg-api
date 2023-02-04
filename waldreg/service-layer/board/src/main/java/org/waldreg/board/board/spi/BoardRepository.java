@@ -5,7 +5,7 @@ import org.waldreg.board.dto.BoardDto;
 
 public interface BoardRepository{
 
-    BoardDto createBoard(BoardDto boardDto);
+    void createBoard(BoardDto boardDto);
 
     BoardDto inquiryBoardById(int boardId);
 
@@ -19,16 +19,14 @@ public interface BoardRepository{
 
     int getBoardMaxIdxByCategory(int categoryId);
 
-    BoardDto modifyBoard(BoardDto boardDto);
+    void modifyBoard(BoardDto boardDto);
 
     void deleteBoard(int id);
 
-    List<BoardDto> searchByTitle(String keyword, int from, int to);
+    List<BoardDto> searchByTitle(String keyword);
 
-    List<BoardDto> searchByContent(String keyword, int from, int to);
+    List<BoardDto> searchByContent(String keyword);
 
-    List<BoardDto> searchByAuthorUserId(String keyword, int from, int to);
-
-    int getSearchMaxIdx(String keyword);
+    List<BoardDto> searchByAuthorUserId(String keyword);
 
 }
