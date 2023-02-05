@@ -55,10 +55,10 @@ public class BoardMapper{
                 .build();
     }
 
-    private ReactionDto reactionDomainToReactionDto(Map<ReactionType, List<User>> reactionMap){
-        Map<BoardServiceReactionType, List<UserDto>> reactionTypeListMap = new HashMap<>();
-        for (Map.Entry<ReactionType, List<User>> reactionEntry : reactionMap.entrySet()){
-            reactionTypeListMap.put(boardServiceReactionTypeToReactionType(reactionEntry.getKey()), userDomainListToUserDtoList(reactionEntry.getValue()));
+    private ReactionDto reactionDomainToReactionDto(Map<ReactionType, List<String>> reactionMap){
+        Map<BoardServiceReactionType, List<String>> reactionTypeListMap = new HashMap<>();
+        for (Map.Entry<ReactionType, List<String>> reactionEntry : reactionMap.entrySet()){
+            reactionTypeListMap.put(boardServiceReactionTypeToReactionType(reactionEntry.getKey()),reactionEntry.getValue());
         }
         return ReactionDto.builder()
                 .reactionMap(reactionTypeListMap)
@@ -67,14 +67,6 @@ public class BoardMapper{
 
     private BoardServiceReactionType boardServiceReactionTypeToReactionType(ReactionType reactionType){
         return BoardServiceReactionType.valueOf(reactionType.name());
-    }
-
-    private List<UserDto> userDomainListToUserDtoList(List<User> userList){
-        List<UserDto> userDtoList = new ArrayList<>();
-        for (User user : userList){
-            userDtoList.add(userDomainToUserDto(user));
-        }
-        return userDtoList;
     }
 
     private List<CommentDto> commentDomainListToCommentDtoList(List<Comment> commentList){
