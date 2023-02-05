@@ -152,7 +152,7 @@ public final class Board{
             createdAt = LocalDateTime.now();
             lastModifiedAt = createdAt;
             reactions = Reaction.builder().build();
-            commentList = List.of();
+            commentList = new ArrayList<>();
             views = 0;
         }
 

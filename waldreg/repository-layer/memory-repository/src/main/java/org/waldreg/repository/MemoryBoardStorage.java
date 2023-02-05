@@ -123,6 +123,8 @@ public class MemoryBoardStorage{
         return boardList;
     }
 
+
+
     private boolean isKeywordContained(String word, String keyword){
         return word.contains(keyword);
     }

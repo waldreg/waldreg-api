@@ -742,5 +742,85 @@ public class BoardRepositoryTest{
 
     }
 
+    @Test
+    @DisplayName("게시글 수정 성공 테스트")
+    public void MODIFY_BOARD_SUCCESS_TEST(){
+        //given
+        org.waldreg.user.dto.UserDto user = org.waldreg.user.dto.UserDto.builder()
+                .userId("alcuk_id")
+                .name("alcuk")
+                .userPassword("alcuk123!")
+                .phoneNumber("010-1234-1234")
+                .build();
+        CharacterDto characterDto = CharacterDto.builder()
+                .id(1)
+                .characterName("Guest")
+                .permissionDtoList(List.of())
+                .build();
+        characterRepository.createCharacter(characterDto);
+        userRepository.createUser(user);
+        org.waldreg.user.dto.UserDto userResponse = userRepository.readUserByUserId("alcuk_id");
+        String title = "title";
+        String content = "content";
+        UserDto userDto = UserDto.builder()
+                .id(userResponse.getId())
+                .userId("alcuk_id")
+                .name("alcuk")
+                .build();
+        CategoryDto categoryDto = CategoryDto.builder()
+                .id(1)
+                .categoryName("cate")
+                .build();
+        List<String> filePathList = new ArrayList<>();
+        filePathList.add("uuid.pptx");
+        List<String> imagePathList = new ArrayList<>();
+        imagePathList.add("uuid.png");
+        BoardDto boardRequest = BoardDto.builder()
+                .title(title)
+                .userDto(userDto)
+                .content(content)
+                .categoryId(categoryDto.getId())
+                .fileUrls(filePathList)
+                .build();
+        String modifiedTitle = "modifiedTitle";
+        String modifiedContent = "hihihi";
+
+        //when
+        boardRepository.createBoard(boardRequest);
+        BoardDto boardDto = boardRepository.searchByTitle(title).get(0);
+        System.out.println("!!"+boardDto.getId());
+        BoardDto modifiedBoardRequest = BoardDto.builder()
+                .id(boardDto.getId())
+                .title(modifiedTitle)
+                .content(modifiedContent)
+                .userDto(boardDto.getUserDto())
+                .createdAt(boardDto.getCreatedAt())
+                .categoryId(boardDto.getCategoryId())
+                .fileUrls(List.of())
+                .imageUrls(imagePathList)
+                .reactions(boardDto.getReactions())
+                .commentList(boardDto.getCommentList())
+                .views(boardDto.getViews())
+                .build();
+        boardRepository.modifyBoard(modifiedBoardRequest);
+        BoardDto result = boardRepository.inquiryBoardById(boardDto.getId());
+
+        //then
+        Assertions.assertAll(
+                () -> Assertions.assertEquals(modifiedBoardRequest.getId(), result.getId()),
+                () -> Assertions.assertEquals(modifiedBoardRequest.getTitle(), result.getTitle()),
+                () -> Assertions.assertEquals(modifiedBoardRequest.getContent(), result.getContent()),
+                () -> Assertions.assertEquals(modifiedBoardRequest.getUserDto().getUserId(), result.getUserDto().getUserId()),
+                () -> Assertions.assertEquals(modifiedBoardRequest.getUserDto().getName(), result.getUserDto().getName()),
+                () -> Assertions.assertEquals(modifiedBoardRequest.getCategoryId(), result.getCategoryId()),
+                () -> Assertions.assertEquals(modifiedBoardRequest.getCreatedAt(), result.getCreatedAt()),
+                () -> Assertions.assertTrue(result.getFileUrls() == null),
+                () -> Assertions.assertEquals(modifiedBoardRequest.getImageUrls().get(0), result.getImageUrls().get(0)),
+                () -> Assertions.assertTrue(boardDto.getLastModifiedAt().isBefore(result.getLastModifiedAt())),
+                () -> Assertions.assertEquals(modifiedBoardRequest.getViews(), result.getViews())
+        );
+
+    }
+
 
 }
