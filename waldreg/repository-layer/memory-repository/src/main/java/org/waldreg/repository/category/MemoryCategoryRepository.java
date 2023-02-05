@@ -40,7 +40,8 @@ public class MemoryCategoryRepository implements CategoryRepository{
 
     @Override
     public CategoryDto inquiryCategoryById(int id){
-        return null;
+        Category category = memoryCategoryStorage.inquiryCategoryById(id);
+        return categoryMapper.categoryDomainToCategoryDto(category);
     }
 
     @Override
