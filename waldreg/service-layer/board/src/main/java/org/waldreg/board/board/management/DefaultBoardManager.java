@@ -123,7 +123,7 @@ public class DefaultBoardManager implements BoardManager{
     @Override
     public List<BoardDto> searchBoardByTitle(String keyword, int from, int to){
         throwIfInvalidRangeDetected(from, to);
-        int maxIdx = boardRepository.getSearchMaxIdx(keyword);
+        int maxIdx = boardRepository.getBoardMaxIdxByTitle(keyword);
         to = adjustEndIdx(from, to, maxIdx);
         return boardRepository.searchByTitle(keyword, from, to);
     }
@@ -131,7 +131,7 @@ public class DefaultBoardManager implements BoardManager{
     @Override
     public List<BoardDto> searchBoardByContent(String keyword, int from, int to){
         throwIfInvalidRangeDetected(from, to);
-        int maxIdx = boardRepository.getSearchMaxIdx(keyword);
+        int maxIdx = boardRepository.getBoardMaxIdxByContent(keyword);
         to = adjustEndIdx(from, to, maxIdx);
         return boardRepository.searchByContent(keyword, from, to);
     }
@@ -139,7 +139,7 @@ public class DefaultBoardManager implements BoardManager{
     @Override
     public List<BoardDto> searchBoardByAuthorUserId(String keyword, int from, int to){
         throwIfInvalidRangeDetected(from, to);
-        int maxIdx = boardRepository.getSearchMaxIdx(keyword);
+        int maxIdx = boardRepository.getBoardMaxIdxByAuthorUserId(keyword);
         to = adjustEndIdx(from, to, maxIdx);
         return boardRepository.searchByAuthorUserId(keyword, from, to);
     }

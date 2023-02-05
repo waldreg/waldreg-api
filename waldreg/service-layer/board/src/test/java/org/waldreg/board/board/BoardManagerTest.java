@@ -337,7 +337,7 @@ public class BoardManagerTest{
         //when
         String searchKeyword = "title";
 
-        Mockito.when(boardRepository.getSearchMaxIdx(Mockito.anyString())).thenReturn(2);
+        Mockito.when(boardRepository.getBoardMaxIdxByTitle(Mockito.anyString())).thenReturn(2);
         Mockito.when(boardRepository.searchByTitle(Mockito.anyString(), Mockito.anyInt(), Mockito.anyInt())).thenReturn(resultRepo);
         List<BoardDto> result = boardManager.searchBoardByTitle(searchKeyword, 1, 2);
         //then
@@ -405,7 +405,7 @@ public class BoardManagerTest{
 
         //when
         String searchKeyword = "content";
-        Mockito.when(boardRepository.getSearchMaxIdx(Mockito.anyString())).thenReturn(2);
+        Mockito.when(boardRepository.getBoardMaxIdxByContent(Mockito.anyString())).thenReturn(2);
         Mockito.when(boardRepository.searchByContent(Mockito.anyString(), Mockito.anyInt(), Mockito.anyInt())).thenReturn(resultRepo);
         List<BoardDto> result = boardManager.searchBoardByContent(searchKeyword, 1, 2);
         //then
@@ -473,7 +473,7 @@ public class BoardManagerTest{
 
         //when
         String searchKeyword = "Fixtar";
-        Mockito.when(boardRepository.getSearchMaxIdx(Mockito.anyString())).thenReturn(1);
+        Mockito.when(boardRepository.getBoardMaxIdxByAuthorUserId(Mockito.anyString())).thenReturn(1);
         Mockito.when(boardRepository.searchByAuthorUserId(Mockito.anyString(), Mockito.anyInt(), Mockito.anyInt())).thenReturn(List.of(boardDto1));
         List<BoardDto> result = boardManager.searchBoardByAuthorUserId(searchKeyword, 1, 2);
 
