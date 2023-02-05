@@ -122,5 +122,23 @@ public class CategoryRepositoryTest{
 
     }
 
+    @Test
+    @DisplayName("카테고리 삭제 성공 테스트")
+    public void DELETE_CATEGORY_BY_ID_SUCCESS_TEST(){
+        //given
+        String categoryName = "catecate";
+        CategoryDto categoryDto = CategoryDto.builder()
+                .categoryName(categoryName)
+                .build();
+
+        //when
+        categoryRepository.createCategory(categoryDto);
+        CategoryDto categoryResponse = categoryRepository.inquiryAllCategory().get(0);
+        categoryRepository.deleteCategory(categoryResponse.getId());
+
+        //then
+        Assertions.assertFalse(()->categoryRepository.isExistCategory(categoryResponse.getId()));
+    }
+
 
 }

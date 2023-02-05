@@ -38,4 +38,12 @@ public class MemoryCategoryStorage{
         storage.clear();
     }
 
+    public void deleteCategory(int id){
+        storage.remove(id);
+    }
+
+    public Category inquiryCategoryById(int categoryId){
+        return storage.get(categoryId);
+    }
+
 }

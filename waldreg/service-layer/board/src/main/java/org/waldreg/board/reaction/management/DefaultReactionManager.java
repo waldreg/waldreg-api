@@ -1,3 +1,4 @@
+/*
 package org.waldreg.board.reaction.management;
 
 
@@ -89,3 +90,4 @@ public class DefaultReactionManager implements ReactionManager{
 
 
 }
+*/

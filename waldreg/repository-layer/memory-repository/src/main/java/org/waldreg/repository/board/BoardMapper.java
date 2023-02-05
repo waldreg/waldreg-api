@@ -64,18 +64,24 @@ public class BoardMapper implements BoardInCategoryMapper{
         return commentList != null;
     }
 
-    private Reaction reactionDtoToReactionDomain(Map<BoardServiceReactionType, List<String>> reactionMap){
-        Map<ReactionType, List<String>> reactionTypeListMap = new HashMap<>();
-        for (Map.Entry<BoardServiceReactionType, List<String>> reactionEntry : reactionMap.entrySet()){
-            reactionTypeListMap.put(ReactionTypeToBoardServiceReactionType(reactionEntry.getKey()), reactionEntry.getValue());
+    private Reaction reactionDtoToReactionDomain(Map<BoardServiceReactionType, List<UserDto>> reactionMap){
+        Map<ReactionType, List<User>> reactionTypeListMap = new HashMap<>();
+        for (Map.Entry<BoardServiceReactionType, List<UserDto>> reactionEntry : reactionMap.entrySet()){
+            reactionTypeListMap.put(ReactionTypeToBoardServiceReactionType(reactionEntry.getKey()), userDtoListToUserDomainList((reactionEntry.getValue())));
         }
         return Reaction.builder()
                 .reactionMap(reactionTypeListMap)
                 .build();
     }
-
     private ReactionType ReactionTypeToBoardServiceReactionType(BoardServiceReactionType boardServiceReactionType){
         return ReactionType.valueOf(boardServiceReactionType.name());
+    }
+    private List<User> userDtoListToUserDomainList(List<UserDto> userDtoList){
+        List<User> userList = new ArrayList<>();
+        for (UserDto userDto : userDtoList){
+            userList.add(userDtoToUserDomain(userDto));
+        }
+        return userList;
     }
 
     private List<Comment> commentDtoListToCommentDomainList(List<CommentDto> commentDtoList){
@@ -125,18 +131,24 @@ public class BoardMapper implements BoardInCategoryMapper{
                 .build();
     }
 
-    private ReactionDto reactionDomainToReactionDto(Map<ReactionType, List<String>> reactionMap){
-        Map<BoardServiceReactionType, List<String>> reactionTypeListMap = new HashMap<>();
-        for (Map.Entry<ReactionType, List<String>> reactionEntry : reactionMap.entrySet()){
-            reactionTypeListMap.put(boardServiceReactionTypeToReactionType(reactionEntry.getKey()), reactionEntry.getValue());
+    private ReactionDto reactionDomainToReactionDto(Map<ReactionType, List<User>> reactionMap){
+        Map<BoardServiceReactionType, List<UserDto>> reactionTypeListMap = new HashMap<>();
+        for (Map.Entry<ReactionType, List<User>> reactionEntry : reactionMap.entrySet()){
+            reactionTypeListMap.put(boardServiceReactionTypeToReactionType(reactionEntry.getKey()), userDomainListToUserDtoList(reactionEntry.getValue()));
         }
         return ReactionDto.builder()
                 .reactionMap(reactionTypeListMap)
                 .build();
     }
-
     private BoardServiceReactionType boardServiceReactionTypeToReactionType(ReactionType reactionType){
         return BoardServiceReactionType.valueOf(reactionType.name());
+    }
+    private List<UserDto> userDomainListToUserDtoList(List<User> userList){
+        List<UserDto> userDtoList = new ArrayList<>();
+        for (User user : userList){
+            userDtoList.add(userDomainToUserDto(user));
+        }
+        return userDtoList;
     }
 
     private List<CommentDto> commentDomainListToCommentDtoList(List<Comment> commentList){

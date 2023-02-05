@@ -23,7 +23,7 @@ public class MemoryCategoryRepository implements CategoryRepository{
 
     @Override
     public Boolean isExistCategory(int categoryId){
-        return null;
+        return memoryCategoryStorage.inquiryCategoryById(categoryId)!=null;
     }
 
     @Override
@@ -50,7 +50,7 @@ public class MemoryCategoryRepository implements CategoryRepository{
 
     @Override
     public void deleteCategory(int id){
-
+        memoryCategoryStorage.deleteCategory(id);
     }
 
     @Override
