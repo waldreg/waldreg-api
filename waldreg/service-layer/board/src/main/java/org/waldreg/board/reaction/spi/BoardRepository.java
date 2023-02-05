@@ -4,8 +4,10 @@ import org.waldreg.board.dto.ReactionDto;
 
 public interface BoardRepository{
 
-    void addReaction(ReactionDto reactionDto);
+    ReactionDto getReactionDto(int boardId);
 
-    void deleteReaction(ReactionDto reactionDto);
+    void storeReactionDto(ReactionDto reactionDto);
+
+    boolean isExistBoard(int boardId);
 
 }
