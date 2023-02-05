@@ -1,7 +1,6 @@
 package org.waldreg.board.board.management;
 
 import java.util.List;
-import java.util.UUID;
 import org.waldreg.board.dto.BoardDto;
 
 public interface BoardManager{
@@ -32,9 +31,7 @@ public interface BoardManager{
         private String title;
         private int categoryId;
         private String content;
-        private List<UUID> fileUuidList;
-        private List<UUID> imageUuidList;
-        private List<UUID> deleteFileNameList;
+        private List<String> deleteFileNameList;
 
         private BoardRequest(){}
 
@@ -44,8 +41,6 @@ public interface BoardManager{
             this.categoryId = builder.categoryId;
             this.title = builder.title;
             this.content = builder.content;
-            this.fileUuidList = builder.fileUuidList;
-            this.imageUuidList = builder.imageUuidList;
             this.deleteFileNameList = builder.deleteFileNameList;
         }
 
@@ -59,10 +54,6 @@ public interface BoardManager{
 
         public int getAuthorId(){
             return authorId;
-        }
-
-        public void setAuthorId(int authorId){
-            this.authorId = authorId;
         }
 
         public String getTitle(){
@@ -89,23 +80,7 @@ public interface BoardManager{
             this.content = content;
         }
 
-        public List<UUID> getFileUuidList(){
-            return fileUuidList;
-        }
-
-        public void setFileUuidList(List<UUID> fileUuidList){
-            this.fileUuidList = fileUuidList;
-        }
-
-        public List<UUID> getImageUuidList(){
-            return imageUuidList;
-        }
-
-        public void setImageUuidList(List<UUID> imageUuidList){
-            this.imageUuidList = imageUuidList;
-        }
-
-        public List<UUID> getDeleteFileNameList(){
+        public List<String> getDeleteFileNameList(){
             return deleteFileNameList;
         }
 
@@ -116,9 +91,7 @@ public interface BoardManager{
             private String title;
             private int categoryId;
             private String content;
-            private List<UUID> fileUuidList;
-            private List<UUID> imageUuidList;
-            private List<UUID> deleteFileNameList;
+            private List<String> deleteFileNameList;
 
             public Builder id(int id){
                 this.id = id;
@@ -145,17 +118,7 @@ public interface BoardManager{
                 return this;
             }
 
-            public Builder fileUuidList(List<UUID> fileUuidList){
-                this.fileUuidList = fileUuidList;
-                return this;
-            }
-
-            public Builder imageUuidList(List<UUID> imageUuidList){
-                this.imageUuidList = imageUuidList;
-                return this;
-            }
-
-            public Builder deleteFileNameList(List<UUID> deleteFileNameList){
+            public Builder deleteFileNameList(List<String> deleteFileNameList){
                 this.deleteFileNameList = deleteFileNameList;
                 return this;
             }

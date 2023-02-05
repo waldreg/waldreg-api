@@ -1,4 +1,4 @@
-package org.waldreg.controller.board.response.category;
+package org.waldreg.controller.board.category.response;
 
 public class CategoryListResponse{
 

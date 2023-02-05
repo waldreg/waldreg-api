@@ -3,11 +3,13 @@ package org.waldreg.board.board.management;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.UUID;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.Future;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.waldreg.board.board.exception.BoardDoesNotExistException;
 import org.waldreg.board.board.exception.CategoryDoesNotExistException;
+import org.waldreg.board.board.exception.FutureCannotGetException;
 import org.waldreg.board.board.exception.InvalidRangeException;
 import org.waldreg.board.board.file.FileInfoGettable;
 import org.waldreg.board.board.spi.BoardRepository;
@@ -39,8 +41,8 @@ public class DefaultBoardManager implements BoardManager{
     @Override
     public void createBoard(BoardRequest request){
         throwIfCategoryDoesNotExist(request.getCategoryId());
-        List<String> saveImageNameList = getFileNameList(request.getImageUuidList());
-        List<String> saveFileNameList = getFileNameList(request.getFileUuidList());
+        List<String> saveFileNameList = getFileNameList();
+        List<String> saveImageNameList = getImageNameList();
         BoardDto boardDto = buildBoardDto(request);
         boardDto.setFileUrls(saveFileNameList);
         boardDto.setImageUrls(saveImageNameList);
@@ -54,13 +56,30 @@ public class DefaultBoardManager implements BoardManager{
         }
     }
 
-    private List<String> getFileNameList(List<UUID> uuidList){
+    private List<String> getFileNameList(){
         List<String> fileNameList = new ArrayList<>();
-        for (UUID uuid : uuidList){
-            String fileName = fileInfoGettable.getSavedFileName(uuid);
+        for (Future<String> future : fileInfoGettable.getSavedFileNameList()){
+            String fileName = throwIfFileDoesNotSaved(future);
             fileNameList.add(fileName);
         }
         return fileNameList;
+    }
+
+    private List<String> getImageNameList(){
+        List<String> fileNameList = new ArrayList<>();
+        for (Future<String> future : fileInfoGettable.getSavedImageNameList()){
+            String fileName = throwIfFileDoesNotSaved(future);
+            fileNameList.add(fileName);
+        }
+        return fileNameList;
+    }
+
+    private String throwIfFileDoesNotSaved(Future<String> future){
+        try{
+            return future.get();
+        } catch (InterruptedException | ExecutionException e){
+            throw new FutureCannotGetException();
+        }
     }
 
     private BoardDto buildBoardDto(BoardRequest request){
@@ -162,8 +181,9 @@ public class DefaultBoardManager implements BoardManager{
     }
 
     private BoardDto deleteFilePathList(BoardDto boardDto, BoardRequest boardRequest){
-        List<UUID> deleteFileUuidList = boardRequest.getDeleteFileNameList();
-        List<String> deleteFileNameList = getDeleteFileNameList(deleteFileUuidList);
+        Future<Boolean> future = fileInfoGettable.isFileDeleteSuccess();
+        throwIfFileDoesNotDeleted(future);
+        List<String> deleteFileNameList = boardRequest.getDeleteFileNameList();
         List<String> updatedFilePaths = deleteFilePath(boardDto.getFileUrls(), deleteFileNameList);
         List<String> updatedImagePaths = deleteFilePath(boardDto.getImageUrls(), deleteFileNameList);
         boardDto.setFileUrls(updatedFilePaths);
@@ -171,20 +191,20 @@ public class DefaultBoardManager implements BoardManager{
         return boardDto;
     }
 
+    private void throwIfFileDoesNotDeleted(Future<Boolean> future){
+        try{
+            future.get();
+        } catch (InterruptedException | ExecutionException e){
+            throw new FutureCannotGetException();
+        }
+
+    }
+
     private List<String> deleteFilePath(List<String> beforeFilePathList, List<String> requestFilePathList){
         for (String requestFilePath : requestFilePathList){
             beforeFilePathList.remove(requestFilePath);
         }
         return beforeFilePathList;
-    }
-
-    private List<String> getDeleteFileNameList(List<UUID> deleteFileUuidList){
-        List<String> fileNameList = new ArrayList<>();
-        for (UUID fileUuid : deleteFileUuidList){
-            String fileName = fileInfoGettable.getDeletedFileName(fileUuid);
-            fileNameList.add(fileName);
-        }
-        return fileNameList;
     }
 
     private BoardDto setBoardDto(BoardDto boardDto, BoardRequest boardRequest){
@@ -196,8 +216,8 @@ public class DefaultBoardManager implements BoardManager{
     }
 
     private BoardDto addSavedFilePathList(BoardDto boardDto, BoardRequest boardRequest){
-        List<String> saveImageNameList = getFileNameList(boardRequest.getImageUuidList());
-        List<String> saveFileNameList = getFileNameList(boardRequest.getFileUuidList());
+        List<String> saveFileNameList = getFileNameList();
+        List<String> saveImageNameList = getImageNameList();
         List<String> filePathList = boardDto.getFileUrls();
         List<String> imagePathList = boardDto.getImageUrls();
         boardDto.setFileUrls(saveFilePath(filePathList, saveFileNameList));
