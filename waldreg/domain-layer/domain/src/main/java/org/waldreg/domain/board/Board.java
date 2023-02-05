@@ -140,7 +140,7 @@ public final class Board{
         private int categoryId;
         private String content;
         private User user;
-        private final LocalDateTime createdAt;
+        private LocalDateTime createdAt;
         private LocalDateTime lastModifiedAt;
         private List<String> imagePathList;
         private List<String> filePathList;
@@ -180,6 +180,11 @@ public final class Board{
 
         public Builder user(User user){
             this.user = user;
+            return this;
+        }
+
+        public Builder createdAt(LocalDateTime createdAt){
+            this.createdAt = createdAt;
             return this;
         }
 

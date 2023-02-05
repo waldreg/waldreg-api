@@ -49,13 +49,13 @@ public class MemoryBoardRepository implements BoardRepository{
 
     @Override
     public List<BoardDto> inquiryAllBoard(int from, int to){
-        List<Board> boardList = memoryBoardStorage.inquiryAllBoard(from, to);
+        List<Board> boardList = memoryBoardStorage.inquiryAllBoard(from-1, to-1);
         return boardMapper.boardDomainListToBoardDtoList(boardList);
     }
 
     @Override
     public List<BoardDto> inquiryAllBoardByCategory(int categoryId, int from, int to){
-        List<Board> boardList = memoryBoardStorage.inquiryAllBoardByCategory(categoryId, from, to);
+        List<Board> boardList = memoryBoardStorage.inquiryAllBoardByCategory(categoryId, from - 1, to - 1);
         return boardMapper.boardDomainListToBoardDtoList(boardList);
     }
 
@@ -77,35 +77,35 @@ public class MemoryBoardRepository implements BoardRepository{
 
     @Override
     public List<BoardDto> searchByTitle(String keyword, int from, int to){
-        List<Board> boardList = memoryBoardStorage.searchByTitle(keyword);
+        List<Board> boardList = memoryBoardStorage.searchByTitle(keyword, from - 1, to - 1);
         return boardMapper.boardDomainListToBoardDtoList(boardList);
     }
 
     @Override
     public List<BoardDto> searchByContent(String keyword, int from, int to){
-        List<Board> boardList = memoryBoardStorage.searchByContent(keyword);
+        List<Board> boardList = memoryBoardStorage.searchByContent(keyword, from - 1, to - 1);
         return boardMapper.boardDomainListToBoardDtoList(boardList);
     }
 
     @Override
     public List<BoardDto> searchByAuthorUserId(String keyword, int from, int to){
-        List<Board> boardList = memoryBoardStorage.searchByAuthorUserId(keyword);
+        List<Board> boardList = memoryBoardStorage.searchByAuthorUserId(keyword, from - 1, to - 1);
         return boardMapper.boardDomainListToBoardDtoList(boardList);
     }
 
     @Override
     public int getBoardMaxIdxByTitle(String keyword){
-        return 0;
+        return memoryBoardStorage.getBoardMaxIdxByTitle(keyword);
     }
 
     @Override
     public int getBoardMaxIdxByContent(String keyword){
-        return 0;
+        return memoryBoardStorage.getBoardMaxIdxByContent(keyword);
     }
 
     @Override
     public int getBoardMaxIdxByAuthorUserId(String keyword){
-        return 0;
+        return memoryBoardStorage.getBoardMaxIdxByAuthorUserId(keyword);
     }
 
 }

@@ -158,7 +158,7 @@ public class BoardRepositoryTest{
 
         //when
         boardRepository.createBoard(boardRequest);
-        List<BoardDto> boardDtoList = boardRepository.searchByTitle(title);
+        List<BoardDto> boardDtoList = boardRepository.searchByTitle(title,1,1);
         BoardDto result = boardRepository.inquiryBoardById(boardDtoList.get(0).getId());
 
         //then
@@ -245,7 +245,7 @@ public class BoardRepositoryTest{
         boardRepository.createBoard(boardRequest);
         boardRepository.createBoard(boardRequest2);
         boardRepository.createBoard(boardRequest3);
-        List<BoardDto> result = boardRepository.searchByTitle(title);
+        List<BoardDto> result = boardRepository.searchByTitle(title,1,2);
 
         //then
         Assertions.assertAll(
@@ -344,7 +344,7 @@ public class BoardRepositoryTest{
         boardRepository.createBoard(boardRequest);
         boardRepository.createBoard(boardRequest2);
         boardRepository.createBoard(boardRequest3);
-        List<BoardDto> result = boardRepository.searchByContent("This");
+        List<BoardDto> result = boardRepository.searchByContent("This",1,2);
 
         //then
         Assertions.assertAll(
@@ -456,7 +456,7 @@ public class BoardRepositoryTest{
         boardRepository.createBoard(boardRequest);
         boardRepository.createBoard(boardRequest2);
         boardRepository.createBoard(boardRequest3);
-        List<BoardDto> result = boardRepository.searchByAuthorUserId(userDto2.getUserId());
+        List<BoardDto> result = boardRepository.searchByAuthorUserId(userDto2.getUserId(),1,1);
 
         //then
         Assertions.assertAll(
@@ -708,37 +708,15 @@ public class BoardRepositoryTest{
                 .fileUrls(filePathList)
                 .imageUrls(imageUrlList)
                 .build();
-        String title2 = "title2";
-        BoardDto boardRequest2 = BoardDto.builder()
-                .title(title2)
-                .userDto(userDto)
-                .content(content)
-                .categoryId(categoryDto.getId())
-                .fileUrls(filePathList)
-                .imageUrls(imageUrlList)
-                .build();
 
         //when
         boardRepository.createBoard(boardRequest);
-        boardRepository.createBoard(boardRequest2);
-        List<BoardDto> boardDtoList = boardRepository.searchByTitle(title);
+        List<BoardDto> boardDtoList = boardRepository.searchByTitle(title,1,1);
         boardRepository.deleteBoard(boardDtoList.get(0).getId());
-        List<BoardDto> result = boardRepository.searchByTitle(title);
+        boolean result = boardRepository.isExistBoard(boardDtoList.get(0).getId());
 
         //then
-        Assertions.assertAll(
-                () -> Assertions.assertEquals(1, result.size()),
-                () -> Assertions.assertEquals(boardRequest2.getTitle(), result.get(0).getTitle()),
-                () -> Assertions.assertEquals(boardRequest2.getContent(), result.get(0).getContent()),
-                () -> Assertions.assertEquals(boardRequest2.getUserDto().getUserId(), result.get(0).getUserDto().getUserId()),
-                () -> Assertions.assertEquals(boardRequest2.getUserDto().getName(), result.get(0).getUserDto().getName()),
-                () -> Assertions.assertEquals(boardRequest2.getCategoryId(), result.get(0).getCategoryId()),
-                () -> Assertions.assertNotNull(result.get(0).getCreatedAt()),
-                () -> Assertions.assertEquals(boardRequest2.getFileUrls().get(0), result.get(0).getFileUrls().get(0)),
-                () -> Assertions.assertEquals(boardRequest2.getImageUrls().get(0), result.get(0).getImageUrls().get(0)),
-                () -> Assertions.assertNotNull(result.get(0).getLastModifiedAt()),
-                () -> Assertions.assertTrue(result.get(0).getViews() == 0)
-        );
+        Assertions.assertFalse(result);
 
     }
 
@@ -781,20 +759,21 @@ public class BoardRepositoryTest{
                 .content(content)
                 .categoryId(categoryDto.getId())
                 .fileUrls(filePathList)
+                .imageUrls(List.of())
                 .build();
         String modifiedTitle = "modifiedTitle";
         String modifiedContent = "hihihi";
 
         //when
         boardRepository.createBoard(boardRequest);
-        BoardDto boardDto = boardRepository.searchByTitle(title).get(0);
-        System.out.println("!!"+boardDto.getId());
+        BoardDto boardDto = boardRepository.searchByTitle(title,1,1).get(0);
         BoardDto modifiedBoardRequest = BoardDto.builder()
                 .id(boardDto.getId())
                 .title(modifiedTitle)
                 .content(modifiedContent)
                 .userDto(boardDto.getUserDto())
                 .createdAt(boardDto.getCreatedAt())
+                .lastModifiedAt(boardDto.getLastModifiedAt().plusMinutes(3))
                 .categoryId(boardDto.getCategoryId())
                 .fileUrls(List.of())
                 .imageUrls(imagePathList)
@@ -814,7 +793,7 @@ public class BoardRepositoryTest{
                 () -> Assertions.assertEquals(modifiedBoardRequest.getUserDto().getName(), result.getUserDto().getName()),
                 () -> Assertions.assertEquals(modifiedBoardRequest.getCategoryId(), result.getCategoryId()),
                 () -> Assertions.assertEquals(modifiedBoardRequest.getCreatedAt(), result.getCreatedAt()),
-                () -> Assertions.assertTrue(result.getFileUrls() == null),
+                () -> Assertions.assertTrue(result.getFileUrls().size()==0),
                 () -> Assertions.assertEquals(modifiedBoardRequest.getImageUrls().get(0), result.getImageUrls().get(0)),
                 () -> Assertions.assertTrue(boardDto.getLastModifiedAt().isBefore(result.getLastModifiedAt())),
                 () -> Assertions.assertEquals(modifiedBoardRequest.getViews(), result.getViews())

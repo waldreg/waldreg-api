@@ -36,11 +36,13 @@ public class BoardMapper{
     }
 
     boolean isCreateBoard(BoardDto boardDto){
-        return boardDto.getReactions() == null & boardDto.getCommentList() == null && boardDto.getViews() == 0;
+        return boardDto.getCreatedAt() == null;
     }
 
     public Board boardDtoToBoardDomainIfNotCreateBoard(BoardDto boardDto, Board.Builder builder){
         builder = builder.reactions(reactionDtoToReactionDomain(boardDto.getReactions().getReactionMap()))
+                .createdAt(boardDto.getCreatedAt())
+                .lastModifiedAt(boardDto.getLastModifiedAt())
                 .views(boardDto.getViews());
         if(isCommentListNotEmpty(boardDto.getCommentList())){
             builder = builder.commentList(commentDtoListToCommentDomainList(boardDto.getCommentList()));
