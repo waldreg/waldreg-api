@@ -89,9 +89,18 @@ public class MemoryBoardRepository implements BoardRepository{
     }
 
     @Override
-    public int getSearchMaxIdx(String keyword){
+    public int getBoardMaxIdxByTitle(String keyword){
         return 0;
     }
 
+    @Override
+    public int getBoardMaxIdxByContent(String keyword){
+        return 0;
+    }
+
+    @Override
+    public int getBoardMaxIdxByAuthorUserId(String keyword){
+        return 0;
+    }
 
 }

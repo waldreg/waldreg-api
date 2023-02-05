@@ -29,8 +29,6 @@ public interface BoardRepository{
 
     List<BoardDto> searchByAuthorUserId(String keyword, int from, int to);
 
-    int getSearchMaxIdx(String keyword);
-
     int getBoardMaxIdxByTitle(String keyword);
 
     int getBoardMaxIdxByContent(String keyword);
