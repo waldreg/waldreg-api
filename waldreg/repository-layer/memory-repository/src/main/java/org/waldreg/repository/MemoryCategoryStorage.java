@@ -51,4 +51,8 @@ public class MemoryCategoryStorage{
         storage.get(categoryId).addBoard(board);
     }
 
+    public void modifyCategory(Category category){
+        storage.replace(category.getId(),category);
+    }
+
 }

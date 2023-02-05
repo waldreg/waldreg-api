@@ -49,13 +49,14 @@ public class MemoryCategoryRepository implements CategoryRepository{
     @Override
     public CategoryDto inquiryCategoryById(int id){
         Category category = memoryCategoryStorage.inquiryCategoryById(id);
-
         return categoryMapper.categoryDomainToCategoryDto(category);
     }
 
     @Override
     public void modifyCategory(CategoryDto categoryDto){
-
+        Category category = memoryCategoryStorage.inquiryCategoryById(categoryDto.getId());
+        category.setCategoryName(categoryDto.getCategoryName());
+        memoryCategoryStorage.modifyCategory(category);
     }
 
     @Override

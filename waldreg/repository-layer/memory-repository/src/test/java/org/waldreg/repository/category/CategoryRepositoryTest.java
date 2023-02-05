@@ -213,5 +213,33 @@ public class CategoryRepositoryTest{
 
     }
 
+    @Test
+    @DisplayName("특정 카테고리 수정 성공 테스트")
+    public void MODIFY_CATEGORY_BY_ID_SUCCESS_TEST(){
+        //given
+        String categoryName = "catecate";
+        CategoryDto categoryDto = CategoryDto.builder()
+                .categoryName(categoryName)
+                .build();
+
+        //when
+        categoryRepository.createCategory(categoryDto);
+        int categoryDtoId = categoryRepository.inquiryAllCategory().get(0).getId();
+        String categoryName2 = "catecatecate";
+        CategoryDto categoryDto2 = CategoryDto.builder()
+                .id(categoryDtoId)
+                .categoryName(categoryName2)
+                .build();
+        categoryRepository.modifyCategory(categoryDto2);
+        CategoryDto result = categoryRepository.inquiryCategoryById(categoryDtoId);
+
+        //then
+        Assertions.assertAll(
+                () -> Assertions.assertEquals(categoryDtoId, result.getId()),
+                () -> Assertions.assertEquals(categoryDto2.getCategoryName(), result.getCategoryName()),
+                () -> Assertions.assertEquals(new ArrayList<>(), result.getBoardDtoList())
+        );
+    }
+
 
 }
