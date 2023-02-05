@@ -5,7 +5,7 @@ import org.waldreg.domain.board.Board;
 
 public final class Category{
 
-    private final int id;
+    private int id;
     private final String categoryName;
 
     private final List<Board> boardList;
@@ -26,6 +26,10 @@ public final class Category{
 
     public int getId(){
         return id;
+    }
+
+    public void setId(int id){
+        this.id = id;
     }
 
     public String getCategoryName(){

@@ -6,7 +6,7 @@ import org.waldreg.board.comment.exception.BoardDoesNotExistException;
 import org.waldreg.board.comment.exception.CommentDoesNotExistException;
 import org.waldreg.board.comment.exception.ContentLengthOverThousandException;
 import org.waldreg.board.comment.exception.InvalidRangeException;
-import org.waldreg.board.comment.spi.BoardRepository;
+import org.waldreg.board.comment.spi.CommentInBoardRepository;
 import org.waldreg.board.comment.spi.CommentRepository;
 import org.waldreg.board.dto.CommentDto;
 
@@ -15,12 +15,12 @@ public class DefaultCommentManager implements CommentManager{
     private final int perPage = 20;
     private CommentRepository commentRepository;
 
-    private BoardRepository boardRepository;
+    private CommentInBoardRepository commentInBoardRepository;
 
     @Autowired
-    public void DefaultBoardManager(CommentRepository commentRepository, BoardRepository boardRepository){
+    public void DefaultBoardManager(CommentRepository commentRepository, CommentInBoardRepository commentInBoardRepository){
         this.commentRepository = commentRepository;
-        this.boardRepository = boardRepository;
+        this.commentInBoardRepository = commentInBoardRepository;
     }
 
 
@@ -29,11 +29,11 @@ public class DefaultCommentManager implements CommentManager{
         throwIfBoardDoesNotExist(commentDto.getBoardId());
         throwIfContentOverFlowThousand(commentDto.getContent());
         CommentDto storedCommentDto = commentRepository.createComment(commentDto);
-        boardRepository.addComment(storedCommentDto);
+        commentInBoardRepository.addComment(storedCommentDto);
     }
 
     private void throwIfBoardDoesNotExist(int boardId){
-        if (!boardRepository.isExistBoard(boardId)){
+        if (!commentInBoardRepository.isExistBoard(boardId)){
             throw new BoardDoesNotExistException(boardId);
         }
     }

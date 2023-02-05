@@ -2,7 +2,7 @@ package org.waldreg.board.reaction.spi;
 
 import org.waldreg.board.dto.ReactionDto;
 
-public interface BoardRepository{
+public interface ReactionInBoardRepository{
 
     ReactionDto getReactionDto(int boardId);
 

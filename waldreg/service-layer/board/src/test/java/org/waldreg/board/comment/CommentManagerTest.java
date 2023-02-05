@@ -19,7 +19,7 @@ import org.waldreg.board.comment.exception.ContentLengthOverThousandException;
 import org.waldreg.board.comment.exception.InvalidRangeException;
 import org.waldreg.board.comment.management.CommentManager;
 import org.waldreg.board.comment.management.DefaultCommentManager;
-import org.waldreg.board.comment.spi.BoardRepository;
+import org.waldreg.board.comment.spi.CommentInBoardRepository;
 import org.waldreg.board.comment.spi.CommentRepository;
 import org.waldreg.board.dto.BoardDto;
 import org.waldreg.board.dto.CommentDto;
@@ -40,7 +40,7 @@ public class CommentManagerTest{
     private CommentRepository commentRepository;
 
     @MockBean
-    private BoardRepository boardRepository;
+    private CommentInBoardRepository commentInBoardRepository;
 
     @BeforeEach
     @AfterEach
@@ -73,7 +73,7 @@ public class CommentManagerTest{
                 .id(3)
                 .build();
         //when
-        Mockito.when(boardRepository.isExistBoard(Mockito.anyInt())).thenReturn(true);
+        Mockito.when(commentInBoardRepository.isExistBoard(Mockito.anyInt())).thenReturn(true);
         Mockito.when(commentRepository.createComment(Mockito.any())).thenReturn(commentDto);
 
         List<CommentDto> commentDtoList = new ArrayList<>();
@@ -108,7 +108,7 @@ public class CommentManagerTest{
                 .id(3)
                 .build();
         //when
-        Mockito.when(boardRepository.isExistBoard(Mockito.anyInt())).thenReturn(false);
+        Mockito.when(commentInBoardRepository.isExistBoard(Mockito.anyInt())).thenReturn(false);
 
         //then
         Assertions.assertThrows(BoardDoesNotExistException.class, () -> commentManager.createComment(commentDto));
@@ -133,7 +133,7 @@ public class CommentManagerTest{
                 .id(3)
                 .build();
         //when
-        Mockito.when(boardRepository.isExistBoard(Mockito.anyInt())).thenReturn(true);
+        Mockito.when(commentInBoardRepository.isExistBoard(Mockito.anyInt())).thenReturn(true);
 
         //then
         Assertions.assertThrows(ContentLengthOverThousandException.class, () -> commentManager.createComment(commentDto));
@@ -167,7 +167,7 @@ public class CommentManagerTest{
         commentDtoList.add(commentDto);
         commentDtoList.add(commentDto2);
         //when
-        Mockito.when(boardRepository.isExistBoard(Mockito.anyInt())).thenReturn(true);
+        Mockito.when(commentInBoardRepository.isExistBoard(Mockito.anyInt())).thenReturn(true);
         Mockito.when(commentRepository.inquiryAllCommentByBoardId(Mockito.anyInt(), Mockito.anyInt(), Mockito.anyInt())).thenReturn(commentDtoList);
 
         List<CommentDto> result = commentManager.inquiryAllCommentByBoardId(boardId, 1, 2);
@@ -209,7 +209,7 @@ public class CommentManagerTest{
         commentDtoList.add(commentDto);
         commentDtoList.add(commentDto2);
         //when
-        Mockito.when(boardRepository.isExistBoard(Mockito.anyInt())).thenReturn(false);
+        Mockito.when(commentInBoardRepository.isExistBoard(Mockito.anyInt())).thenReturn(false);
         Mockito.when(commentRepository.inquiryAllCommentByBoardId(Mockito.anyInt(), Mockito.anyInt(), Mockito.anyInt())).thenReturn(commentDtoList);
 
         //then
@@ -243,7 +243,7 @@ public class CommentManagerTest{
         commentDtoList.add(commentDto);
         commentDtoList.add(commentDto2);
         //when
-        Mockito.when(boardRepository.isExistBoard(Mockito.anyInt())).thenReturn(true);
+        Mockito.when(commentInBoardRepository.isExistBoard(Mockito.anyInt())).thenReturn(true);
 
         //then
         Assertions.assertThrows(InvalidRangeException.class, () -> commentManager.inquiryAllCommentByBoardId(boardId, 2, 1));
@@ -266,7 +266,7 @@ public class CommentManagerTest{
                 .id(3)
                 .build();
         //when
-        Mockito.when(boardRepository.isExistBoard(Mockito.anyInt())).thenReturn(true);
+        Mockito.when(commentInBoardRepository.isExistBoard(Mockito.anyInt())).thenReturn(true);
         Mockito.when(commentRepository.isExistComment(Mockito.anyInt())).thenReturn(true);
         //then
         Assertions.assertDoesNotThrow(() -> commentManager.modifyComment(commentDto));
@@ -291,7 +291,7 @@ public class CommentManagerTest{
                 .id(3)
                 .build();
         //when
-        Mockito.when(boardRepository.isExistBoard(Mockito.anyInt())).thenReturn(false);
+        Mockito.when(commentInBoardRepository.isExistBoard(Mockito.anyInt())).thenReturn(false);
         Mockito.when(commentRepository.isExistComment(Mockito.anyInt())).thenReturn(true);
         //then
         Assertions.assertThrows(BoardDoesNotExistException.class, () -> commentManager.modifyComment(commentDto));
@@ -316,7 +316,7 @@ public class CommentManagerTest{
                 .id(3)
                 .build();
         //when
-        Mockito.when(boardRepository.isExistBoard(Mockito.anyInt())).thenReturn(true);
+        Mockito.when(commentInBoardRepository.isExistBoard(Mockito.anyInt())).thenReturn(true);
         Mockito.when(commentRepository.isExistComment(Mockito.anyInt())).thenReturn(false);
         //then
         Assertions.assertThrows(CommentDoesNotExistException.class, () -> commentManager.modifyComment(commentDto));

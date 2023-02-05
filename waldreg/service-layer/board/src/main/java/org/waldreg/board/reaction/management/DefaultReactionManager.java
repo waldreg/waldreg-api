@@ -8,29 +8,29 @@ import org.waldreg.board.dto.ReactionDto;
 import org.waldreg.board.dto.ReactionRequestDto;
 import org.waldreg.board.reaction.exception.BoardDoesNotExistException;
 import org.waldreg.board.reaction.exception.ReactionTypeDoesNotExistException;
-import org.waldreg.board.reaction.spi.BoardRepository;
+import org.waldreg.board.reaction.spi.ReactionInBoardRepository;
 
 public class DefaultReactionManager implements ReactionManager{
 
-    private final BoardRepository boardRepository;
+    private final ReactionInBoardRepository reactionInBoardRepository;
 
-    public DefaultReactionManager(BoardRepository boardRepository){
-        this.boardRepository = boardRepository;
+    public DefaultReactionManager(ReactionInBoardRepository reactionInBoardRepository){
+        this.reactionInBoardRepository = reactionInBoardRepository;
     }
 
     @Override
     public void reactionRequest(ReactionRequestDto reactionRequestDto){
         throwIfBoardDoesNotExist(reactionRequestDto.getBoardId());
         throwIfReactionTypeDoesNotExist(reactionRequestDto.getReactionType());
-        ReactionDto reactionDto = boardRepository.getReactionDto(reactionRequestDto.getBoardId());
+        ReactionDto reactionDto = reactionInBoardRepository.getReactionDto(reactionRequestDto.getBoardId());
         BoardServiceReactionType beforeType = findBoardServiceReactionTypeByUserId(reactionDto.getReactionMap(), reactionRequestDto.getUserId());
         Map<BoardServiceReactionType, List<String>> reactionMap = allRequestReaction(reactionDto.getReactionMap(), beforeType, reactionRequestDto);
         reactionDto.setReactionMap(reactionMap);
-        boardRepository.storeReactionDto(reactionDto);
+        reactionInBoardRepository.storeReactionDto(reactionDto);
     }
 
     private void throwIfBoardDoesNotExist(int boardId){
-        if (!boardRepository.isExistBoard(boardId)){
+        if (!reactionInBoardRepository.isExistBoard(boardId)){
             throw new BoardDoesNotExistException(boardId);
         }
     }

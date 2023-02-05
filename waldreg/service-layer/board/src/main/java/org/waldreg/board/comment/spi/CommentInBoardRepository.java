@@ -2,7 +2,7 @@ package org.waldreg.board.comment.spi;
 
 import org.waldreg.board.dto.CommentDto;
 
-public interface BoardRepository{
+public interface CommentInBoardRepository{
 
     void addComment(CommentDto commentDto);
 

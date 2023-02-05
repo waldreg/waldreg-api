@@ -11,7 +11,7 @@ import org.waldreg.board.board.exception.CategoryDoesNotExistException;
 import org.waldreg.board.board.exception.InvalidRangeException;
 import org.waldreg.board.board.file.FileInfoGettable;
 import org.waldreg.board.board.spi.BoardRepository;
-import org.waldreg.board.board.spi.CategoryRepository;
+import org.waldreg.board.board.spi.CategoryExistChecker;
 import org.waldreg.board.board.spi.UserRepository;
 import org.waldreg.board.dto.BoardDto;
 import org.waldreg.board.dto.UserDto;
@@ -23,14 +23,14 @@ public class DefaultBoardManager implements BoardManager{
     private final int perPage = 20;
     private final BoardRepository boardRepository;
     private final UserRepository userRepository;
-    private final CategoryRepository categoryRepository;
+    private final CategoryExistChecker categoryExistChecker;
     private final DecryptedTokenContextGetter decryptedTokenContextGetter;
     private final FileInfoGettable fileInfoGettable;
 
     @Autowired
-    public DefaultBoardManager(BoardRepository boardRepository, CategoryRepository categoryRepository, UserRepository userRepository, DecryptedTokenContextGetter decryptedTokenContextGetter, FileInfoGettable fileInfoGettable){
+    public DefaultBoardManager(BoardRepository boardRepository, CategoryExistChecker categoryExistChecker, UserRepository userRepository, DecryptedTokenContextGetter decryptedTokenContextGetter, FileInfoGettable fileInfoGettable){
         this.boardRepository = boardRepository;
-        this.categoryRepository = categoryRepository;
+        this.categoryExistChecker = categoryExistChecker;
         this.userRepository = userRepository;
         this.decryptedTokenContextGetter = decryptedTokenContextGetter;
         this.fileInfoGettable = fileInfoGettable;
@@ -48,7 +48,7 @@ public class DefaultBoardManager implements BoardManager{
     }
 
     private void throwIfCategoryDoesNotExist(int categoryId){
-        if (!categoryRepository.isExistCategory(categoryId)){
+        if (!categoryExistChecker.isExistCategory(categoryId)){
             throw new CategoryDoesNotExistException(categoryId);
         }
     }

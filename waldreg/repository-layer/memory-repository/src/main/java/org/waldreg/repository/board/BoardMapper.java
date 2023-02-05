@@ -15,9 +15,19 @@ import org.waldreg.domain.board.comment.Comment;
 import org.waldreg.domain.board.reaction.Reaction;
 import org.waldreg.domain.board.reaction.ReactionType;
 import org.waldreg.domain.user.User;
+import org.waldreg.repository.category.BoardInCategoryMapper;
 
 @Service
-public class BoardMapper{
+public class BoardMapper implements BoardInCategoryMapper{
+
+    @Override
+    public List<Board> boardDtoListToBoardDomainList(List<BoardDto> boardDtoList){
+        List<Board> boardList = new ArrayList<>();
+        for (BoardDto boardDto : boardDtoList){
+            boardList.add(boardDtoToBoardDomain(boardDto));
+        }
+        return boardList;
+    }
 
     public Board boardDtoToBoardDomain(BoardDto boardDto){
         Board.Builder builder = Board.builder()
@@ -81,7 +91,7 @@ public class BoardMapper{
         return commentList;
     }
 
-    private User userDtoToUserDomain(UserDto userDto){
+    public User userDtoToUserDomain(UserDto userDto){
         return User.builder()
                 .id(userDto.getId())
                 .userId(userDto.getUserId())
@@ -89,6 +99,7 @@ public class BoardMapper{
                 .build();
     }
 
+    @Override
     public List<BoardDto> boardDomainListToBoardDtoList(List<Board> boardList){
         List<BoardDto> boardDtoList = new ArrayList<>();
         for (Board board : boardList){
@@ -142,7 +153,7 @@ public class BoardMapper{
         return commentDtoList;
     }
 
-    private UserDto userDomainToUserDto(User user){
+    public UserDto userDomainToUserDto(User user){
         return UserDto.builder()
                 .id(user.getId())
                 .userId(user.getUserId())

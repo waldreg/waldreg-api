@@ -1,9 +1,10 @@
 package org.waldreg.board.category.spi;
 
 import java.util.List;
+import org.waldreg.board.board.spi.CategoryExistChecker;
 import org.waldreg.board.dto.CategoryDto;
 
-public interface CategoryRepository{
+public interface CategoryRepository extends CategoryExistChecker{
 
     void createCategory(CategoryDto categoryDto);
 
@@ -17,6 +18,6 @@ public interface CategoryRepository{
 
     boolean isDuplicateCategoryName(String categoryName);
 
-    boolean isExistCategory(int categoryId);
+    //boolean isExistCategory(int categoryId);
 
 }

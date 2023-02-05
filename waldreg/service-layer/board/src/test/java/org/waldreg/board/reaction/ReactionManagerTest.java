@@ -18,12 +18,11 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.waldreg.board.dto.BoardServiceReactionType;
 import org.waldreg.board.dto.ReactionDto;
 import org.waldreg.board.dto.ReactionRequestDto;
-import org.waldreg.board.dto.UserDto;
 import org.waldreg.board.reaction.exception.BoardDoesNotExistException;
 import org.waldreg.board.reaction.exception.ReactionTypeDoesNotExistException;
 import org.waldreg.board.reaction.management.DefaultReactionManager;
 import org.waldreg.board.reaction.management.ReactionManager;
-import org.waldreg.board.reaction.spi.BoardRepository;
+import org.waldreg.board.reaction.spi.ReactionInBoardRepository;
 import org.waldreg.util.token.DecryptedTokenContext;
 
 @ExtendWith(SpringExtension.class)
@@ -37,7 +36,7 @@ public class ReactionManagerTest{
     private DecryptedTokenContext decryptedTokenContext;
 
     @MockBean
-    private BoardRepository boardRepository;
+    private ReactionInBoardRepository reactionInBoardRepository;
 
     @BeforeEach
     @AfterEach
@@ -69,8 +68,8 @@ public class ReactionManagerTest{
                 .reactionMap(reactionMap)
                 .build();
         //when
-        Mockito.when(boardRepository.isExistBoard(Mockito.anyInt())).thenReturn(true);
-        Mockito.when(boardRepository.getReactionDto(Mockito.anyInt())).thenReturn(reactionDto);
+        Mockito.when(reactionInBoardRepository.isExistBoard(Mockito.anyInt())).thenReturn(true);
+        Mockito.when(reactionInBoardRepository.getReactionDto(Mockito.anyInt())).thenReturn(reactionDto);
         //then
         Assertions.assertDoesNotThrow(() -> reactionManager.reactionRequest(reactionRequestDto));
     }
@@ -98,8 +97,8 @@ public class ReactionManagerTest{
                 .reactionMap(reactionMap)
                 .build();
         //when
-        Mockito.when(boardRepository.isExistBoard(Mockito.anyInt())).thenReturn(false);
-        Mockito.when(boardRepository.getReactionDto(Mockito.anyInt())).thenReturn(reactionDto);
+        Mockito.when(reactionInBoardRepository.isExistBoard(Mockito.anyInt())).thenReturn(false);
+        Mockito.when(reactionInBoardRepository.getReactionDto(Mockito.anyInt())).thenReturn(reactionDto);
         //then
         Assertions.assertThrows(BoardDoesNotExistException.class, () -> reactionManager.reactionRequest(reactionRequestDto));
     }
@@ -127,8 +126,8 @@ public class ReactionManagerTest{
                 .reactionMap(reactionMap)
                 .build();
         //when
-        Mockito.when(boardRepository.isExistBoard(Mockito.anyInt())).thenReturn(true);
-        Mockito.when(boardRepository.getReactionDto(Mockito.anyInt())).thenReturn(reactionDto);
+        Mockito.when(reactionInBoardRepository.isExistBoard(Mockito.anyInt())).thenReturn(true);
+        Mockito.when(reactionInBoardRepository.getReactionDto(Mockito.anyInt())).thenReturn(reactionDto);
         //then
         Assertions.assertThrows(ReactionTypeDoesNotExistException.class, () -> reactionManager.reactionRequest(reactionRequestDto));
     }
