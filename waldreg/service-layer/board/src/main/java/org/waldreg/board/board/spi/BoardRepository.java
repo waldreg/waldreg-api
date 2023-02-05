@@ -19,7 +19,7 @@ public interface BoardRepository{
 
     int getBoardMaxIdxByCategory(int categoryId);
 
-    BoardDto modifyBoard(BoardDto boardDto);
+    void modifyBoard(BoardDto boardDto);
 
     void deleteBoard(int id);
 

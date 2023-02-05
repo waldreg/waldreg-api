@@ -65,8 +65,7 @@ public class MemoryBoardRepository implements BoardRepository{
     }
 
     @Override
-    public BoardDto modifyBoard(BoardDto boardDto){
-        return null;
+    public void modifyBoard(BoardDto boardDto){
     }
 
     @Override

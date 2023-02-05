@@ -1,9 +1,11 @@
 package org.waldreg.board.board.file;
 
+import java.util.UUID;
+
 public interface FileInfoGettable{
 
-    String getSavedFileName(int id);
+    String getSavedFileName(UUID id);
 
-    boolean isFileDeleteSuccess(int id);
+    String getDeletedFileName(UUID id);
 
 }
