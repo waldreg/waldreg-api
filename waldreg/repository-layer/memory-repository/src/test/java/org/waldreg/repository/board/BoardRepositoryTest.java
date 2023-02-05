@@ -158,7 +158,7 @@ public class BoardRepositoryTest{
 
         //when
         boardRepository.createBoard(boardRequest);
-        List<BoardDto> boardDtoList = boardRepository.searchByTitle(title,1,1);
+        List<BoardDto> boardDtoList = boardRepository.searchByTitle(title, 1, 1);
         BoardDto result = boardRepository.inquiryBoardById(boardDtoList.get(0).getId());
 
         //then
@@ -245,7 +245,7 @@ public class BoardRepositoryTest{
         boardRepository.createBoard(boardRequest);
         boardRepository.createBoard(boardRequest2);
         boardRepository.createBoard(boardRequest3);
-        List<BoardDto> result = boardRepository.searchByTitle(title,1,2);
+        List<BoardDto> result = boardRepository.searchByTitle(title, 1, 2);
 
         //then
         Assertions.assertAll(
@@ -344,7 +344,7 @@ public class BoardRepositoryTest{
         boardRepository.createBoard(boardRequest);
         boardRepository.createBoard(boardRequest2);
         boardRepository.createBoard(boardRequest3);
-        List<BoardDto> result = boardRepository.searchByContent("This",1,2);
+        List<BoardDto> result = boardRepository.searchByContent("This", 1, 2);
 
         //then
         Assertions.assertAll(
@@ -456,7 +456,7 @@ public class BoardRepositoryTest{
         boardRepository.createBoard(boardRequest);
         boardRepository.createBoard(boardRequest2);
         boardRepository.createBoard(boardRequest3);
-        List<BoardDto> result = boardRepository.searchByAuthorUserId(userDto2.getUserId(),1,1);
+        List<BoardDto> result = boardRepository.searchByAuthorUserId(userDto2.getUserId(), 1, 1);
 
         //then
         Assertions.assertAll(
@@ -547,7 +547,7 @@ public class BoardRepositoryTest{
         boardRepository.createBoard(boardRequest);
         boardRepository.createBoard(boardRequest2);
         boardRepository.createBoard(boardRequest3);
-        List<BoardDto> result = boardRepository.inquiryAllBoardByCategory(categoryDto.getId(), 1,1);
+        List<BoardDto> result = boardRepository.inquiryAllBoardByCategory(categoryDto.getId(), 1, 1);
 
         //then
         Assertions.assertAll(
@@ -634,7 +634,7 @@ public class BoardRepositoryTest{
         boardRepository.createBoard(boardRequest);
         boardRepository.createBoard(boardRequest2);
         boardRepository.createBoard(boardRequest3);
-        List<BoardDto> result = boardRepository.inquiryAllBoard(1,2);
+        List<BoardDto> result = boardRepository.inquiryAllBoard(1, 2);
 
         //then
         Assertions.assertAll(
@@ -711,7 +711,7 @@ public class BoardRepositoryTest{
 
         //when
         boardRepository.createBoard(boardRequest);
-        List<BoardDto> boardDtoList = boardRepository.searchByTitle(title,1,1);
+        List<BoardDto> boardDtoList = boardRepository.searchByTitle(title, 1, 1);
         boardRepository.deleteBoard(boardDtoList.get(0).getId());
         boolean result = boardRepository.isExistBoard(boardDtoList.get(0).getId());
 
@@ -766,7 +766,7 @@ public class BoardRepositoryTest{
 
         //when
         boardRepository.createBoard(boardRequest);
-        BoardDto boardDto = boardRepository.searchByTitle(title,1,1).get(0);
+        BoardDto boardDto = boardRepository.searchByTitle(title, 1, 1).get(0);
         BoardDto modifiedBoardRequest = BoardDto.builder()
                 .id(boardDto.getId())
                 .title(modifiedTitle)
@@ -793,7 +793,7 @@ public class BoardRepositoryTest{
                 () -> Assertions.assertEquals(modifiedBoardRequest.getUserDto().getName(), result.getUserDto().getName()),
                 () -> Assertions.assertEquals(modifiedBoardRequest.getCategoryId(), result.getCategoryId()),
                 () -> Assertions.assertEquals(modifiedBoardRequest.getCreatedAt(), result.getCreatedAt()),
-                () -> Assertions.assertTrue(result.getFileUrls().size()==0),
+                () -> Assertions.assertTrue(result.getFileUrls().size() == 0),
                 () -> Assertions.assertEquals(modifiedBoardRequest.getImageUrls().get(0), result.getImageUrls().get(0)),
                 () -> Assertions.assertTrue(boardDto.getLastModifiedAt().isBefore(result.getLastModifiedAt())),
                 () -> Assertions.assertEquals(modifiedBoardRequest.getViews(), result.getViews())

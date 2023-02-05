@@ -6,7 +6,6 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicInteger;
 import org.springframework.stereotype.Repository;
-import org.waldreg.board.dto.BoardDto;
 import org.waldreg.domain.board.Board;
 
 @Repository
@@ -39,8 +38,8 @@ public class MemoryBoardStorage{
         storage.remove(id);
     }
 
-    public Board modifyBoard(Board board){
-        return storage.replace(board.getId(), board);
+    public void modifyBoard(Board board){
+        storage.replace(board.getId(), board);
     }
 
     public int getBoardMaxIdx(){
@@ -50,8 +49,8 @@ public class MemoryBoardStorage{
     public List<Board> inquiryAllBoard(int from, int to){
         int index = startIndex;
         List<Board> boardList = new ArrayList<>();
-        for(Map.Entry<Integer, Board> boardEntry : storage.entrySet()){
-            if(isInRange(index, from, to)){
+        for (Map.Entry<Integer, Board> boardEntry : storage.entrySet()){
+            if (isInRange(index, from, to)){
                 boardList.add(boardEntry.getValue());
                 index++;
             }
@@ -62,8 +61,8 @@ public class MemoryBoardStorage{
     public List<Board> inquiryAllBoardByCategory(int categoryId, int from, int to){
         int index = startIndex;
         List<Board> boardList = new ArrayList<>();
-        for(Map.Entry<Integer, Board> boardEntry : storage.entrySet()){
-            if(isCategoryIdEqual(boardEntry.getValue().getCategoryId(),categoryId) && isInRange(index, from, to)){
+        for (Map.Entry<Integer, Board> boardEntry : storage.entrySet()){
+            if (isCategoryIdEqual(boardEntry.getValue().getCategoryId(), categoryId) && isInRange(index, from, to)){
                 boardList.add(boardEntry.getValue());
                 index++;
             }
@@ -73,8 +72,8 @@ public class MemoryBoardStorage{
 
     public int getBoardMaxIdxByCategory(int categoryId){
         int count = 0;
-        for(Map.Entry<Integer, Board> boardEntry : storage.entrySet()){
-            if(isCategoryIdEqual(boardEntry.getValue().getCategoryId(),categoryId)){
+        for (Map.Entry<Integer, Board> boardEntry : storage.entrySet()){
+            if (isCategoryIdEqual(boardEntry.getValue().getCategoryId(), categoryId)){
                 count++;
             }
         }
@@ -85,11 +84,11 @@ public class MemoryBoardStorage{
         return boardCategoryId == categoryId;
     }
 
-    public List<Board> searchByTitle(String keyword,int from, int to){
+    public List<Board> searchByTitle(String keyword, int from, int to){
         int index = startIndex;
         List<Board> boardList = new ArrayList<>();
-        for(Map.Entry<Integer, Board> boardEntry : storage.entrySet()){
-            if(isKeywordContained(boardEntry.getValue().getTitle(),keyword) && isInRange(index, from, to)){
+        for (Map.Entry<Integer, Board> boardEntry : storage.entrySet()){
+            if (isKeywordContained(boardEntry.getValue().getTitle(), keyword) && isInRange(index, from, to)){
                 boardList.add(boardEntry.getValue());
             }
         }
@@ -99,8 +98,8 @@ public class MemoryBoardStorage{
     public List<Board> searchByContent(String keyword, int from, int to){
         int index = startIndex;
         List<Board> boardList = new ArrayList<>();
-        for(Map.Entry<Integer, Board> boardEntry : storage.entrySet()){
-            if(isKeywordContained(boardEntry.getValue().getContent(),keyword) && isInRange(index, from, to)){
+        for (Map.Entry<Integer, Board> boardEntry : storage.entrySet()){
+            if (isKeywordContained(boardEntry.getValue().getContent(), keyword) && isInRange(index, from, to)){
                 boardList.add(boardEntry.getValue());
             }
         }
@@ -110,8 +109,8 @@ public class MemoryBoardStorage{
     public List<Board> searchByAuthorUserId(String keyword, int from, int to){
         int index = startIndex;
         List<Board> boardList = new ArrayList<>();
-        for(Map.Entry<Integer, Board> boardEntry : storage.entrySet()){
-            if(isKeywordContained(boardEntry.getValue().getUser().getUserId(),keyword) && isInRange(index, from, to)){
+        for (Map.Entry<Integer, Board> boardEntry : storage.entrySet()){
+            if (isKeywordContained(boardEntry.getValue().getUser().getUserId(), keyword) && isInRange(index, from, to)){
                 boardList.add(boardEntry.getValue());
             }
         }
@@ -119,13 +118,13 @@ public class MemoryBoardStorage{
     }
 
     private boolean isInRange(int index, int from, int to){
-        return index>=from && index<=to;
+        return index >= from && index <= to;
     }
 
     public int getBoardMaxIdxByTitle(String keyword){
         int count = 0;
-        for(Map.Entry<Integer, Board> boardEntry : storage.entrySet()){
-            if(isKeywordContained(boardEntry.getValue().getTitle(),keyword)){
+        for (Map.Entry<Integer, Board> boardEntry : storage.entrySet()){
+            if (isKeywordContained(boardEntry.getValue().getTitle(), keyword)){
                 count++;
             }
         }
@@ -134,8 +133,8 @@ public class MemoryBoardStorage{
 
     public int getBoardMaxIdxByContent(String keyword){
         int count = 0;
-        for(Map.Entry<Integer, Board> boardEntry : storage.entrySet()){
-            if(isKeywordContained(boardEntry.getValue().getContent(),keyword)){
+        for (Map.Entry<Integer, Board> boardEntry : storage.entrySet()){
+            if (isKeywordContained(boardEntry.getValue().getContent(), keyword)){
                 count++;
             }
         }
@@ -144,8 +143,8 @@ public class MemoryBoardStorage{
 
     public int getBoardMaxIdxByAuthorUserId(String keyword){
         int count = 0;
-        for(Map.Entry<Integer, Board> boardEntry : storage.entrySet()){
-            if(isKeywordContained(boardEntry.getValue().getUser().getUserId(),keyword)){
+        for (Map.Entry<Integer, Board> boardEntry : storage.entrySet()){
+            if (isKeywordContained(boardEntry.getValue().getUser().getUserId(), keyword)){
                 count++;
             }
         }

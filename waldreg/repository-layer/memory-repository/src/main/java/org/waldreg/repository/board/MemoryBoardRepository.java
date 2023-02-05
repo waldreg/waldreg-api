@@ -16,8 +16,6 @@ public class MemoryBoardRepository implements BoardRepository{
     private final MemoryUserStorage memoryUserStorage;
     private final BoardMapper boardMapper;
 
-    private final int startIndex = 0;
-
     @Autowired
     public MemoryBoardRepository(MemoryBoardStorage memoryBoardStorage, MemoryUserStorage memoryUserStorage, BoardMapper boardMapper){
         this.memoryBoardStorage = memoryBoardStorage;
@@ -49,7 +47,7 @@ public class MemoryBoardRepository implements BoardRepository{
 
     @Override
     public List<BoardDto> inquiryAllBoard(int from, int to){
-        List<Board> boardList = memoryBoardStorage.inquiryAllBoard(from-1, to-1);
+        List<Board> boardList = memoryBoardStorage.inquiryAllBoard(from - 1, to - 1);
         return boardMapper.boardDomainListToBoardDtoList(boardList);
     }
 

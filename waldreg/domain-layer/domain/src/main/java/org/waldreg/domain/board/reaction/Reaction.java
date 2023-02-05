@@ -3,11 +3,10 @@ package org.waldreg.domain.board.reaction;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import org.waldreg.domain.user.User;
 
 public final class Reaction{
 
-    private final Map<ReactionType, List<User>> reactionMap;
+    private final Map<ReactionType, List<String>> reactionMap;
 
     private Reaction(){
         throw new UnsupportedOperationException("Can not invoke constructor \"Reaction()\"");
@@ -17,7 +16,7 @@ public final class Reaction{
         this.reactionMap = builder.reactionMap;
     }
 
-    public Map<ReactionType, List<User>> getReactionMap(){
+    public Map<ReactionType, List<String>> getReactionMap(){
         return reactionMap;
     }
 
@@ -27,7 +26,7 @@ public final class Reaction{
 
     public final static class Builder{
 
-        private Map<ReactionType, List<User>> reactionMap;
+        private Map<ReactionType, List<String>> reactionMap;
 
         {
             reactionMap = new HashMap<>();
@@ -35,7 +34,7 @@ public final class Reaction{
 
         private Builder(){}
 
-        public Builder reactionMap(Map<ReactionType, List<User>> reactionMap){
+        public Builder reactionMap(Map<ReactionType, List<String>> reactionMap){
             this.reactionMap = reactionMap;
             return this;
         }

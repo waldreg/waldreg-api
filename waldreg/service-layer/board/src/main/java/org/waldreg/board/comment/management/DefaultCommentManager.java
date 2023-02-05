@@ -18,7 +18,7 @@ public class DefaultCommentManager implements CommentManager{
     private BoardRepository boardRepository;
 
     @Autowired
-    public void DefaultBoardManager(CommentRepository commentRepository , BoardRepository boardRepository){
+    public void DefaultBoardManager(CommentRepository commentRepository, BoardRepository boardRepository){
         this.commentRepository = commentRepository;
         this.boardRepository = boardRepository;
     }
@@ -76,8 +76,9 @@ public class DefaultCommentManager implements CommentManager{
         throwIfContentOverFlowThousand(commentDto.getContent());
         commentRepository.modifyComment(commentDto);
     }
+
     private void throwIfCommentDoesNotExist(int commentId){
-        if(!commentRepository.isExistComment(commentId)){
+        if (!commentRepository.isExistComment(commentId)){
             throw new CommentDoesNotExistException(commentId);
         }
     }
