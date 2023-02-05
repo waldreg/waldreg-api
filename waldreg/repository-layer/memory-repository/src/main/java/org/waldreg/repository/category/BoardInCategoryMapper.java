@@ -10,4 +10,6 @@ public interface BoardInCategoryMapper{
 
     List<BoardDto> boardDomainListToBoardDtoList(List<Board> boardList);
 
+    Board boardDtoToBoardDomain(BoardDto boardDto);
+
 }

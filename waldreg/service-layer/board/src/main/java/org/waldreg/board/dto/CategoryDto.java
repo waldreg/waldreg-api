@@ -14,6 +14,7 @@ public class CategoryDto{
     private CategoryDto(Builder builder){
         this.id = builder.id;
         this.categoryName = builder.categoryName;
+        this.boardDtoList = builder.boardDtoList;
     }
 
     public static Builder builder(){

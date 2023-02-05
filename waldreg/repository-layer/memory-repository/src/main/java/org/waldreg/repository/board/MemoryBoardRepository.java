@@ -24,9 +24,10 @@ public class MemoryBoardRepository implements BoardRepository{
     }
 
     @Override
-    public void createBoard(BoardDto boardDto){
+    public BoardDto createBoard(BoardDto boardDto){
         Board board = boardMapper.boardDtoToBoardDomain(boardDto);
-        memoryBoardStorage.createBoard(board);
+        board = memoryBoardStorage.createBoard(board);
+        return boardMapper.boardDomainToBoardDto(board);
     }
 
     @Override

@@ -4,7 +4,9 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 import org.waldreg.board.category.spi.CategoryRepository;
+import org.waldreg.board.dto.BoardDto;
 import org.waldreg.board.dto.CategoryDto;
+import org.waldreg.domain.board.Board;
 import org.waldreg.domain.category.Category;
 import org.waldreg.repository.MemoryCategoryStorage;
 
@@ -22,7 +24,13 @@ public class MemoryCategoryRepository implements CategoryRepository{
     }
 
     @Override
-    public Boolean isExistCategory(int categoryId){
+    public void addBoardInCategoryBoardList(BoardDto boardDto){
+        Board board = categoryMapper.boardDtoToBoardDomain(boardDto);
+        memoryCategoryStorage.addBoardInCategoryBoardList(board);
+    }
+
+    @Override
+    public boolean isExistCategory(int categoryId){
         return memoryCategoryStorage.inquiryCategoryById(categoryId)!=null;
     }
 
@@ -41,6 +49,7 @@ public class MemoryCategoryRepository implements CategoryRepository{
     @Override
     public CategoryDto inquiryCategoryById(int id){
         Category category = memoryCategoryStorage.inquiryCategoryById(id);
+
         return categoryMapper.categoryDomainToCategoryDto(category);
     }
 

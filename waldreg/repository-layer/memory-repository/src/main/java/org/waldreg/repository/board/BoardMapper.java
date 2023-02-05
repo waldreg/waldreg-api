@@ -29,6 +29,7 @@ public class BoardMapper implements BoardInCategoryMapper{
         return boardList;
     }
 
+    @Override
     public Board boardDtoToBoardDomain(BoardDto boardDto){
         Board.Builder builder = Board.builder()
                 .title(boardDto.getTitle())
