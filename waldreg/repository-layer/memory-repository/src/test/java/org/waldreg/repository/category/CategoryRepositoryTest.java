@@ -1,5 +1,6 @@
 package org.waldreg.repository.category;
 
+import java.util.List;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
@@ -10,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.waldreg.board.board.spi.BoardRepository;
+import org.waldreg.board.category.spi.CategoryRepository;
 import org.waldreg.board.dto.CategoryDto;
 import org.waldreg.character.spi.CharacterRepository;
 import org.waldreg.repository.MemoryBoardStorage;
@@ -29,7 +31,7 @@ import org.waldreg.user.spi.UserRepository;
 public class CategoryRepositoryTest{
 
     @Autowired
-    private MemoryCategoryRepository memoryCategoryRepository;
+    private CategoryRepository categoryRepository;
 
     @Autowired
     private MemoryCategoryStorage memoryCategoryStorage;
@@ -51,6 +53,10 @@ public class CategoryRepositoryTest{
 
     @Autowired
     private MemoryCharacterStorage memoryCharacterStorage;
+
+    @BeforeEach
+    @AfterEach
+    private void DELETE_ALL_CATEGORY(){memoryCategoryStorage.deleteAllCategory();}
 
     @BeforeEach
     @AfterEach
@@ -76,10 +82,45 @@ public class CategoryRepositoryTest{
                 .build();
 
         //when&then
-        Assertions.assertDoesNotThrow(()->memoryCategoryRepository.createCategory(categoryDto));
+        Assertions.assertDoesNotThrow(() -> categoryRepository.createCategory(categoryDto));
 
     }
 
+    @Test
+    @DisplayName("전체 카테고리 조회 성공 테스트")
+    public void INQUIRY_ALL_CATEGORY_TEST(){
+        //given
+        String categoryName = "catecate";
+        CategoryDto categoryDto = CategoryDto.builder()
+                .categoryName(categoryName)
+                .build();
+        String categoryName2 = "catecatecate";
+        CategoryDto categoryDto2 = CategoryDto.builder()
+                .categoryName(categoryName2)
+                .build();
+        String categoryName3 = "catecatecatecate";
+        CategoryDto categoryDto3 = CategoryDto.builder()
+                .categoryName(categoryName3)
+                .build();
+
+        //when
+        categoryRepository.createCategory(categoryDto);
+        categoryRepository.createCategory(categoryDto2);
+        categoryRepository.createCategory(categoryDto3);
+        List<CategoryDto> result = categoryRepository.inquiryAllCategory();
+
+        //then
+        Assertions.assertAll(
+                () -> Assertions.assertEquals(3, result.size()),
+                () -> Assertions.assertEquals(categoryDto.getCategoryName(), result.get(0).getCategoryName()),
+                () -> Assertions.assertEquals(categoryDto.getBoardDtoList(), result.get(0).getBoardDtoList()),
+                () -> Assertions.assertEquals(categoryDto2.getCategoryName(), result.get(1).getCategoryName()),
+                () -> Assertions.assertEquals(categoryDto2.getBoardDtoList(), result.get(1).getBoardDtoList()),
+                () -> Assertions.assertEquals(categoryDto3.getCategoryName(), result.get(2).getCategoryName()),
+                () -> Assertions.assertEquals(categoryDto3.getBoardDtoList(), result.get(2).getBoardDtoList())
+        );
+
+    }
 
 
 }

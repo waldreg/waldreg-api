@@ -34,7 +34,8 @@ public class MemoryCategoryRepository implements CategoryRepository{
 
     @Override
     public List<CategoryDto> inquiryAllCategory(){
-        return null;
+        List<Category> categoryList = memoryCategoryStorage.inquiryAllCategory();
+        return categoryMapper.categoryDomainListToCategoryDtoList(categoryList);
     }
 
     @Override

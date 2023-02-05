@@ -1,5 +1,6 @@
 package org.waldreg.domain.category;
 
+import java.util.ArrayList;
 import java.util.List;
 import org.waldreg.domain.board.Board;
 
@@ -49,6 +50,10 @@ public final class Category{
         private int id;
         private String categoryName;
         private List<Board> boardList;
+
+        {
+            boardList = new ArrayList<>();
+        }
 
         private Builder(){}
 

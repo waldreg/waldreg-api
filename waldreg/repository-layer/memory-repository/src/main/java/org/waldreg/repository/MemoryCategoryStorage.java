@@ -1,5 +1,7 @@
 package org.waldreg.repository;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -22,6 +24,18 @@ public class MemoryCategoryStorage{
     public void createCategory(Category category){
         category.setId(atomicInteger.getAndIncrement());
         storage.put(category.getId(),category);
+    }
+
+    public List<Category> inquiryAllCategory(){
+        List<Category> categoryList = new ArrayList<>();
+        for(Map.Entry<Integer, Category> categoryEntry : storage.entrySet()){
+            categoryList.add(categoryEntry.getValue());
+        }
+        return categoryList;
+    }
+
+    public void deleteAllCategory(){
+        storage.clear();
     }
 
 }

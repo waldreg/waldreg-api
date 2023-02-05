@@ -1,5 +1,6 @@
 package org.waldreg.repository.category;
 
+import java.util.ArrayList;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -42,6 +43,22 @@ public class CategoryMapper{
 
     private boolean isBoardDtoListNotEmpty(List<BoardDto> boardDtoList){
         return boardDtoList != null;
+    }
+
+    public List<CategoryDto> categoryDomainListToCategoryDtoList(List<Category> categoryList){
+        List<CategoryDto> categoryDtoList = new ArrayList<>();
+        for(Category category : categoryList){
+            categoryDtoList.add(categoryDomainToCategoryDto(category));
+        }
+        return categoryDtoList;
+    }
+
+    public CategoryDto categoryDomainToCategoryDto(Category category){
+        return CategoryDto.builder()
+                .id(category.getId())
+                .categoryName(category.getCategoryName())
+                .boardDtoList(boardInCategoryMapper.boardDomainListToBoardDtoList(category.getBoardList()))
+                .build();
     }
 
 }
