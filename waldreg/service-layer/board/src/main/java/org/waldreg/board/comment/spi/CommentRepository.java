@@ -17,5 +17,4 @@ public interface CommentRepository{
 
     void deleteComment(int id);
 
-
 }

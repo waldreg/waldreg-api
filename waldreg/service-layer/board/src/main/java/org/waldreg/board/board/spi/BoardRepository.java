@@ -31,4 +31,10 @@ public interface BoardRepository{
 
     int getSearchMaxIdx(String keyword);
 
+    int getBoardMaxIdxByTitle(String keyword);
+
+    int getBoardMaxIdxByContent(String keyword);
+
+    int getBoardMaxIdxByAuthorUserId(String keyword);
+
 }

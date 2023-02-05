@@ -6,11 +6,8 @@ import org.waldreg.board.comment.exception.BoardDoesNotExistException;
 import org.waldreg.board.comment.exception.CommentDoesNotExistException;
 import org.waldreg.board.comment.exception.ContentLengthOverThousandException;
 import org.waldreg.board.comment.exception.InvalidRangeException;
-import org.waldreg.board.comment.exception.UserDoesNotExistException;
 import org.waldreg.board.comment.spi.BoardRepository;
 import org.waldreg.board.comment.spi.CommentRepository;
-import org.waldreg.board.comment.spi.UserRepository;
-import org.waldreg.board.dto.BoardDto;
 import org.waldreg.board.dto.CommentDto;
 
 public class DefaultCommentManager implements CommentManager{
