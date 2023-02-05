@@ -23,10 +23,16 @@ public interface BoardRepository{
 
     void deleteBoard(int id);
 
-    List<BoardDto> searchByTitle(String keyword);
+    List<BoardDto> searchByTitle(String keyword, int from, int to);
 
-    List<BoardDto> searchByContent(String keyword);
+    List<BoardDto> searchByContent(String keyword, int from, int to);
 
-    List<BoardDto> searchByAuthorUserId(String keyword);
+    List<BoardDto> searchByAuthorUserId(String keyword, int from, int to);
+
+    int getBoardMaxIdxByTitle(String keyword);
+
+    int getBoardMaxIdxByContent(String keyword);
+
+    int getBoardMaxIdxByAuthorUserId(String keyword);
 
 }

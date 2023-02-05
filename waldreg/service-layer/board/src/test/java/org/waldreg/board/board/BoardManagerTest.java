@@ -3,6 +3,7 @@ package org.waldreg.board.board;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
@@ -17,6 +18,7 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.waldreg.board.board.exception.BoardDoesNotExistException;
 import org.waldreg.board.board.exception.CategoryDoesNotExistException;
 import org.waldreg.board.board.exception.InvalidRangeException;
+import org.waldreg.board.board.file.FileInfoGettable;
 import org.waldreg.board.board.management.BoardManager;
 import org.waldreg.board.board.management.BoardManager.BoardRequest;
 import org.waldreg.board.board.management.DefaultBoardManager;
@@ -38,9 +40,11 @@ public class BoardManagerTest{
     @MockBean
     private BoardRepository boardRepository;
     @MockBean
+    private CategoryRepository categoryRepository;
+    @MockBean
     private UserRepository userRepository;
     @MockBean
-    private CategoryRepository categoryRepository;
+    private FileInfoGettable fileInfoGettable;
 
     @BeforeEach
     @AfterEach
@@ -59,17 +63,22 @@ public class BoardManagerTest{
 
         int id = 1;
         int categoryId = 1;
+        List<UUID> imageUuidList = new ArrayList<>();
+        imageUuidList.add(UUID.randomUUID());
+        List<UUID> fileUuidList = new ArrayList<>();
+        fileUuidList.add(UUID.randomUUID());
 
-        Mockito.when(userRepository.isExistUser(Mockito.anyInt())).thenReturn(true);
+        String fileName = "fileName";
         Mockito.when(categoryRepository.isExistCategory(Mockito.anyInt())).thenReturn(true);
+        Mockito.when(fileInfoGettable.getSavedFileName(Mockito.any())).thenReturn(fileName);
 
         BoardRequest boardRequest = BoardRequest.builder()
                 .authorId(id)
                 .title(title)
                 .content(content)
                 .categoryId(categoryId)
-                .imageCount(2)
-                .fileCount(3)
+                .imageUuidList(imageUuidList)
+                .fileUuidList(fileUuidList)
                 .build();
 
         //when&then
@@ -511,32 +520,36 @@ public class BoardManagerTest{
                 .categoryId(categoryId)
                 .title(title)
                 .content(content)
+                .fileUrls(new ArrayList<>())
+                .imageUrls(new ArrayList<>())
                 .build();
 
         String modifyTitle = "modifyTitle";
         String modifyContent = "modifyContent";
-        BoardDto modifiedBoardDto = BoardDto.builder()
+        List<UUID> imageUuidList = new ArrayList<>();
+        imageUuidList.add(UUID.randomUUID());
+        List<UUID> fileUuidList = new ArrayList<>();
+        fileUuidList.add(UUID.randomUUID());
+        List<UUID> deleteUuidList = new ArrayList<>();
+        deleteUuidList.add(UUID.randomUUID());
+
+        BoardRequest modifiedBoardRequestDto = BoardRequest.builder()
                 .id(boardDto.getId())
-                .userDto(boardDto.getUserDto())
+                .authorId(boardDto.getUserDto().getId())
                 .title(modifyTitle)
                 .content(modifyContent)
                 .categoryId(boardDto.getCategoryId())
+                .imageUuidList(imageUuidList)
+                .fileUuidList(fileUuidList)
+                .deleteFileNameList(deleteUuidList)
                 .build();
 
-        Mockito.when(userRepository.isExistUser(Mockito.anyInt())).thenReturn(true);
         Mockito.when(categoryRepository.isExistCategory(Mockito.anyInt())).thenReturn(true);
         Mockito.when(boardRepository.isExistBoard(Mockito.anyInt())).thenReturn(true);
-        Mockito.when(boardRepository.modifyBoard(Mockito.any())).thenReturn(modifiedBoardDto);
-        BoardDto result = boardManager.modifyBoard(modifiedBoardDto);
+        Mockito.when(boardRepository.inquiryBoardById(Mockito.anyInt())).thenReturn(boardDto);
         //when
         //then
-        Assertions.assertAll(
-                () -> Assertions.assertEquals(boardDto.getId(), result.getId()),
-                () -> Assertions.assertEquals(boardDto.getUserDto(), result.getUserDto()),
-                () -> Assertions.assertEquals(boardDto.getCategoryId(), result.getCategoryId()),
-                () -> Assertions.assertNotEquals(boardDto.getTitle(), result.getTitle()),
-                () -> Assertions.assertNotEquals(boardDto.getContent(), result.getContent())
-        );
+        Assertions.assertDoesNotThrow(() -> boardManager.modifyBoard(modifiedBoardRequestDto));
 
     }
 
@@ -561,32 +574,36 @@ public class BoardManagerTest{
                 .categoryId(categoryId)
                 .title(title)
                 .content(content)
+                .fileUrls(new ArrayList<>())
+                .imageUrls(new ArrayList<>())
                 .build();
 
         String modifyTitle = "modifyTitle";
         String modifyContent = "modifyContent";
+        List<UUID> imageUuidList = new ArrayList<>();
+        imageUuidList.add(UUID.randomUUID());
+        List<UUID> fileUuidList = new ArrayList<>();
+        fileUuidList.add(UUID.randomUUID());
+        List<UUID> deleteUuidList = new ArrayList<>();
+        deleteUuidList.add(UUID.randomUUID());
 
-        BoardDto modifiedBoardDto = BoardDto.builder()
+        BoardRequest modifiedBoardRequestDto = BoardRequest.builder()
                 .id(boardDto.getId())
-                .userDto(boardDto.getUserDto())
+                .authorId(boardDto.getUserDto().getId())
                 .title(modifyTitle)
                 .content(modifyContent)
                 .categoryId(boardDto.getCategoryId())
+                .imageUuidList(imageUuidList)
+                .fileUuidList(fileUuidList)
+                .deleteFileNameList(deleteUuidList)
                 .build();
 
-        Mockito.when(categoryRepository.isExistCategory(Mockito.anyInt())).thenReturn(true);
+        Mockito.when(categoryRepository.isExistCategory(Mockito.anyInt())).thenReturn(false);
         Mockito.when(boardRepository.isExistBoard(Mockito.anyInt())).thenReturn(true);
-        Mockito.when(boardRepository.modifyBoard(Mockito.any())).thenReturn(modifiedBoardDto);
-        BoardDto result = boardManager.modifyBoard(modifiedBoardDto);
+        Mockito.when(boardRepository.inquiryBoardById(Mockito.anyInt())).thenReturn(boardDto);
         //when
         //then
-        Assertions.assertAll(
-                () -> Assertions.assertEquals(boardDto.getId(), result.getId()),
-                () -> Assertions.assertEquals(boardDto.getUserDto(), result.getUserDto()),
-                () -> Assertions.assertEquals(boardDto.getCategoryId(), result.getCategoryId()),
-                () -> Assertions.assertNotEquals(boardDto.getTitle(), result.getTitle()),
-                () -> Assertions.assertNotEquals(boardDto.getContent(), result.getContent())
-        );
+        Assertions.assertThrows(CategoryDoesNotExistException.class, () -> boardManager.modifyBoard(modifiedBoardRequestDto));
 
     }
 

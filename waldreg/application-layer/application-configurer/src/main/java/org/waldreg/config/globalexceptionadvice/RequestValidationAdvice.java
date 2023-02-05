@@ -26,7 +26,8 @@ public class RequestValidationAdvice{
     private String getMessage(String[] message){
         StringBuilder sb = new StringBuilder();
         for(int i = 1; i < message.length; i++){
-            sb.append(sb).append(" ");
+            sb.append(message[i]);
+            if(i < message.length-1) sb.append(" ");
         }
         return sb.toString();
     }

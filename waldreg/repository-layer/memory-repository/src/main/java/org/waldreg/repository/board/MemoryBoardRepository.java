@@ -1,14 +1,11 @@
 package org.waldreg.repository.board;
 
-import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 import org.waldreg.board.board.spi.BoardRepository;
 import org.waldreg.board.dto.BoardDto;
 import org.waldreg.domain.board.Board;
-import org.waldreg.domain.user.User;
 import org.waldreg.repository.MemoryBoardStorage;
 import org.waldreg.repository.MemoryUserStorage;
 
@@ -70,7 +67,6 @@ public class MemoryBoardRepository implements BoardRepository{
     @Override
     public void modifyBoard(BoardDto boardDto){
         Board board = boardMapper.boardDtoToBoardDomain(boardDto);
-        board.setLastModifiedAt(LocalDateTime.now());
         memoryBoardStorage.modifyBoard(board);
     }
 
@@ -80,21 +76,36 @@ public class MemoryBoardRepository implements BoardRepository{
     }
 
     @Override
-    public List<BoardDto> searchByTitle(String keyword){
+    public List<BoardDto> searchByTitle(String keyword, int from, int to){
         List<Board> boardList = memoryBoardStorage.searchByTitle(keyword);
         return boardMapper.boardDomainListToBoardDtoList(boardList);
     }
 
     @Override
-    public List<BoardDto> searchByContent(String keyword){
+    public List<BoardDto> searchByContent(String keyword, int from, int to){
         List<Board> boardList = memoryBoardStorage.searchByContent(keyword);
         return boardMapper.boardDomainListToBoardDtoList(boardList);
     }
 
     @Override
-    public List<BoardDto> searchByAuthorUserId(String keyword){
+    public List<BoardDto> searchByAuthorUserId(String keyword, int from, int to){
         List<Board> boardList = memoryBoardStorage.searchByAuthorUserId(keyword);
         return boardMapper.boardDomainListToBoardDtoList(boardList);
+    }
+
+    @Override
+    public int getBoardMaxIdxByTitle(String keyword){
+        return 0;
+    }
+
+    @Override
+    public int getBoardMaxIdxByContent(String keyword){
+        return 0;
+    }
+
+    @Override
+    public int getBoardMaxIdxByAuthorUserId(String keyword){
+        return 0;
     }
 
 }
