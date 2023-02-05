@@ -24,7 +24,6 @@ import org.waldreg.board.reaction.exception.ReactionTypeDoesNotExistException;
 import org.waldreg.board.reaction.management.DefaultReactionManager;
 import org.waldreg.board.reaction.management.ReactionManager;
 import org.waldreg.board.reaction.spi.BoardRepository;
-import org.waldreg.board.reaction.spi.UserRepository;
 import org.waldreg.util.token.DecryptedTokenContext;
 
 @ExtendWith(SpringExtension.class)
@@ -58,7 +57,7 @@ public class ReactionManagerTest{
                 .boardId(boardId)
                 .build();
 
-        Map<BoardServiceReactionType, List<UserDto>> reactionMap = new HashMap<>();
+        Map<BoardServiceReactionType, List<String>> reactionMap = new HashMap<>();
         reactionMap.put(BoardServiceReactionType.HEART, new ArrayList<>());
         reactionMap.put(BoardServiceReactionType.BAD, new ArrayList<>());
         reactionMap.put(BoardServiceReactionType.SAD, new ArrayList<>());
@@ -87,7 +86,7 @@ public class ReactionManagerTest{
                 .boardId(boardId)
                 .build();
 
-        Map<BoardServiceReactionType, List<UserDto>> reactionMap = new HashMap<>();
+        Map<BoardServiceReactionType, List<String>> reactionMap = new HashMap<>();
         reactionMap.put(BoardServiceReactionType.HEART, new ArrayList<>());
         reactionMap.put(BoardServiceReactionType.BAD, new ArrayList<>());
         reactionMap.put(BoardServiceReactionType.SAD, new ArrayList<>());
@@ -116,7 +115,7 @@ public class ReactionManagerTest{
                 .boardId(boardId)
                 .build();
 
-        Map<BoardServiceReactionType, List<UserDto>> reactionMap = new HashMap<>();
+        Map<BoardServiceReactionType, List<String>> reactionMap = new HashMap<>();
         reactionMap.put(BoardServiceReactionType.HEART, new ArrayList<>());
         reactionMap.put(BoardServiceReactionType.BAD, new ArrayList<>());
         reactionMap.put(BoardServiceReactionType.SAD, new ArrayList<>());
