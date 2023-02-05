@@ -1,4 +1,3 @@
-/*
 package org.waldreg.board.reaction.management;
 
 
@@ -7,27 +6,30 @@ import java.util.Map;
 import org.waldreg.board.dto.BoardServiceReactionType;
 import org.waldreg.board.dto.ReactionDto;
 import org.waldreg.board.dto.ReactionRequestDto;
+import org.waldreg.board.dto.UserDto;
 import org.waldreg.board.reaction.exception.BoardDoesNotExistException;
 import org.waldreg.board.reaction.exception.ReactionTypeDoesNotExistException;
 import org.waldreg.board.reaction.spi.ReactionInBoardRepository;
+import org.waldreg.board.reaction.spi.UserRepository;
 
 public class DefaultReactionManager implements ReactionManager{
 
     private final ReactionInBoardRepository reactionInBoardRepository;
+    private final UserRepository userRepository;
 
-    public DefaultReactionManager(ReactionInBoardRepository reactionInBoardRepository){
+    public DefaultReactionManager(ReactionInBoardRepository reactionInBoardRepository, UserRepository userRepository){
         this.reactionInBoardRepository = reactionInBoardRepository;
+        this.userRepository = userRepository;
     }
 
     @Override
     public void reactionRequest(ReactionRequestDto reactionRequestDto){
         throwIfBoardDoesNotExist(reactionRequestDto.getBoardId());
         throwIfReactionTypeDoesNotExist(reactionRequestDto.getReactionType());
-        ReactionDto reactionDto = reactionInBoardRepository.getReactionDto(reactionRequestDto.getBoardId());
-        BoardServiceReactionType beforeType = findBoardServiceReactionTypeByUserId(reactionDto.getReactionMap(), reactionRequestDto.getUserId());
-        Map<BoardServiceReactionType, List<String>> reactionMap = allRequestReaction(reactionDto.getReactionMap(), beforeType, reactionRequestDto);
-        reactionDto.setReactionMap(reactionMap);
-        reactionInBoardRepository.storeReactionDto(reactionDto);
+        Map<BoardServiceReactionType, List<UserDto>> reactionMap = reactionInBoardRepository.getReactionDto(reactionRequestDto.getBoardId()).getReactionMap();
+        BoardServiceReactionType beforeType = findBoardServiceReactionTypeByUserId(reactionMap, reactionRequestDto.getUserId());
+        reactionMap = allRequestReaction(reactionMap, beforeType, reactionRequestDto);
+        reactionInBoardRepository.storeReactionDto(ReactionDto.builder().reactionMap(reactionMap).build());
     }
 
     private void throwIfBoardDoesNotExist(int boardId){
@@ -44,50 +46,61 @@ public class DefaultReactionManager implements ReactionManager{
         }
     }
 
-    private BoardServiceReactionType findBoardServiceReactionTypeByUserId(Map<BoardServiceReactionType, List<String>> reactionMap, String userId){
-        for (Map.Entry<BoardServiceReactionType, List<String>> typeList : reactionMap.entrySet()){
-            List<String> storedUserIdList = typeList.getValue();
-            if (storedUserIdList.contains(userId)){
-                return typeList.getKey();
+    private BoardServiceReactionType findBoardServiceReactionTypeByUserId(Map<BoardServiceReactionType, List<UserDto>> reactionMap, String userId){
+        for (Map.Entry<BoardServiceReactionType, List<UserDto>> typeList : reactionMap.entrySet()){
+            List<UserDto> userDtoList = typeList.getValue();
+            for (UserDto userDto : userDtoList){
+                if (userDto.getUserId().equals(userId)){
+                    return typeList.getKey();
+                }
             }
         }
         return null;
     }
 
-    private Map<BoardServiceReactionType, List<String>> allRequestReaction(Map<BoardServiceReactionType, List<String>> reactionMap, BoardServiceReactionType beforeType, ReactionRequestDto reactionRequestDto){
+    private Map<BoardServiceReactionType, List<UserDto>> allRequestReaction(Map<BoardServiceReactionType, List<UserDto>> reactionMap, BoardServiceReactionType beforeType, ReactionRequestDto reactionRequestDto){
         BoardServiceReactionType requestType = BoardServiceReactionType.valueOf(reactionRequestDto.getReactionType());
         String userId = reactionRequestDto.getUserId();
         if (beforeType == requestType){
-            cancelReaction(reactionMap, beforeType, userId);
+            reactionMap = cancelReaction(reactionMap, beforeType, userId);
         } else if (beforeType == null){
-            addReaction(reactionMap, requestType, userId);
+            reactionMap = addReaction(reactionMap, requestType, userId);
         } else{
-            cancelReaction(reactionMap, beforeType, userId);
-            addReaction(reactionMap, requestType, userId);
+            reactionMap = cancelReaction(reactionMap, beforeType, userId);
+            reactionMap = addReaction(reactionMap, requestType, userId);
         }
         return reactionMap;
     }
 
-    private void cancelReaction(Map<BoardServiceReactionType, List<String>> reactionMap, BoardServiceReactionType beforeType, String userId){
-        List<String> typeUserIdList = reactionMap.get(beforeType);
-        cancelReactionUserList(typeUserIdList, userId);
-        reactionMap.put(beforeType, typeUserIdList);
+    private Map<BoardServiceReactionType, List<UserDto>> cancelReaction(Map<BoardServiceReactionType, List<UserDto>> reactionMap, BoardServiceReactionType beforeType, String userId){
+        List<UserDto> typeUserDtoList = reactionMap.get(beforeType);
+        typeUserDtoList = cancelReactionUserList(typeUserDtoList, userId);
+        reactionMap.put(beforeType, typeUserDtoList);
+        return reactionMap;
     }
 
-    private void cancelReactionUserList(List<String> typeUserIdList, String userId){
-        typeUserIdList.remove(userId);
+    private List<UserDto> cancelReactionUserList(List<UserDto> typeUserDtoList, String userId){
+        for (UserDto userDto : typeUserDtoList){
+            if (userDto.getUserId().equals(userId)){
+                typeUserDtoList.remove(userDto);
+                return typeUserDtoList;
+            }
+        }
+        return typeUserDtoList;
     }
 
-    private void addReaction(Map<BoardServiceReactionType, List<String>> reactionMap, BoardServiceReactionType type, String userId){
-        List<String> typeUserIdList = reactionMap.get(type);
-        addReactionUserList(typeUserIdList, userId);
-        reactionMap.put(type, typeUserIdList);
+    private Map<BoardServiceReactionType, List<UserDto>> addReaction(Map<BoardServiceReactionType, List<UserDto>> reactionMap, BoardServiceReactionType type, String userId){
+        List<UserDto> typeUserDtoList = reactionMap.get(type);
+        typeUserDtoList = addReactionUserList(typeUserDtoList, userId);
+        reactionMap.put(type, typeUserDtoList);
+        return reactionMap;
     }
 
-    private void addReactionUserList(List<String> typeUserIdList, String userId){
-        typeUserIdList.add(userId);
+    private List<UserDto> addReactionUserList(List<UserDto> userDtoList, String userId){
+        UserDto userDto = userRepository.getUserInfoByUserId(userId);
+        userDtoList.add(userDto);
+        return userDtoList;
     }
 
 
 }
-*/
