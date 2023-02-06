@@ -1,4 +1,4 @@
-package org.waldreg.board.board.exception;
+package org.waldreg.board.comment.exception;
 
 public class UserDoesNotExistException extends RuntimeException{
 

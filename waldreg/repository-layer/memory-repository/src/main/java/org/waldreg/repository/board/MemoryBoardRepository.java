@@ -6,7 +6,6 @@ import org.springframework.stereotype.Repository;
 import org.waldreg.board.board.spi.BoardRepository;
 import org.waldreg.board.dto.BoardDto;
 import org.waldreg.domain.board.Board;
-import org.waldreg.domain.user.User;
 import org.waldreg.repository.MemoryBoardStorage;
 import org.waldreg.repository.MemoryUserStorage;
 
@@ -25,12 +24,9 @@ public class MemoryBoardRepository implements BoardRepository{
     }
 
     @Override
-    public BoardDto createBoard(BoardDto boardDto){
+    public void createBoard(BoardDto boardDto){
         Board board = boardMapper.boardDtoToBoardDomain(boardDto);
-        User user = memoryUserStorage.readUserById(boardDto.getUserDto().getId());
-        board.setUser(user);
-        board = memoryBoardStorage.createBoard(board);
-        return boardMapper.boardDomainToBoardDto(board);
+        memoryBoardStorage.createBoard(board);
     }
 
     @Override
@@ -46,53 +42,68 @@ public class MemoryBoardRepository implements BoardRepository{
 
     @Override
     public int getBoardMaxIdx(){
-        return 0;
+        return memoryBoardStorage.getBoardMaxIdx();
     }
 
     @Override
     public List<BoardDto> inquiryAllBoard(int from, int to){
-        return null;
+        List<Board> boardList = memoryBoardStorage.inquiryAllBoard(from - 1, to - 1);
+        return boardMapper.boardDomainListToBoardDtoList(boardList);
     }
 
     @Override
     public List<BoardDto> inquiryAllBoardByCategory(int categoryId, int from, int to){
-        return null;
+        List<Board> boardList = memoryBoardStorage.inquiryAllBoardByCategory(categoryId, from - 1, to - 1);
+        return boardMapper.boardDomainListToBoardDtoList(boardList);
     }
 
     @Override
     public int getBoardMaxIdxByCategory(int categoryId){
-        return 0;
+        return memoryBoardStorage.getBoardMaxIdxByCategory(categoryId);
     }
 
     @Override
-    public BoardDto modifyBoard(BoardDto boardDto){
-        return null;
+    public void modifyBoard(BoardDto boardDto){
+        Board board = boardMapper.boardDtoToBoardDomain(boardDto);
+        memoryBoardStorage.modifyBoard(board);
     }
 
     @Override
     public void deleteBoard(int id){
-
+        memoryBoardStorage.deleteBoardById(id);
     }
 
     @Override
     public List<BoardDto> searchByTitle(String keyword, int from, int to){
-        return null;
+        List<Board> boardList = memoryBoardStorage.searchByTitle(keyword, from - 1, to - 1);
+        return boardMapper.boardDomainListToBoardDtoList(boardList);
     }
 
     @Override
     public List<BoardDto> searchByContent(String keyword, int from, int to){
-        return null;
+        List<Board> boardList = memoryBoardStorage.searchByContent(keyword, from - 1, to - 1);
+        return boardMapper.boardDomainListToBoardDtoList(boardList);
     }
 
     @Override
     public List<BoardDto> searchByAuthorUserId(String keyword, int from, int to){
-        return null;
+        List<Board> boardList = memoryBoardStorage.searchByAuthorUserId(keyword, from - 1, to - 1);
+        return boardMapper.boardDomainListToBoardDtoList(boardList);
     }
 
     @Override
-    public int getSearchMaxIdx(String keyword){
-        return 0;
+    public int getBoardMaxIdxByTitle(String keyword){
+        return memoryBoardStorage.getBoardMaxIdxByTitle(keyword);
     }
 
+    @Override
+    public int getBoardMaxIdxByContent(String keyword){
+        return memoryBoardStorage.getBoardMaxIdxByContent(keyword);
+    }
+
+    @Override
+    public int getBoardMaxIdxByAuthorUserId(String keyword){
+        return memoryBoardStorage.getBoardMaxIdxByAuthorUserId(keyword);
+    }
 
 }
