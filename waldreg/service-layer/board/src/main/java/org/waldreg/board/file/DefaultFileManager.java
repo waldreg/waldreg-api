@@ -42,6 +42,7 @@ public class DefaultFileManager implements FileManager{
     public void saveFile(MultipartFile multipartFile){
         ImageDetector imageDetector = new ImageDetector();
         Callable<String> callable = createCallable(imageDetector, multipartFile);
+        System.out.println("imageDectector : " + imageDetector.isImage);
         if(imageDetector.isImage) {
             fileData.addImageName(executorService.submit(callable));
             return;
@@ -49,11 +50,12 @@ public class DefaultFileManager implements FileManager{
         fileData.addFileName(executorService.submit(callable));
     }
 
-    private Callable<String> createCallable(ImageDetector typeWithCallable, MultipartFile multipartFile){
+    private Callable<String> createCallable(ImageDetector imageDetector, MultipartFile multipartFile){
         return () -> {
             NameWithPath nameWithPath = createFile(multipartFile);
             multipartFile.transferTo(nameWithPath.path);
-            typeWithCallable.isImage = nameWithPath.isImage;
+            imageDetector.isImage = nameWithPath.isImage;
+            System.out.println("name with path : " + nameWithPath.isImage);
             return nameWithPath.name;
         };
     }
