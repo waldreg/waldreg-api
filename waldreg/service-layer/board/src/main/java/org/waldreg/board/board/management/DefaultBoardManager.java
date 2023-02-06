@@ -1,5 +1,7 @@
 package org.waldreg.board.board.management;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -54,21 +56,22 @@ public class DefaultBoardManager implements BoardManager{
     }
 
     private BoardDto buildBoardDto(BoardRequest request){
-        CategoryDto categoryDto = categoryRepository.inquiryCategory(request.getCategoryId());
         UserDto userDto = userRepository.getUserInfo(request.getAuthorId());
         return BoardDto.builder()
                 .title(request.getTitle())
                 .content(request.getContent())
-                .categoryDto(categoryDto)
+                .categoryId(request.getCategoryId())
                 .userDto(userDto)
-                .boardServiceMemberTier(request.getMemberTier())
                 .build();
     }
 
     @Override
     public BoardDto inquiryBoardById(int id){
         throwIfBoardDoesNotExist(id);
-        return boardRepository.inquiryBoardById(id);
+        BoardDto boardDto = boardRepository.inquiryBoardById(id);
+        boardDto.setViews(boardDto.getViews() + 1);
+        boardRepository.modifyBoard(boardDto);
+        return boardDto;
     }
 
     private void throwIfBoardDoesNotExist(int boardId){
@@ -80,15 +83,9 @@ public class DefaultBoardManager implements BoardManager{
     @Override
     public List<BoardDto> inquiryAllBoard(int from, int to){
         throwIfInvalidRangeDetected(from, to);
-        String userTier = getUserTier();
-        int maxIdx = boardRepository.getBoardMaxIdx(userTier);
+        int maxIdx = boardRepository.getBoardMaxIdx();
         to = adjustEndIdx(from, to, maxIdx);
-        return boardRepository.inquiryAllBoard(userTier, from, to);
-    }
-
-    private String getUserTier(){
-        int id = decryptedTokenContextGetter.get();
-        return userRepository.getUserTier(id);
+        return boardRepository.inquiryAllBoard(from, to);
     }
 
     private void throwIfInvalidRangeDetected(int from, int to){
@@ -111,44 +108,61 @@ public class DefaultBoardManager implements BoardManager{
     public List<BoardDto> inquiryAllBoardByCategory(int categoryId, int from, int to){
         throwIfCategoryDoesNotExist(categoryId);
         throwIfInvalidRangeDetected(from, to);
-        String userTier = getUserTier();
-        int maxIdx = boardRepository.getBoardMaxIdxByCategory(userTier, categoryId);
+        int maxIdx = boardRepository.getBoardMaxIdxByCategory(categoryId);
         to = adjustEndIdx(from, to, maxIdx);
-        return boardRepository.inquiryAllBoardByCategory(userTier, categoryId, from, to);
+        return boardRepository.inquiryAllBoardByCategory(categoryId, from, to);
     }
 
     @Override
     public List<BoardDto> searchBoardByTitle(String keyword, int from, int to){
         throwIfInvalidRangeDetected(from, to);
-        String userTier = getUserTier();
-        int maxIdx = boardRepository.getSearchMaxIdx(userTier, keyword);
+        int maxIdx = boardRepository.getSearchMaxIdx(keyword);
         to = adjustEndIdx(from, to, maxIdx);
-        return boardRepository.searchByTitle(userTier, keyword, from, to);
+        return boardRepository.searchByTitle(keyword, from, to);
     }
 
     @Override
     public List<BoardDto> searchBoardByContent(String keyword, int from, int to){
         throwIfInvalidRangeDetected(from, to);
-        String userTier = getUserTier();
-        int maxIdx = boardRepository.getSearchMaxIdx(userTier, keyword);
+        int maxIdx = boardRepository.getSearchMaxIdx(keyword);
         to = adjustEndIdx(from, to, maxIdx);
-        return boardRepository.searchByContent(userTier, keyword, from, to);
+        return boardRepository.searchByContent(keyword, from, to);
     }
 
     @Override
     public List<BoardDto> searchBoardByAuthorUserId(String keyword, int from, int to){
         throwIfInvalidRangeDetected(from, to);
-        String userTier = getUserTier();
-        int maxIdx = boardRepository.getSearchMaxIdx(userTier, keyword);
+        int maxIdx = boardRepository.getSearchMaxIdx(keyword);
         to = adjustEndIdx(from, to, maxIdx);
-        return boardRepository.searchByAuthorUserId(userTier, keyword, from, to);
+        return boardRepository.searchByAuthorUserId(keyword, from, to);
     }
 
     @Override
-    public BoardDto modifyBoard(BoardDto boardDto){
-        throwIfBoardDoesNotExist(boardDto.getId());
-        throwIfCategoryDoesNotExist(boardDto.getCategoryDto().getId());
+    public BoardDto modifyBoard(BoardDto boardDtoRequest){
+        throwIfBoardDoesNotExist(boardDtoRequest.getId());
+        throwIfCategoryDoesNotExist(boardDtoRequest.getCategoryId());
+        BoardDto boardDto = boardRepository.inquiryBoardById(boardDtoRequest.getId());
+        setBoardDto(boardDto, boardDtoRequest);
+        deleteFilePath(boardDto.getFileUrls(), boardDtoRequest.getFileUrls());
+        deleteFilePath(boardDto.getImageUrls(), boardDtoRequest.getFileUrls());
         return boardRepository.modifyBoard(boardDto);
+    }
+
+    private BoardDto setBoardDto(BoardDto boardDto, BoardDto boardDtoRequest){
+        boardDto.setCategoryId(boardDtoRequest.getCategoryId());
+        boardDto.setTitle(boardDtoRequest.getTitle());
+        boardDto.setContent(boardDtoRequest.getContent());
+        boardDto.setLastModifiedAt(LocalDateTime.now());
+        return boardDto;
+    }
+
+    private List<String> deleteFilePath(List<String> beforeFilePaths, List<String> requestFilePaths){
+        for (String requestFilePath : requestFilePaths){
+            if (beforeFilePaths.contains(requestFilePath)){
+                beforeFilePaths.remove(requestFilePath);
+            }
+        }
+        return beforeFilePaths;
     }
 
     @Override

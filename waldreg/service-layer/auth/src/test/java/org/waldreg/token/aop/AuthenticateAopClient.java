@@ -1,6 +1,7 @@
 package org.waldreg.token.aop;
 
 import org.waldreg.token.aop.annotation.Authenticating;
+import org.waldreg.token.aop.annotation.BoardIdAuthenticating;
 import org.waldreg.token.aop.annotation.HeaderPasswordAuthenticating;
 import org.waldreg.token.aop.annotation.IdAuthenticating;
 import org.waldreg.token.aop.annotation.UserIdAuthenticating;
@@ -32,5 +33,11 @@ public interface AuthenticateAopClient{
 
     @IdAuthenticating(fail = AuthFailBehavior.PASS)
     boolean authenticateByIdAndReturnParam(int id, AuthenticateVerifyState state);
+
+    @BoardIdAuthenticating
+    void authenticateByBoardId(int boardId);
+
+    @BoardIdAuthenticating(fail = AuthFailBehavior.PASS)
+    boolean authenticateByBoardIdAndReturnParam(int boardId, AuthenticateVerifyState state);
 
 }

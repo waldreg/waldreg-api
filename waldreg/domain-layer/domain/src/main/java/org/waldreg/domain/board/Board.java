@@ -5,20 +5,17 @@ import java.util.ArrayList;
 import java.util.List;
 import org.waldreg.domain.board.comment.Comment;
 import org.waldreg.domain.board.reaction.Reaction;
-import org.waldreg.domain.category.Category;
-import org.waldreg.domain.tier.MemberTier;
 import org.waldreg.domain.user.User;
 
 public final class Board{
 
     private int id;
     private final String title;
-    private final Category category;
+    private final int categoryId;
     private final String content;
     private User user;
     private final LocalDateTime createdAt;
     private final LocalDateTime lastModifiedAt;
-    private final MemberTier memberTier;
     private final List<String> imagePathList;
     private final List<String> filePathList;
     private final Reaction reactions;
@@ -32,12 +29,11 @@ public final class Board{
     private Board(Builder builder){
         this.id = builder.id;
         this.title = builder.title;
-        this.category = builder.category;
+        this.categoryId = builder.categoryId;
         this.content = builder.content;
         this.user = builder.user;
         this.createdAt = builder.createdAt;
         this.lastModifiedAt = builder.lastModifiedAt;
-        this.memberTier = builder.memberTier;
         this.imagePathList = builder.imagePathList;
         this.filePathList = builder.filePathList;
         this.reactions = builder.reactions;
@@ -59,8 +55,8 @@ public final class Board{
         return title;
     }
 
-    public Category getCategory(){
-        return category;
+    public int getCategoryId(){
+        return categoryId;
     }
 
     public String getContent(){
@@ -79,10 +75,6 @@ public final class Board{
 
     public LocalDateTime getLastModifiedAt(){
         return lastModifiedAt;
-    }
-
-    public MemberTier getMemberTier(){
-        return memberTier;
     }
 
     public List<String> getImagePathList(){
@@ -108,12 +100,11 @@ public final class Board{
 
         private int id;
         private String title;
-        private Category category;
+        private int categoryId;
         private String content;
         private User user;
         private final LocalDateTime createdAt;
         private LocalDateTime lastModifiedAt;
-        private MemberTier memberTier;
         private List<String> imagePathList;
         private List<String> filePathList;
         private Reaction reactions;
@@ -142,8 +133,8 @@ public final class Board{
             return this;
         }
 
-        public Builder category(Category category){
-            this.category = category;
+        public Builder categoryId(int categoryId){
+            this.categoryId = categoryId;
             return this;
         }
 
@@ -162,10 +153,6 @@ public final class Board{
             return this;
         }
 
-        public Builder memberTier(MemberTier memberTier){
-            this.memberTier = memberTier;
-            return this;
-        }
 
         public Builder imagePathList(List<String> imagePathList){
             this.imagePathList = imagePathList;

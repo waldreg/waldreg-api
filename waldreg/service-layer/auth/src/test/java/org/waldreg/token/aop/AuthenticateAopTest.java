@@ -51,6 +51,7 @@ public class AuthenticateAopTest{
         Mockito.when(httpServletRequest.getHeader("Password")).thenReturn(userPassword);
         Mockito.when(tokenAuthenticator.authenticate(Mockito.anyString())).thenReturn(id);
         Mockito.when(authRepository.findUserById(id)).thenReturn(tokenUserDto);
+        Mockito.when(authRepository.findUserByBoardId(id)).thenReturn(tokenUserDto);
     }
 
     @Test
@@ -172,6 +173,34 @@ public class AuthenticateAopTest{
 
         // when
         boolean result = client.authenticateByIdAndReturnParam(id, null);
+
+        // then
+        Assertions.assertTrue(result);
+    }
+
+    @Test
+    @DisplayName("BoardId로 인증 성공 테스트")
+    public void AUTHENTICATE_BY_BOARD_ID_SUCCESS_TEST(){
+        // given
+        AspectJProxyFactory aspectJProxyFactory = new AspectJProxyFactory(authenticateAopClient);
+        aspectJProxyFactory.addAspect(authenticateAop);
+        AuthenticateAopClient client = aspectJProxyFactory.getProxy();
+
+        // when & then
+        Assertions.assertDoesNotThrow(() -> client.authenticateByBoardId(id));
+    }
+
+    @Test
+    @DisplayName("BoardId로 인증 성공 테스트 - 파라미터 전달 테스트")
+    public void AUTHENTICATE_BY_BOARD_ID_SUCCESS_PASS_AUTHENTICATE_VERIFY_STATE_TEST(){
+        // given
+        Mockito.when(authenticateAopClient.authenticateByBoardIdAndReturnParam(Mockito.anyInt(), Mockito.any(AuthenticateVerifyState.class))).thenReturn(true);
+        AspectJProxyFactory aspectJProxyFactory = new AspectJProxyFactory(authenticateAopClient);
+        aspectJProxyFactory.addAspect(authenticateAop);
+        AuthenticateAopClient client = aspectJProxyFactory.getProxy();
+
+        // when
+        boolean result = client.authenticateByBoardIdAndReturnParam(id, null);
 
         // then
         Assertions.assertTrue(result);

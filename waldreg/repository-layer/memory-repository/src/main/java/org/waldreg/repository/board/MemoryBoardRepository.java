@@ -35,31 +35,32 @@ public class MemoryBoardRepository implements BoardRepository{
 
     @Override
     public BoardDto inquiryBoardById(int boardId){
-        return null;
+        Board board = memoryBoardStorage.inquiryBoardById(boardId);
+        return boardMapper.boardDomainToBoardDto(board);
     }
 
     @Override
-    public Boolean isExistBoard(int id){
-        return null;
+    public boolean isExistBoard(int id){
+        return memoryBoardStorage.inquiryBoardById(id) != null;
     }
 
     @Override
-    public int getBoardMaxIdx(String userTier){
+    public int getBoardMaxIdx(){
         return 0;
     }
 
     @Override
-    public List<BoardDto> inquiryAllBoard(String userTier, int from, int to){
+    public List<BoardDto> inquiryAllBoard(int from, int to){
         return null;
     }
 
     @Override
-    public List<BoardDto> inquiryAllBoardByCategory(String userTier, int categoryId, int from, int to){
+    public List<BoardDto> inquiryAllBoardByCategory(int categoryId, int from, int to){
         return null;
     }
 
     @Override
-    public int getBoardMaxIdxByCategory(String userTier, int categoryId){
+    public int getBoardMaxIdxByCategory(int categoryId){
         return 0;
     }
 
@@ -74,22 +75,22 @@ public class MemoryBoardRepository implements BoardRepository{
     }
 
     @Override
-    public List<BoardDto> searchByTitle(String userTier, String keyword, int from, int to){
+    public List<BoardDto> searchByTitle(String keyword, int from, int to){
         return null;
     }
 
     @Override
-    public List<BoardDto> searchByContent(String userTier, String keyword, int from, int to){
+    public List<BoardDto> searchByContent(String keyword, int from, int to){
         return null;
     }
 
     @Override
-    public List<BoardDto> searchByAuthorUserId(String userTier, String keyword, int from, int to){
+    public List<BoardDto> searchByAuthorUserId(String keyword, int from, int to){
         return null;
     }
 
     @Override
-    public int getSearchMaxIdx(String userTier, String keyword){
+    public int getSearchMaxIdx(String keyword){
         return 0;
     }
 

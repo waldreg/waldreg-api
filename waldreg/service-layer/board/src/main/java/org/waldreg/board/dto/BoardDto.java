@@ -7,14 +7,13 @@ public class BoardDto{
 
     private int id;
     private String title;
-    private CategoryDto categoryDto;
+    private int categoryId;
     private String content;
     private UserDto userDto;
     private LocalDateTime createdAt;
     private LocalDateTime lastModifiedAt;
     private List<String> fileUrls;
     private List<String> imageUrls;
-    private BoardServiceMemberTier boardServiceMemberTier;
     private ReactionDto reactions;
     private List<CommentDto> commentList;
     private int views;
@@ -24,12 +23,11 @@ public class BoardDto{
     private BoardDto(Builder builder){
         this.id = builder.id;
         this.title = builder.title;
-        this.categoryDto = builder.categoryDto;
+        this.categoryId = builder.categoryId;
         this.content = builder.content;
         this.userDto = builder.userDto;
         this.createdAt = builder.createdAt;
         this.lastModifiedAt = builder.lastModifiedAt;
-        this.boardServiceMemberTier = builder.boardServiceMemberTier;
         this.imageUrls = builder.imageUrls;
         this.fileUrls = builder.fileUrls;
         this.reactions = builder.reactions;
@@ -49,8 +47,8 @@ public class BoardDto{
         return title;
     }
 
-    public CategoryDto getCategoryDto(){
-        return categoryDto;
+    public int getCategoryId(){
+        return categoryId;
     }
 
     public String getContent(){
@@ -73,14 +71,6 @@ public class BoardDto{
         return fileUrls;
     }
 
-    public BoardServiceMemberTier getMemberTier(){
-        return boardServiceMemberTier;
-    }
-
-    public void setBoardServiceMemberTier(BoardServiceMemberTier boardServiceMemberTier){
-        this.boardServiceMemberTier = boardServiceMemberTier;
-    }
-
     public List<String> getImageUrls(){
         return imageUrls;
     }
@@ -97,16 +87,43 @@ public class BoardDto{
         return views;
     }
 
+    public void setTitle(String title){
+        this.title = title;
+    }
+
+    public void setCategoryId(int categoryId){
+        this.categoryId = categoryId;
+    }
+
+    public void setContent(String content){
+        this.content = content;
+    }
+
+    public void setLastModifiedAt(LocalDateTime lastModifiedAt){
+        this.lastModifiedAt = lastModifiedAt;
+    }
+
+    public void setFileUrls(List<String> fileUrls){
+        this.fileUrls = fileUrls;
+    }
+
+    public void setImageUrls(List<String> imageUrls){
+        this.imageUrls = imageUrls;
+    }
+
+    public void setViews(int views){
+        this.views = views;
+    }
+
     public static final class Builder{
 
         private int id;
         private String title;
-        private CategoryDto categoryDto;
+        private int categoryId;
         private String content;
         private UserDto userDto;
         private LocalDateTime createdAt;
         private LocalDateTime lastModifiedAt;
-        private BoardServiceMemberTier boardServiceMemberTier;
         private List<String> fileUrls;
         private List<String> imageUrls;
         private ReactionDto reactions;
@@ -125,8 +142,8 @@ public class BoardDto{
             return this;
         }
 
-        public Builder categoryDto(CategoryDto categoryDto){
-            this.categoryDto = categoryDto;
+        public Builder categoryId(int categoryId){
+            this.categoryId = categoryId;
             return this;
         }
 
@@ -147,11 +164,6 @@ public class BoardDto{
 
         public Builder lastModifiedAt(LocalDateTime lastModifiedAt){
             this.lastModifiedAt = lastModifiedAt;
-            return this;
-        }
-
-        public Builder boardServiceMemberTier(BoardServiceMemberTier boardServiceMemberTier){
-            this.boardServiceMemberTier = boardServiceMemberTier;
             return this;
         }
 
