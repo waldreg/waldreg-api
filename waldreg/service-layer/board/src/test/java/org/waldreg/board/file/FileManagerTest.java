@@ -56,7 +56,7 @@ public class FileManagerTest{
 
         // when
         fileManager.saveFile(multipartFile);
-        String name = fileData.getSavedFileName().get();
+        String name = fileData.getSavedFileName().get(0).get();
         deleteQueue.add(name);
 
         // then
@@ -74,7 +74,7 @@ public class FileManagerTest{
 
         // when
         fileManager.saveFile(multipartFile);
-        String name = fileData.getSavedFileName().get();
+        String name = fileData.getSavedFileName().get(0).get();
         deleteQueue.add(name);
 
         // then
@@ -92,7 +92,7 @@ public class FileManagerTest{
 
         // when
         fileManager.saveFile(multipartFile);
-        String name = fileData.getSavedFileName().get();
+        String name = fileData.getSavedFileName().get(0).get();
         deleteQueue.add(name);
 
         // then

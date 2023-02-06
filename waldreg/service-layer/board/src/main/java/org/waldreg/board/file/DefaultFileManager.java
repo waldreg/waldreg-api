@@ -39,7 +39,7 @@ public class DefaultFileManager implements FileManager{
     @Override
     public void saveFile(MultipartFile multipartFile){
         Callable<String> callable = createCallable(multipartFile);
-        fileData.setFileName(executorService.submit(callable));
+        fileData.addFileName(executorService.submit(callable));
     }
 
     private Callable<String> createCallable(MultipartFile multipartFile){
