@@ -4,7 +4,7 @@ import org.waldreg.board.dto.CommentDto;
 
 public interface CommentInBoardRepository{
 
-    void addComment(CommentDto commentDto);
+    void addCommentInBoardCommentList(CommentDto commentDto);
 
     boolean isExistBoard(int id);
 
