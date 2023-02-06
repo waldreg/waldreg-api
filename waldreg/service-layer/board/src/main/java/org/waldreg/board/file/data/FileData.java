@@ -1,5 +1,7 @@
 package org.waldreg.board.file.data;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.concurrent.Future;
 import org.springframework.context.annotation.Scope;
 import org.springframework.context.annotation.ScopedProxyMode;
@@ -11,11 +13,11 @@ import org.waldreg.board.board.file.FileInfoGettable;
 @Scope(value = WebApplicationContext.SCOPE_REQUEST, proxyMode = ScopedProxyMode.TARGET_CLASS)
 public class FileData implements FileInfoGettable{
 
-    private Future<String> fileName;
+    private List<Future<String>> fileName = new ArrayList<>();
     private Future<Boolean> isDeleted;
 
     @Override
-    public Future<String> getSavedFileName(){
+    public List<Future<String>> getSavedFileName(){
         return fileName;
     }
 
@@ -24,8 +26,8 @@ public class FileData implements FileInfoGettable{
         return isDeleted;
     }
 
-    public void setFileName(Future<String> fileName){
-        this.fileName = fileName;
+    public void addFileName(Future<String> fileName){
+        this.fileName.add(fileName);
     }
 
     public void setIsDeleted(Future<Boolean> isDeleted){
