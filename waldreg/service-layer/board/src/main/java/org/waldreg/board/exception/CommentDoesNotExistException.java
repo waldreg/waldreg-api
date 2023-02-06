@@ -1,4 +1,4 @@
-package org.waldreg.board.comment.exception;
+package org.waldreg.board.exception;
 
 public class CommentDoesNotExistException extends RuntimeException{
 

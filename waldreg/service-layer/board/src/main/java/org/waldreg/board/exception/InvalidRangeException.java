@@ -1,4 +1,4 @@
-package org.waldreg.board.board.exception;
+package org.waldreg.board.exception;
 
 public class InvalidRangeException extends RuntimeException{
 

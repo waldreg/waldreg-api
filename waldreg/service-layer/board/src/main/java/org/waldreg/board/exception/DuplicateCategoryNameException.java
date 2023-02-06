@@ -1,4 +1,4 @@
-package org.waldreg.board.category.exception;
+package org.waldreg.board.exception;
 
 public class DuplicateCategoryNameException extends RuntimeException{
 

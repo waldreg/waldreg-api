@@ -1,4 +1,4 @@
-package org.waldreg.board.reaction.exception;
+package org.waldreg.board.exception;
 
 public class BoardDoesNotExistException extends RuntimeException{
 

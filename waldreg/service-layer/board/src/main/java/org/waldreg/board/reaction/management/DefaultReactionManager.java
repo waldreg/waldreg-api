@@ -7,8 +7,8 @@ import org.waldreg.board.dto.BoardServiceReactionType;
 import org.waldreg.board.dto.ReactionDto;
 import org.waldreg.board.dto.ReactionRequestDto;
 import org.waldreg.board.dto.UserDto;
-import org.waldreg.board.reaction.exception.BoardDoesNotExistException;
-import org.waldreg.board.reaction.exception.ReactionTypeDoesNotExistException;
+import org.waldreg.board.exception.BoardDoesNotExistException;
+import org.waldreg.board.exception.ReactionTypeDoesNotExistException;
 import org.waldreg.board.reaction.spi.ReactionInBoardRepository;
 import org.waldreg.board.reaction.spi.UserRepository;
 
