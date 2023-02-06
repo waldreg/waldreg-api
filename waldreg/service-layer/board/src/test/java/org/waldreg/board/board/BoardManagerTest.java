@@ -3,7 +3,9 @@ package org.waldreg.board.board;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.UUID;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
@@ -63,22 +65,21 @@ public class BoardManagerTest{
 
         int id = 1;
         int categoryId = 1;
-        List<UUID> imageUuidList = new ArrayList<>();
-        imageUuidList.add(UUID.randomUUID());
-        List<UUID> fileUuidList = new ArrayList<>();
-        fileUuidList.add(UUID.randomUUID());
+        ExecutorService executor
+                = Executors.newSingleThreadExecutor();
 
-        String fileName = "fileName";
+        Future<String> fileName = executor.submit(()-> "asf");
+        List<Future<String>> fileNameList = new ArrayList<>();
+        fileNameList.add(fileName);
+
         Mockito.when(categoryExistChecker.isExistCategory(Mockito.anyInt())).thenReturn(true);
-        Mockito.when(fileInfoGettable.getSavedFileName(Mockito.any())).thenReturn(fileName);
+        Mockito.when(fileInfoGettable.getSavedFileNameList()).thenReturn(fileNameList);
 
         BoardRequest boardRequest = BoardRequest.builder()
                 .authorId(id)
                 .title(title)
                 .content(content)
                 .categoryId(categoryId)
-                .imageUuidList(imageUuidList)
-                .fileUuidList(fileUuidList)
                 .build();
 
         //when&then
@@ -442,16 +443,11 @@ public class BoardManagerTest{
         String title = "title";
         String content = "content";
         int id1 = 1;
-        int id2 = 2;
         int categoryId1 = 1;
-        int categoryId2 = 2;
 
         UserDto userDto1 = UserDto.builder()
                 .id(id1)
                 .userId("Fixtar")
-                .build();
-        UserDto userDto2 = UserDto.builder()
-                .id(id2)
                 .build();
 
         BoardDto boardDto1 = BoardDto.builder()
@@ -461,15 +457,6 @@ public class BoardManagerTest{
                 .title(title)
                 .content(content)
                 .build();
-        BoardDto boardDto2 = BoardDto.builder()
-                .id(1)
-                .userDto(userDto2)
-                .categoryId(categoryId2)
-                .title("title2")
-                .content("content2")
-                .build();
-        List<BoardDto> resultRepo = new ArrayList<>();
-        resultRepo.add(boardDto1);
 
         //when
         String searchKeyword = "Fixtar";
@@ -526,27 +513,32 @@ public class BoardManagerTest{
 
         String modifyTitle = "modifyTitle";
         String modifyContent = "modifyContent";
-        List<UUID> imageUuidList = new ArrayList<>();
-        imageUuidList.add(UUID.randomUUID());
-        List<UUID> fileUuidList = new ArrayList<>();
-        fileUuidList.add(UUID.randomUUID());
-        List<UUID> deleteUuidList = new ArrayList<>();
-        deleteUuidList.add(UUID.randomUUID());
-
+        List<String> deleteFileNameList = new ArrayList<>();
+        deleteFileNameList.add("delete");
         BoardRequest modifiedBoardRequestDto = BoardRequest.builder()
                 .id(boardDto.getId())
                 .authorId(boardDto.getUserDto().getId())
                 .title(modifyTitle)
                 .content(modifyContent)
                 .categoryId(boardDto.getCategoryId())
-                .imageUuidList(imageUuidList)
-                .fileUuidList(fileUuidList)
-                .deleteFileNameList(deleteUuidList)
+                .deleteFileNameList(deleteFileNameList)
                 .build();
+
+
+        ExecutorService executor
+                = Executors.newSingleThreadExecutor();
+
+        Future<String> fileName = executor.submit(()-> "asf");
+        List<Future<String>> fileNameList = new ArrayList<>();
+        fileNameList.add(fileName);
+
+        Future<Boolean> isFileDeleted = executor.submit(()->true);
 
         Mockito.when(categoryExistChecker.isExistCategory(Mockito.anyInt())).thenReturn(true);
         Mockito.when(boardRepository.isExistBoard(Mockito.anyInt())).thenReturn(true);
         Mockito.when(boardRepository.inquiryBoardById(Mockito.anyInt())).thenReturn(boardDto);
+        Mockito.when(fileInfoGettable.getSavedFileNameList()).thenReturn(fileNameList);
+        Mockito.when(fileInfoGettable.isFileDeleteSuccess()).thenReturn(isFileDeleted);
         //when
         //then
         Assertions.assertDoesNotThrow(() -> boardManager.modifyBoard(modifiedBoardRequestDto));
@@ -580,22 +572,15 @@ public class BoardManagerTest{
 
         String modifyTitle = "modifyTitle";
         String modifyContent = "modifyContent";
-        List<UUID> imageUuidList = new ArrayList<>();
-        imageUuidList.add(UUID.randomUUID());
-        List<UUID> fileUuidList = new ArrayList<>();
-        fileUuidList.add(UUID.randomUUID());
-        List<UUID> deleteUuidList = new ArrayList<>();
-        deleteUuidList.add(UUID.randomUUID());
-
+        List<String> deleteFileNameList = new ArrayList<>();
+        deleteFileNameList.add("delete");
         BoardRequest modifiedBoardRequestDto = BoardRequest.builder()
                 .id(boardDto.getId())
                 .authorId(boardDto.getUserDto().getId())
                 .title(modifyTitle)
                 .content(modifyContent)
                 .categoryId(boardDto.getCategoryId())
-                .imageUuidList(imageUuidList)
-                .fileUuidList(fileUuidList)
-                .deleteFileNameList(deleteUuidList)
+                .deleteFileNameList(deleteFileNameList)
                 .build();
 
         Mockito.when(categoryExistChecker.isExistCategory(Mockito.anyInt())).thenReturn(false);
