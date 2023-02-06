@@ -13,21 +13,28 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
+import org.springframework.test.context.web.WebAppConfiguration;
 import org.springframework.web.multipart.MultipartFile;
+import org.waldreg.board.file.data.FileData;
 
 @ExtendWith(SpringExtension.class)
 @TestPropertySource("classpath:application.properties")
-@ContextConfiguration(classes = DefaultFileManager.class)
+@ContextConfiguration(classes = {DefaultFileManager.class, FileData.class})
+@WebAppConfiguration
 public class FileManagerTest{
 
     @Autowired
     private FileManager fileManager;
 
     private final Queue<String> deleteQueue = new LinkedList<>();
+
+    @Autowired
+    private FileData fileData;
 
     @BeforeEach
     @AfterEach
@@ -48,73 +55,48 @@ public class FileManagerTest{
                 new FileInputStream("./src/test/java/org/waldreg/board/file/EGG.png"));
 
         // when
-        Future<String> future = fileManager.saveFile(multipartFile);
-        String id = future.get();
-        deleteQueue.add(id);
+        fileManager.saveFile(multipartFile);
+        String name = fileData.getSavedFileName().get();
+        deleteQueue.add(name);
 
         // then
-        Assertions.assertNotNull(id);
-    }
-
-    @Test
-    @DisplayName("파일 이름 변경 테스트")
-    public void RENAME_FILE_SUCCESS_TEST() throws Exception{
-        // given
-        String id = "1.png";
-        MultipartFile multipartFile = new MockMultipartFile("image",
-                "EGG.png",
-                "image/png",
-                new FileInputStream("./src/test/java/org/waldreg/board/file/EGG.png"));
-
-        // when
-        Future<String> future = fileManager.saveFile(multipartFile);
-        Future<Boolean> result = fileManager.renameFile(future.get(), id);
-        deleteQueue.add(id);
-
-        // then
-        Assertions.assertTrue(result.get());
+        Assertions.assertNotNull(name);
     }
 
     @Test
     @DisplayName("파일 조회 테스트 - byte[]")
     public void READ_FILE_SUCCESS_BYTE_TEST() throws Exception{
         // given
-        String id = "1.png";
         MultipartFile multipartFile = new MockMultipartFile("image",
                 "EGG.png",
                 "image/png",
                 new FileInputStream("./src/test/java/org/waldreg/board/file/EGG.png"));
 
         // when
-        Future<String> future = fileManager.saveFile(multipartFile);
-        Future<Boolean> result = fileManager.renameFile(future.get(), id);
-        deleteQueue.add(id);
-
-        result.get();
+        fileManager.saveFile(multipartFile);
+        String name = fileData.getSavedFileName().get();
+        deleteQueue.add(name);
 
         // then
-        Assertions.assertDoesNotThrow(() -> fileManager.getFileIntoByteArray(id));
+        Assertions.assertDoesNotThrow(() -> fileManager.getFileIntoByteArray(name));
     }
 
     @Test
     @DisplayName("파일 조회 테스트 - File")
     public void READ_FILE_SUCCESS_FILE_TEST() throws Exception{
         // given
-        String id = "1.png";
         MultipartFile multipartFile = new MockMultipartFile("image",
                 "EGG.png",
                 "image/png",
                 new FileInputStream("./src/test/java/org/waldreg/board/file/EGG.png"));
 
         // when
-        Future<String> future = fileManager.saveFile(multipartFile);
-        Future<Boolean> result = fileManager.renameFile(future.get(), id);
-        deleteQueue.add(id);
-
-        result.get();
+        fileManager.saveFile(multipartFile);
+        String name = fileData.getSavedFileName().get();
+        deleteQueue.add(name);
 
         // then
-        Assertions.assertDoesNotThrow(() -> fileManager.getFileIntoFile(id));
+        Assertions.assertDoesNotThrow(() -> fileManager.getFileIntoFile(name));
     }
 
 }

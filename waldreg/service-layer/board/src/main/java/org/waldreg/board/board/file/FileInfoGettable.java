@@ -1,9 +1,11 @@
 package org.waldreg.board.board.file;
 
+import java.util.concurrent.Future;
+
 public interface FileInfoGettable{
 
-    String getSavedFileName(int id);
+    Future<String> getSavedFileName();
 
-    boolean isFileDeleteSuccess(int id);
+    Future<Boolean> isFileDeleteSuccess();
 
 }
