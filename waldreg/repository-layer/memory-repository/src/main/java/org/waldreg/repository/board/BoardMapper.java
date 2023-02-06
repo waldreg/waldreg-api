@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.waldreg.board.dto.BoardDto;
 import org.waldreg.board.dto.BoardServiceReactionType;
@@ -19,6 +20,11 @@ import org.waldreg.repository.category.BoardInCategoryMapper;
 
 @Service
 public class BoardMapper implements BoardInCategoryMapper{
+
+    private final CommentInBoardMapper commentInBoardMapper;
+
+    @Autowired
+    public BoardMapper(CommentInBoardMapper commentInBoardMapper){this.commentInBoardMapper = commentInBoardMapper;}
 
     @Override
     public List<Board> boardDtoListToBoardDomainList(List<BoardDto> boardDtoList){
@@ -74,9 +80,11 @@ public class BoardMapper implements BoardInCategoryMapper{
                 .reactionMap(reactionTypeListMap)
                 .build();
     }
+
     private ReactionType ReactionTypeToBoardServiceReactionType(BoardServiceReactionType boardServiceReactionType){
         return ReactionType.valueOf(boardServiceReactionType.name());
     }
+
     private List<User> userDtoListToUserDomainList(List<UserDto> userDtoList){
         List<User> userList = new ArrayList<>();
         for (UserDto userDto : userDtoList){
@@ -88,12 +96,7 @@ public class BoardMapper implements BoardInCategoryMapper{
     private List<Comment> commentDtoListToCommentDomainList(List<CommentDto> commentDtoList){
         List<Comment> commentList = new ArrayList<>();
         for (CommentDto commentDto : commentDtoList){
-            commentList.add(Comment.builder()
-                    .id(commentDto.getId())
-                    .user(userDtoToUserDomain(commentDto.getUserDto()))
-                    .lastModifiedAt(commentDto.getLastModifiedAt())
-                    .content(commentDto.getContent())
-                    .build());
+            commentList.add(commentInBoardMapper.commentDtoToCommentDomain(commentDto));
         }
         return commentList;
     }
@@ -141,9 +144,11 @@ public class BoardMapper implements BoardInCategoryMapper{
                 .reactionMap(reactionTypeListMap)
                 .build();
     }
+
     private BoardServiceReactionType boardServiceReactionTypeToReactionType(ReactionType reactionType){
         return BoardServiceReactionType.valueOf(reactionType.name());
     }
+
     private List<UserDto> userDomainListToUserDtoList(List<User> userList){
         List<UserDto> userDtoList = new ArrayList<>();
         for (User user : userList){
@@ -155,13 +160,7 @@ public class BoardMapper implements BoardInCategoryMapper{
     private List<CommentDto> commentDomainListToCommentDtoList(List<Comment> commentList){
         List<CommentDto> commentDtoList = new ArrayList<>();
         for (Comment comment : commentList){
-            commentDtoList.add(CommentDto.builder()
-                    .id(comment.getId())
-                    .userDto(userDomainToUserDto(comment.getUser()))
-                    .createdAt(comment.getCreatedAt())
-                    .lastModifiedAt(comment.getLastModifiedAt())
-                    .content(comment.getContent())
-                    .build());
+            commentDtoList.add(commentInBoardMapper.commentDomainToCommentDto(comment));
         }
         return commentDtoList;
     }

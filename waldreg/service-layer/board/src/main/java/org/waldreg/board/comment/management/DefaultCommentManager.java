@@ -29,7 +29,7 @@ public class DefaultCommentManager implements CommentManager{
         throwIfBoardDoesNotExist(commentDto.getBoardId());
         throwIfContentOverFlowThousand(commentDto.getContent());
         CommentDto storedCommentDto = commentRepository.createComment(commentDto);
-        commentInBoardRepository.addComment(storedCommentDto);
+        commentInBoardRepository.addCommentInBoardCommentList(storedCommentDto);
     }
 
     private void throwIfBoardDoesNotExist(int boardId){

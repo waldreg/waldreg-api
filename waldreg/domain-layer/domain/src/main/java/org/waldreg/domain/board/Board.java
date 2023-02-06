@@ -133,6 +133,10 @@ public final class Board{
         this.views = views;
     }
 
+    public void addComment(Comment comment){
+        this.commentList.add(comment);
+    }
+
     public static final class Builder{
 
         private int id;

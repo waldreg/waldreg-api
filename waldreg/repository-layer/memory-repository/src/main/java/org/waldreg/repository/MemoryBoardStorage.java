@@ -7,6 +7,7 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicInteger;
 import org.springframework.stereotype.Repository;
 import org.waldreg.domain.board.Board;
+import org.waldreg.domain.board.comment.Comment;
 
 @Repository
 public class MemoryBoardStorage{
@@ -154,6 +155,11 @@ public class MemoryBoardStorage{
 
     private boolean isKeywordContained(String word, String keyword){
         return word.contains(keyword);
+    }
+
+    public void addCommentInBoardCommentList(Comment comment){
+        int boardId = comment.getBoardId();
+        storage.get(boardId).addComment(comment);
     }
 
 }
