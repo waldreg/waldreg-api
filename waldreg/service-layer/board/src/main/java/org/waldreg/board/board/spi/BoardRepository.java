@@ -5,7 +5,7 @@ import org.waldreg.board.dto.BoardDto;
 
 public interface BoardRepository{
 
-    void createBoard(BoardDto boardDto);
+    BoardDto createBoard(BoardDto boardDto);
 
     BoardDto inquiryBoardById(int boardId);
 

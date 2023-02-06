@@ -107,7 +107,21 @@ public class BoardRepositoryTest{
                 .build();
 
         //when
-        Assertions.assertDoesNotThrow(() -> boardRepository.createBoard(boardRequest));
+        BoardDto result = boardRepository.createBoard(boardRequest);
+
+        //then
+        Assertions.assertAll(
+                () -> Assertions.assertEquals(boardRequest.getTitle(), result.getTitle()),
+                () -> Assertions.assertEquals(boardRequest.getContent(), result.getContent()),
+                () -> Assertions.assertEquals(boardRequest.getUserDto().getUserId(), result.getUserDto().getUserId()),
+                () -> Assertions.assertEquals(boardRequest.getUserDto().getName(), result.getUserDto().getName()),
+                () -> Assertions.assertEquals(boardRequest.getCategoryId(), result.getCategoryId()),
+                () -> Assertions.assertNotNull(result.getCreatedAt()),
+                () -> Assertions.assertEquals(boardRequest.getFileUrls().get(0), result.getFileUrls().get(0)),
+                () -> Assertions.assertEquals(boardRequest.getImageUrls().get(0), result.getImageUrls().get(0)),
+                () -> Assertions.assertNotNull(result.getLastModifiedAt()),
+                () -> Assertions.assertTrue(result.getViews() == 0)
+        );
     }
 
     @Test
@@ -157,9 +171,8 @@ public class BoardRepositoryTest{
                 .build();
 
         //when
-        boardRepository.createBoard(boardRequest);
-        List<BoardDto> boardDtoList = boardRepository.searchByTitle(title, 1, 1);
-        BoardDto result = boardRepository.inquiryBoardById(boardDtoList.get(0).getId());
+        BoardDto boardDto = boardRepository.createBoard(boardRequest);
+        BoardDto result = boardRepository.inquiryBoardById(boardDto.getId());
 
         //then
         Assertions.assertAll(
@@ -710,10 +723,9 @@ public class BoardRepositoryTest{
                 .build();
 
         //when
-        boardRepository.createBoard(boardRequest);
-        List<BoardDto> boardDtoList = boardRepository.searchByTitle(title, 1, 1);
-        boardRepository.deleteBoard(boardDtoList.get(0).getId());
-        boolean result = boardRepository.isExistBoard(boardDtoList.get(0).getId());
+        BoardDto boardDto = boardRepository.createBoard(boardRequest);
+        boardRepository.deleteBoard(boardDto.getId());
+        boolean result = boardRepository.isExistBoard(boardDto.getId());
 
         //then
         Assertions.assertFalse(result);
@@ -765,8 +777,7 @@ public class BoardRepositoryTest{
         String modifiedContent = "hihihi";
 
         //when
-        boardRepository.createBoard(boardRequest);
-        BoardDto boardDto = boardRepository.searchByTitle(title, 1, 1).get(0);
+        BoardDto boardDto = boardRepository.createBoard(boardRequest);
         BoardDto modifiedBoardRequest = BoardDto.builder()
                 .id(boardDto.getId())
                 .title(modifiedTitle)

@@ -1,5 +1,6 @@
 package org.waldreg.repository.category;
 
+import java.util.ArrayList;
 import java.util.List;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Assertions;
@@ -12,7 +13,9 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.waldreg.board.board.spi.BoardRepository;
 import org.waldreg.board.category.spi.CategoryRepository;
+import org.waldreg.board.dto.BoardDto;
 import org.waldreg.board.dto.CategoryDto;
+import org.waldreg.board.dto.UserDto;
 import org.waldreg.character.spi.CharacterRepository;
 import org.waldreg.repository.MemoryBoardStorage;
 import org.waldreg.repository.MemoryCategoryStorage;
@@ -113,11 +116,11 @@ public class CategoryRepositoryTest{
         Assertions.assertAll(
                 () -> Assertions.assertEquals(3, result.size()),
                 () -> Assertions.assertEquals(categoryDto.getCategoryName(), result.get(0).getCategoryName()),
-                () -> Assertions.assertEquals(categoryDto.getBoardDtoList(), result.get(0).getBoardDtoList()),
+                () -> Assertions.assertEquals(new ArrayList<>(), result.get(0).getBoardDtoList()),
                 () -> Assertions.assertEquals(categoryDto2.getCategoryName(), result.get(1).getCategoryName()),
-                () -> Assertions.assertEquals(categoryDto2.getBoardDtoList(), result.get(1).getBoardDtoList()),
+                () -> Assertions.assertEquals(new ArrayList<>(), result.get(1).getBoardDtoList()),
                 () -> Assertions.assertEquals(categoryDto3.getCategoryName(), result.get(2).getCategoryName()),
-                () -> Assertions.assertEquals(categoryDto3.getBoardDtoList(), result.get(2).getBoardDtoList())
+                () -> Assertions.assertEquals(new ArrayList<>(), result.get(0).getBoardDtoList())
         );
 
     }
@@ -137,7 +140,105 @@ public class CategoryRepositoryTest{
         categoryRepository.deleteCategory(categoryResponse.getId());
 
         //then
-        Assertions.assertFalse(()->categoryRepository.isExistCategory(categoryResponse.getId()));
+        Assertions.assertFalse(() -> categoryRepository.isExistCategory(categoryResponse.getId()));
+    }
+
+    @Test
+    @DisplayName("특정 카테고리 조회 성공 테스트")
+    public void INQUIRY_CATEGORY_BY_ID_SUCCESS_TEST(){
+        //given
+        String categoryName = "catecate";
+        CategoryDto categoryDto = CategoryDto.builder()
+                .categoryName(categoryName)
+                .build();
+        String categoryName2 = "catecatecate";
+        CategoryDto categoryDto2 = CategoryDto.builder()
+                .categoryName(categoryName2)
+                .build();
+        String categoryName3 = "catecatecatecate";
+        CategoryDto categoryDto3 = CategoryDto.builder()
+                .categoryName(categoryName3)
+                .build();
+
+        //when
+        categoryRepository.createCategory(categoryDto);
+        categoryRepository.createCategory(categoryDto2);
+        categoryRepository.createCategory(categoryDto3);
+        int categoryDtoId = categoryRepository.inquiryAllCategory().get(0).getId();
+        CategoryDto result = categoryRepository.inquiryCategoryById(categoryDtoId);
+
+        //then
+        Assertions.assertAll(
+                () -> Assertions.assertEquals(categoryDtoId, result.getId()),
+                () -> Assertions.assertEquals(categoryDto.getCategoryName(), result.getCategoryName()),
+                () -> Assertions.assertEquals(new ArrayList<>(), result.getBoardDtoList())
+        );
+    }
+
+    @Test
+    @DisplayName("카테고리 Board List에 Board 추가 성공 테스트")
+    public void ADD_BOARD_IN_CATEGORY_BOARD_LIST_SUCCESS_TEST(){
+        //given
+        UserDto userDto = UserDto.builder()
+                .id(1)
+                .userId("alcuk_id")
+                .name("alcuk")
+                .build();
+        CategoryDto categoryDto = CategoryDto.builder()
+                .categoryName("catecate")
+                .build();
+
+        //when
+        categoryRepository.createCategory(categoryDto);
+        int categoryDtoId = categoryRepository.inquiryAllCategory().get(0).getId();
+        BoardDto boardRequest = BoardDto.builder()
+                .title("bobo")
+                .userDto(userDto)
+                .content("contcont")
+                .categoryId(categoryDtoId)
+                .fileUrls(List.of())
+                .imageUrls(List.of())
+                .build();
+        BoardDto boardDto = boardRepository.createBoard(boardRequest);
+        categoryRepository.addBoardInCategoryBoardList(boardDto);
+        CategoryDto result = categoryRepository.inquiryCategoryById(categoryDtoId);
+
+        //then
+        Assertions.assertAll(
+                () -> Assertions.assertEquals(categoryDtoId, result.getId()),
+                () -> Assertions.assertEquals(1, result.getBoardDtoList().size()),
+                () -> Assertions.assertEquals(boardDto.getId(), result.getBoardDtoList().get(0).getId()),
+                () -> Assertions.assertEquals(categoryDto.getCategoryName(), result.getCategoryName())
+        );
+
+    }
+
+    @Test
+    @DisplayName("특정 카테고리 수정 성공 테스트")
+    public void MODIFY_CATEGORY_BY_ID_SUCCESS_TEST(){
+        //given
+        String categoryName = "catecate";
+        CategoryDto categoryDto = CategoryDto.builder()
+                .categoryName(categoryName)
+                .build();
+
+        //when
+        categoryRepository.createCategory(categoryDto);
+        int categoryDtoId = categoryRepository.inquiryAllCategory().get(0).getId();
+        String categoryName2 = "catecatecate";
+        CategoryDto categoryDto2 = CategoryDto.builder()
+                .id(categoryDtoId)
+                .categoryName(categoryName2)
+                .build();
+        categoryRepository.modifyCategory(categoryDto2);
+        CategoryDto result = categoryRepository.inquiryCategoryById(categoryDtoId);
+
+        //then
+        Assertions.assertAll(
+                () -> Assertions.assertEquals(categoryDtoId, result.getId()),
+                () -> Assertions.assertEquals(categoryDto2.getCategoryName(), result.getCategoryName()),
+                () -> Assertions.assertEquals(new ArrayList<>(), result.getBoardDtoList())
+        );
     }
 
 

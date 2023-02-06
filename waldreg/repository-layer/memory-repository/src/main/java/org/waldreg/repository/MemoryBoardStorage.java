@@ -21,9 +21,10 @@ public class MemoryBoardStorage{
         atomicInteger = new AtomicInteger(1);
     }
 
-    public void createBoard(Board board){
+    public Board createBoard(Board board){
         board.setId(atomicInteger.getAndIncrement());
         storage.put(board.getId(), board);
+        return board;
     }
 
     public Board inquiryBoardById(int id){

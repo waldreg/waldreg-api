@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.waldreg.board.dto.BoardDto;
 import org.waldreg.board.dto.CategoryDto;
+import org.waldreg.domain.board.Board;
 import org.waldreg.domain.category.Category;
 
 @Service
@@ -59,6 +60,10 @@ public class CategoryMapper{
                 .categoryName(category.getCategoryName())
                 .boardDtoList(boardInCategoryMapper.boardDomainListToBoardDtoList(category.getBoardList()))
                 .build();
+    }
+
+    public Board boardDtoToBoardDomain(BoardDto boardDto){
+        return boardInCategoryMapper.boardDtoToBoardDomain(boardDto);
     }
 
 }
