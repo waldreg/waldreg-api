@@ -13,12 +13,18 @@ import org.waldreg.board.board.file.FileInfoGettable;
 @Scope(value = WebApplicationContext.SCOPE_REQUEST, proxyMode = ScopedProxyMode.TARGET_CLASS)
 public class FileData implements FileInfoGettable{
 
-    private List<Future<String>> fileName = new ArrayList<>();
+    private List<Future<String>> fileNameList = new ArrayList<>();
+    private List<Future<String>> imageNameList = new ArrayList<>();
     private Future<Boolean> isDeleted;
 
     @Override
-    public List<Future<String>> getSavedFileName(){
-        return fileName;
+    public List<Future<String>> getSavedFileNameList(){
+        return fileNameList;
+    }
+
+    @Override
+    public List<Future<String>> getSavedImageNameList(){
+        return imageNameList;
     }
 
     @Override
@@ -27,7 +33,11 @@ public class FileData implements FileInfoGettable{
     }
 
     public void addFileName(Future<String> fileName){
-        this.fileName.add(fileName);
+        this.fileNameList.add(fileName);
+    }
+
+    public void addImageName(Future<String> imageName){
+        this.imageNameList.add(imageName);
     }
 
     public void setIsDeleted(Future<Boolean> isDeleted){

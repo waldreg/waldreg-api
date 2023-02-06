@@ -5,7 +5,6 @@ import java.io.IOException;
 import java.util.LinkedList;
 import java.util.Queue;
 import java.util.concurrent.ExecutionException;
-import java.util.concurrent.Future;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
@@ -13,7 +12,6 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.TestPropertySource;
@@ -56,7 +54,7 @@ public class FileManagerTest{
 
         // when
         fileManager.saveFile(multipartFile);
-        String name = fileData.getSavedFileName().get(0).get();
+        String name = fileData.getSavedImageNameList().get(0).get();
         deleteQueue.add(name);
 
         // then
@@ -74,7 +72,7 @@ public class FileManagerTest{
 
         // when
         fileManager.saveFile(multipartFile);
-        String name = fileData.getSavedFileName().get(0).get();
+        String name = fileData.getSavedImageNameList().get(0).get();
         deleteQueue.add(name);
 
         // then
@@ -92,7 +90,7 @@ public class FileManagerTest{
 
         // when
         fileManager.saveFile(multipartFile);
-        String name = fileData.getSavedFileName().get(0).get();
+        String name = fileData.getSavedImageNameList().get(0).get();
         deleteQueue.add(name);
 
         // then
