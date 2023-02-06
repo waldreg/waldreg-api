@@ -7,6 +7,8 @@ import java.nio.file.Files;
 import java.nio.file.InvalidPathException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutorService;
@@ -38,14 +40,20 @@ public class DefaultFileManager implements FileManager{
 
     @Override
     public void saveFile(MultipartFile multipartFile){
-        Callable<String> callable = createCallable(multipartFile);
+        ImageDetector imageDetector = new ImageDetector();
+        Callable<String> callable = createCallable(imageDetector, multipartFile);
+        if(imageDetector.isImage) {
+            fileData.addImageName(executorService.submit(callable));
+            return;
+        }
         fileData.addFileName(executorService.submit(callable));
     }
 
-    private Callable<String> createCallable(MultipartFile multipartFile){
+    private Callable<String> createCallable(ImageDetector typeWithCallable, MultipartFile multipartFile){
         return () -> {
             NameWithPath nameWithPath = createFile(multipartFile);
             multipartFile.transferTo(nameWithPath.path);
+            typeWithCallable.isImage = nameWithPath.isImage;
             return nameWithPath.name;
         };
     }
@@ -55,7 +63,8 @@ public class DefaultFileManager implements FileManager{
             String id = UUID.randomUUID().toString();
             Path filePath = Paths.get(getPath(id, multipartFile));
             Path ans = Files.createFile(filePath);
-            return new NameWithPath(getFileNameWithMimeType(id, multipartFile), ans);
+            String[] fileNameAndMimeType = getFileNameAndMimeType(id, multipartFile);
+            return new NameWithPath(fileNameAndMimeType[0], fileNameAndMimeType[1].equals("image"), ans);
         } catch (FileAlreadyExistsException faee){
             return createFile(multipartFile);
         } catch (IOException ioe){
@@ -64,14 +73,17 @@ public class DefaultFileManager implements FileManager{
     }
 
     private String getPath(String id, MultipartFile multipartFile){
-        return path + getFileNameWithMimeType(id, multipartFile);
+        return path + getFileNameAndMimeType(id, multipartFile)[0];
     }
 
-    private String getFileNameWithMimeType(String id, MultipartFile multipartFile){
+    private String[] getFileNameAndMimeType(String id, MultipartFile multipartFile){
         StringBuilder stringBuilder = new StringBuilder();
         MimeType mimeType = MimeTypeUtils.parseMimeType(multipartFile.getContentType());
+        String[] ans = new String[2];
         stringBuilder.append(id).append(".").append(mimeType.getSubtype());
-        return stringBuilder.toString();
+        ans[0] = stringBuilder.toString();
+        ans[1] = mimeType.getType();
+        return ans;
     }
 
     @Override
@@ -122,15 +134,23 @@ public class DefaultFileManager implements FileManager{
         return path + id;
     }
 
-    private final static class NameWithPath{
+    private static final class NameWithPath{
 
         private final String name;
+        private final boolean isImage;
         private final Path path;
 
-        private NameWithPath(String name, Path path){
+        private NameWithPath(String name, boolean isImage, Path path){
             this.name = name;
+            this.isImage = isImage;
             this.path = path;
         }
+
+    }
+
+    private static final class ImageDetector{
+
+        private boolean isImage;
 
     }
 
