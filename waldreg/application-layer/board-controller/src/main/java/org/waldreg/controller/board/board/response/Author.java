@@ -1,4 +1,4 @@
-package org.waldreg.controller.board.response.author;
+package org.waldreg.controller.board.board.response;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 

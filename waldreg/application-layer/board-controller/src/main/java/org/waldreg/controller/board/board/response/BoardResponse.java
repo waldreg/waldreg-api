@@ -2,8 +2,6 @@ package org.waldreg.controller.board.board.response;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import java.time.LocalDateTime;
-import org.waldreg.controller.board.category.response.CategoryResponse;
-import org.waldreg.controller.board.response.author.Author;
 
 public class BoardResponse{
 

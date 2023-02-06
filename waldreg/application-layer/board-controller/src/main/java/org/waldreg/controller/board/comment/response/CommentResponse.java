@@ -1,4 +1,4 @@
-package org.waldreg.controller.board.response.comment;
+package org.waldreg.controller.board.comment.response;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import java.time.LocalDateTime;

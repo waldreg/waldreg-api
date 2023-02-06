@@ -12,7 +12,7 @@ import org.waldreg.controller.board.board.request.BoardCreateRequest;
 import org.waldreg.controller.board.board.request.BoardUpdateRequest;
 import org.waldreg.controller.board.board.response.BoardListResponse;
 import org.waldreg.controller.board.board.response.ReactionResponse;
-import org.waldreg.controller.board.response.author.Author;
+import org.waldreg.controller.board.board.response.Author;
 import org.waldreg.controller.board.board.response.BoardResponse;
 
 public class ControllerBoardMapper{
