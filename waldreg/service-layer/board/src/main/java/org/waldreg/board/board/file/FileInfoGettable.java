@@ -1,11 +1,11 @@
 package org.waldreg.board.board.file;
 
-import java.util.UUID;
+import java.util.concurrent.Future;
 
 public interface FileInfoGettable{
 
-    String getSavedFileName(UUID id);
+    Future<String> getSavedFileName();
 
-    String getDeletedFileName(UUID id);
+    Future<Boolean> isFileDeleteSuccess();
 
 }
