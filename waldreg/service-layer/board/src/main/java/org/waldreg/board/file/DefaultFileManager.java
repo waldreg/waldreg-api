@@ -40,22 +40,18 @@ public class DefaultFileManager implements FileManager{
 
     @Override
     public void saveFile(MultipartFile multipartFile){
-        ImageDetector imageDetector = new ImageDetector();
-        Callable<String> callable = createCallable(imageDetector, multipartFile);
-        System.out.println("imageDectector : " + imageDetector.isImage);
-        if(imageDetector.isImage) {
+        Callable<String> callable = createCallable(multipartFile);
+        if(isImage(multipartFile)) {
             fileData.addImageName(executorService.submit(callable));
             return;
         }
         fileData.addFileName(executorService.submit(callable));
     }
 
-    private Callable<String> createCallable(ImageDetector imageDetector, MultipartFile multipartFile){
+    private Callable<String> createCallable(MultipartFile multipartFile){
         return () -> {
             NameWithPath nameWithPath = createFile(multipartFile);
             multipartFile.transferTo(nameWithPath.path);
-            imageDetector.isImage = nameWithPath.isImage;
-            System.out.println("name with path : " + nameWithPath.isImage);
             return nameWithPath.name;
         };
     }
@@ -66,7 +62,7 @@ public class DefaultFileManager implements FileManager{
             Path filePath = Paths.get(getPath(id, multipartFile));
             Path ans = Files.createFile(filePath);
             String[] fileNameAndMimeType = getFileNameAndMimeType(id, multipartFile);
-            return new NameWithPath(fileNameAndMimeType[0], fileNameAndMimeType[1].equals("image"), ans);
+            return new NameWithPath(fileNameAndMimeType[0], ans);
         } catch (FileAlreadyExistsException faee){
             return createFile(multipartFile);
         } catch (IOException ioe){
@@ -86,6 +82,11 @@ public class DefaultFileManager implements FileManager{
         ans[0] = stringBuilder.toString();
         ans[1] = mimeType.getType();
         return ans;
+    }
+
+    private boolean isImage(MultipartFile multipartFile){
+        MimeType mimeType = MimeTypeUtils.parseMimeType(multipartFile.getContentType());
+        return mimeType.getType().equals("image");
     }
 
     @Override
@@ -139,20 +140,12 @@ public class DefaultFileManager implements FileManager{
     private static final class NameWithPath{
 
         private final String name;
-        private final boolean isImage;
         private final Path path;
 
-        private NameWithPath(String name, boolean isImage, Path path){
+        private NameWithPath(String name, Path path){
             this.name = name;
-            this.isImage = isImage;
             this.path = path;
         }
-
-    }
-
-    private static final class ImageDetector{
-
-        private boolean isImage;
 
     }
 
