@@ -9,9 +9,6 @@ public interface CategoryRepository extends CategoryPerformer{
     void createCategory(CategoryDto categoryDto);
 
     List<CategoryDto> inquiryAllCategory();
-
-    CategoryDto inquiryCategoryById(int id);
-
     void modifyCategory(CategoryDto categoryDto);
 
     void deleteCategory(int id);

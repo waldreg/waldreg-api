@@ -1,8 +1,8 @@
-package org.waldreg.board.exception;
+package org.waldreg.board.board.exception;
 
-public class ModifyPermissionException extends RuntimeException{
+public class BoardModifyPermissionException extends RuntimeException{
 
-    public ModifyPermissionException(){
+    public BoardModifyPermissionException(){
         super("Modify permission does not have");
     }
 }

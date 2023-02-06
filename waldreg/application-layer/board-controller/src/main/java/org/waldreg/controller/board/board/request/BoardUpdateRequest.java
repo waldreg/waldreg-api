@@ -11,22 +11,15 @@ public class BoardUpdateRequest{
     private String content;
 
     private int categoryId;
-    @JsonProperty("member_tier")
-    private String memberTier;
-
-    @JsonProperty("delete_image_id")
-    private ArrayList<Integer> deleteImageIdList;
-    @JsonProperty("delete_file_id")
-    private ArrayList<Integer> deleteFileIdList;
+    @JsonProperty("delete_file_urls")
+    private ArrayList<String> deleteFileUrls;
 
     public BoardUpdateRequest(){}
     private BoardUpdateRequest(Builder builder){
         this.title = builder.title;
         this.content = builder.content;
         this.categoryId = builder.categoryId;
-        this.memberTier = builder.memberTier;
-        this.deleteImageIdList = builder.deleteImageIdList;
-        this.deleteFileIdList = builder.deleteFileIdList;
+        this.deleteFileUrls = builder.deleteFileUrls;
     }
 
     public static Builder builder(){
@@ -42,38 +35,25 @@ public class BoardUpdateRequest{
         return content;
     }
 
-    public String getMemberTier(){
-        return memberTier;
-    }
-
     public int getCategoryId(){
         return categoryId;
     }
-
-    public ArrayList<Integer> getDeleteImageId(){
-        return deleteImageIdList;
-    }
-
-    public ArrayList<Integer> getDeleteFileId(){
-        return deleteFileIdList;
+    public ArrayList<String> getDeleteFileUrls(){
+        return deleteFileUrls;
     }
 
     public final static class Builder{
         private String title;
         private String content;
         private int categoryId;
-        private String memberTier;
-
-        private ArrayList<Integer> deleteImageIdList;
-        private ArrayList<Integer>  deleteFileIdList;
+        private ArrayList<String>  deleteFileUrls;
 
         {
             categoryId = 0;
-            deleteImageIdList = new ArrayList<>();
-            deleteFileIdList = new ArrayList<>();
+            deleteFileUrls = new ArrayList<>();
         }
 
-        private Builder(){};
+        private Builder(){}
 
         public Builder title(String title){
             this.title = title;
@@ -88,16 +68,8 @@ public class BoardUpdateRequest{
             this.categoryId = categoryId;
             return this;
         }
-        public Builder memberTier(String memberTier){
-            this.memberTier = memberTier;
-            return this;
-        }
-        public Builder deleteImageIdList( ArrayList<Integer> deleteImageIdList){
-            this.deleteImageIdList = deleteImageIdList;
-            return this;
-        }
-        public Builder deleteFileIdList( ArrayList<Integer> deleteFileIdList){
-            this.deleteFileIdList = deleteFileIdList;
+        public Builder deleteFileUrls( ArrayList<String> deleteFileUrls){
+            this.deleteFileUrls = deleteFileUrls;
             return this;
         }
         public BoardUpdateRequest build(){

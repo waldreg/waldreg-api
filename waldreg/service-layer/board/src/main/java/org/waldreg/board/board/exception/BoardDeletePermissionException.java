@@ -1,8 +1,8 @@
-package org.waldreg.board.exception;
+package org.waldreg.board.board.exception;
 
-public class DeletePermissionException extends RuntimeException{
+public class BoardDeletePermissionException extends RuntimeException{
 
-    public DeletePermissionException(){
+    public BoardDeletePermissionException(){
         super("Delete permission does not have");
     }
 

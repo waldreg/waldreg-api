@@ -2,6 +2,7 @@ package org.waldreg.controller.board.board.response;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import java.time.LocalDateTime;
+import org.waldreg.controller.board.category.response.CategoryResponse;
 import org.waldreg.controller.board.response.author.Author;
 
 public class BoardResponse{
@@ -16,9 +17,6 @@ public class BoardResponse{
 
     @JsonProperty("last_modified_at")
     private LocalDateTime lastModifiedAt;
-
-    @JsonProperty("member_tier")
-    private String memberTier;
 
     private String[] images;
 
@@ -39,7 +37,6 @@ public class BoardResponse{
         this.author = builder.author;
         this.createdAt = builder.createdAt;
         this.lastModifiedAt = builder.lastModifiedAt;
-        this.memberTier = builder.memberTier;
         this.images = builder.images;
         this.existFile = builder.existFile;
         this.files = builder.files;
@@ -107,14 +104,6 @@ public class BoardResponse{
         this.lastModifiedAt = lastModifiedAt;
     }
 
-    public String getMemberTier(){
-        return memberTier;
-    }
-
-    public void setMemberTier(String memberTier){
-        this.memberTier = memberTier;
-    }
-
     public String[] getImages(){
         return images;
     }
@@ -157,8 +146,6 @@ public class BoardResponse{
         private LocalDateTime createdAt;
 
         private LocalDateTime lastModifiedAt;
-
-        private String memberTier;
 
         private String[] images;
         private String existFile;
@@ -203,11 +190,6 @@ public class BoardResponse{
 
         public Builder lastModifiedAt(LocalDateTime lastModifiedAt){
             this.lastModifiedAt = lastModifiedAt;
-            return this;
-        }
-
-        public Builder memberTier(String memberTier){
-            this.memberTier = memberTier;
             return this;
         }
 

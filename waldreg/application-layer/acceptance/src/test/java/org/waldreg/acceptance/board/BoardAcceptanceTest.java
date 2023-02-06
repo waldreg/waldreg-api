@@ -3,6 +3,7 @@ package org.waldreg.acceptance.board;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.io.FileInputStream;
 import java.util.ArrayList;
+import java.util.List;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -21,13 +22,13 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import org.waldreg.acceptance.authentication.AuthenticationAcceptanceTestHelper;
 import org.waldreg.acceptance.user.UserAcceptanceTestHelper;
 import org.waldreg.auth.request.AuthTokenRequest;
-import org.waldreg.controller.board.request.BoardCreateRequest;
-import org.waldreg.controller.board.request.BoardUpdateRequest;
-import org.waldreg.controller.board.request.CategoryRequest;
-import org.waldreg.controller.board.response.board.BoardListResponse;
-import org.waldreg.controller.board.response.board.BoardResponse;
-import org.waldreg.controller.board.response.category.CategoryListResponse;
-import org.waldreg.controller.board.response.category.CategoryResponse;
+import org.waldreg.controller.board.board.request.BoardCreateRequest;
+import org.waldreg.controller.board.board.request.BoardUpdateRequest;
+import org.waldreg.controller.board.category.request.CategoryRequest;
+import org.waldreg.controller.board.board.response.BoardListResponse;
+import org.waldreg.controller.board.board.response.BoardResponse;
+import org.waldreg.controller.board.category.response.CategoryListResponse;
+import org.waldreg.controller.board.category.response.CategoryResponse;
 import org.waldreg.controller.board.response.comment.CommentListResponse;
 import org.waldreg.controller.board.response.comment.CommentResponse;
 import org.waldreg.controller.user.request.UserRequest;
@@ -265,45 +266,6 @@ public class BoardAcceptanceTest{
 
     }
 
-    @Test
-    @DisplayName("게시글 생성 실패 - tier 문제로 권한이 없는경우")
-    public void CREATE_BOARD_FAIL_NO_PERMISSION_BY_TIER_TEST() throws Exception{
-        //given
-        String adminToken = AuthenticationAcceptanceTestHelper.getAdminToken(mvc, objectMapper);
-
-        String categoryName = "cate1";
-        CategoryRequest categoryRequest = CategoryRequest.builder().categoryName(categoryName).build();
-        BoardAcceptanceTestHelper.createCategory(mvc, adminToken, objectMapper.writeValueAsString(categoryRequest));
-        CategoryListResponse categoryResult = objectMapper.readValue(BoardAcceptanceTestHelper.inquiryAllCategory(mvc, adminToken)
-                                                                             .andReturn()
-                                                                             .getResponse()
-                                                                             .getContentAsString(), CategoryListResponse.class);
-        int categoryId = categoryResult.getCategories()[0].getCategoryId();
-
-        String token = createUserAndGetToken("alcuk", "alcuk_id", "2gdddddd!");
-
-        String title = "notice";
-        String content = "content";
-        BoardCreateRequest boardCreateRequest = BoardCreateRequest.builder()
-                .title(title)
-                .content(content).categoryId(categoryId).build();
-
-        MockPart jsonContent = new MockPart("boardCreateRequest", objectMapper.writeValueAsString(boardCreateRequest).getBytes());
-        //when
-
-        ResultActions result = BoardAcceptanceTestHelper.createBoardWithOnlyJson(mvc, token, jsonContent);
-
-        //then
-        result.andExpectAll(
-                MockMvcResultMatchers.status().isForbidden(),
-                MockMvcResultMatchers.header().string(HttpHeaders.CONTENT_TYPE, "application/json"),
-                MockMvcResultMatchers.header().string("api-version", apiVersion),
-                MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON),
-                MockMvcResultMatchers.jsonPath("$.messages").value("No permission"),
-                MockMvcResultMatchers.jsonPath("$.document_url").value("docs.waldreg.org")
-        );
-
-    }
 
     @Test
     @DisplayName("게시글 생성 실패 - 게시글 제목이 빈 제목일 경우")
@@ -521,21 +483,17 @@ public class BoardAcceptanceTest{
 
         String[] imageUrls = boards[0].getImages();
         String[] fileUrls = boards[0].getFiles();
-        String imageUrl1 = imageUrls[0].split("=")[1];
-        String fileUrl1 = fileUrls[0].split("=")[1];
 
         int boardId = boards[0].getId();
         int categoryId = categoryList[0].getCategoryId();
-        ArrayList<Integer> imageIdList = new ArrayList<>(Integer.parseInt(imageUrl1));
-        ArrayList<Integer> fileIdList = new ArrayList<>(Integer.parseInt(fileUrl1));
+        ArrayList<String> imageUrlList = new ArrayList<>(List.of(fileUrls));
+        ArrayList<String> fileUrlList = new ArrayList<>(List.of(fileUrls));
 
         BoardUpdateRequest boardUpdateRequest = BoardUpdateRequest.builder()
                 .title(title2)
                 .content(content2)
                 .categoryId(categoryId)
-
-                .deleteImageIdList(imageIdList)
-                .deleteFileIdList(fileIdList)
+                .deleteFileUrls(fileUrlList)
                 .build();
 
         String imgName2 = "TestImage2.jpg";
@@ -581,21 +539,18 @@ public class BoardAcceptanceTest{
 
         String[] imageUrls = boards[0].getImages();
         String[] fileUrls = boards[0].getFiles();
-        String imageUrl1 = imageUrls[0].split("=")[1];
-        String fileUrl1 = fileUrls[0].split("=")[1];
 
         int boardId = boards[0].getId();
         int categoryId = categoryList[0].getCategoryId();
-        ArrayList<Integer> imageIdList = new ArrayList<>(Integer.parseInt(imageUrl1));
-        ArrayList<Integer> fileIdList = new ArrayList<>(Integer.parseInt(fileUrl1));
+        ArrayList<String> imageUrlList = new ArrayList<>(List.of(fileUrls));
+        ArrayList<String> fileUrlList = new ArrayList<>(List.of(fileUrls));
+
 
         BoardUpdateRequest boardUpdateRequest = BoardUpdateRequest.builder()
                 .title(title2)
                 .content(content2)
                 .categoryId(categoryId)
-
-                .deleteImageIdList(imageIdList)
-                .deleteFileIdList(fileIdList)
+                .deleteFileUrls(fileUrlList)
                 .build();
 
         MockPart jsonContent2 = new MockPart("boardCreateRequest", objectMapper.writeValueAsString(boardUpdateRequest).getBytes());
@@ -631,21 +586,18 @@ public class BoardAcceptanceTest{
 
         String[] imageUrls = boards[0].getImages();
         String[] fileUrls = boards[0].getFiles();
-        String imageUrl1 = imageUrls[0].split("=")[1];
-        String fileUrl1 = fileUrls[0].split("=")[1];
 
         int boardId = boards[0].getId();
         int categoryId = categoryList[0].getCategoryId();
-        ArrayList<Integer> imageIdList = new ArrayList<>(Integer.parseInt(imageUrl1));
-        ArrayList<Integer> fileIdList = new ArrayList<>(Integer.parseInt(fileUrl1));
+        ArrayList<String> imageUrlList = new ArrayList<>(List.of(fileUrls));
+        ArrayList<String> fileUrlList = new ArrayList<>(List.of(fileUrls));
+
 
         BoardUpdateRequest boardUpdateRequest = BoardUpdateRequest.builder()
                 .title(title2)
                 .content(content2)
                 .categoryId(categoryId)
-
-                .deleteImageIdList(imageIdList)
-                .deleteFileIdList(fileIdList)
+                .deleteFileUrls(fileUrlList)
                 .build();
 
         String imgName2 = "TestImage2.jpg";
@@ -686,21 +638,18 @@ public class BoardAcceptanceTest{
 
         String[] imageUrls = boards[0].getImages();
         String[] fileUrls = boards[0].getFiles();
-        String imageUrl1 = imageUrls[0].split("=")[1];
-        String fileUrl1 = fileUrls[0].split("=")[1];
 
         int boardId = boards[0].getId();
         int categoryId = categoryList[0].getCategoryId();
-        ArrayList<Integer> imageIdList = new ArrayList<>(Integer.parseInt(imageUrl1));
-        ArrayList<Integer> fileIdList = new ArrayList<>(Integer.parseInt(fileUrl1));
+        ArrayList<String> imageUrlList = new ArrayList<>(List.of(fileUrls));
+        ArrayList<String> fileUrlList = new ArrayList<>(List.of(fileUrls));
+
 
         BoardUpdateRequest boardUpdateRequest = BoardUpdateRequest.builder()
                 .title(title2)
                 .content(content2)
                 .categoryId(categoryId)
-
-                .deleteImageIdList(imageIdList)
-                .deleteFileIdList(fileIdList)
+                .deleteFileUrls(fileUrlList)
                 .build();
 
         String fileName2 = "TestDocx2";
@@ -742,21 +691,18 @@ public class BoardAcceptanceTest{
 
         String[] imageUrls = boards[0].getImages();
         String[] fileUrls = boards[0].getFiles();
-        String imageUrl1 = imageUrls[0].split("=")[1];
-        String fileUrl1 = fileUrls[0].split("=")[1];
 
-        int boardId = -1;
+        int boardId = boards[0].getId();
         int categoryId = categoryList[0].getCategoryId();
-        ArrayList<Integer> imageIdList = new ArrayList<>(Integer.parseInt(imageUrl1));
-        ArrayList<Integer> fileIdList = new ArrayList<>(Integer.parseInt(fileUrl1));
+        ArrayList<String> imageUrlList = new ArrayList<>(List.of(fileUrls));
+        ArrayList<String> fileUrlList = new ArrayList<>(List.of(fileUrls));
+
 
         BoardUpdateRequest boardUpdateRequest = BoardUpdateRequest.builder()
                 .title(title2)
                 .content(content2)
                 .categoryId(categoryId)
-
-                .deleteImageIdList(imageIdList)
-                .deleteFileIdList(fileIdList)
+                .deleteFileUrls(fileUrlList)
                 .build();
 
         String imgName2 = "TestImage2.jpg";
@@ -805,21 +751,18 @@ public class BoardAcceptanceTest{
 
         String[] imageUrls = boards[0].getImages();
         String[] fileUrls = boards[0].getFiles();
-        String imageUrl1 = imageUrls[0].split("=")[1];
-        String fileUrl1 = fileUrls[0].split("=")[1];
 
-        int boardId = -1;
+        int boardId = boards[0].getId();
         int categoryId = categoryList[0].getCategoryId();
-        ArrayList<Integer> imageIdList = new ArrayList<>(Integer.parseInt(imageUrl1));
-        ArrayList<Integer> fileIdList = new ArrayList<>(Integer.parseInt(fileUrl1));
+        ArrayList<String> imageUrlList = new ArrayList<>(List.of(fileUrls));
+        ArrayList<String> fileUrlList = new ArrayList<>(List.of(fileUrls));
+
 
         BoardUpdateRequest boardUpdateRequest = BoardUpdateRequest.builder()
                 .title(title2)
                 .content(content2)
                 .categoryId(categoryId)
-
-                .deleteImageIdList(imageIdList)
-                .deleteFileIdList(fileIdList)
+                .deleteFileUrls(fileUrlList)
                 .build();
 
         String imgName2 = "TestImage2.jpg";
@@ -1254,12 +1197,10 @@ public class BoardAcceptanceTest{
 
         String title4 = "notice4";
         String content4 = "content";
-        String memberTier4 = "tier 3";
         BoardCreateRequest boardCreateRequest4 = BoardCreateRequest.builder()
                 .title(title4)
                 .content(content4)
                 .categoryId(category1)
-                .memberTier(memberTier4)
                 .build();
         MockPart jsonContent4 = new MockPart("boardCreateRequest", objectMapper.writeValueAsString(boardCreateRequest4).getBytes());
 
@@ -1942,7 +1883,6 @@ public class BoardAcceptanceTest{
                 MockMvcResultMatchers.header().string(HttpHeaders.CONTENT_TYPE, "application/json"),
                 MockMvcResultMatchers.header().string("api-version", apiVersion),
                 MockMvcResultMatchers.jsonPath("$.max_idx").value(2),
-                MockMvcResultMatchers.jsonPath("$.member_tier").value("tier 1"),
                 MockMvcResultMatchers.jsonPath("$.comments.[0].user_id").value("Admin"),
                 MockMvcResultMatchers.jsonPath("$.comments.[0].name").value("Admin"),
                 MockMvcResultMatchers.jsonPath("$.comments.[0].created_at").isNotEmpty(),
@@ -2403,8 +2343,7 @@ public class BoardAcceptanceTest{
         String token = createUserAndGetToken("alcuk", "alcuk_id", "2gdddddd!");
 
         String categoryName = "photo";
-        String CategoryMemberTier = "tier 1";
-        CategoryRequest categoryRequest = CategoryRequest.builder().categoryName(categoryName).memberTier(CategoryMemberTier).build();
+        CategoryRequest categoryRequest = CategoryRequest.builder().categoryName(categoryName).build();
 
         //when
         ResultActions result = BoardAcceptanceTestHelper.createCategory(mvc, token, objectMapper.writeValueAsString(categoryRequest));
@@ -2478,12 +2417,10 @@ public class BoardAcceptanceTest{
         String adminToken = AuthenticationAcceptanceTestHelper.getAdminToken(mvc, objectMapper);
 
         String categoryName1 = "cate1";
-        String memberTier1 = "tier 1";
         CategoryRequest categoryRequest1 = CategoryRequest.builder().categoryName(categoryName1).build();
 
         String categoryName2 = "cate2";
-        String memberTier2 = "tier 2";
-        CategoryRequest categoryRequest2 = CategoryRequest.builder().categoryName(categoryName2).memberTier(memberTier2).build();
+        CategoryRequest categoryRequest2 = CategoryRequest.builder().categoryName(categoryName2).build();
 
         BoardAcceptanceTestHelper.createCategory(mvc, adminToken, objectMapper.writeValueAsString(categoryRequest1));
         BoardAcceptanceTestHelper.createCategory(mvc, adminToken, objectMapper.writeValueAsString(categoryRequest2));
@@ -2498,11 +2435,9 @@ public class BoardAcceptanceTest{
                 MockMvcResultMatchers.jsonPath("$.categories.[0].category_id").isNumber(),
                 MockMvcResultMatchers.jsonPath("$.categories.[0].category_name").value(categoryName1),
                 MockMvcResultMatchers.jsonPath("$.categories.[0].category_boards").isNumber(),
-                MockMvcResultMatchers.jsonPath("$.categories.[0].member_tier").value(memberTier1),
                 MockMvcResultMatchers.jsonPath("$.categories.[1].category_id").isNumber(),
                 MockMvcResultMatchers.jsonPath("$.categories.[1].category_name").value(categoryName2),
-                MockMvcResultMatchers.jsonPath("$.categories.[1].category_boards").isNumber(),
-                MockMvcResultMatchers.jsonPath("$.categories.[1].member_tier").value(memberTier2)
+                MockMvcResultMatchers.jsonPath("$.categories.[1].category_boards").isNumber()
         );
 
     }
@@ -2605,8 +2540,7 @@ public class BoardAcceptanceTest{
         BoardAcceptanceTestHelper.createCategory(mvc, adminToken, objectMapper.writeValueAsString(categoryRequest));
 
         String categoryName2 = "cate2";
-        String memberTier2 = "tier 1";
-        CategoryRequest categoryRequest2 = CategoryRequest.builder().categoryName(categoryName2).memberTier(memberTier2).build();
+        CategoryRequest categoryRequest2 = CategoryRequest.builder().categoryName(categoryName2).build();
         BoardAcceptanceTestHelper.createCategory(mvc, adminToken, objectMapper.writeValueAsString(categoryRequest2));
 
         CategoryListResponse categoryListResponse = objectMapper.readValue(BoardAcceptanceTestHelper.inquiryAllCategory(mvc, adminToken).andReturn().getResponse().getContentAsString(), CategoryListResponse.class);

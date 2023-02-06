@@ -10,8 +10,6 @@ public class CategoryResponse{
     private String categoryName;
     @JsonProperty("category_boards")
     private int categoryBoards;
-    @JsonProperty("member_tier")
-    private String memberTier;
 
     private CategoryResponse(){}
 
@@ -19,7 +17,6 @@ public class CategoryResponse{
         this.categoryId = builder.categoryId;
         this.categoryName = builder.categoryName;
         this.categoryBoards = builder.categoryBoards;
-        this.memberTier = builder.memberTier;
     }
 
     public static Builder builder(){
@@ -38,17 +35,11 @@ public class CategoryResponse{
         return categoryName;
     }
 
-    public String getMemberTier(){
-        return memberTier;
-    }
-
     public final static class Builder{
 
         private int categoryId;
         private String categoryName;
         private int categoryBoards;
-
-        private String memberTier;
 
         private Builder(){}
 
@@ -62,10 +53,6 @@ public class CategoryResponse{
             return this;
         }
 
-        public Builder memberTier(String memberTier){
-            this.memberTier = memberTier;
-            return this;
-        }
         public Builder categoryBoards(int categoryBoards){
             this.categoryBoards = categoryBoards;
             return this;
