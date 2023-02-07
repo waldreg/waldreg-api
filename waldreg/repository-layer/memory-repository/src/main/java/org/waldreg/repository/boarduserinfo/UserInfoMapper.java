@@ -1,9 +1,11 @@
 package org.waldreg.repository.boarduserinfo;
 
+import org.springframework.stereotype.Service;
 import org.waldreg.board.dto.UserDto;
 import org.waldreg.domain.user.User;
 import org.waldreg.repository.board.UserInBoardMapper;
 
+@Service
 public class UserInfoMapper implements UserInBoardMapper{
 
     @Override

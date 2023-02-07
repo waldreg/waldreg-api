@@ -1,13 +1,16 @@
 package org.waldreg.repository.board;
 
 import java.util.List;
+import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 import org.waldreg.board.board.spi.BoardRepository;
 import org.waldreg.board.comment.spi.CommentInBoardRepository;
 import org.waldreg.board.dto.BoardDto;
+import org.waldreg.board.dto.BoardServiceReactionType;
 import org.waldreg.board.dto.CommentDto;
 import org.waldreg.board.dto.ReactionDto;
+import org.waldreg.board.dto.UserDto;
 import org.waldreg.board.reaction.spi.ReactionInBoardRepository;
 import org.waldreg.domain.board.Board;
 import org.waldreg.domain.board.comment.Comment;
@@ -60,14 +63,16 @@ public class MemoryBoardRepository implements BoardRepository, CommentInBoardRep
 
     @Override
     public ReactionDto getReactionDto(int boardId){
-        return null;
+        Board board = memoryBoardStorage.inquiryBoardById(boardId);
+        Reaction reaction = board.getReactions();
+        return  boardMapper.reactionDomainToReactionDto(reaction);
     }
 
     @Override
     public void storeReactionDto(ReactionDto reactionDto){
         int boardId = reactionDto.getBoardId();
         Board board = memoryBoardStorage.inquiryBoardById(boardId);
-        Reaction reaction = boardMapper.reactionDtoToReactionDomain(reactionDto.getReactionMap());
+        Reaction reaction = boardMapper.reactionDtoToReactionDomain(reactionDto);
         board.setReactions(reaction);
         memoryBoardStorage.modifyBoard(board);
     }

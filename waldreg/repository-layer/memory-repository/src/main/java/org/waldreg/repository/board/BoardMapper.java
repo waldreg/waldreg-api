@@ -60,7 +60,7 @@ public class BoardMapper implements BoardInCategoryMapper{
     public Board boardDtoToBoardDomainIfNotCreateBoard(BoardDto boardDto, Board.Builder builder){
         builder = builder
                 .id(boardDto.getId())
-                .reactions(reactionDtoToReactionDomain(boardDto.getReactions().getReactionMap()))
+                .reactions(reactionDtoToReactionDomain(boardDto.getReactions()))
                 .createdAt(boardDto.getCreatedAt())
                 .lastModifiedAt(boardDto.getLastModifiedAt())
                 .views(boardDto.getViews());
@@ -74,12 +74,13 @@ public class BoardMapper implements BoardInCategoryMapper{
         return commentList != null;
     }
 
-    public Reaction reactionDtoToReactionDomain(Map<BoardServiceReactionType, List<UserDto>> reactionMap){
+    public Reaction reactionDtoToReactionDomain(ReactionDto reactionDto){
         Map<ReactionType, List<User>> reactionTypeListMap = new HashMap<>();
-        for (Map.Entry<BoardServiceReactionType, List<UserDto>> reactionEntry : reactionMap.entrySet()){
+        for (Map.Entry<BoardServiceReactionType, List<UserDto>> reactionEntry : reactionDto.getReactionMap().entrySet()){
             reactionTypeListMap.put(ReactionTypeToBoardServiceReactionType(reactionEntry.getKey()), userDtoListToUserDomainList((reactionEntry.getValue())));
         }
         return Reaction.builder()
+                .boardId(reactionDto.getBoardId())
                 .reactionMap(reactionTypeListMap)
                 .build();
     }
@@ -126,18 +127,19 @@ public class BoardMapper implements BoardInCategoryMapper{
                 .lastModifiedAt(board.getLastModifiedAt())
                 .fileUrls(board.getFilePathList())
                 .imageUrls(board.getImagePathList())
-                .reactions(reactionDomainToReactionDto(board.getReactions().getReactionMap()))
+                .reactions(reactionDomainToReactionDto(board.getReactions()))
                 .commentList(commentInBoardMapper.commentDomainListToCommentDtoList(board.getCommentList()))
                 .views(board.getViews())
                 .build();
     }
 
-    private ReactionDto reactionDomainToReactionDto(Map<ReactionType, List<User>> reactionMap){
+    public ReactionDto reactionDomainToReactionDto(Reaction reaction){
         Map<BoardServiceReactionType, List<UserDto>> reactionTypeListMap = new HashMap<>();
-        for (Map.Entry<ReactionType, List<User>> reactionEntry : reactionMap.entrySet()){
+        for (Map.Entry<ReactionType, List<User>> reactionEntry : reaction.getReactionMap().entrySet()){
             reactionTypeListMap.put(boardServiceReactionTypeToReactionType(reactionEntry.getKey()), userDomainListToUserDtoList(reactionEntry.getValue()));
         }
         return ReactionDto.builder()
+                .boardId(reaction.getBoardId())
                 .reactionMap(reactionTypeListMap)
                 .build();
     }

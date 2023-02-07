@@ -8,6 +8,8 @@ import org.waldreg.domain.user.User;
 
 public final class Reaction{
 
+    private int boardId;
+
     private final Map<ReactionType, List<User>> reactionMap;
 
     private Reaction(){
@@ -15,7 +17,12 @@ public final class Reaction{
     }
 
     private Reaction(Builder builder){
+        this.boardId = builder.boardId;
         this.reactionMap = builder.reactionMap;
+    }
+
+    public int getBoardId(){
+        return boardId;
     }
 
     public Map<ReactionType, List<User>> getReactionMap(){
@@ -27,6 +34,8 @@ public final class Reaction{
     }
 
     public final static class Builder{
+
+        private int boardId;
 
         private Map<ReactionType, List<User>> reactionMap;
 
@@ -41,6 +50,11 @@ public final class Reaction{
         }
 
         private Builder(){}
+
+        public Builder boardId(int boardId){
+            this.boardId = boardId;
+            return this;
+        }
 
         public Builder reactionMap(Map<ReactionType, List<User>> reactionMap){
             this.reactionMap = reactionMap;

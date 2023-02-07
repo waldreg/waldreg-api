@@ -1,12 +1,14 @@
 package org.waldreg.repository.boarduserinfo;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Repository;
 import org.waldreg.board.board.spi.BoardUserRepository;
 import org.waldreg.board.dto.UserDto;
 import org.waldreg.board.reaction.spi.ReactionUserRepository;
 import org.waldreg.domain.user.User;
 import org.waldreg.repository.MemoryUserStorage;
 
+@Repository
 public class MemoryBoardUserInfoRepository implements BoardUserRepository, ReactionUserRepository{
 
     private final MemoryUserStorage memoryUserStorage;

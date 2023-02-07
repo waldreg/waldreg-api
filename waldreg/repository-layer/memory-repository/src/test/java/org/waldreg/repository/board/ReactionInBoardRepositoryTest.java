@@ -170,6 +170,7 @@ public class ReactionInBoardRepositoryTest{
                 () -> Assertions.assertEquals(new ArrayList<>(), result.getReactions().getReactionMap().get(BoardServiceReactionType.SMILE)),
                 () -> Assertions.assertEquals(new ArrayList<>(), result.getReactions().getReactionMap().get(BoardServiceReactionType.GOOD)),
                 () -> Assertions.assertEquals(new ArrayList<>(), result.getReactions().getReactionMap().get(BoardServiceReactionType.CHECK)),
+                () -> Assertions.assertEquals(reactionDto.getBoardId(),result.getReactions().getBoardId()),
                 () -> Assertions.assertEquals(reactionDto.getReactionMap().get(BoardServiceReactionType.BAD).get(0).getId(), result.getReactions().getReactionMap().get(BoardServiceReactionType.BAD).get(0).getId()),
                 () -> Assertions.assertEquals(reactionDto.getReactionMap().get(BoardServiceReactionType.BAD).get(0).getName(), result.getReactions().getReactionMap().get(BoardServiceReactionType.BAD).get(0).getName()),
                 () -> Assertions.assertEquals(reactionDto.getReactionMap().get(BoardServiceReactionType.BAD).get(0).getUserId(), result.getReactions().getReactionMap().get(BoardServiceReactionType.BAD).get(0).getUserId())
@@ -237,18 +238,20 @@ public class ReactionInBoardRepositoryTest{
         reactionInBoardRepository.storeReactionDto(reactionDto);
         categoryRepository.addBoardInCategoryBoardList(boardDto);
         BoardDto result = boardRepository.inquiryBoardById(boardDto.getId());
+        ReactionDto result2 = reactionInBoardRepository.getReactionDto(boardDto.getId());
 
         //then
         Assertions.assertAll(
-                () -> Assertions.assertTrue(result.getReactions().getReactionMap().get(BoardServiceReactionType.BAD).size() == 1),
-                () -> Assertions.assertEquals(new ArrayList<>(), result.getReactions().getReactionMap().get(BoardServiceReactionType.SAD)),
-                () -> Assertions.assertEquals(new ArrayList<>(), result.getReactions().getReactionMap().get(BoardServiceReactionType.HEART)),
-                () -> Assertions.assertEquals(new ArrayList<>(), result.getReactions().getReactionMap().get(BoardServiceReactionType.SMILE)),
-                () -> Assertions.assertEquals(new ArrayList<>(), result.getReactions().getReactionMap().get(BoardServiceReactionType.GOOD)),
-                () -> Assertions.assertEquals(new ArrayList<>(), result.getReactions().getReactionMap().get(BoardServiceReactionType.CHECK)),
-                () -> Assertions.assertEquals(reactionDto.getReactionMap().get(BoardServiceReactionType.BAD).get(0).getId(), result.getReactions().getReactionMap().get(BoardServiceReactionType.BAD).get(0).getId()),
-                () -> Assertions.assertEquals(reactionDto.getReactionMap().get(BoardServiceReactionType.BAD).get(0).getName(), result.getReactions().getReactionMap().get(BoardServiceReactionType.BAD).get(0).getName()),
-                () -> Assertions.assertEquals(reactionDto.getReactionMap().get(BoardServiceReactionType.BAD).get(0).getUserId(), result.getReactions().getReactionMap().get(BoardServiceReactionType.BAD).get(0).getUserId())
+                () -> Assertions.assertTrue(result2.getReactionMap().get(BoardServiceReactionType.BAD).size() == 1),
+                () -> Assertions.assertEquals(new ArrayList<>(), result2.getReactionMap().get(BoardServiceReactionType.SAD)),
+                () -> Assertions.assertEquals(new ArrayList<>(), result2.getReactionMap().get(BoardServiceReactionType.HEART)),
+                () -> Assertions.assertEquals(new ArrayList<>(), result2.getReactionMap().get(BoardServiceReactionType.SMILE)),
+                () -> Assertions.assertEquals(new ArrayList<>(), result2.getReactionMap().get(BoardServiceReactionType.GOOD)),
+                () -> Assertions.assertEquals(new ArrayList<>(), result2.getReactionMap().get(BoardServiceReactionType.CHECK)),
+                () -> Assertions.assertEquals(result.getReactions().getBoardId(), result2.getBoardId()),
+                () -> Assertions.assertEquals(result.getReactions().getReactionMap().get(BoardServiceReactionType.BAD).get(0).getId(),result2.getReactionMap().get(BoardServiceReactionType.BAD).get(0).getId()),
+                () -> Assertions.assertEquals(result.getReactions().getReactionMap().get(BoardServiceReactionType.BAD).get(0).getName(),result2.getReactionMap().get(BoardServiceReactionType.BAD).get(0).getName()),
+                () -> Assertions.assertEquals(result.getReactions().getReactionMap().get(BoardServiceReactionType.BAD).get(0).getUserId(),result2.getReactionMap().get(BoardServiceReactionType.BAD).get(0).getUserId())
         );
     }
 
