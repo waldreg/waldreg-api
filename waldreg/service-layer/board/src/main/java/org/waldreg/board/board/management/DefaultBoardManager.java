@@ -13,7 +13,7 @@ import org.waldreg.board.board.exception.FutureCannotGetException;
 import org.waldreg.board.board.exception.InvalidRangeException;
 import org.waldreg.board.board.file.FileInfoGettable;
 import org.waldreg.board.board.spi.BoardRepository;
-import org.waldreg.board.board.spi.CategoryPerformer;
+import org.waldreg.board.board.spi.BoardInCategoryRepository;
 import org.waldreg.board.board.spi.UserRepository;
 import org.waldreg.board.dto.BoardDto;
 import org.waldreg.board.dto.UserDto;
@@ -25,14 +25,14 @@ public class DefaultBoardManager implements BoardManager{
     private final int perPage = 20;
     private final BoardRepository boardRepository;
     private final UserRepository userRepository;
-    private final CategoryPerformer categoryPerformer;
+    private final BoardInCategoryRepository boardInCategoryRepository;
     private final DecryptedTokenContextGetter decryptedTokenContextGetter;
     private final FileInfoGettable fileInfoGettable;
 
     @Autowired
-    public DefaultBoardManager(BoardRepository boardRepository, CategoryPerformer categoryPerformer, UserRepository userRepository, DecryptedTokenContextGetter decryptedTokenContextGetter, FileInfoGettable fileInfoGettable){
+    public DefaultBoardManager(BoardRepository boardRepository, BoardInCategoryRepository boardInCategoryRepository, UserRepository userRepository, DecryptedTokenContextGetter decryptedTokenContextGetter, FileInfoGettable fileInfoGettable){
         this.boardRepository = boardRepository;
-        this.categoryPerformer = categoryPerformer;
+        this.boardInCategoryRepository = boardInCategoryRepository;
         this.userRepository = userRepository;
         this.decryptedTokenContextGetter = decryptedTokenContextGetter;
         this.fileInfoGettable = fileInfoGettable;
@@ -47,11 +47,11 @@ public class DefaultBoardManager implements BoardManager{
         boardDto.setFileUrls(saveFileNameList);
         boardDto.setImageUrls(saveImageNameList);
         boardDto = boardRepository.createBoard(boardDto);
-        categoryPerformer.addBoardInCategoryBoardList(boardDto);
+        boardInCategoryRepository.addBoardInCategoryBoardList(boardDto);
     }
 
     private void throwIfCategoryDoesNotExist(int categoryId){
-        if (!categoryPerformer.isExistCategory(categoryId)){
+        if (!boardInCategoryRepository.isExistCategory(categoryId)){
             throw new CategoryDoesNotExistException(categoryId);
         }
     }
