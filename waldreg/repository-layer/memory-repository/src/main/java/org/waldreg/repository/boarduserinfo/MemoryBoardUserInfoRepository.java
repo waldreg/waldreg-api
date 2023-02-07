@@ -27,7 +27,8 @@ public class MemoryBoardUserInfoRepository implements BoardUserRepository, React
 
     @Override
     public UserDto getUserInfoByUserId(String userId){
-        return null;
+        User user = memoryUserStorage.readUserByUserId(userId);
+        return userInfoMapper.userDomainToUserDto(user);
     }
 
 }
