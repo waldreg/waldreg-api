@@ -48,4 +48,8 @@ public class MemoryCommentStorage{
 
     private boolean isInRange(int index, int from, int to){return index >= from && index <= to;}
 
+    public void modifyComment(Comment comment){
+        storage.replace(comment.getId(), comment);
+    }
+
 }

@@ -40,7 +40,8 @@ public class MemoryCommentRepository implements CommentRepository{
 
     @Override
     public void modifyComment(CommentDto commentDto){
-
+        Comment comment = commentMapper.commentDtoToCommentDomain(commentDto);
+        memoryCommentStorage.modifyComment(comment);
     }
 
     @Override
