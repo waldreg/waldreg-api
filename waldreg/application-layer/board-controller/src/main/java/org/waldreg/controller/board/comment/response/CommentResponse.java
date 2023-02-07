@@ -1,23 +1,26 @@
-package org.waldreg.board.dto;
+package org.waldreg.controller.board.comment.response;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import java.time.LocalDateTime;
+import org.waldreg.controller.board.comment.request.CommentRequest;
+import org.waldreg.controller.board.comment.request.CommentRequest.Builder;
 
-public class CommentDto{
+public class CommentResponse{
 
     private int id;
-
-    private int boardId;
-    private UserDto userDto;
+    @JsonProperty("user_id")
+    private String userId;
+    private String name;
     private LocalDateTime createdAt;
     private LocalDateTime lastModifiedAt;
     private String content;
 
-    private CommentDto(){}
+    private CommentResponse(){}
 
-    private CommentDto(Builder builder){
+    private CommentResponse(Builder builder){
         this.id = builder.id;
-        this.boardId = builder.boardId;
-        this.userDto = builder.userDto;
+        this.userId = builder.userId;
+        this.name = builder.name;
         this.createdAt = builder.createdAt;
         this.lastModifiedAt = builder.lastModifiedAt;
         this.content = builder.content;
@@ -27,20 +30,17 @@ public class CommentDto{
         return new Builder();
     }
 
+
     public int getId(){
         return id;
     }
 
-    public void setId(int id){
-        this.id = id;
+    public String getUserId(){
+        return userId;
     }
 
-    public void setBoardId(int boardId){
-        this.boardId = boardId;
-    }
-
-    public UserDto getUserDto(){
-        return userDto;
+    public String getName(){
+        return name;
     }
 
     public LocalDateTime getCreatedAt(){
@@ -55,15 +55,12 @@ public class CommentDto{
         return content;
     }
 
-    public int getBoardId(){
-        return boardId;
-    }
 
     public final static class Builder{
 
         private int id;
-        private int boardId;
-        private UserDto userDto;
+        private String userId;
+        private String name;
         private LocalDateTime createdAt;
         private LocalDateTime lastModifiedAt;
         private String content;
@@ -80,16 +77,15 @@ public class CommentDto{
             return this;
         }
 
-        public Builder boardId(int boardId){
-            this.boardId = boardId;
+        public Builder userId(String userId){
+            this.userId = userId;
             return this;
         }
 
-        public Builder userDto(UserDto userDto){
-            this.userDto = userDto;
+        public Builder name(String name){
+            this.name = name;
             return this;
         }
-
         public Builder createdAt(LocalDateTime createdAt){
             this.createdAt = createdAt;
             return this;
@@ -105,11 +101,10 @@ public class CommentDto{
             return this;
         }
 
-        public CommentDto build(){
-            return new CommentDto(this);
+        public CommentResponse build(){
+            return new CommentResponse(this);
         }
 
     }
 
 }
-

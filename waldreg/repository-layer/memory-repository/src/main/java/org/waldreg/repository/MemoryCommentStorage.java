@@ -76,4 +76,8 @@ public class MemoryCommentStorage{
         return storage.get(id).getBoardId();
     }
 
+    public Comment inquiryCommentById(int commentId){
+        return storage.get(commentId);
+    }
+
 }

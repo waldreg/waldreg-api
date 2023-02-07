@@ -18,6 +18,7 @@ import org.waldreg.domain.character.Character;
 import org.waldreg.domain.user.User;
 import org.waldreg.repository.MemoryBoardStorage;
 import org.waldreg.repository.MemoryCharacterStorage;
+import org.waldreg.repository.MemoryCommentStorage;
 import org.waldreg.repository.MemoryUserStorage;
 import org.waldreg.repository.auth.MemoryAuthRepository;
 import org.waldreg.token.dto.TokenUserDto;
@@ -38,6 +39,8 @@ public class AuthRepositoryTest{
 
     @MockBean
     private MemoryBoardStorage memoryBoardStorage;
+    @MockBean
+    private MemoryCommentStorage memoryCommentStorage;
 
     @BeforeEach
     public void CLEAR_memoryUserStorage(){

@@ -8,4 +8,6 @@ public interface TokenUserFindable{
 
     TokenUserDto findUserByBoardId(int boardId);
 
+    TokenUserDto findUserByCommentId(int commentId);
+
 }

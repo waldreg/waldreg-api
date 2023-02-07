@@ -7,15 +7,16 @@ import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.waldreg.board.board.exception.BoardDoesNotExistException;
-import org.waldreg.board.board.exception.CategoryDoesNotExistException;
-import org.waldreg.board.board.exception.FutureCannotGetException;
-import org.waldreg.board.board.exception.InvalidRangeException;
+import org.waldreg.board.exception.BoardDoesNotExistException;
+import org.waldreg.board.exception.CategoryDoesNotExistException;
+import org.waldreg.board.exception.FutureCannotGetException;
+import org.waldreg.board.exception.InvalidRangeException;
 import org.waldreg.board.board.file.FileInfoGettable;
 import org.waldreg.board.board.spi.BoardRepository;
 import org.waldreg.board.board.spi.BoardInCategoryRepository;
 import org.waldreg.board.board.spi.BoardUserRepository;
 import org.waldreg.board.dto.BoardDto;
+import org.waldreg.board.dto.CategoryDto;
 import org.waldreg.board.dto.UserDto;
 import org.waldreg.util.token.DecryptedTokenContextGetter;
 
@@ -96,6 +97,8 @@ public class DefaultBoardManager implements BoardManager{
     public BoardDto inquiryBoardById(int id){
         throwIfBoardDoesNotExist(id);
         BoardDto boardDto = boardRepository.inquiryBoardById(id);
+        CategoryDto categoryDto = boardInCategoryRepository.inquiryCategoryById(boardDto.getCategoryId());
+        boardDto.setCategoryName(categoryDto.getCategoryName());
         boardDto.setViews(boardDto.getViews() + 1);
         boardRepository.modifyBoard(boardDto);
         return boardDto;
@@ -112,7 +115,8 @@ public class DefaultBoardManager implements BoardManager{
         throwIfInvalidRangeDetected(from, to);
         int maxIdx = boardRepository.getBoardMaxIdx();
         to = adjustEndIdx(from, to, maxIdx);
-        return boardRepository.inquiryAllBoard(from, to);
+        List<BoardDto> boardDtoList = boardRepository.inquiryAllBoard(from, to);
+        return setCategoryName(boardDtoList);
     }
 
     private void throwIfInvalidRangeDetected(int from, int to){
@@ -131,13 +135,24 @@ public class DefaultBoardManager implements BoardManager{
         return to;
     }
 
+    private List<BoardDto> setCategoryName(List<BoardDto> boardDtoList){
+        List<BoardDto> updatedBoardDtoList = new ArrayList<>();
+        for (BoardDto boardDto : boardDtoList){
+            CategoryDto categoryDto = boardInCategoryRepository.inquiryCategoryById(boardDto.getCategoryId());
+            boardDto.setCategoryName(categoryDto.getCategoryName());
+            updatedBoardDtoList.add(boardDto);
+        }
+        return updatedBoardDtoList;
+    }
+
     @Override
     public List<BoardDto> inquiryAllBoardByCategory(int categoryId, int from, int to){
         throwIfCategoryDoesNotExist(categoryId);
         throwIfInvalidRangeDetected(from, to);
         int maxIdx = boardRepository.getBoardMaxIdxByCategory(categoryId);
         to = adjustEndIdx(from, to, maxIdx);
-        return boardRepository.inquiryAllBoardByCategory(categoryId, from, to);
+        List<BoardDto> boardDtoList = boardRepository.inquiryAllBoardByCategory(categoryId, from, to);
+        return setCategoryName(boardDtoList);
     }
 
     @Override
@@ -145,7 +160,8 @@ public class DefaultBoardManager implements BoardManager{
         throwIfInvalidRangeDetected(from, to);
         int maxIdx = boardRepository.getBoardMaxIdxByTitle(keyword);
         to = adjustEndIdx(from, to, maxIdx);
-        return boardRepository.searchByTitle(keyword, from, to);
+        List<BoardDto> boardDtoList = boardRepository.searchByTitle(keyword, from, to);
+        return setCategoryName(boardDtoList);
     }
 
     @Override
@@ -153,7 +169,8 @@ public class DefaultBoardManager implements BoardManager{
         throwIfInvalidRangeDetected(from, to);
         int maxIdx = boardRepository.getBoardMaxIdxByContent(keyword);
         to = adjustEndIdx(from, to, maxIdx);
-        return boardRepository.searchByContent(keyword, from, to);
+        List<BoardDto> boardDtoList = boardRepository.searchByContent(keyword, from, to);
+        return setCategoryName(boardDtoList);
     }
 
     @Override
@@ -161,7 +178,8 @@ public class DefaultBoardManager implements BoardManager{
         throwIfInvalidRangeDetected(from, to);
         int maxIdx = boardRepository.getBoardMaxIdxByAuthorUserId(keyword);
         to = adjustEndIdx(from, to, maxIdx);
-        return boardRepository.searchByAuthorUserId(keyword, from, to);
+        List<BoardDto> boardDtoList = boardRepository.searchByAuthorUserId(keyword, from, to);
+        return setCategoryName(boardDtoList);
     }
 
     @Override

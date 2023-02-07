@@ -17,9 +17,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
-import org.waldreg.board.board.exception.BoardDoesNotExistException;
-import org.waldreg.board.board.exception.CategoryDoesNotExistException;
-import org.waldreg.board.board.exception.InvalidRangeException;
+import org.waldreg.board.exception.BoardDoesNotExistException;
+import org.waldreg.board.exception.CategoryDoesNotExistException;
+import org.waldreg.board.exception.InvalidRangeException;
 import org.waldreg.board.board.file.FileInfoGettable;
 import org.waldreg.board.board.management.BoardManager;
 import org.waldreg.board.board.management.BoardManager.BoardRequest;
@@ -28,6 +28,7 @@ import org.waldreg.board.board.spi.BoardRepository;
 import org.waldreg.board.board.spi.BoardInCategoryRepository;
 import org.waldreg.board.board.spi.BoardUserRepository;
 import org.waldreg.board.dto.BoardDto;
+import org.waldreg.board.dto.CategoryDto;
 import org.waldreg.board.dto.UserDto;
 import org.waldreg.util.token.DecryptedTokenContext;
 
@@ -107,9 +108,14 @@ public class BoardManagerTest{
                 .title(title)
                 .content(content)
                 .build();
+        CategoryDto categoryDto = CategoryDto.builder()
+                .categoryName("categoryName")
+                .id(categoryId)
+                .build();
 
         Mockito.when(boardRepository.isExistBoard(Mockito.anyInt())).thenReturn(true);
         Mockito.when(boardRepository.inquiryBoardById(Mockito.anyInt())).thenReturn(boardDto);
+        Mockito.when(boardInCategoryRepository.inquiryCategoryById(Mockito.anyInt())).thenReturn(categoryDto);
 
         //when
         BoardDto result = boardManager.inquiryBoardById(1);
@@ -249,6 +255,10 @@ public class BoardManagerTest{
                 .title("title3")
                 .content("content3")
                 .build();
+        CategoryDto categoryDto = CategoryDto.builder()
+                .categoryName("categoryName")
+                .id(categoryId1)
+                .build();
 
         List<BoardDto> result2 = new ArrayList<>();
         result2.add(boardDto1);
@@ -258,6 +268,7 @@ public class BoardManagerTest{
         Mockito.when(boardRepository.getBoardMaxIdxByCategory(Mockito.anyInt())).thenReturn(2);
         Mockito.when(boardInCategoryRepository.isExistCategory(Mockito.anyInt())).thenReturn(true);
         Mockito.when(boardRepository.inquiryAllBoardByCategory(Mockito.anyInt(), Mockito.anyInt(), Mockito.anyInt())).thenReturn(result2);
+        Mockito.when(boardInCategoryRepository.inquiryCategoryById(Mockito.anyInt())).thenReturn(categoryDto);
         List<BoardDto> result = boardManager.inquiryAllBoardByCategory(1, 1, 2);
         //then
         Assertions.assertAll(
@@ -335,11 +346,16 @@ public class BoardManagerTest{
         resultRepo.add(boardDto1);
         resultRepo.add(boardDto2);
 
+        CategoryDto categoryDto = CategoryDto.builder()
+                .categoryName("categoryName")
+                .id(categoryId1)
+                .build();
         //when
         String searchKeyword = "title";
 
         Mockito.when(boardRepository.getBoardMaxIdxByTitle(Mockito.anyString())).thenReturn(2);
         Mockito.when(boardRepository.searchByTitle(Mockito.anyString(), Mockito.anyInt(), Mockito.anyInt())).thenReturn(resultRepo);
+        Mockito.when(boardInCategoryRepository.inquiryCategoryById(Mockito.anyInt())).thenReturn(categoryDto);
         List<BoardDto> result = boardManager.searchBoardByTitle(searchKeyword, 1, 2);
         //then
         Assertions.assertAll(
@@ -403,11 +419,16 @@ public class BoardManagerTest{
         List<BoardDto> resultRepo = new ArrayList<>();
         resultRepo.add(boardDto1);
         resultRepo.add(boardDto2);
+        CategoryDto categoryDto = CategoryDto.builder()
+                .categoryName("categoryName")
+                .id(categoryId1)
+                .build();
 
         //when
         String searchKeyword = "content";
         Mockito.when(boardRepository.getBoardMaxIdxByContent(Mockito.anyString())).thenReturn(2);
         Mockito.when(boardRepository.searchByContent(Mockito.anyString(), Mockito.anyInt(), Mockito.anyInt())).thenReturn(resultRepo);
+        Mockito.when(boardInCategoryRepository.inquiryCategoryById(Mockito.anyInt())).thenReturn(categoryDto);
         List<BoardDto> result = boardManager.searchBoardByContent(searchKeyword, 1, 2);
         //then
         Assertions.assertAll(
@@ -458,10 +479,16 @@ public class BoardManagerTest{
                 .content(content)
                 .build();
 
+        CategoryDto categoryDto = CategoryDto.builder()
+                .categoryName("categoryName")
+                .id(categoryId1)
+                .build();
+
         //when
         String searchKeyword = "Fixtar";
         Mockito.when(boardRepository.getBoardMaxIdxByAuthorUserId(Mockito.anyString())).thenReturn(1);
         Mockito.when(boardRepository.searchByAuthorUserId(Mockito.anyString(), Mockito.anyInt(), Mockito.anyInt())).thenReturn(List.of(boardDto1));
+        Mockito.when(boardInCategoryRepository.inquiryCategoryById(Mockito.anyInt())).thenReturn(categoryDto);
         List<BoardDto> result = boardManager.searchBoardByAuthorUserId(searchKeyword, 1, 2);
 
         //then
