@@ -12,9 +12,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
-import org.waldreg.board.board.spi.UserRepository;
 import org.waldreg.board.exception.CategoryDoesNotExistException;
 import org.waldreg.board.exception.DuplicateCategoryNameException;
+import org.waldreg.board.board.spi.BoardUserRepository;
 import org.waldreg.board.category.management.CategoryManager;
 import org.waldreg.board.category.management.DefaultCategoryManager;
 import org.waldreg.board.category.spi.CategoryRepository;
@@ -26,7 +26,7 @@ import org.waldreg.util.token.DecryptedTokenContext;
 public class CategoryManagerTest{
 
     @MockBean
-    private UserRepository userRepository;
+    private BoardUserRepository userRepository;
 
     @Autowired
     private CategoryManager categoryManager;

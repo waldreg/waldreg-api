@@ -14,7 +14,7 @@ import org.waldreg.board.exception.InvalidRangeException;
 import org.waldreg.board.board.file.FileInfoGettable;
 import org.waldreg.board.board.spi.BoardRepository;
 import org.waldreg.board.board.spi.BoardInCategoryRepository;
-import org.waldreg.board.board.spi.UserRepository;
+import org.waldreg.board.board.spi.BoardUserRepository;
 import org.waldreg.board.dto.BoardDto;
 import org.waldreg.board.dto.CategoryDto;
 import org.waldreg.board.dto.UserDto;
@@ -25,16 +25,16 @@ public class DefaultBoardManager implements BoardManager{
 
     private final int perPage = 20;
     private final BoardRepository boardRepository;
-    private final UserRepository userRepository;
+    private final BoardUserRepository boardUserRepository;
     private final BoardInCategoryRepository boardInCategoryRepository;
     private final DecryptedTokenContextGetter decryptedTokenContextGetter;
     private final FileInfoGettable fileInfoGettable;
 
     @Autowired
-    public DefaultBoardManager(BoardRepository boardRepository, BoardInCategoryRepository boardInCategoryRepository, UserRepository userRepository, DecryptedTokenContextGetter decryptedTokenContextGetter, FileInfoGettable fileInfoGettable){
+    public DefaultBoardManager(BoardRepository boardRepository, BoardInCategoryRepository boardInCategoryRepository, BoardUserRepository boardUserRepository, DecryptedTokenContextGetter decryptedTokenContextGetter, FileInfoGettable fileInfoGettable){
         this.boardRepository = boardRepository;
         this.boardInCategoryRepository = boardInCategoryRepository;
-        this.userRepository = userRepository;
+        this.boardUserRepository = boardUserRepository;
         this.decryptedTokenContextGetter = decryptedTokenContextGetter;
         this.fileInfoGettable = fileInfoGettable;
     }
@@ -84,7 +84,7 @@ public class DefaultBoardManager implements BoardManager{
     }
 
     private BoardDto buildBoardDto(BoardRequest request){
-        UserDto userDto = userRepository.getUserInfo(request.getAuthorId());
+        UserDto userDto = boardUserRepository.getUserInfo(request.getAuthorId());
         return BoardDto.builder()
                 .title(request.getTitle())
                 .content(request.getContent())

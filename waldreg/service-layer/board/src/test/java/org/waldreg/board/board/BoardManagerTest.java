@@ -26,7 +26,7 @@ import org.waldreg.board.board.management.BoardManager.BoardRequest;
 import org.waldreg.board.board.management.DefaultBoardManager;
 import org.waldreg.board.board.spi.BoardRepository;
 import org.waldreg.board.board.spi.BoardInCategoryRepository;
-import org.waldreg.board.board.spi.UserRepository;
+import org.waldreg.board.board.spi.BoardUserRepository;
 import org.waldreg.board.dto.BoardDto;
 import org.waldreg.board.dto.CategoryDto;
 import org.waldreg.board.dto.UserDto;
@@ -45,7 +45,7 @@ public class BoardManagerTest{
     @MockBean
     private BoardInCategoryRepository boardInCategoryRepository;
     @MockBean
-    private UserRepository userRepository;
+    private BoardUserRepository boardUserRepository;
     @MockBean
     private FileInfoGettable fileInfoGettable;
 

@@ -24,7 +24,7 @@ import org.waldreg.board.exception.ReactionTypeDoesNotExistException;
 import org.waldreg.board.reaction.management.DefaultReactionManager;
 import org.waldreg.board.reaction.management.ReactionManager;
 import org.waldreg.board.reaction.spi.ReactionInBoardRepository;
-import org.waldreg.board.reaction.spi.UserRepository;
+import org.waldreg.board.reaction.spi.ReactionUserRepository;
 import org.waldreg.util.token.DecryptedTokenContext;
 
 @ExtendWith(SpringExtension.class)
@@ -41,7 +41,7 @@ public class ReactionManagerTest{
     private ReactionInBoardRepository reactionInBoardRepository;
 
     @MockBean
-    private UserRepository userRepository;
+    private ReactionUserRepository reactionUserRepository;
 
     @BeforeEach
     @AfterEach

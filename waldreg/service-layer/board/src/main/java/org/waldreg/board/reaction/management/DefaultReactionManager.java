@@ -10,16 +10,16 @@ import org.waldreg.board.dto.UserDto;
 import org.waldreg.board.exception.BoardDoesNotExistException;
 import org.waldreg.board.exception.ReactionTypeDoesNotExistException;
 import org.waldreg.board.reaction.spi.ReactionInBoardRepository;
-import org.waldreg.board.reaction.spi.UserRepository;
+import org.waldreg.board.reaction.spi.ReactionUserRepository;
 
 public class DefaultReactionManager implements ReactionManager{
 
     private final ReactionInBoardRepository reactionInBoardRepository;
-    private final UserRepository userRepository;
+    private final ReactionUserRepository reactionUserRepository;
 
-    public DefaultReactionManager(ReactionInBoardRepository reactionInBoardRepository, UserRepository userRepository){
+    public DefaultReactionManager(ReactionInBoardRepository reactionInBoardRepository, ReactionUserRepository userRepository){
         this.reactionInBoardRepository = reactionInBoardRepository;
-        this.userRepository = userRepository;
+        this.reactionUserRepository = userRepository;
     }
 
     @Override
@@ -97,7 +97,7 @@ public class DefaultReactionManager implements ReactionManager{
     }
 
     private List<UserDto> addReactionUserList(List<UserDto> userDtoList, String userId){
-        UserDto userDto = userRepository.getUserInfoByUserId(userId);
+        UserDto userDto = reactionUserRepository.getUserInfoByUserId(userId);
         userDtoList.add(userDto);
         return userDtoList;
     }
