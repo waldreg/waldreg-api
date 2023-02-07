@@ -15,7 +15,7 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.waldreg.board.exception.BoardDoesNotExistException;
 import org.waldreg.board.exception.CommentDoesNotExistException;
-import org.waldreg.board.exception.ContentLengthOverThousandException;
+import org.waldreg.board.exception.ContentOverFlowException;
 import org.waldreg.board.exception.InvalidRangeException;
 import org.waldreg.board.comment.management.CommentManager;
 import org.waldreg.board.comment.management.DefaultCommentManager;
@@ -136,7 +136,7 @@ public class CommentManagerTest{
         Mockito.when(commentInBoardRepository.isExistBoard(Mockito.anyInt())).thenReturn(true);
 
         //then
-        Assertions.assertThrows(ContentLengthOverThousandException.class, () -> commentManager.createComment(commentDto));
+        Assertions.assertThrows(ContentOverFlowException.class, () -> commentManager.createComment(commentDto));
     }
 
 

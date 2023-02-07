@@ -9,7 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.waldreg.board.exception.BoardDoesNotExistException;
 import org.waldreg.board.exception.CategoryDoesNotExistException;
-import org.waldreg.board.exception.FutureCannotGetException;
+import org.waldreg.board.exception.FileDoesNotSavedException;
 import org.waldreg.board.exception.InvalidRangeException;
 import org.waldreg.board.board.file.FileInfoGettable;
 import org.waldreg.board.board.spi.BoardRepository;
@@ -79,7 +79,7 @@ public class DefaultBoardManager implements BoardManager{
         try{
             return future.get();
         } catch (InterruptedException | ExecutionException e){
-            throw new FutureCannotGetException();
+            throw new FileDoesNotSavedException();
         }
     }
 
@@ -213,7 +213,7 @@ public class DefaultBoardManager implements BoardManager{
         try{
             future.get();
         } catch (InterruptedException | ExecutionException e){
-            throw new FutureCannotGetException();
+            throw new FileDoesNotSavedException();
         }
 
     }

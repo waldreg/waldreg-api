@@ -4,7 +4,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.waldreg.board.exception.BoardDoesNotExistException;
 import org.waldreg.board.exception.CommentDoesNotExistException;
-import org.waldreg.board.exception.ContentLengthOverThousandException;
+import org.waldreg.board.exception.ContentOverFlowException;
 import org.waldreg.board.exception.InvalidRangeException;
 import org.waldreg.board.comment.spi.CommentInBoardRepository;
 import org.waldreg.board.comment.spi.CommentRepository;
@@ -40,7 +40,7 @@ public class DefaultCommentManager implements CommentManager{
 
     private void throwIfContentOverFlowThousand(String content){
         if (content.length() > 1000){
-            throw new ContentLengthOverThousandException();
+            throw new ContentOverFlowException();
         }
     }
 
