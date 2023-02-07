@@ -691,7 +691,6 @@ public class BoardAcceptanceTest{
 
         String[] fileUrls = boards[0].getFiles();
 
-        int boardId = boards[0].getId();
         int categoryId = categoryList[0].getCategoryId();
         ArrayList<String> fileUrlList = new ArrayList<>(List.of(fileUrls));
 
@@ -1516,7 +1515,6 @@ public class BoardAcceptanceTest{
         String content1 = "content";
         CategoryListResponse categoryListResponse = objectMapper.readValue(BoardAcceptanceTestHelper.inquiryAllCategory(mvc, token).andReturn().getResponse().getContentAsString(), CategoryListResponse.class);
         int categoryId = categoryListResponse.getCategories()[0].getCategoryId();
-        int categoryId2 = categoryListResponse.getCategories()[1].getCategoryId();
 
         BoardCreateRequest boardCreateRequest1 = BoardCreateRequest.builder()
                 .title(title1)
@@ -1603,7 +1601,6 @@ public class BoardAcceptanceTest{
         String content1 = "content";
         CategoryListResponse categoryListResponse = objectMapper.readValue(BoardAcceptanceTestHelper.inquiryAllCategory(mvc, token).andReturn().getResponse().getContentAsString(), CategoryListResponse.class);
         int categoryId = categoryListResponse.getCategories()[0].getCategoryId();
-        int categoryId2 = categoryListResponse.getCategories()[1].getCategoryId();
 
         BoardCreateRequest boardCreateRequest1 = BoardCreateRequest.builder()
                 .title(title1)
@@ -1690,7 +1687,6 @@ public class BoardAcceptanceTest{
         String content1 = "content";
         CategoryListResponse categoryListResponse = objectMapper.readValue(BoardAcceptanceTestHelper.inquiryAllCategory(mvc, token).andReturn().getResponse().getContentAsString(), CategoryListResponse.class);
         int categoryId = categoryListResponse.getCategories()[0].getCategoryId();
-        int categoryId2 = categoryListResponse.getCategories()[1].getCategoryId();
 
         BoardCreateRequest boardCreateRequest1 = BoardCreateRequest.builder()
                 .title(title1)
