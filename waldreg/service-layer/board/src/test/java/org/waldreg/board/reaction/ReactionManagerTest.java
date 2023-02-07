@@ -4,9 +4,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -42,13 +40,6 @@ public class ReactionManagerTest{
 
     @MockBean
     private ReactionUserRepository reactionUserRepository;
-
-    @BeforeEach
-    @AfterEach
-    public void INIT_USER_TOKEN(){
-        decryptedTokenContext.resolve();
-        decryptedTokenContext.hold(1);
-    }
 
     @Test
     @DisplayName("반응 남기기 요청 성공")

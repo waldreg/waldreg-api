@@ -297,24 +297,24 @@ public class BoardRepositoryTest{
         //then
         Assertions.assertAll(
                 () -> Assertions.assertEquals(2, result.size()),
-                () -> Assertions.assertEquals(boardRequest2.getTitle(), result.get(0).getTitle()),
-                () -> Assertions.assertEquals(boardRequest2.getContent(), result.get(0).getContent()),
-                () -> Assertions.assertEquals(boardRequest2.getUserDto().getUserId(), result.get(0).getUserDto().getUserId()),
-                () -> Assertions.assertEquals(boardRequest2.getUserDto().getName(), result.get(0).getUserDto().getName()),
-                () -> Assertions.assertEquals(boardRequest2.getCategoryId(), result.get(0).getCategoryId()),
+                () -> Assertions.assertEquals(boardRequest.getTitle(), result.get(0).getTitle()),
+                () -> Assertions.assertEquals(boardRequest.getContent(), result.get(0).getContent()),
+                () -> Assertions.assertEquals(boardRequest.getUserDto().getUserId(), result.get(0).getUserDto().getUserId()),
+                () -> Assertions.assertEquals(boardRequest.getUserDto().getName(), result.get(0).getUserDto().getName()),
+                () -> Assertions.assertEquals(boardRequest.getCategoryId(), result.get(0).getCategoryId()),
                 () -> Assertions.assertNotNull(result.get(0).getCreatedAt()),
-                () -> Assertions.assertEquals(boardRequest2.getFileUrls().get(0), result.get(0).getFileUrls().get(0)),
-                () -> Assertions.assertEquals(boardRequest2.getImageUrls().get(0), result.get(0).getImageUrls().get(0)),
+                () -> Assertions.assertEquals(boardRequest.getFileUrls().get(0), result.get(0).getFileUrls().get(0)),
+                () -> Assertions.assertEquals(boardRequest.getImageUrls().get(0), result.get(0).getImageUrls().get(0)),
                 () -> Assertions.assertNotNull(result.get(0).getLastModifiedAt()),
                 () -> Assertions.assertTrue(result.get(0).getViews() == 0),
-                () -> Assertions.assertEquals(boardRequest.getTitle(), result.get(1).getTitle()),
-                () -> Assertions.assertEquals(boardRequest.getContent(), result.get(1).getContent()),
-                () -> Assertions.assertEquals(boardRequest.getUserDto().getUserId(), result.get(1).getUserDto().getUserId()),
-                () -> Assertions.assertEquals(boardRequest.getUserDto().getName(), result.get(1).getUserDto().getName()),
-                () -> Assertions.assertEquals(boardRequest.getCategoryId(), result.get(1).getCategoryId()),
+                () -> Assertions.assertEquals(boardRequest2.getTitle(), result.get(1).getTitle()),
+                () -> Assertions.assertEquals(boardRequest2.getContent(), result.get(1).getContent()),
+                () -> Assertions.assertEquals(boardRequest2.getUserDto().getUserId(), result.get(1).getUserDto().getUserId()),
+                () -> Assertions.assertEquals(boardRequest2.getUserDto().getName(), result.get(1).getUserDto().getName()),
+                () -> Assertions.assertEquals(boardRequest2.getCategoryId(), result.get(1).getCategoryId()),
                 () -> Assertions.assertNotNull(result.get(1).getCreatedAt()),
-                () -> Assertions.assertEquals(boardRequest.getFileUrls().get(0), result.get(1).getFileUrls().get(0)),
-                () -> Assertions.assertEquals(boardRequest.getImageUrls().get(0), result.get(1).getImageUrls().get(0)),
+                () -> Assertions.assertEquals(boardRequest2.getFileUrls().get(0), result.get(1).getFileUrls().get(0)),
+                () -> Assertions.assertEquals(boardRequest2.getImageUrls().get(0), result.get(1).getImageUrls().get(0)),
                 () -> Assertions.assertNotNull(result.get(1).getLastModifiedAt()),
                 () -> Assertions.assertTrue(result.get(1).getViews() == 0)
         );
@@ -856,6 +856,71 @@ public class BoardRepositoryTest{
                 () -> Assertions.assertEquals(boardInCategory.getViews(), result.getViews())
         );
 
+    }
+
+    @Test
+    @DisplayName("reaction 추가 성공 테스트")
+    public void ADD_REACTION_SUCCESS_TEST(){
+        //given
+        org.waldreg.user.dto.UserDto user = org.waldreg.user.dto.UserDto.builder()
+                .userId("alcuk_id")
+                .name("alcuk")
+                .userPassword("alcuk123!")
+                .phoneNumber("010-1234-1234")
+                .build();
+        CharacterDto characterDto = CharacterDto.builder()
+                .id(1)
+                .characterName("Guest")
+                .permissionDtoList(List.of())
+                .build();
+        characterRepository.createCharacter(characterDto);
+        userRepository.createUser(user);
+        org.waldreg.user.dto.UserDto userResponse = userRepository.readUserByUserId("alcuk_id");
+        String title = "title";
+        String content = "content";
+        UserDto userDto = UserDto.builder()
+                .id(userResponse.getId())
+                .userId("alcuk_id")
+                .name("alcuk")
+                .build();
+        CategoryDto categoryDto = CategoryDto.builder()
+                .categoryName("cate")
+                .build();
+        List<String> filePathList = new ArrayList<>();
+        filePathList.add("uuid.pptx");
+        List<String> imagePathList = new ArrayList<>();
+        imagePathList.add("uuid.png");
+
+        //when
+        categoryRepository.createCategory(categoryDto);
+        int categoryId = categoryRepository.inquiryAllCategory().get(0).getId();
+        BoardDto boardRequest = BoardDto.builder()
+                .title(title)
+                .userDto(userDto)
+                .content(content)
+                .categoryId(categoryId)
+                .lastModifiedAt(LocalDateTime.now())
+                .fileUrls(filePathList)
+                .imageUrls(imagePathList)
+                .build();
+        BoardDto result = boardRepository.createBoard(boardRequest);
+        categoryRepository.addBoardInCategoryBoardList(result);
+        CategoryDto boardInCategoryResult = categoryRepository.inquiryCategoryById(categoryId);
+
+        //then
+        Assertions.assertAll(
+                () -> Assertions.assertTrue(boardInCategoryResult.getBoardDtoList().size() == 1),
+                () -> Assertions.assertEquals(boardRequest.getTitle(), result.getTitle()),
+                () -> Assertions.assertEquals(boardRequest.getContent(), result.getContent()),
+                () -> Assertions.assertEquals(boardRequest.getUserDto().getUserId(), result.getUserDto().getUserId()),
+                () -> Assertions.assertEquals(boardRequest.getUserDto().getName(), result.getUserDto().getName()),
+                () -> Assertions.assertEquals(boardRequest.getCategoryId(), result.getCategoryId()),
+                () -> Assertions.assertNotNull(result.getCreatedAt()),
+                () -> Assertions.assertEquals(boardRequest.getFileUrls().get(0), result.getFileUrls().get(0)),
+                () -> Assertions.assertEquals(boardRequest.getImageUrls().get(0), result.getImageUrls().get(0)),
+                () -> Assertions.assertNotNull(result.getLastModifiedAt()),
+                () -> Assertions.assertTrue(result.getViews() == 0)
+        );
     }
 
 

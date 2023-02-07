@@ -74,7 +74,7 @@ public class BoardMapper implements BoardInCategoryMapper{
         return commentList != null;
     }
 
-    private Reaction reactionDtoToReactionDomain(Map<BoardServiceReactionType, List<UserDto>> reactionMap){
+    public Reaction reactionDtoToReactionDomain(Map<BoardServiceReactionType, List<UserDto>> reactionMap){
         Map<ReactionType, List<User>> reactionTypeListMap = new HashMap<>();
         for (Map.Entry<BoardServiceReactionType, List<UserDto>> reactionEntry : reactionMap.entrySet()){
             reactionTypeListMap.put(ReactionTypeToBoardServiceReactionType(reactionEntry.getKey()), userDtoListToUserDomainList((reactionEntry.getValue())));
