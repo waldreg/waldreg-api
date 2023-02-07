@@ -13,15 +13,18 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.waldreg.board.board.spi.BoardRepository;
+import org.waldreg.board.category.spi.CategoryRepository;
 import org.waldreg.board.dto.BoardDto;
 import org.waldreg.board.dto.CategoryDto;
 import org.waldreg.board.dto.UserDto;
 import org.waldreg.character.dto.CharacterDto;
 import org.waldreg.character.spi.CharacterRepository;
 import org.waldreg.repository.MemoryBoardStorage;
+import org.waldreg.repository.MemoryCategoryStorage;
 import org.waldreg.repository.MemoryCharacterStorage;
 import org.waldreg.repository.MemoryUserStorage;
 import org.waldreg.repository.category.CategoryMapper;
+import org.waldreg.repository.category.MemoryCategoryRepository;
 import org.waldreg.repository.character.CharacterMapper;
 import org.waldreg.repository.character.MemoryCharacterRepository;
 import org.waldreg.repository.comment.CommentMapper;
@@ -30,7 +33,7 @@ import org.waldreg.repository.user.UserMapper;
 import org.waldreg.user.spi.UserRepository;
 
 @ExtendWith(SpringExtension.class)
-@ContextConfiguration(classes = {CommentMapper.class, MemoryBoardRepository.class, MemoryBoardStorage.class, MemoryUserRepository.class, MemoryUserStorage.class, MemoryCharacterRepository.class, MemoryCharacterStorage.class, BoardMapper.class, UserMapper.class, CharacterMapper.class})
+@ContextConfiguration(classes = {CategoryMapper.class, MemoryCategoryStorage.class, MemoryCategoryRepository.class, CommentMapper.class, MemoryBoardRepository.class, MemoryBoardStorage.class, MemoryUserRepository.class, MemoryUserStorage.class, MemoryCharacterRepository.class, MemoryCharacterStorage.class, BoardMapper.class, UserMapper.class, CharacterMapper.class})
 public class BoardRepositoryTest{
 
     @Autowired
@@ -51,6 +54,12 @@ public class BoardRepositoryTest{
     @Autowired
     private MemoryCharacterStorage memoryCharacterStorage;
 
+    @Autowired
+    private CategoryRepository categoryRepository;
+
+    @Autowired
+    private MemoryCategoryStorage memoryCategoryStorage;
+
     @BeforeEach
     @AfterEach
     private void DELETE_ALL_CHARACTER(){memoryCharacterStorage.deleteAllCharacter();}
@@ -64,6 +73,10 @@ public class BoardRepositoryTest{
     @BeforeEach
     @AfterEach
     private void DELETE_ALL_BOARD(){memoryBoardStorage.deleteAllBoard();}
+
+    @BeforeEach
+    @AfterEach
+    private void DELETE_ALL_CATEGORY(){memoryCategoryStorage.deleteAllCategory();}
 
     @Test
     @DisplayName("새로운 보드 생성 성공 테스트")
@@ -91,28 +104,32 @@ public class BoardRepositoryTest{
                 .name("alcuk")
                 .build();
         CategoryDto categoryDto = CategoryDto.builder()
-                .id(1)
                 .categoryName("cate")
                 .build();
         List<String> filePathList = new ArrayList<>();
         filePathList.add("uuid.pptx");
         List<String> imagePathList = new ArrayList<>();
         imagePathList.add("uuid.png");
+
+        //when
+        categoryRepository.createCategory(categoryDto);
+        int categoryId = categoryRepository.inquiryAllCategory().get(0).getId();
         BoardDto boardRequest = BoardDto.builder()
                 .title(title)
                 .userDto(userDto)
                 .content(content)
-                .categoryId(categoryDto.getId())
+                .categoryId(categoryId)
                 .lastModifiedAt(LocalDateTime.now())
                 .fileUrls(filePathList)
                 .imageUrls(imagePathList)
                 .build();
-
-        //when
         BoardDto result = boardRepository.createBoard(boardRequest);
+        categoryRepository.addBoardInCategoryBoardList(result);
+        CategoryDto boardInCategoryResult = categoryRepository.inquiryCategoryById(categoryId);
 
         //then
         Assertions.assertAll(
+                () -> Assertions.assertTrue(boardInCategoryResult.getBoardDtoList().size() == 1),
                 () -> Assertions.assertEquals(boardRequest.getTitle(), result.getTitle()),
                 () -> Assertions.assertEquals(boardRequest.getContent(), result.getContent()),
                 () -> Assertions.assertEquals(boardRequest.getUserDto().getUserId(), result.getUserDto().getUserId()),
@@ -698,39 +715,41 @@ public class BoardRepositoryTest{
         org.waldreg.user.dto.UserDto userResponse = userRepository.readUserByUserId("alcuk_id");
         String title = "title";
         String content = "content";
-        List<String> fileUrlList = new ArrayList<>();
-        fileUrlList.add("uuid.pptx");
-        List<String> imageUrlList = new ArrayList<>();
-        imageUrlList.add("uuid.png");
         UserDto userDto = UserDto.builder()
                 .id(userResponse.getId())
                 .userId("alcuk_id")
                 .name("alcuk")
                 .build();
         CategoryDto categoryDto = CategoryDto.builder()
-                .id(1)
                 .categoryName("cate")
                 .build();
         List<String> filePathList = new ArrayList<>();
         filePathList.add("uuid.pptx");
         List<String> imagePathList = new ArrayList<>();
         imagePathList.add("uuid.png");
+
+        //when
+        categoryRepository.createCategory(categoryDto);
+        int categoryId = categoryRepository.inquiryAllCategory().get(0).getId();
         BoardDto boardRequest = BoardDto.builder()
                 .title(title)
                 .userDto(userDto)
                 .content(content)
-                .categoryId(categoryDto.getId())
+                .categoryId(categoryId)
+                .lastModifiedAt(LocalDateTime.now())
                 .fileUrls(filePathList)
-                .imageUrls(imageUrlList)
+                .imageUrls(imagePathList)
                 .build();
-
-        //when
         BoardDto boardDto = boardRepository.createBoard(boardRequest);
+        categoryRepository.addBoardInCategoryBoardList(boardDto);
         boardRepository.deleteBoard(boardDto.getId());
-        boolean result = boardRepository.isExistBoard(boardDto.getId());
+        CategoryDto boardInCategoryResult = categoryRepository.inquiryCategoryById(categoryId);
 
         //then
-        Assertions.assertFalse(result);
+        Assertions.assertAll(
+                () -> Assertions.assertFalse(boardRepository.isExistBoard(boardDto.getId())),
+                () -> Assertions.assertTrue(boardInCategoryResult.getBoardDtoList().size() == 0)
+        );
 
     }
 
@@ -760,30 +779,31 @@ public class BoardRepositoryTest{
                 .name("alcuk")
                 .build();
         CategoryDto categoryDto = CategoryDto.builder()
-                .id(1)
                 .categoryName("cate")
                 .build();
         List<String> filePathList = new ArrayList<>();
         filePathList.add("uuid.pptx");
         List<String> imagePathList = new ArrayList<>();
         imagePathList.add("uuid.png");
+
+        //when
+        categoryRepository.createCategory(categoryDto);
+        int categoryId = categoryRepository.inquiryAllCategory().get(0).getId();
         BoardDto boardRequest = BoardDto.builder()
                 .title(title)
                 .userDto(userDto)
                 .content(content)
-                .categoryId(categoryDto.getId())
+                .categoryId(categoryId)
+                .lastModifiedAt(LocalDateTime.now())
                 .fileUrls(filePathList)
-                .imageUrls(List.of())
+                .imageUrls(imagePathList)
                 .build();
-        String modifiedTitle = "modifiedTitle";
-        String modifiedContent = "hihihi";
-
-        //when
         BoardDto boardDto = boardRepository.createBoard(boardRequest);
+        categoryRepository.addBoardInCategoryBoardList(boardDto);
         BoardDto modifiedBoardRequest = BoardDto.builder()
                 .id(boardDto.getId())
-                .title(modifiedTitle)
-                .content(modifiedContent)
+                .title("changedtitle")
+                .content("blablablablabla")
                 .userDto(boardDto.getUserDto())
                 .createdAt(boardDto.getCreatedAt())
                 .lastModifiedAt(boardDto.getLastModifiedAt().plusMinutes(3))
@@ -796,20 +816,21 @@ public class BoardRepositoryTest{
                 .build();
         boardRepository.modifyBoard(modifiedBoardRequest);
         BoardDto result = boardRepository.inquiryBoardById(boardDto.getId());
+        BoardDto boardInCategory = categoryRepository.inquiryCategoryById(categoryId).getBoardDtoList().get(0);
 
         //then
         Assertions.assertAll(
-                () -> Assertions.assertEquals(modifiedBoardRequest.getId(), result.getId()),
-                () -> Assertions.assertEquals(modifiedBoardRequest.getTitle(), result.getTitle()),
-                () -> Assertions.assertEquals(modifiedBoardRequest.getContent(), result.getContent()),
-                () -> Assertions.assertEquals(modifiedBoardRequest.getUserDto().getUserId(), result.getUserDto().getUserId()),
-                () -> Assertions.assertEquals(modifiedBoardRequest.getUserDto().getName(), result.getUserDto().getName()),
-                () -> Assertions.assertEquals(modifiedBoardRequest.getCategoryId(), result.getCategoryId()),
-                () -> Assertions.assertEquals(modifiedBoardRequest.getCreatedAt(), result.getCreatedAt()),
+                () -> Assertions.assertEquals(boardInCategory.getId(), result.getId()),
+                () -> Assertions.assertEquals(boardInCategory.getTitle(), result.getTitle()),
+                () -> Assertions.assertEquals(boardInCategory.getContent(), result.getContent()),
+                () -> Assertions.assertEquals(boardInCategory.getUserDto().getUserId(), result.getUserDto().getUserId()),
+                () -> Assertions.assertEquals(boardInCategory.getUserDto().getName(), result.getUserDto().getName()),
+                () -> Assertions.assertEquals(boardInCategory.getCategoryId(), result.getCategoryId()),
+                () -> Assertions.assertEquals(boardInCategory.getCreatedAt(), result.getCreatedAt()),
                 () -> Assertions.assertTrue(result.getFileUrls().size() == 0),
-                () -> Assertions.assertEquals(modifiedBoardRequest.getImageUrls().get(0), result.getImageUrls().get(0)),
+                () -> Assertions.assertEquals(boardInCategory.getImageUrls().get(0), result.getImageUrls().get(0)),
                 () -> Assertions.assertTrue(boardDto.getLastModifiedAt().isBefore(result.getLastModifiedAt())),
-                () -> Assertions.assertEquals(modifiedBoardRequest.getViews(), result.getViews())
+                () -> Assertions.assertEquals(boardInCategory.getViews(), result.getViews())
         );
 
     }

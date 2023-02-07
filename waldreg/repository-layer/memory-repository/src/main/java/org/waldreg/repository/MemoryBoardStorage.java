@@ -8,6 +8,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 import org.springframework.stereotype.Repository;
 import org.waldreg.domain.board.Board;
 import org.waldreg.domain.board.comment.Comment;
+import org.waldreg.domain.category.Category;
 
 @Repository
 public class MemoryBoardStorage{

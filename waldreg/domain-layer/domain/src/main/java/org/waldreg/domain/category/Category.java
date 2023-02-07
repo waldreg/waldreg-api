@@ -9,7 +9,7 @@ public final class Category{
     private int id;
     private String categoryName;
 
-    private final List<Board> boardList;
+    private List<Board> boardList;
 
     private Category(){
         throw new UnsupportedOperationException("Can not invoke constructor \"Category()\"");
@@ -41,6 +41,10 @@ public final class Category{
 
     public List<Board> getBoardList(){
         return boardList;
+    }
+
+    public void setBoardList(List<Board> boardList){
+        this.boardList = boardList;
     }
 
     public void addBoard(Board board){

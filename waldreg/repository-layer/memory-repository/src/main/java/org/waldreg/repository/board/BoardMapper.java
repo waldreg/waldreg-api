@@ -62,7 +62,7 @@ public class BoardMapper implements BoardInCategoryMapper{
                 .lastModifiedAt(boardDto.getLastModifiedAt())
                 .views(boardDto.getViews());
         if (isCommentListNotEmpty(boardDto.getCommentList())){
-            builder = builder.commentList(commentDtoListToCommentDomainList(boardDto.getCommentList()));
+            builder = builder.commentList(commentInBoardMapper.commentDtoListToCommentDomainList(boardDto.getCommentList()));
         }
         return builder.build();
     }
@@ -93,13 +93,7 @@ public class BoardMapper implements BoardInCategoryMapper{
         return userList;
     }
 
-    private List<Comment> commentDtoListToCommentDomainList(List<CommentDto> commentDtoList){
-        List<Comment> commentList = new ArrayList<>();
-        for (CommentDto commentDto : commentDtoList){
-            commentList.add(commentInBoardMapper.commentDtoToCommentDomain(commentDto));
-        }
-        return commentList;
-    }
+
 
     public User userDtoToUserDomain(UserDto userDto){
         return User.builder()

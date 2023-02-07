@@ -25,7 +25,7 @@ import org.waldreg.board.board.management.BoardManager;
 import org.waldreg.board.board.management.BoardManager.BoardRequest;
 import org.waldreg.board.board.management.DefaultBoardManager;
 import org.waldreg.board.board.spi.BoardRepository;
-import org.waldreg.board.board.spi.CategoryPerformer;
+import org.waldreg.board.board.spi.BoardInCategoryRepository;
 import org.waldreg.board.board.spi.UserRepository;
 import org.waldreg.board.dto.BoardDto;
 import org.waldreg.board.dto.CategoryDto;
@@ -43,7 +43,7 @@ public class BoardManagerTest{
     @MockBean
     private BoardRepository boardRepository;
     @MockBean
-    private CategoryPerformer categoryPerformer;
+    private BoardInCategoryRepository boardInCategoryRepository;
     @MockBean
     private UserRepository userRepository;
     @MockBean
@@ -73,7 +73,7 @@ public class BoardManagerTest{
         List<Future<String>> fileNameList = new ArrayList<>();
         fileNameList.add(fileName);
 
-        Mockito.when(categoryPerformer.isExistCategory(Mockito.anyInt())).thenReturn(true);
+        Mockito.when(boardInCategoryRepository.isExistCategory(Mockito.anyInt())).thenReturn(true);
         Mockito.when(fileInfoGettable.getSavedFileNameList()).thenReturn(fileNameList);
 
         BoardRequest boardRequest = BoardRequest.builder()
@@ -266,7 +266,7 @@ public class BoardManagerTest{
 
         //when
         Mockito.when(boardRepository.getBoardMaxIdxByCategory(Mockito.anyInt())).thenReturn(2);
-        Mockito.when(categoryPerformer.isExistCategory(Mockito.anyInt())).thenReturn(true);
+        Mockito.when(boardInCategoryRepository.isExistCategory(Mockito.anyInt())).thenReturn(true);
         Mockito.when(boardRepository.inquiryAllBoardByCategory(Mockito.anyInt(), Mockito.anyInt(), Mockito.anyInt())).thenReturn(result2);
         Mockito.when(categoryPerformer.inquiryCategoryById(Mockito.anyInt())).thenReturn(categoryDto);
         List<BoardDto> result = boardManager.inquiryAllBoardByCategory(1, 1, 2);
@@ -289,7 +289,7 @@ public class BoardManagerTest{
         //given
 
         //when
-        Mockito.when(categoryPerformer.isExistCategory(Mockito.anyInt())).thenReturn(false);
+        Mockito.when(boardInCategoryRepository.isExistCategory(Mockito.anyInt())).thenReturn(false);
         //then
         Assertions.assertThrows(CategoryDoesNotExistException.class, () -> boardManager.inquiryAllBoardByCategory(2, 1, 2));
     }
@@ -301,7 +301,7 @@ public class BoardManagerTest{
         //given
         int categoryId = 3;
         //when
-        Mockito.when(categoryPerformer.isExistCategory(Mockito.anyInt())).thenReturn(true);
+        Mockito.when(boardInCategoryRepository.isExistCategory(Mockito.anyInt())).thenReturn(true);
         //then
         Assertions.assertAll(
                 () -> Assertions.assertThrows(InvalidRangeException.class, () -> boardManager.inquiryAllBoardByCategory(categoryId, -1, 0)),
@@ -560,7 +560,7 @@ public class BoardManagerTest{
 
         Future<Boolean> isFileDeleted = executor.submit(()->true);
 
-        Mockito.when(categoryPerformer.isExistCategory(Mockito.anyInt())).thenReturn(true);
+        Mockito.when(boardInCategoryRepository.isExistCategory(Mockito.anyInt())).thenReturn(true);
         Mockito.when(boardRepository.isExistBoard(Mockito.anyInt())).thenReturn(true);
         Mockito.when(boardRepository.inquiryBoardById(Mockito.anyInt())).thenReturn(boardDto);
         Mockito.when(fileInfoGettable.getSavedFileNameList()).thenReturn(fileNameList);
@@ -609,7 +609,7 @@ public class BoardManagerTest{
                 .deleteFileNameList(deleteFileNameList)
                 .build();
 
-        Mockito.when(categoryPerformer.isExistCategory(Mockito.anyInt())).thenReturn(false);
+        Mockito.when(boardInCategoryRepository.isExistCategory(Mockito.anyInt())).thenReturn(false);
         Mockito.when(boardRepository.isExistBoard(Mockito.anyInt())).thenReturn(true);
         Mockito.when(boardRepository.inquiryBoardById(Mockito.anyInt())).thenReturn(boardDto);
         //when

@@ -3,7 +3,7 @@ package org.waldreg.board.board.spi;
 import org.waldreg.board.dto.BoardDto;
 import org.waldreg.board.dto.CategoryDto;
 
-public interface CategoryPerformer{
+public interface BoardInCategoryRepository{
 
     void addBoardInCategoryBoardList(BoardDto boardDto);
 
