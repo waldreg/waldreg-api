@@ -13,6 +13,7 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.waldreg.board.board.spi.BoardUserRepository;
 import org.waldreg.board.dto.BoardDto;
 import org.waldreg.board.dto.UserDto;
+import org.waldreg.board.reaction.spi.ReactionUserRepository;
 import org.waldreg.character.dto.CharacterDto;
 import org.waldreg.character.spi.CharacterRepository;
 import org.waldreg.domain.board.Board;
@@ -30,6 +31,9 @@ public class BoardUserInfoRepositoryTest{
 
     @Autowired
     private BoardUserRepository boardUserRepository;
+
+    @Autowired
+    private ReactionUserRepository reactionUserRepository;
 
     @Autowired
     private UserRepository userRepository;
@@ -83,6 +87,38 @@ public class BoardUserInfoRepositoryTest{
                 () -> Assertions.assertEquals(userResponse.getId(),result.getId())
         );
 
+
+    }
+
+    @Test
+    @DisplayName("userId로 유저 정보 조회 성공 테스트")
+    public void GET_USER_INFO_BY_USER_ID_SUCCESS_TEST(){
+        //given
+        org.waldreg.user.dto.UserDto user = org.waldreg.user.dto.UserDto.builder()
+                .userId("alcuk_id")
+                .name("alcuk")
+                .userPassword("alcuk123!")
+                .phoneNumber("010-1234-1234")
+                .build();
+        CharacterDto characterDto = CharacterDto.builder()
+                .id(1)
+                .characterName("Guest")
+                .permissionDtoList(List.of())
+                .build();
+        characterRepository.createCharacter(characterDto);
+        userRepository.createUser(user);
+        org.waldreg.user.dto.UserDto userResponse = userRepository.readUserByUserId("alcuk_id");
+
+        //when
+        String userId = userResponse.getUserId();
+        UserDto result = reactionUserRepository.getUserInfoByUserId(userId);
+
+        //then
+        Assertions.assertAll(
+                () -> Assertions.assertEquals(userResponse.getUserId(), result.getUserId()),
+                () -> Assertions.assertEquals(userResponse.getName(), result.getName()),
+                () -> Assertions.assertEquals(userResponse.getId(),result.getId())
+        );
 
     }
 
