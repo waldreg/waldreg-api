@@ -115,7 +115,7 @@ public class BoardManagerTest{
 
         Mockito.when(boardRepository.isExistBoard(Mockito.anyInt())).thenReturn(true);
         Mockito.when(boardRepository.inquiryBoardById(Mockito.anyInt())).thenReturn(boardDto);
-        Mockito.when(categoryPerformer.inquiryCategoryById(Mockito.anyInt())).thenReturn(categoryDto);
+        Mockito.when(boardInCategoryRepository.inquiryCategoryById(Mockito.anyInt())).thenReturn(categoryDto);
 
         //when
         BoardDto result = boardManager.inquiryBoardById(1);
@@ -268,7 +268,7 @@ public class BoardManagerTest{
         Mockito.when(boardRepository.getBoardMaxIdxByCategory(Mockito.anyInt())).thenReturn(2);
         Mockito.when(boardInCategoryRepository.isExistCategory(Mockito.anyInt())).thenReturn(true);
         Mockito.when(boardRepository.inquiryAllBoardByCategory(Mockito.anyInt(), Mockito.anyInt(), Mockito.anyInt())).thenReturn(result2);
-        Mockito.when(categoryPerformer.inquiryCategoryById(Mockito.anyInt())).thenReturn(categoryDto);
+        Mockito.when(boardInCategoryRepository.inquiryCategoryById(Mockito.anyInt())).thenReturn(categoryDto);
         List<BoardDto> result = boardManager.inquiryAllBoardByCategory(1, 1, 2);
         //then
         Assertions.assertAll(
@@ -355,7 +355,7 @@ public class BoardManagerTest{
 
         Mockito.when(boardRepository.getBoardMaxIdxByTitle(Mockito.anyString())).thenReturn(2);
         Mockito.when(boardRepository.searchByTitle(Mockito.anyString(), Mockito.anyInt(), Mockito.anyInt())).thenReturn(resultRepo);
-        Mockito.when(categoryPerformer.inquiryCategoryById(Mockito.anyInt())).thenReturn(categoryDto);
+        Mockito.when(boardInCategoryRepository.inquiryCategoryById(Mockito.anyInt())).thenReturn(categoryDto);
         List<BoardDto> result = boardManager.searchBoardByTitle(searchKeyword, 1, 2);
         //then
         Assertions.assertAll(
@@ -428,7 +428,7 @@ public class BoardManagerTest{
         String searchKeyword = "content";
         Mockito.when(boardRepository.getBoardMaxIdxByContent(Mockito.anyString())).thenReturn(2);
         Mockito.when(boardRepository.searchByContent(Mockito.anyString(), Mockito.anyInt(), Mockito.anyInt())).thenReturn(resultRepo);
-        Mockito.when(categoryPerformer.inquiryCategoryById(Mockito.anyInt())).thenReturn(categoryDto);
+        Mockito.when(boardInCategoryRepository.inquiryCategoryById(Mockito.anyInt())).thenReturn(categoryDto);
         List<BoardDto> result = boardManager.searchBoardByContent(searchKeyword, 1, 2);
         //then
         Assertions.assertAll(
@@ -488,7 +488,7 @@ public class BoardManagerTest{
         String searchKeyword = "Fixtar";
         Mockito.when(boardRepository.getBoardMaxIdxByAuthorUserId(Mockito.anyString())).thenReturn(1);
         Mockito.when(boardRepository.searchByAuthorUserId(Mockito.anyString(), Mockito.anyInt(), Mockito.anyInt())).thenReturn(List.of(boardDto1));
-        Mockito.when(categoryPerformer.inquiryCategoryById(Mockito.anyInt())).thenReturn(categoryDto);
+        Mockito.when(boardInCategoryRepository.inquiryCategoryById(Mockito.anyInt())).thenReturn(categoryDto);
         List<BoardDto> result = boardManager.searchBoardByAuthorUserId(searchKeyword, 1, 2);
 
         //then

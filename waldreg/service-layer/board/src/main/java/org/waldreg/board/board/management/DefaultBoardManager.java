@@ -97,7 +97,7 @@ public class DefaultBoardManager implements BoardManager{
     public BoardDto inquiryBoardById(int id){
         throwIfBoardDoesNotExist(id);
         BoardDto boardDto = boardRepository.inquiryBoardById(id);
-        CategoryDto categoryDto = categoryPerformer.inquiryCategoryById(boardDto.getCategoryId());
+        CategoryDto categoryDto = boardInCategoryRepository.inquiryCategoryById(boardDto.getCategoryId());
         boardDto.setCategoryName(categoryDto.getCategoryName());
         boardDto.setViews(boardDto.getViews() + 1);
         boardRepository.modifyBoard(boardDto);
@@ -138,7 +138,7 @@ public class DefaultBoardManager implements BoardManager{
     private List<BoardDto> setCategoryName(List<BoardDto> boardDtoList){
         List<BoardDto> updatedBoardDtoList = new ArrayList<>();
         for (BoardDto boardDto : boardDtoList){
-            CategoryDto categoryDto = categoryPerformer.inquiryCategoryById(boardDto.getCategoryId());
+            CategoryDto categoryDto = boardInCategoryRepository.inquiryCategoryById(boardDto.getCategoryId());
             boardDto.setCategoryName(categoryDto.getCategoryName());
             updatedBoardDtoList.add(boardDto);
         }
