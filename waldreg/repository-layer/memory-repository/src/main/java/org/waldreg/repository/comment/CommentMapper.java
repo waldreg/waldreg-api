@@ -2,6 +2,7 @@ package org.waldreg.repository.comment;
 
 import java.util.ArrayList;
 import java.util.List;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.waldreg.board.dto.CommentDto;
 import org.waldreg.board.dto.UserDto;
@@ -11,6 +12,35 @@ import org.waldreg.repository.board.CommentInBoardMapper;
 
 @Service
 public class CommentMapper implements CommentInBoardMapper{
+
+    @Override
+    public List<Comment> commentDtoListToCommentDomainList(List<CommentDto> commentDtoList){
+        List<Comment> commentList = new ArrayList<>();
+        for (CommentDto commentDto : commentDtoList){
+            commentList.add(commentDtoToCommentDomain(commentDto));
+        }
+        return commentList;
+    }
+
+    @Override
+    public Comment commentDtoToCommentDomain(CommentDto commentDto){
+        Comment.Builder builder = Comment.builder()
+                .boardId(commentDto.getBoardId())
+                .user(userDtoToUserDomain(commentDto.getUserDto()))
+                .content(commentDto.getContent());
+        if (!isCommentCreate(commentDto)){
+            return builder
+                    .id(commentDto.getId())
+                    .createdAt(commentDto.getCreatedAt())
+                    .lastModifiedAt(commentDto.getLastModifiedAt())
+                    .build();
+        }
+        return builder.build();
+    }
+
+    private boolean isCommentCreate(CommentDto commentDto){
+        return commentDto.getCreatedAt() == null;
+    }
 
     @Override
     public List<CommentDto> commentDomainListToCommentDtoList(List<Comment> commentList){
@@ -39,26 +69,6 @@ public class CommentMapper implements CommentInBoardMapper{
                 .userId(user.getUserId())
                 .name(user.getName())
                 .build();
-    }
-
-    @Override
-    public Comment commentDtoToCommentDomain(CommentDto commentDto){
-        Comment.Builder builder = Comment.builder()
-                .boardId(commentDto.getBoardId())
-                .user(userDtoToUserDomain(commentDto.getUserDto()))
-                .content(commentDto.getContent());
-        if (!isCommentCreate(commentDto)){
-            return builder
-                    .id(commentDto.getId())
-                    .createdAt(commentDto.getCreatedAt())
-                    .lastModifiedAt(commentDto.getLastModifiedAt())
-                    .build();
-        }
-        return builder.build();
-    }
-
-    private boolean isCommentCreate(CommentDto commentDto){
-        return commentDto.getCreatedAt() == null;
     }
 
     public User userDtoToUserDomain(UserDto userDto){

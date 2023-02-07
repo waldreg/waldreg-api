@@ -2,7 +2,7 @@ package org.waldreg.board.board.spi;
 
 import org.waldreg.board.dto.BoardDto;
 
-public interface CategoryPerformer{
+public interface BoardInCategoryRepository{
 
     void addBoardInCategoryBoardList(BoardDto boardDto);
 
