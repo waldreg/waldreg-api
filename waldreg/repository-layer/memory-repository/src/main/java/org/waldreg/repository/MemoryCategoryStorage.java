@@ -52,7 +52,7 @@ public class MemoryCategoryStorage{
     }
 
     public void modifyCategory(Category category){
-        storage.replace(category.getId(),category);
+        storage.replace(category.getId(), category);
     }
 
 }

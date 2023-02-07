@@ -206,7 +206,7 @@ public class BoardDto{
             return this;
         }
 
-        public Builder commentList(List<CommentDto> comments){
+        public Builder commentList(List<CommentDto> commentList){
             this.commentList = commentList;
             return this;
         }

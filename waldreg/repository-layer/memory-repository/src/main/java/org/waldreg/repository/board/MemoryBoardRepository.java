@@ -4,23 +4,29 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 import org.waldreg.board.board.spi.BoardRepository;
+import org.waldreg.board.comment.spi.CommentInBoardRepository;
 import org.waldreg.board.dto.BoardDto;
+import org.waldreg.board.dto.CommentDto;
 import org.waldreg.domain.board.Board;
+import org.waldreg.domain.board.comment.Comment;
 import org.waldreg.repository.MemoryBoardStorage;
 import org.waldreg.repository.MemoryUserStorage;
 
 @Repository
-public class MemoryBoardRepository implements BoardRepository{
+public class MemoryBoardRepository implements BoardRepository, CommentInBoardRepository{
 
     private final MemoryBoardStorage memoryBoardStorage;
     private final MemoryUserStorage memoryUserStorage;
     private final BoardMapper boardMapper;
 
+    private final CommentInBoardMapper commentInBoardMapper;
+
     @Autowired
-    public MemoryBoardRepository(MemoryBoardStorage memoryBoardStorage, MemoryUserStorage memoryUserStorage, BoardMapper boardMapper){
+    public MemoryBoardRepository(MemoryBoardStorage memoryBoardStorage, MemoryUserStorage memoryUserStorage, BoardMapper boardMapper, CommentInBoardMapper commentInBoardMapper){
         this.memoryBoardStorage = memoryBoardStorage;
         this.memoryUserStorage = memoryUserStorage;
         this.boardMapper = boardMapper;
+        this.commentInBoardMapper = commentInBoardMapper;
     }
 
     @Override
@@ -34,6 +40,12 @@ public class MemoryBoardRepository implements BoardRepository{
     public BoardDto inquiryBoardById(int boardId){
         Board board = memoryBoardStorage.inquiryBoardById(boardId);
         return boardMapper.boardDomainToBoardDto(board);
+    }
+
+    @Override
+    public void addCommentInBoardCommentList(CommentDto commentDto){
+        Comment comment = commentInBoardMapper.commentDtoToCommentDomain(commentDto);
+        memoryBoardStorage.addCommentInBoardCommentList(comment);
     }
 
     @Override
