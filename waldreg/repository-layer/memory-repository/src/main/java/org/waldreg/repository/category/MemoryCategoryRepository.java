@@ -8,6 +8,7 @@ import org.waldreg.board.dto.BoardDto;
 import org.waldreg.board.dto.CategoryDto;
 import org.waldreg.domain.board.Board;
 import org.waldreg.domain.category.Category;
+import org.waldreg.repository.MemoryBoardStorage;
 import org.waldreg.repository.MemoryCategoryStorage;
 
 @Repository
@@ -15,11 +16,14 @@ public class MemoryCategoryRepository implements CategoryRepository{
 
     private final MemoryCategoryStorage memoryCategoryStorage;
 
+    private final MemoryBoardStorage memoryBoardStorage;
+
     private final CategoryMapper categoryMapper;
 
     @Autowired
-    public MemoryCategoryRepository(MemoryCategoryStorage memoryCategoryStorage, CategoryMapper categoryMapper){
+    public MemoryCategoryRepository(MemoryCategoryStorage memoryCategoryStorage, MemoryBoardStorage memoryBoardStorage, CategoryMapper categoryMapper){
         this.memoryCategoryStorage = memoryCategoryStorage;
+        this.memoryBoardStorage = memoryBoardStorage;
         this.categoryMapper = categoryMapper;
     }
 
@@ -61,7 +65,15 @@ public class MemoryCategoryRepository implements CategoryRepository{
 
     @Override
     public void deleteCategory(int id){
+        Category category = memoryCategoryStorage.inquiryCategoryById(id);
+        deleteBoardInCategoryBoardList(category.getBoardList());
         memoryCategoryStorage.deleteCategory(id);
+    }
+
+    private void deleteBoardInCategoryBoardList(List<Board> boardList){
+        for(Board board : boardList){
+            memoryBoardStorage.deleteBoardById(board.getId());
+        }
     }
 
     @Override
