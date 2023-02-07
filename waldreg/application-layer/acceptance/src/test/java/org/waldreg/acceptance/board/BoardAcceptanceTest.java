@@ -17,6 +17,7 @@ import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.mock.web.MockPart;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
+import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import org.waldreg.acceptance.authentication.AuthenticationAcceptanceTestHelper;
@@ -142,9 +143,80 @@ public class BoardAcceptanceTest{
         MockMultipartFile imgFile = new MockMultipartFile("image", imgName, imgContentType, new FileInputStream(imgPath));
         MockMultipartFile docxFile = new MockMultipartFile("file", fileName, fileContentType, new FileInputStream(filePath));
         //when
+        List<MockMultipartFile> imgFileList = new ArrayList<>();
+        List<MockMultipartFile> docxFileList = new ArrayList<>();
+        imgFileList.add(imgFile);
+        docxFileList.add(docxFile);
 
-        ResultActions result = BoardAcceptanceTestHelper.createBoardWithAll(mvc, token, jsonContent, imgFile, docxFile);
 
+        ResultActions result = BoardAcceptanceTestHelper.createBoardWithAll(mvc, token, jsonContent, imgFileList, docxFileList);
+
+        //then
+        result.andExpectAll(
+                MockMvcResultMatchers.status().isOk(),
+                MockMvcResultMatchers.header().string(HttpHeaders.CONTENT_TYPE, "application/json"),
+                MockMvcResultMatchers.header().string("api-version", apiVersion)
+        );
+
+    }
+
+    @Test
+    @DisplayName("게시글 생성 성공(이미지,파일 여러개)")
+    public void CREATE_BOARD_WITH_ALL_FILE_LIST_TEST() throws Exception{
+        //given
+        String adminToken = AuthenticationAcceptanceTestHelper.getAdminToken(mvc, objectMapper);
+
+        String categoryName = "cate1";
+        CategoryRequest categoryRequest = CategoryRequest.builder().categoryName(categoryName).build();
+        BoardAcceptanceTestHelper.createCategory(mvc, adminToken, objectMapper.writeValueAsString(categoryRequest));
+        CategoryListResponse categoryResult = objectMapper.readValue(BoardAcceptanceTestHelper.inquiryAllCategory(mvc, adminToken)
+                                                                             .andReturn()
+                                                                             .getResponse()
+                                                                             .getContentAsString(), CategoryListResponse.class);
+        int categoryId = categoryResult.getCategories()[0].getCategoryId();
+
+        String token = createUserAndGetToken("alcuk", "alcuk_id", "2gdddddd!");
+        String title = "notice";
+        String content = "content";
+
+        BoardCreateRequest boardCreateRequest = BoardCreateRequest.builder()
+                .title(title)
+                .content(content)
+                .categoryId(categoryId)
+                .build();
+
+        String imgName = "TestImage.jpg";
+        String imgContentType = "jpg";
+        String imgPath = "./src/test/java/org/waldreg/acceptance/board/TestImage.jpg";
+
+        String imgName2 = "TestImage2.jpg";
+        String imgContentType2 = "jpg";
+        String imgPath2 = "./src/test/java/org/waldreg/acceptance/board/TestImage2.jpg";
+
+        String fileName = "TestDocx";
+        String fileContentType = "docx";
+        String filePath = "./src/test/java/org/waldreg/acceptance/board/TestDocx.docx";
+
+        MockPart jsonContent = new MockPart("boardCreateRequest", objectMapper.writeValueAsString(boardCreateRequest).getBytes());
+        MockMultipartFile imgFile = new MockMultipartFile("image", imgName, imgContentType, new FileInputStream(imgPath));
+        MockMultipartFile imgFile2 = new MockMultipartFile("image", imgName2, imgContentType2, new FileInputStream(imgPath2));
+        MockMultipartFile docxFile = new MockMultipartFile("file", fileName, fileContentType, new FileInputStream(filePath));
+        //when
+        List<MockMultipartFile> imgFileList = new ArrayList<>();
+        List<MockMultipartFile> docxFileList = new ArrayList<>();
+        imgFileList.add(imgFile);
+        imgFileList.add(imgFile2);
+        docxFileList.add(docxFile);
+
+        ResultActions result = mvc.perform(MockMvcRequestBuilders.multipart("/board")
+                                                   .part(jsonContent)
+                                                   .file(imgFileList.get(0))
+                                                   .file(imgFileList.get(1))
+                                                   .file(docxFileList.get(0))
+                                                   .header(HttpHeaders.AUTHORIZATION, token)
+                                                   .contentType(MediaType.APPLICATION_JSON)
+                                                   .accept(MediaType.APPLICATION_JSON)
+                                                   .header("api-version", apiVersion));
         //then
         result.andExpectAll(
                 MockMvcResultMatchers.status().isOk(),
@@ -221,8 +293,9 @@ public class BoardAcceptanceTest{
         MockPart jsonContent = new MockPart("boardCreateRequest", objectMapper.writeValueAsString(boardCreateRequest).getBytes());
         MockMultipartFile imgFile = new MockMultipartFile("image", imgName, imgContentType, new FileInputStream(imgPath));
         //when
-
-        ResultActions result = BoardAcceptanceTestHelper.createBoardWithJsonAndImage(mvc, token, jsonContent, imgFile);
+        List<MockMultipartFile> imgFileList = new ArrayList<>();
+        imgFileList.add(imgFile);
+        ResultActions result = BoardAcceptanceTestHelper.createBoardWithJsonAndImage(mvc, token, jsonContent, imgFileList);
 
         //then
         result.andExpectAll(
@@ -263,8 +336,10 @@ public class BoardAcceptanceTest{
         MockPart jsonContent = new MockPart("boardCreateRequest", objectMapper.writeValueAsString(boardCreateRequest).getBytes());
         MockMultipartFile docxFile = new MockMultipartFile("file", fileName, fileContentType, new FileInputStream(filePath));
         //when
+        List<MockMultipartFile> docxFileList = new ArrayList<>();
+        docxFileList.add(docxFile);
 
-        ResultActions result = BoardAcceptanceTestHelper.createBoardWithJsonAndFile(mvc, token, jsonContent, docxFile);
+        ResultActions result = BoardAcceptanceTestHelper.createBoardWithJsonAndFile(mvc, token, jsonContent, docxFileList);
 
         //then
         result.andExpectAll(
@@ -518,7 +593,12 @@ public class BoardAcceptanceTest{
         MockMultipartFile docxFile2 = new MockMultipartFile("file", fileName2, fileContentType2, new FileInputStream(filePath2));
         //when
 
-        ResultActions result = BoardAcceptanceTestHelper.modifyBoardWithAll(mvc, adminToken, boardId, jsonContent2, imgFile2, docxFile2);
+        List<MockMultipartFile> imgFileList = new ArrayList<>();
+        List<MockMultipartFile> docxFileList = new ArrayList<>();
+        imgFileList.add(imgFile2);
+        docxFileList.add(docxFile2);
+
+        ResultActions result = BoardAcceptanceTestHelper.modifyBoardWithAll(mvc, adminToken, boardId, jsonContent2, imgFileList, docxFileList);
 
         //then
         result.andExpectAll(
@@ -610,8 +690,10 @@ public class BoardAcceptanceTest{
         MockPart jsonContent2 = new MockPart("boardCreateRequest", objectMapper.writeValueAsString(boardUpdateRequest).getBytes());
         MockMultipartFile imgFile2 = new MockMultipartFile("image", imgName2, imgContentType2, new FileInputStream(imgPath2));
         //when
+        List<MockMultipartFile> imgFileList = new ArrayList<>();
+        imgFileList.add(imgFile2);
 
-        ResultActions result = BoardAcceptanceTestHelper.modifyBoardWithJsonAndImage(mvc, adminToken, boardId, jsonContent2, imgFile2);
+        ResultActions result = BoardAcceptanceTestHelper.modifyBoardWithJsonAndImage(mvc, adminToken, boardId, jsonContent2, imgFileList);
 
         //then
         result.andExpectAll(
@@ -659,8 +741,10 @@ public class BoardAcceptanceTest{
         MockPart jsonContent2 = new MockPart("boardCreateRequest", objectMapper.writeValueAsString(boardUpdateRequest).getBytes());
         MockMultipartFile docxFile2 = new MockMultipartFile("file", fileName2, fileContentType2, new FileInputStream(filePath2));
         //when
+        List<MockMultipartFile> docxFileList = new ArrayList<>();
+        docxFileList.add(docxFile2);
 
-        ResultActions result = BoardAcceptanceTestHelper.modifyBoardWithJsonAndFile(mvc, adminToken, boardId, jsonContent2, docxFile2);
+        ResultActions result = BoardAcceptanceTestHelper.modifyBoardWithJsonAndFile(mvc, adminToken, boardId, jsonContent2, docxFileList);
 
         //then
         result.andExpectAll(
@@ -714,7 +798,12 @@ public class BoardAcceptanceTest{
         MockMultipartFile docxFile2 = new MockMultipartFile("file", fileName2, fileContentType2, new FileInputStream(filePath2));
         //when
 
-        ResultActions result = BoardAcceptanceTestHelper.modifyBoardWithAll(mvc, adminToken, -1, jsonContent2, imgFile2, docxFile2);
+        List<MockMultipartFile> imgFileList = new ArrayList<>();
+        List<MockMultipartFile> docxFileList = new ArrayList<>();
+        imgFileList.add(imgFile2);
+        docxFileList.add(docxFile2);
+
+        ResultActions result = BoardAcceptanceTestHelper.modifyBoardWithAll(mvc, adminToken, -1, jsonContent2, imgFileList, docxFileList);
 
         //then
         result.andExpectAll(
@@ -771,8 +860,12 @@ public class BoardAcceptanceTest{
         MockMultipartFile imgFile2 = new MockMultipartFile("image", imgName2, imgContentType2, new FileInputStream(imgPath2));
         MockMultipartFile docxFile2 = new MockMultipartFile("file", fileName2, fileContentType2, new FileInputStream(filePath2));
         //when
+        List<MockMultipartFile> imgFileList = new ArrayList<>();
+        List<MockMultipartFile> docxFileList = new ArrayList<>();
+        imgFileList.add(imgFile2);
+        docxFileList.add(docxFile2);
 
-        ResultActions result = BoardAcceptanceTestHelper.modifyBoardWithAll(mvc, token, boardId, jsonContent2, imgFile2, docxFile2);
+        ResultActions result = BoardAcceptanceTestHelper.modifyBoardWithAll(mvc, token, boardId, jsonContent2, imgFileList, docxFileList);
 
         //then
         result.andExpectAll(
@@ -818,7 +911,11 @@ public class BoardAcceptanceTest{
         MockPart jsonContent = new MockPart("boardCreateRequest", objectMapper.writeValueAsString(boardCreateRequest).getBytes());
         MockMultipartFile imgFile = new MockMultipartFile("image", imgName, imgContentType, new FileInputStream(imgPath));
         MockMultipartFile docxFile = new MockMultipartFile("file", fileName, fileContentType, new FileInputStream(filePath));
-        BoardAcceptanceTestHelper.createBoardWithAll(mvc, token, jsonContent, imgFile, docxFile);
+        List<MockMultipartFile> imgFileList = new ArrayList<>();
+        List<MockMultipartFile> docxFileList = new ArrayList<>();
+        imgFileList.add(imgFile);
+        docxFileList.add(docxFile);
+        BoardAcceptanceTestHelper.createBoardWithAll(mvc, token, jsonContent, imgFileList, docxFileList);
 
         //when
         ResultActions boards = BoardAcceptanceTestHelper.inquiryAllBoard(mvc, token);
@@ -872,7 +969,11 @@ public class BoardAcceptanceTest{
         MockPart jsonContent = new MockPart("boardCreateRequest", objectMapper.writeValueAsString(boardCreateRequest).getBytes());
         MockMultipartFile imgFile = new MockMultipartFile("image", imgName, imgContentType, new FileInputStream(imgPath));
         MockMultipartFile docxFile = new MockMultipartFile("file", fileName, fileContentType, new FileInputStream(filePath));
-        BoardAcceptanceTestHelper.createBoardWithAll(mvc, token, jsonContent, imgFile, docxFile);
+        List<MockMultipartFile> imgFileList = new ArrayList<>();
+        List<MockMultipartFile> docxFileList = new ArrayList<>();
+        imgFileList.add(imgFile);
+        docxFileList.add(docxFile);
+        BoardAcceptanceTestHelper.createBoardWithAll(mvc, token, jsonContent, imgFileList, docxFileList);
 
         //when
         ResultActions boards = BoardAcceptanceTestHelper.inquiryAllBoard(mvc, token);
@@ -925,7 +1026,11 @@ public class BoardAcceptanceTest{
         MockPart jsonContent = new MockPart("boardCreateRequest", objectMapper.writeValueAsString(boardCreateRequest).getBytes());
         MockMultipartFile imgFile = new MockMultipartFile("image", imgName, imgContentType, new FileInputStream(imgPath));
         MockMultipartFile docxFile = new MockMultipartFile("file", fileName, fileContentType, new FileInputStream(filePath));
-        BoardAcceptanceTestHelper.createBoardWithAll(mvc, token, jsonContent, imgFile, docxFile);
+        List<MockMultipartFile> imgFileList = new ArrayList<>();
+        List<MockMultipartFile> docxFileList = new ArrayList<>();
+        imgFileList.add(imgFile);
+        docxFileList.add(docxFile);
+        BoardAcceptanceTestHelper.createBoardWithAll(mvc, token, jsonContent, imgFileList, docxFileList);
 
         //when
         ResultActions boards = BoardAcceptanceTestHelper.inquiryAllBoard(mvc, token);
@@ -2928,8 +3033,11 @@ public class BoardAcceptanceTest{
         MockPart jsonContent = new MockPart("boardCreateRequest", objectMapper.writeValueAsString(boardCreateRequest).getBytes());
         MockMultipartFile imgFile = new MockMultipartFile("image", imgName, imgContentType, new FileInputStream(imgPath));
         MockMultipartFile docxFile = new MockMultipartFile("file", fileName, fileContentType, new FileInputStream(filePath));
-
-        BoardAcceptanceTestHelper.createBoardWithAll(mvc, adminToken, jsonContent, imgFile, docxFile);
+        List<MockMultipartFile> imgFileList = new ArrayList<>();
+        List<MockMultipartFile> docxFileList = new ArrayList<>();
+        imgFileList.add(imgFile);
+        docxFileList.add(docxFile);
+        BoardAcceptanceTestHelper.createBoardWithAll(mvc, adminToken, jsonContent, imgFileList, docxFileList);
 
     }
 

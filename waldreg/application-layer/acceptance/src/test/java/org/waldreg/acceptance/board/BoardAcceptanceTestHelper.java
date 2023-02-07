@@ -1,7 +1,7 @@
 package org.waldreg.acceptance.board;
 
 
-import org.mockito.Mock;
+import java.util.List;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.mock.web.MockMultipartFile;
@@ -16,11 +16,11 @@ public class BoardAcceptanceTestHelper{
 
     private final static String apiVersion = "1.0";
 
-    public static ResultActions createBoardWithAll(MockMvc mvc, String token, MockPart jsonContent, MockMultipartFile imgFile, MockMultipartFile docxFile) throws Exception{
+    public static ResultActions createBoardWithAll(MockMvc mvc, String token, MockPart jsonContent, List<MockMultipartFile> imgFile,  List<MockMultipartFile> docxFile) throws Exception{
         return mvc.perform(MockMvcRequestBuilders.multipart("/board")
                                    .part(jsonContent)
-                                   .file(imgFile)
-                                   .file(docxFile)
+                                   .file(imgFile.get(0))
+                                   .file(docxFile.get(0))
                                    .header(HttpHeaders.AUTHORIZATION, token)
                                    .contentType(MediaType.APPLICATION_JSON)
                                    .accept(MediaType.APPLICATION_JSON)
@@ -36,31 +36,31 @@ public class BoardAcceptanceTestHelper{
                                    .header("api-version", apiVersion));
     }
 
-    public static ResultActions createBoardWithJsonAndImage(MockMvc mvc, String token, MockPart jsonContent, MockMultipartFile imgFile) throws Exception{
+    public static ResultActions createBoardWithJsonAndImage(MockMvc mvc, String token, MockPart jsonContent, List<MockMultipartFile> imgFile) throws Exception{
         return mvc.perform(MockMvcRequestBuilders.multipart("/board")
                                    .part(jsonContent)
-                                   .file(imgFile)
+                                   .file(imgFile.get(0))
                                    .header(HttpHeaders.AUTHORIZATION, token)
                                    .contentType(MediaType.APPLICATION_JSON)
                                    .accept(MediaType.APPLICATION_JSON)
                                    .header("api-version", apiVersion));
     }
 
-    public static ResultActions createBoardWithJsonAndFile(MockMvc mvc, String token, MockPart jsonContent, MockMultipartFile docxFile) throws Exception{
+    public static ResultActions createBoardWithJsonAndFile(MockMvc mvc, String token, MockPart jsonContent, List<MockMultipartFile> docxFile) throws Exception{
         return mvc.perform(MockMvcRequestBuilders.multipart("/board")
                                    .part(jsonContent)
-                                   .file(docxFile)
+                                   .file(docxFile.get(0))
                                    .header(HttpHeaders.AUTHORIZATION, token)
                                    .contentType(MediaType.APPLICATION_JSON)
                                    .accept(MediaType.APPLICATION_JSON)
                                    .header("api-version", apiVersion));
     }
 
-    public static ResultActions modifyBoardWithAll(MockMvc mvc, String token, int boardId, MockPart jsonContent, MockMultipartFile imgFile, MockMultipartFile docxFile) throws Exception{
+    public static ResultActions modifyBoardWithAll(MockMvc mvc, String token, int boardId, MockPart jsonContent, List<MockMultipartFile> imgFile, List<MockMultipartFile> docxFile) throws Exception{
         return mvc.perform(MockMvcRequestBuilders.multipart("/board/{board-id}", boardId)
                                    .part(jsonContent)
-                                   .file(imgFile)
-                                   .file(docxFile)
+                                   .file(imgFile.get(0))
+                                   .file(docxFile.get(0))
                                    .header(HttpHeaders.AUTHORIZATION, token)
                                    .contentType(MediaType.APPLICATION_JSON)
                                    .accept(MediaType.APPLICATION_JSON)
@@ -76,20 +76,20 @@ public class BoardAcceptanceTestHelper{
                                    .header("api-version", apiVersion));
     }
 
-    public static ResultActions modifyBoardWithJsonAndImage(MockMvc mvc, String token, int boardId, MockPart jsonContent, MockMultipartFile imgFile) throws Exception{
+    public static ResultActions modifyBoardWithJsonAndImage(MockMvc mvc, String token, int boardId, MockPart jsonContent, List<MockMultipartFile> imgFile) throws Exception{
         return mvc.perform(MockMvcRequestBuilders.multipart("/board/{board-id}", boardId)
                                    .part(jsonContent)
-                                   .file(imgFile)
+                                   .file(imgFile.get(0))
                                    .header(HttpHeaders.AUTHORIZATION, token)
                                    .contentType(MediaType.APPLICATION_JSON)
                                    .accept(MediaType.APPLICATION_JSON)
                                    .header("api-version", apiVersion));
     }
 
-    public static ResultActions modifyBoardWithJsonAndFile(MockMvc mvc, String token, int boardId, MockPart jsonContent, MockMultipartFile docxFile) throws Exception{
+    public static ResultActions modifyBoardWithJsonAndFile(MockMvc mvc, String token, int boardId, MockPart jsonContent, List<MockMultipartFile> docxFile) throws Exception{
         return mvc.perform(MockMvcRequestBuilders.multipart("/board/{board-id}", boardId)
                                    .part(jsonContent)
-                                   .file(docxFile)
+                                   .file(docxFile.get(0))
                                    .header(HttpHeaders.AUTHORIZATION, token)
                                    .contentType(MediaType.APPLICATION_JSON)
                                    .accept(MediaType.APPLICATION_JSON)
