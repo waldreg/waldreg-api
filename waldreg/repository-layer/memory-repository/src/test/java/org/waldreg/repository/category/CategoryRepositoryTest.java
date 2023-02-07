@@ -20,18 +20,20 @@ import org.waldreg.character.spi.CharacterRepository;
 import org.waldreg.repository.MemoryBoardStorage;
 import org.waldreg.repository.MemoryCategoryStorage;
 import org.waldreg.repository.MemoryCharacterStorage;
+import org.waldreg.repository.MemoryCommentStorage;
 import org.waldreg.repository.MemoryUserStorage;
 import org.waldreg.repository.board.BoardMapper;
 import org.waldreg.repository.board.MemoryBoardRepository;
 import org.waldreg.repository.character.CharacterMapper;
 import org.waldreg.repository.character.MemoryCharacterRepository;
 import org.waldreg.repository.comment.CommentMapper;
+import org.waldreg.repository.comment.MemoryCommentRepository;
 import org.waldreg.repository.user.MemoryUserRepository;
 import org.waldreg.repository.user.UserMapper;
 import org.waldreg.user.spi.UserRepository;
 
 @ExtendWith(SpringExtension.class)
-@ContextConfiguration(classes = {CommentMapper.class, MemoryCategoryRepository.class, CategoryMapper.class, MemoryCategoryStorage.class, MemoryBoardRepository.class, MemoryBoardStorage.class, MemoryUserRepository.class, MemoryUserStorage.class, MemoryCharacterRepository.class, MemoryCharacterStorage.class, BoardMapper.class, UserMapper.class, CharacterMapper.class})
+@ContextConfiguration(classes = {MemoryCommentStorage.class, MemoryCommentRepository.class, CommentMapper.class, MemoryCategoryRepository.class, CategoryMapper.class, MemoryCategoryStorage.class, MemoryBoardRepository.class, MemoryBoardStorage.class, MemoryUserRepository.class, MemoryUserStorage.class, MemoryCharacterRepository.class, MemoryCharacterStorage.class, BoardMapper.class, UserMapper.class, CharacterMapper.class})
 public class CategoryRepositoryTest{
 
     @Autowired

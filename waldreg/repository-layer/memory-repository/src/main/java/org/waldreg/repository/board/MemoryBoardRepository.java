@@ -6,19 +6,20 @@ import org.springframework.stereotype.Repository;
 import org.waldreg.board.board.spi.BoardRepository;
 import org.waldreg.board.comment.spi.CommentInBoardRepository;
 import org.waldreg.board.dto.BoardDto;
-import org.waldreg.board.dto.CategoryDto;
 import org.waldreg.board.dto.CommentDto;
 import org.waldreg.domain.board.Board;
 import org.waldreg.domain.board.comment.Comment;
 import org.waldreg.domain.category.Category;
 import org.waldreg.repository.MemoryBoardStorage;
 import org.waldreg.repository.MemoryCategoryStorage;
+import org.waldreg.repository.MemoryCommentStorage;
 import org.waldreg.repository.MemoryUserStorage;
 
 @Repository
 public class MemoryBoardRepository implements BoardRepository, CommentInBoardRepository{
 
     private final MemoryBoardStorage memoryBoardStorage;
+    private final MemoryCommentStorage memoryCommentStorage;
     private final MemoryCategoryStorage memoryCategoryStorage;
     private final MemoryUserStorage memoryUserStorage;
     private final BoardMapper boardMapper;
@@ -26,8 +27,9 @@ public class MemoryBoardRepository implements BoardRepository, CommentInBoardRep
     private final CommentInBoardMapper commentInBoardMapper;
 
     @Autowired
-    public MemoryBoardRepository(MemoryBoardStorage memoryBoardStorage, MemoryCategoryStorage memoryCategoryStorage, MemoryUserStorage memoryUserStorage, BoardMapper boardMapper, CommentInBoardMapper commentInBoardMapper){
+    public MemoryBoardRepository(MemoryBoardStorage memoryBoardStorage, MemoryCommentStorage memoryCommentStorage, MemoryCategoryStorage memoryCategoryStorage, MemoryUserStorage memoryUserStorage, BoardMapper boardMapper, CommentInBoardMapper commentInBoardMapper){
         this.memoryBoardStorage = memoryBoardStorage;
+        this.memoryCommentStorage = memoryCommentStorage;
         this.memoryCategoryStorage = memoryCategoryStorage;
         this.memoryUserStorage = memoryUserStorage;
         this.boardMapper = boardMapper;
@@ -90,9 +92,17 @@ public class MemoryBoardRepository implements BoardRepository, CommentInBoardRep
 
     @Override
     public void deleteBoard(int id){
-        int categoryId = memoryBoardStorage.inquiryBoardById(id).getCategoryId();
+        Board board = memoryBoardStorage.inquiryBoardById(id);
+        int categoryId = board.getCategoryId();
+        deleteCommentInBoardCommentList(board.getCommentList());
         memoryBoardStorage.deleteBoardById(id);
         updateCategoryBoardList(categoryId);
+    }
+
+    private void deleteCommentInBoardCommentList(List<Comment> commentList){
+        for(Comment comment : commentList){
+            memoryCommentStorage.deleteComment(comment.getId());
+        }
     }
 
     private void updateCategoryBoardList(int categoryId){

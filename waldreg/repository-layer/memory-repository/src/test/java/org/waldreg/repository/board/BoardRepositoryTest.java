@@ -14,26 +14,31 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.waldreg.board.board.spi.BoardRepository;
 import org.waldreg.board.category.spi.CategoryRepository;
+import org.waldreg.board.comment.spi.CommentInBoardRepository;
+import org.waldreg.board.comment.spi.CommentRepository;
 import org.waldreg.board.dto.BoardDto;
 import org.waldreg.board.dto.CategoryDto;
+import org.waldreg.board.dto.CommentDto;
 import org.waldreg.board.dto.UserDto;
 import org.waldreg.character.dto.CharacterDto;
 import org.waldreg.character.spi.CharacterRepository;
 import org.waldreg.repository.MemoryBoardStorage;
 import org.waldreg.repository.MemoryCategoryStorage;
 import org.waldreg.repository.MemoryCharacterStorage;
+import org.waldreg.repository.MemoryCommentStorage;
 import org.waldreg.repository.MemoryUserStorage;
 import org.waldreg.repository.category.CategoryMapper;
 import org.waldreg.repository.category.MemoryCategoryRepository;
 import org.waldreg.repository.character.CharacterMapper;
 import org.waldreg.repository.character.MemoryCharacterRepository;
 import org.waldreg.repository.comment.CommentMapper;
+import org.waldreg.repository.comment.MemoryCommentRepository;
 import org.waldreg.repository.user.MemoryUserRepository;
 import org.waldreg.repository.user.UserMapper;
 import org.waldreg.user.spi.UserRepository;
 
 @ExtendWith(SpringExtension.class)
-@ContextConfiguration(classes = {CategoryMapper.class, MemoryCategoryStorage.class, MemoryCategoryRepository.class, CommentMapper.class, MemoryBoardRepository.class, MemoryBoardStorage.class, MemoryUserRepository.class, MemoryUserStorage.class, MemoryCharacterRepository.class, MemoryCharacterStorage.class, BoardMapper.class, UserMapper.class, CharacterMapper.class})
+@ContextConfiguration(classes = {MemoryCommentStorage.class, MemoryCommentRepository.class, CategoryMapper.class, MemoryCategoryStorage.class, MemoryCategoryRepository.class, CommentMapper.class, MemoryBoardRepository.class, MemoryBoardStorage.class, MemoryUserRepository.class, MemoryUserStorage.class, MemoryCharacterRepository.class, MemoryCharacterStorage.class, BoardMapper.class, UserMapper.class, CharacterMapper.class})
 public class BoardRepositoryTest{
 
     @Autowired
@@ -59,6 +64,15 @@ public class BoardRepositoryTest{
 
     @Autowired
     private MemoryCategoryStorage memoryCategoryStorage;
+
+    @Autowired
+    private CommentRepository commentRepository;
+
+    @Autowired
+    private CommentInBoardRepository commentInBoardRepository;
+
+    @Autowired
+    private MemoryCommentStorage memoryCommentStorage;
 
     @BeforeEach
     @AfterEach
@@ -742,13 +756,21 @@ public class BoardRepositoryTest{
                 .build();
         BoardDto boardDto = boardRepository.createBoard(boardRequest);
         categoryRepository.addBoardInCategoryBoardList(boardDto);
+        CommentDto commentRequest = CommentDto.builder()
+                .boardId(boardDto.getId())
+                .userDto(userDto)
+                .content(content)
+                .build();
+        CommentDto commentDto = commentRepository.createComment(commentRequest);
+        commentInBoardRepository.addCommentInBoardCommentList(commentDto);
         boardRepository.deleteBoard(boardDto.getId());
         CategoryDto boardInCategoryResult = categoryRepository.inquiryCategoryById(categoryId);
 
         //then
         Assertions.assertAll(
                 () -> Assertions.assertFalse(boardRepository.isExistBoard(boardDto.getId())),
-                () -> Assertions.assertTrue(boardInCategoryResult.getBoardDtoList().size() == 0)
+                () -> Assertions.assertTrue(boardInCategoryResult.getBoardDtoList().size() == 0),
+                () -> Assertions.assertFalse(commentRepository.isExistComment(commentDto.getId()))
         );
 
     }
