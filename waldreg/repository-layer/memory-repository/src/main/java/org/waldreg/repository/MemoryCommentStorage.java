@@ -6,10 +6,13 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicInteger;
 import org.springframework.stereotype.Repository;
+import org.waldreg.domain.board.Board;
 import org.waldreg.domain.board.comment.Comment;
 
 @Repository
 public class MemoryCommentStorage{
+
+    private final MemoryBoardStorage memoryBoardStorage;
 
     private final AtomicInteger atomicInteger;
 
@@ -21,6 +24,8 @@ public class MemoryCommentStorage{
         storage = new ConcurrentHashMap<>();
         atomicInteger = new AtomicInteger(1);
     }
+
+    public MemoryCommentStorage(MemoryBoardStorage memoryBoardStorage){this.memoryBoardStorage = memoryBoardStorage;}
 
     public Comment createComment(Comment comment){
         comment.setId(atomicInteger.getAndIncrement());
@@ -53,7 +58,7 @@ public class MemoryCommentStorage{
     }
 
     public boolean isExistComment(int commentId){
-        return storage.get(commentId) !=null;
+        return storage.get(commentId) != null;
     }
 
     public void deleteComment(int id){
@@ -69,6 +74,18 @@ public class MemoryCommentStorage{
             }
         }
         return count;
+    }
+
+    public void updateBoardCommentList(int boardId){
+        int startIdx = 0;
+        int maxIdx = getCommentMaxIdxByBoardId(boardId) - 1;
+        Board board = memoryBoardStorage.inquiryBoardById(boardId);
+        board.setCommentList(inquiryAllCommentByBoardId(boardId, startIndex, maxIdx));
+        memoryBoardStorage.modifyBoard(board);
+    }
+
+    public int getCommentBoardIdByCommentId(int id){
+        return storage.get(id).getBoardId();
     }
 
 }

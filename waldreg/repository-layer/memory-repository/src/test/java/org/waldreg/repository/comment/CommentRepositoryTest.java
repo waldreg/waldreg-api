@@ -311,17 +311,16 @@ public class CommentRepositoryTest{
                 .lastModifiedAt(LocalDateTime.now().plusMinutes(3))
                 .build();
         commentRepository.modifyComment(modifiedCommentDto);
-        CommentDto result = commentRepository.inquiryAllCommentByBoardId(boardDto.getId(),1,1).get(0);
-
+        BoardDto result = boardRepository.inquiryBoardById(boardDto.getId());
         //then
         Assertions.assertAll(
-                () -> Assertions.assertEquals(modifiedCommentDto.getId(), result.getId()),
-                () -> Assertions.assertEquals(modifiedCommentDto.getBoardId(), result.getBoardId()),
-                () -> Assertions.assertEquals(modifiedCommentDto.getUserDto().getId(), result.getUserDto().getId()),
-                () -> Assertions.assertEquals(modifiedCommentDto.getContent(), result.getContent()),
-                () -> Assertions.assertEquals(modifiedCommentDto.getUserDto().getUserId(), result.getUserDto().getUserId()),
-                () -> Assertions.assertEquals(modifiedCommentDto.getCreatedAt(), result.getCreatedAt()),
-                () -> Assertions.assertEquals(modifiedCommentDto.getLastModifiedAt(), result.getLastModifiedAt())
+                () -> Assertions.assertEquals(modifiedCommentDto.getId(), result.getCommentList().get(0).getId()),
+                () -> Assertions.assertEquals(modifiedCommentDto.getBoardId(), result.getCommentList().get(0).getBoardId()),
+                () -> Assertions.assertEquals(modifiedCommentDto.getUserDto().getId(), result.getCommentList().get(0).getUserDto().getId()),
+                () -> Assertions.assertEquals(modifiedCommentDto.getContent(), result.getCommentList().get(0).getContent()),
+                () -> Assertions.assertEquals(modifiedCommentDto.getUserDto().getUserId(), result.getCommentList().get(0).getUserDto().getUserId()),
+                () -> Assertions.assertEquals(modifiedCommentDto.getCreatedAt(), result.getCommentList().get(0).getCreatedAt()),
+                () -> Assertions.assertEquals(modifiedCommentDto.getLastModifiedAt(), result.getCommentList().get(0).getLastModifiedAt())
         );
     }
 
@@ -374,9 +373,13 @@ public class CommentRepositoryTest{
         CommentDto commentDto = commentRepository.createComment(commentRequest);
         commentInBoardRepository.addCommentInBoardCommentList(commentDto);
         commentRepository.deleteComment(commentDto.getId());
+        BoardDto result = boardRepository.inquiryBoardById(boardDto.getId());
 
         //then
-        Assertions.assertFalse(()->commentRepository.isExistComment(commentDto.getId()));
+        Assertions.assertAll(
+                () -> Assertions.assertFalse(() -> commentRepository.isExistComment(commentDto.getId())),
+                () -> Assertions.assertTrue(result.getCommentList().size() == 0)
+        );
 
     }
 
