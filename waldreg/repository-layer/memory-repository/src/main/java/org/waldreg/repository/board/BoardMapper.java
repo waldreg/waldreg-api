@@ -130,7 +130,7 @@ public class BoardMapper implements BoardInCategoryMapper{
                 .fileUrls(board.getFilePathList())
                 .imageUrls(board.getImagePathList())
                 .reactions(reactionDomainToReactionDto(board.getReactions().getReactionMap()))
-                .commentList(commentDomainListToCommentDtoList(board.getCommentList()))
+                .commentList(commentInBoardMapper.commentDomainListToCommentDtoList(board.getCommentList()))
                 .views(board.getViews())
                 .build();
     }
@@ -155,14 +155,6 @@ public class BoardMapper implements BoardInCategoryMapper{
             userDtoList.add(userDomainToUserDto(user));
         }
         return userDtoList;
-    }
-
-    private List<CommentDto> commentDomainListToCommentDtoList(List<Comment> commentList){
-        List<CommentDto> commentDtoList = new ArrayList<>();
-        for (Comment comment : commentList){
-            commentDtoList.add(commentInBoardMapper.commentDomainToCommentDto(comment));
-        }
-        return commentDtoList;
     }
 
     public UserDto userDomainToUserDto(User user){

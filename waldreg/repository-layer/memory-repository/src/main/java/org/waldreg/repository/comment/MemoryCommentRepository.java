@@ -34,7 +34,8 @@ public class MemoryCommentRepository implements CommentRepository{
 
     @Override
     public List<CommentDto> inquiryAllCommentByBoardId(int boardId, int startIdx, int endIdx){
-        return null;
+        List<Comment> commentList = memoryCommentStorage.inquiryAllCommentByBoardId(boardId, startIdx-1, endIdx-1);
+        return commentMapper.commentDomainListToCommentDtoList(commentList);
     }
 
     @Override

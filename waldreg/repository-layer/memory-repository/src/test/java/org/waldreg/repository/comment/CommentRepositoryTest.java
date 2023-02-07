@@ -154,5 +154,109 @@ public class CommentRepositoryTest{
 
     }
 
+    @Test
+    @DisplayName("댓글 전체 조회 성공")
+    public void INQUIRY_ALL_COMMENT_SUCCESS_TEST(){
+        //given
+        org.waldreg.user.dto.UserDto user = org.waldreg.user.dto.UserDto.builder()
+                .userId("alcuk_id")
+                .name("alcuk")
+                .userPassword("alcuk123!")
+                .phoneNumber("010-1234-1234")
+                .build();
+        CharacterDto characterDto = CharacterDto.builder()
+                .id(1)
+                .characterName("Guest")
+                .permissionDtoList(List.of())
+                .build();
+        characterRepository.createCharacter(characterDto);
+        userRepository.createUser(user);
+        org.waldreg.user.dto.UserDto userResponse = userRepository.readUserByUserId("alcuk_id");
+        String title = "title";
+        String content = "content";
+        UserDto userDto = UserDto.builder()
+                .id(userResponse.getId())
+                .userId("alcuk_id")
+                .name("alcuk")
+                .build();
+        List<String> filePathList = new ArrayList<>();
+        filePathList.add("uuid.pptx");
+        List<String> imagePathList = new ArrayList<>();
+        imagePathList.add("uuid.png");
+        BoardDto boardRequest = BoardDto.builder()
+                .title(title)
+                .userDto(userDto)
+                .content(content)
+                .categoryId(1)
+                .lastModifiedAt(LocalDateTime.now())
+                .fileUrls(List.of())
+                .imageUrls(List.of())
+                .build();
+        BoardDto boardRequest2 = BoardDto.builder()
+                .title("holholholhol")
+                .userDto(userDto)
+                .content(content)
+                .categoryId(2)
+                .lastModifiedAt(LocalDateTime.now())
+                .fileUrls(List.of())
+                .imageUrls(List.of())
+                .build();
+
+        //when
+        BoardDto boardDto = boardRepository.createBoard(boardRequest);
+        BoardDto boardDto2 = boardRepository.createBoard(boardRequest2);
+        CommentDto commentRequest = CommentDto.builder()
+                .boardId(boardDto.getId())
+                .userDto(userDto)
+                .content(content)
+                .build();
+        CommentDto commentRequest2 = CommentDto.builder()
+                .boardId(boardDto.getId())
+                .userDto(userDto)
+                .content("comcomcomcom")
+                .build();
+        CommentDto commentRequest3 = CommentDto.builder()
+                .boardId(boardDto.getId())
+                .userDto(userDto)
+                .content("metnemtnemtent")
+                .build();
+        CommentDto commentRequest4 = CommentDto.builder()
+                .boardId(boardDto2.getId())
+                .userDto(userDto)
+                .content("wowowowowwowow")
+                .build();
+        CommentDto commentDto = commentRepository.createComment(commentRequest);
+        CommentDto commentDto2 = commentRepository.createComment(commentRequest2);
+        CommentDto commentDto3 = commentRepository.createComment(commentRequest3);
+        CommentDto commentDto4 = commentRepository.createComment(commentRequest4);
+        commentInBoardRepository.addCommentInBoardCommentList(commentDto);
+        commentInBoardRepository.addCommentInBoardCommentList(commentDto2);
+        commentInBoardRepository.addCommentInBoardCommentList(commentDto3);
+        commentInBoardRepository.addCommentInBoardCommentList(commentDto4);
+        List<CommentDto> result = commentRepository.inquiryAllCommentByBoardId(boardDto.getId(), 1, 2);
+
+        //then
+        Assertions.assertAll(
+                () -> Assertions.assertEquals(2, result.size()),
+                () -> Assertions.assertEquals(commentDto.getId(), result.get(0).getId()),
+                () -> Assertions.assertEquals(commentDto.getUserDto().getUserId(), result.get(0).getUserDto().getUserId()),
+                () -> Assertions.assertEquals(commentDto.getCreatedAt(), result.get(0).getCreatedAt()),
+                () -> Assertions.assertEquals(commentDto.getLastModifiedAt(), result.get(0).getLastModifiedAt()),
+                () -> Assertions.assertEquals(commentDto.getBoardId(), result.get(0).getBoardId()),
+                () -> Assertions.assertEquals(commentDto.getUserDto().getId(), result.get(0).getUserDto().getId()),
+                () -> Assertions.assertEquals(commentDto.getContent(), result.get(0).getContent()),
+                () -> Assertions.assertEquals(commentDto2.getId(), result.get(1).getId()),
+                () -> Assertions.assertEquals(commentDto2.getUserDto().getUserId(), result.get(1).getUserDto().getUserId()),
+                () -> Assertions.assertEquals(commentDto2.getCreatedAt(), result.get(1).getCreatedAt()),
+                () -> Assertions.assertEquals(commentDto2.getLastModifiedAt(), result.get(1).getLastModifiedAt()),
+                () -> Assertions.assertEquals(commentDto2.getBoardId(), result.get(1).getBoardId()),
+                () -> Assertions.assertEquals(commentDto2.getUserDto().getId(), result.get(1).getUserDto().getId()),
+                () -> Assertions.assertEquals(commentDto2.getContent(), result.get(1).getContent())
+        );
+
+    }
+
+
+
 
 }
