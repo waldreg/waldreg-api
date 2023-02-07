@@ -1,5 +1,7 @@
 package org.waldreg.repository.comment;
 
+import java.util.ArrayList;
+import java.util.List;
 import org.springframework.stereotype.Service;
 import org.waldreg.board.dto.CommentDto;
 import org.waldreg.board.dto.UserDto;
@@ -9,6 +11,15 @@ import org.waldreg.repository.board.CommentInBoardMapper;
 
 @Service
 public class CommentMapper implements CommentInBoardMapper{
+
+    @Override
+    public List<CommentDto> commentDomainListToCommentDtoList(List<Comment> commentList){
+        List<CommentDto> commentDtoList = new ArrayList<>();
+        for (Comment comment : commentList){
+            commentDtoList.add(commentDomainToCommentDto(comment));
+        }
+        return commentDtoList;
+    }
 
     @Override
     public CommentDto commentDomainToCommentDto(Comment comment){

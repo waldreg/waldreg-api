@@ -5,7 +5,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 import org.waldreg.board.comment.spi.CommentRepository;
 import org.waldreg.board.dto.CommentDto;
+import org.waldreg.domain.board.Board;
 import org.waldreg.domain.board.comment.Comment;
+import org.waldreg.repository.MemoryBoardStorage;
 import org.waldreg.repository.MemoryCommentStorage;
 
 @Repository
@@ -29,27 +31,33 @@ public class MemoryCommentRepository implements CommentRepository{
 
     @Override
     public int getCommentMaxIdxByBoardId(int boardId){
-        return 0;
+        return memoryCommentStorage.getCommentMaxIdxByBoardId(boardId);
     }
 
     @Override
     public List<CommentDto> inquiryAllCommentByBoardId(int boardId, int startIdx, int endIdx){
-        return null;
+        List<Comment> commentList = memoryCommentStorage.inquiryAllCommentByBoardId(boardId, startIdx - 1, endIdx - 1);
+        return commentMapper.commentDomainListToCommentDtoList(commentList);
     }
 
     @Override
     public void modifyComment(CommentDto commentDto){
-
+        int boardId = commentDto.getBoardId();
+        Comment comment = commentMapper.commentDtoToCommentDomain(commentDto);
+        memoryCommentStorage.modifyComment(comment);
+        memoryCommentStorage.updateBoardCommentList(boardId);
     }
 
     @Override
     public boolean isExistComment(int commentId){
-        return false;
+        return memoryCommentStorage.isExistComment(commentId);
     }
 
     @Override
     public void deleteComment(int id){
-
+        int boardId = memoryCommentStorage.getCommentBoardIdByCommentId(id);
+        memoryCommentStorage.deleteComment(id);
+        memoryCommentStorage.updateBoardCommentList(boardId);
     }
 
 }
