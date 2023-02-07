@@ -29,7 +29,7 @@ public class MemoryCommentRepository implements CommentRepository{
 
     @Override
     public int getCommentMaxIdxByBoardId(int boardId){
-        return 0;
+        return memoryCommentStorage.getCommentMaxIdxByBoardId(boardId);
     }
 
     @Override
@@ -46,12 +46,12 @@ public class MemoryCommentRepository implements CommentRepository{
 
     @Override
     public boolean isExistComment(int commentId){
-        return false;
+        return memoryCommentStorage.isExistComment(commentId);
     }
 
     @Override
     public void deleteComment(int id){
-
+        memoryCommentStorage.deleteComment(id);
     }
 
 }

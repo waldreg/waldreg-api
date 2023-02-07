@@ -52,4 +52,23 @@ public class MemoryCommentStorage{
         storage.replace(comment.getId(), comment);
     }
 
+    public boolean isExistComment(int commentId){
+        return storage.get(commentId) !=null;
+    }
+
+    public void deleteComment(int id){
+        storage.remove(id);
+    }
+
+    public int getCommentMaxIdxByBoardId(int boardId){
+        int count = 0;
+        List<Comment> commentList = new ArrayList<>();
+        for (Map.Entry<Integer, Comment> commentEntry : storage.entrySet()){
+            if (isBoardIdEqual(commentEntry.getValue().getBoardId(), boardId)){
+                count++;
+            }
+        }
+        return count;
+    }
+
 }

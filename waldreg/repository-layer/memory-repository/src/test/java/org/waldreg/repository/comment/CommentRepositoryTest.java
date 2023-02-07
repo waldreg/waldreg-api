@@ -325,7 +325,60 @@ public class CommentRepositoryTest{
         );
     }
 
-    
+    @Test
+    @DisplayName("댓글 삭제 성공 테스트")
+    public void DELETE_COMMENT_SUCCESS_TEST(){
+        //given
+        org.waldreg.user.dto.UserDto user = org.waldreg.user.dto.UserDto.builder()
+                .userId("alcuk_id")
+                .name("alcuk")
+                .userPassword("alcuk123!")
+                .phoneNumber("010-1234-1234")
+                .build();
+        CharacterDto characterDto = CharacterDto.builder()
+                .id(1)
+                .characterName("Guest")
+                .permissionDtoList(List.of())
+                .build();
+        characterRepository.createCharacter(characterDto);
+        userRepository.createUser(user);
+        org.waldreg.user.dto.UserDto userResponse = userRepository.readUserByUserId("alcuk_id");
+        String title = "title";
+        String content = "content";
+        UserDto userDto = UserDto.builder()
+                .id(userResponse.getId())
+                .userId("alcuk_id")
+                .name("alcuk")
+                .build();
+        List<String> filePathList = new ArrayList<>();
+        filePathList.add("uuid.pptx");
+        List<String> imagePathList = new ArrayList<>();
+        imagePathList.add("uuid.png");
+        BoardDto boardRequest = BoardDto.builder()
+                .title(title)
+                .userDto(userDto)
+                .content(content)
+                .categoryId(1)
+                .lastModifiedAt(LocalDateTime.now())
+                .fileUrls(List.of())
+                .imageUrls(List.of())
+                .build();
+
+        //when
+        BoardDto boardDto = boardRepository.createBoard(boardRequest);
+        CommentDto commentRequest = CommentDto.builder()
+                .boardId(boardDto.getId())
+                .userDto(userDto)
+                .content(content)
+                .build();
+        CommentDto commentDto = commentRepository.createComment(commentRequest);
+        commentInBoardRepository.addCommentInBoardCommentList(commentDto);
+        commentRepository.deleteComment(commentDto.getId());
+
+        //then
+        Assertions.assertFalse(()->commentRepository.isExistComment(commentDto.getId()));
+
+    }
 
 
 }
