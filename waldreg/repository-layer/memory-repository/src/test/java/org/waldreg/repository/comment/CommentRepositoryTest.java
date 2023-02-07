@@ -28,6 +28,7 @@ import org.waldreg.repository.MemoryCommentStorage;
 import org.waldreg.repository.MemoryUserStorage;
 import org.waldreg.repository.board.BoardMapper;
 import org.waldreg.repository.board.MemoryBoardRepository;
+import org.waldreg.repository.boarduserinfo.UserInfoMapper;
 import org.waldreg.repository.category.CategoryMapper;
 import org.waldreg.repository.category.MemoryCategoryRepository;
 import org.waldreg.repository.character.CharacterMapper;
@@ -37,7 +38,7 @@ import org.waldreg.repository.user.UserMapper;
 import org.waldreg.user.spi.UserRepository;
 
 @ExtendWith(SpringExtension.class)
-@ContextConfiguration(classes = {MemoryCategoryRepository.class, MemoryCategoryStorage.class, CategoryMapper.class, MemoryCommentRepository.class, MemoryCommentStorage.class, CommentMapper.class, MemoryBoardRepository.class, MemoryBoardStorage.class, MemoryUserRepository.class, MemoryUserStorage.class, MemoryCharacterRepository.class, MemoryCharacterStorage.class, BoardMapper.class, UserMapper.class, CharacterMapper.class})
+@ContextConfiguration(classes = {UserInfoMapper.class, MemoryCategoryRepository.class, MemoryCategoryStorage.class, CategoryMapper.class, MemoryCommentRepository.class, MemoryCommentStorage.class, CommentMapper.class, MemoryBoardRepository.class, MemoryBoardStorage.class, MemoryUserRepository.class, MemoryUserStorage.class, MemoryCharacterRepository.class, MemoryCharacterStorage.class, BoardMapper.class, UserMapper.class, CharacterMapper.class})
 public class CommentRepositoryTest{
 
     @Autowired
