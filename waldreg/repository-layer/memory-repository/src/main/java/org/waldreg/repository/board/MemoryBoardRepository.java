@@ -7,8 +7,11 @@ import org.waldreg.board.board.spi.BoardRepository;
 import org.waldreg.board.comment.spi.CommentInBoardRepository;
 import org.waldreg.board.dto.BoardDto;
 import org.waldreg.board.dto.CommentDto;
+import org.waldreg.board.dto.ReactionDto;
+import org.waldreg.board.reaction.spi.ReactionInBoardRepository;
 import org.waldreg.domain.board.Board;
 import org.waldreg.domain.board.comment.Comment;
+import org.waldreg.domain.board.reaction.Reaction;
 import org.waldreg.domain.category.Category;
 import org.waldreg.repository.MemoryBoardStorage;
 import org.waldreg.repository.MemoryCategoryStorage;
@@ -16,7 +19,7 @@ import org.waldreg.repository.MemoryCommentStorage;
 import org.waldreg.repository.MemoryUserStorage;
 
 @Repository
-public class MemoryBoardRepository implements BoardRepository, CommentInBoardRepository{
+public class MemoryBoardRepository implements BoardRepository, CommentInBoardRepository, ReactionInBoardRepository{
 
     private final MemoryBoardStorage memoryBoardStorage;
     private final MemoryCommentStorage memoryCommentStorage;
@@ -53,6 +56,20 @@ public class MemoryBoardRepository implements BoardRepository, CommentInBoardRep
     public void addCommentInBoardCommentList(CommentDto commentDto){
         Comment comment = commentInBoardMapper.commentDtoToCommentDomain(commentDto);
         memoryBoardStorage.addCommentInBoardCommentList(comment);
+    }
+
+    @Override
+    public ReactionDto getReactionDto(int boardId){
+        return null;
+    }
+
+    @Override
+    public void storeReactionDto(ReactionDto reactionDto){
+        int boardId = reactionDto.getBoardId();
+        Board board = memoryBoardStorage.inquiryBoardById(boardId);
+        Reaction reaction = boardMapper.reactionDtoToReactionDomain(reactionDto.getReactionMap());
+        board.setReactions(reaction);
+        memoryBoardStorage.modifyBoard(board);
     }
 
     @Override

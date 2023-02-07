@@ -1,5 +1,6 @@
 package org.waldreg.domain.board.reaction;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -31,6 +32,12 @@ public final class Reaction{
 
         {
             reactionMap = new HashMap<>();
+            reactionMap.put(ReactionType.HEART, new ArrayList<>());
+            reactionMap.put(ReactionType.BAD, new ArrayList<>());
+            reactionMap.put(ReactionType.SAD, new ArrayList<>());
+            reactionMap.put(ReactionType.SMILE, new ArrayList<>());
+            reactionMap.put(ReactionType.GOOD, new ArrayList<>());
+            reactionMap.put(ReactionType.CHECK, new ArrayList<>());
         }
 
         private Builder(){}
