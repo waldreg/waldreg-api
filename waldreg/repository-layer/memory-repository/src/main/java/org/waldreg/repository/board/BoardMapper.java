@@ -12,7 +12,6 @@ import org.waldreg.board.dto.CommentDto;
 import org.waldreg.board.dto.ReactionDto;
 import org.waldreg.board.dto.UserDto;
 import org.waldreg.domain.board.Board;
-import org.waldreg.domain.board.comment.Comment;
 import org.waldreg.domain.board.reaction.Reaction;
 import org.waldreg.domain.board.reaction.ReactionType;
 import org.waldreg.domain.user.User;
@@ -22,9 +21,13 @@ import org.waldreg.repository.category.BoardInCategoryMapper;
 public class BoardMapper implements BoardInCategoryMapper{
 
     private final CommentInBoardMapper commentInBoardMapper;
+    private UserInBoardMapper userInBoardMapper;
 
     @Autowired
-    public BoardMapper(CommentInBoardMapper commentInBoardMapper){this.commentInBoardMapper = commentInBoardMapper;}
+    public BoardMapper(CommentInBoardMapper commentInBoardMapper, UserInBoardMapper userInBoardMapper){
+        this.commentInBoardMapper = commentInBoardMapper;
+        this.userInBoardMapper = userInBoardMapper;
+    }
 
     @Override
     public List<Board> boardDtoListToBoardDomainList(List<BoardDto> boardDtoList){
@@ -118,7 +121,7 @@ public class BoardMapper implements BoardInCategoryMapper{
                 .title(board.getTitle())
                 .categoryId(board.getCategoryId())
                 .content(board.getContent())
-                .userDto(userDomainToUserDto(board.getUser()))
+                .userDto(userInBoardMapper.userDomainToUserDto(board.getUser()))
                 .createdAt(board.getCreatedAt())
                 .lastModifiedAt(board.getLastModifiedAt())
                 .fileUrls(board.getFilePathList())
@@ -146,17 +149,9 @@ public class BoardMapper implements BoardInCategoryMapper{
     private List<UserDto> userDomainListToUserDtoList(List<User> userList){
         List<UserDto> userDtoList = new ArrayList<>();
         for (User user : userList){
-            userDtoList.add(userDomainToUserDto(user));
+            userDtoList.add(userInBoardMapper.userDomainToUserDto(user));
         }
         return userDtoList;
-    }
-
-    public UserDto userDomainToUserDto(User user){
-        return UserDto.builder()
-                .id(user.getId())
-                .userId(user.getUserId())
-                .name(user.getName())
-                .build();
     }
 
 }
