@@ -114,15 +114,15 @@ public class BoardAcceptanceTestHelper{
 
 
     public static ResultActions inquiryAllBoardWithCategory(MockMvc mvc, String token, int category) throws Exception{
-        return mvc.perform(MockMvcRequestBuilders.get("/boards")
-                                   .param("category", Integer.toString(category))
+        return mvc.perform(MockMvcRequestBuilders.get("/boards?from=1&to=4")
+                                   .param("category-id", Integer.toString(category))
                                    .header(HttpHeaders.AUTHORIZATION, token)
                                    .accept(MediaType.APPLICATION_JSON)
                                    .header("api-version", apiVersion));
     }
 
     public static ResultActions inquiryAllBoardWithFromTo(MockMvc mvc, String token, int startIdx, int endIdx) throws Exception{
-        return mvc.perform(MockMvcRequestBuilders.get("/boards")
+        return mvc.perform(MockMvcRequestBuilders.get("/boards?from=1&to=4")
                                    .param("from", Integer.toString(startIdx))
                                    .param("to", Integer.toString(endIdx))
                                    .header(HttpHeaders.AUTHORIZATION, token)

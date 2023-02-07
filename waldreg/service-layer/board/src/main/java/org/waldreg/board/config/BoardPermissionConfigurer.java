@@ -32,7 +32,7 @@ public class BoardPermissionConfigurer{
         permissionExtension.extend(
                 DefaultPermissionUnit.builder()
                         .name("Board create manager")
-                        .info("If set true, all permissions related to the reward are accessible.")
+                        .info("If set true, can create board")
                         .statusList(List.of("true", "false"))
                         .permissionVerifiable(s -> s.equals("true"))
                         .build()
@@ -42,7 +42,7 @@ public class BoardPermissionConfigurer{
         permissionExtension.extend(
                 DefaultPermissionUnit.builder()
                         .name("Board modify manager")
-                        .info("If set true, all permissions related to the reward are accessible.")
+                        .info("If set true, can modify board")
                         .statusList(List.of("true", "false"))
                         .permissionVerifiable(s -> s.equals("true"))
                         .build()
@@ -53,7 +53,7 @@ public class BoardPermissionConfigurer{
         permissionExtension.extend(
                 DefaultPermissionUnit.builder()
                         .name("Board delete manager")
-                        .info("If set true, all permissions related to the reward are accessible.")
+                        .info("If set true, can delete board")
                         .statusList(List.of("true", "false"))
                         .permissionVerifiable(s -> s.equals("true"))
                         .build()
@@ -64,7 +64,7 @@ public class BoardPermissionConfigurer{
         permissionExtension.extend(
                 DefaultPermissionUnit.builder()
                         .name("Category manager")
-                        .info("If set true, all permissions related to the reward are accessible.")
+                        .info("If set true, all permissions related to the category are accessible.")
                         .statusList(List.of("true", "false"))
                         .permissionVerifiable(s -> s.equals("true"))
                         .build()
@@ -74,7 +74,7 @@ public class BoardPermissionConfigurer{
         permissionExtension.extend(
                 DefaultPermissionUnit.builder()
                         .name("Comment manager")
-                        .info("If set true, all permissions related to the reward are accessible.")
+                        .info("If set true, all permissions related to the comment are accessible.")
                         .statusList(List.of("true", "false"))
                         .permissionVerifiable(s -> s.equals("true"))
                         .build()
@@ -84,7 +84,7 @@ public class BoardPermissionConfigurer{
         permissionExtension.extend(
                 DefaultPermissionUnit.builder()
                         .name("File download manager")
-                        .info("If set true, all permissions related to the reward are accessible.")
+                        .info("If set true, can download file.")
                         .statusList(List.of("true", "false"))
                         .permissionVerifiable(s -> s.equals("true"))
                         .build()

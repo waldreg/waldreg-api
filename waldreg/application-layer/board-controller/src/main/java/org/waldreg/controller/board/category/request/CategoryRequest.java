@@ -5,7 +5,7 @@ import javax.validation.constraints.NotBlank;
 
 public class CategoryRequest{
 
-    @NotBlank(message = "Blank category name")
+    @NotBlank(message = "BOARD-411 Blank category name")
     @JsonProperty("category_name")
     private String categoryName;
 

@@ -4,7 +4,7 @@ import javax.validation.constraints.NotBlank;
 
 public class BoardCreateRequest{
 
-    @NotBlank(message = "Board title cannot be null")
+    @NotBlank(message = "BOARD-409 Blank board title")
     private String title;
     private String content;
 

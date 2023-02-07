@@ -55,4 +55,13 @@ public class MemoryCategoryStorage{
         storage.replace(category.getId(), category);
     }
 
+    public boolean isDuplicatedCategoryName(String categoryName){
+        for (Map.Entry<Integer, Category> categoryEntry : storage.entrySet()){
+            if( categoryEntry.getValue().getCategoryName().equals(categoryName)){
+                return true;
+            }
+        }
+        return false;
+    }
+
 }

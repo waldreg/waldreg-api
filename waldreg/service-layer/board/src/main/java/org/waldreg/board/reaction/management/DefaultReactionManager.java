@@ -36,7 +36,7 @@ public class DefaultReactionManager implements ReactionManager{
 
     private void throwIfBoardDoesNotExist(int boardId){
         if (!reactionInBoardRepository.isExistBoard(boardId)){
-            throw new BoardDoesNotExistException(boardId);
+            throw new BoardDoesNotExistException("BOARD-401","Unknown board id : " + boardId);
         }
     }
 
@@ -44,7 +44,7 @@ public class DefaultReactionManager implements ReactionManager{
         try{
             BoardServiceReactionType.valueOf(reactionType.toUpperCase());
         } catch (IllegalArgumentException e){
-            throw new ReactionTypeDoesNotExistException(reactionType);
+            throw new ReactionTypeDoesNotExistException("BOARD-402","Invalid reaction type reactionType: " + reactionType);
         }
     }
 

@@ -53,7 +53,7 @@ public class DefaultBoardManager implements BoardManager{
 
     private void throwIfCategoryDoesNotExist(int categoryId){
         if (!boardInCategoryRepository.isExistCategory(categoryId)){
-            throw new CategoryDoesNotExistException(categoryId);
+            throw new CategoryDoesNotExistException("BOARD-403","Unknown category id : " + categoryId);
         }
     }
 
@@ -79,7 +79,7 @@ public class DefaultBoardManager implements BoardManager{
         try{
             return future.get();
         } catch (InterruptedException | ExecutionException e){
-            throw new FileDoesNotSavedException();
+            throw new FileDoesNotSavedException("BOARD-502","File does not saved");
         }
     }
 
@@ -106,7 +106,7 @@ public class DefaultBoardManager implements BoardManager{
 
     private void throwIfBoardDoesNotExist(int boardId){
         if (!boardRepository.isExistBoard(boardId)){
-            throw new BoardDoesNotExistException(boardId);
+            throw new BoardDoesNotExistException("BOARD-401","Unknown board id : " + boardId);
         }
     }
 
@@ -121,7 +121,7 @@ public class DefaultBoardManager implements BoardManager{
 
     private void throwIfInvalidRangeDetected(int from, int to){
         if (from > to || from < 0){
-            throw new InvalidRangeException(from, to);
+            throw new InvalidRangeException("BOARD-404","Invalid range from : " + from + " to : " + to);
         }
     }
 
@@ -150,6 +150,7 @@ public class DefaultBoardManager implements BoardManager{
         throwIfCategoryDoesNotExist(categoryId);
         throwIfInvalidRangeDetected(from, to);
         int maxIdx = boardRepository.getBoardMaxIdxByCategory(categoryId);
+
         to = adjustEndIdx(from, to, maxIdx);
         List<BoardDto> boardDtoList = boardRepository.inquiryAllBoardByCategory(categoryId, from, to);
         return setCategoryName(boardDtoList);
@@ -213,7 +214,7 @@ public class DefaultBoardManager implements BoardManager{
         try{
             future.get();
         } catch (InterruptedException | ExecutionException e){
-            throw new FileDoesNotSavedException();
+            throw new FileDoesNotSavedException("BOARD-502","File does not saved");
         }
 
     }

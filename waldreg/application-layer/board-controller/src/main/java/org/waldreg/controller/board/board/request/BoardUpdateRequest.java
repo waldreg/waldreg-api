@@ -6,7 +6,7 @@ import javax.validation.constraints.NotBlank;
 
 public class BoardUpdateRequest{
 
-    @NotBlank(message = "Can not be blank title")
+    @NotBlank(message = "BOARD-409 Blank board title")
     private String title;
     private String content;
 

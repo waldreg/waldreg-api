@@ -80,9 +80,11 @@ public class BoardController{
     @GetMapping("/boards")
     public BoardListResponse getBoardList(@RequestParam(value = "category-id", required = false) Integer categoryId, @RequestParam("from") int from, @RequestParam("to") int to){
         List<BoardDto> boardDtoList;
-        if (ObjectUtils.isEmpty(categoryId)){
+        if (categoryId == null){
+            System.out.println("11");
             boardDtoList = boardManager.inquiryAllBoard(from, to);
         } else{
+            System.out.println("22");
             boardDtoList = boardManager.inquiryAllBoardByCategory(categoryId, from, to);
         }
         return controllerBoardMapper.boardDtoListToBoardListResponse(boardDtoList);

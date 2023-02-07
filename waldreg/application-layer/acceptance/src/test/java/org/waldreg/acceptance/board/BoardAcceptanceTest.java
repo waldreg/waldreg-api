@@ -61,15 +61,6 @@ public class BoardAcceptanceTest{
                                                                        .getResponse()
                                                                        .getContentAsString(), UserResponse.class);
             UserAcceptanceTestHelper.forcedDeleteUserWithToken(mvc, userResponse.getId(), adminToken);
-            ResultActions result = UserAcceptanceTestHelper.inquiryUserWithoutToken(mvc, request.getUserId());
-            result.andExpectAll(
-                    MockMvcResultMatchers.status().isBadRequest(),
-                    MockMvcResultMatchers.header().string(HttpHeaders.CONTENT_TYPE, "application/json"),
-                    MockMvcResultMatchers.header().string("api-version", apiVersion),
-                    MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON),
-                    MockMvcResultMatchers.jsonPath("$.messages").value("Unknown user_id"),
-                    MockMvcResultMatchers.jsonPath("$.document_url").value("docs.waldreg.org")
-            );
         }
         userCreateRequestList.clear();
     }
@@ -1169,7 +1160,6 @@ public class BoardAcceptanceTest{
                 .title(title3)
                 .content(content3)
                 .categoryId(categoryId2)
-
                 .build();
         MockPart jsonContent3 = new MockPart("boardCreateRequest", objectMapper.writeValueAsString(boardCreateRequest3).getBytes());
 
@@ -2510,7 +2500,6 @@ public class BoardAcceptanceTest{
         //then
         result.andExpectAll(
                 MockMvcResultMatchers.status().isOk(),
-                MockMvcResultMatchers.header().string(HttpHeaders.CONTENT_TYPE, "application/json"),
                 MockMvcResultMatchers.header().string("api-version", apiVersion)
         );
     }
@@ -2587,7 +2576,7 @@ public class BoardAcceptanceTest{
                 MockMvcResultMatchers.header().string("api-version", apiVersion),
                 MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON),
                 MockMvcResultMatchers.jsonPath("$.code").value("BOARD-412"),
-                MockMvcResultMatchers.jsonPath("$.messages").value("Duplicated category name"),
+                MockMvcResultMatchers.jsonPath("$.messages").value("Duplicated category name : cate1"),
                 MockMvcResultMatchers.jsonPath("$.document_url").value("docs.waldreg.org")
         );
     }

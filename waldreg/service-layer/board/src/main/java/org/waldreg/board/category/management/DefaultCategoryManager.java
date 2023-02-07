@@ -24,7 +24,7 @@ public class DefaultCategoryManager implements CategoryManager{
 
     private void throwIfCategoryNameDuplicated(String categoryName){
         if (categoryRepository.isDuplicateCategoryName(categoryName)){
-            throw new DuplicateCategoryNameException(categoryName);
+            throw new DuplicateCategoryNameException("BOARD-412","Duplicated category name : " + categoryName);
         }
     }
 
@@ -43,7 +43,7 @@ public class DefaultCategoryManager implements CategoryManager{
 
     private void throwIfCategoryDoesNotExist(int categoryId){
         if (!categoryRepository.isExistCategory(categoryId)){
-            throw new CategoryDoesNotExistException(categoryId);
+            throw new CategoryDoesNotExistException("BOARD-403","Unknown category id : " + categoryId);
         }
     }
 

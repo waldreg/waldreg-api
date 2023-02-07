@@ -78,7 +78,7 @@ public class MemoryCategoryRepository implements CategoryRepository{
 
     @Override
     public boolean isDuplicateCategoryName(String categoryName){
-        return false;
+        return memoryCategoryStorage.isDuplicatedCategoryName(categoryName);
     }
 
 }
