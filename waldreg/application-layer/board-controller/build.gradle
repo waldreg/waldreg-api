@@ -23,6 +23,8 @@ dependencyManagement {
 }
 
 dependencies {
+
+    implementation project(':service-layer:user')
     implementation project(':service-layer:board')
     implementation project(':repository-layer:memory-repository')
     implementation project(':stable-service-layer:character')

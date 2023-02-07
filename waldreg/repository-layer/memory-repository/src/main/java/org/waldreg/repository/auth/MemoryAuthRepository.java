@@ -58,4 +58,14 @@ public class MemoryAuthRepository implements AuthRepository{
                 .build();
     }
 
+    @Override
+    public TokenUserDto findUserByCommentId(int commentId){
+        User user = memomoryCommentStorage.inquiryCommentId(commentId).getUser();
+        return TokenUserDto.builder()
+                .id(user.getId())
+                .userId(user.getUserId())
+                .userPassword(user.getUserPassword())
+                .build();
+    }
+
 }

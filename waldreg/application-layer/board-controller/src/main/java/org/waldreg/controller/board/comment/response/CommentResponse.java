@@ -2,13 +2,14 @@ package org.waldreg.controller.board.comment.response;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import java.time.LocalDateTime;
+import org.waldreg.controller.board.comment.request.CommentRequest;
+import org.waldreg.controller.board.comment.request.CommentRequest.Builder;
 
 public class CommentResponse{
 
     private int id;
     @JsonProperty("user_id")
     private String userId;
-
     private String name;
     private LocalDateTime createdAt;
     private LocalDateTime lastModifiedAt;
@@ -24,6 +25,11 @@ public class CommentResponse{
         this.lastModifiedAt = builder.lastModifiedAt;
         this.content = builder.content;
     }
+
+    public static Builder builder(){
+        return new Builder();
+    }
+
 
     public int getId(){
         return id;
@@ -78,6 +84,10 @@ public class CommentResponse{
 
         public Builder name(String name){
             this.name = name;
+            return this;
+        }
+        public Builder createdAt(LocalDateTime createdAt){
+            this.createdAt = createdAt;
             return this;
         }
 

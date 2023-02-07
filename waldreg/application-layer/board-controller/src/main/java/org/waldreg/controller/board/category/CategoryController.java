@@ -1,5 +1,6 @@
 package org.waldreg.controller.board.category;
 
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -25,7 +26,7 @@ public class CategoryController{
     @Authenticating
     @PermissionVerifying(value = "Category manager")
     @PostMapping("/category")
-    public void createCategory(@RequestBody CategoryRequest categoryRequest){
+    public void createCategory(@RequestBody @Validated CategoryRequest categoryRequest){
         CategoryDto categoryDto = CategoryDto.builder().categoryName(categoryRequest.getCategoryName()).build();
         categoryManager.createCategory(categoryDto);
     }
@@ -39,7 +40,7 @@ public class CategoryController{
     @Authenticating
     @PermissionVerifying(value = "Category manager")
     @PutMapping("/category/{category-id}")
-    public void updateCategory(@RequestBody CategoryRequest categoryRequest, @PathVariable("category-id") int categoryId){
+    public void updateCategory(@RequestBody @Validated CategoryRequest categoryRequest, @PathVariable("category-id") int categoryId){
         CategoryDto categoryDto = CategoryDto.builder()
                 .id(categoryId)
                 .categoryName(categoryRequest.getCategoryName())

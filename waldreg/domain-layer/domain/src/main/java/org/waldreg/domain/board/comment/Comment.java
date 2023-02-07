@@ -1,8 +1,6 @@
 package org.waldreg.domain.board.comment;
 
 import java.time.LocalDateTime;
-import org.waldreg.domain.board.Board;
-import org.waldreg.domain.board.Board.Builder;
 import org.waldreg.domain.user.User;
 
 public final class Comment{

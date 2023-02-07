@@ -31,6 +31,14 @@ public class CommentDto{
         return id;
     }
 
+    public void setId(int id){
+        this.id = id;
+    }
+
+    public void setBoardId(int boardId){
+        this.boardId = boardId;
+    }
+
     public UserDto getUserDto(){
         return userDto;
     }

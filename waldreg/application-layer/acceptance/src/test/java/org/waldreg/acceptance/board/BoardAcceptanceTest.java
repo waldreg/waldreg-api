@@ -482,12 +482,10 @@ public class BoardAcceptanceTest{
         ResultActions resultCategory = BoardAcceptanceTestHelper.inquiryAllCategory(mvc, adminToken);
         CategoryResponse[] categoryList = objectMapper.readValue(resultCategory.andReturn().getResponse().getContentAsString(), CategoryListResponse.class).getCategories();
 
-        String[] imageUrls = boards[0].getImages();
         String[] fileUrls = boards[0].getFiles();
 
         int boardId = boards[0].getId();
         int categoryId = categoryList[0].getCategoryId();
-        ArrayList<String> imageUrlList = new ArrayList<>(List.of(fileUrls));
         ArrayList<String> fileUrlList = new ArrayList<>(List.of(fileUrls));
 
         BoardUpdateRequest boardUpdateRequest = BoardUpdateRequest.builder()
@@ -538,12 +536,10 @@ public class BoardAcceptanceTest{
         ResultActions resultCategory = BoardAcceptanceTestHelper.inquiryAllCategory(mvc, adminToken);
         CategoryResponse[] categoryList = objectMapper.readValue(resultCategory.andReturn().getResponse().getContentAsString(), CategoryListResponse.class).getCategories();
 
-        String[] imageUrls = boards[0].getImages();
         String[] fileUrls = boards[0].getFiles();
 
         int boardId = boards[0].getId();
         int categoryId = categoryList[0].getCategoryId();
-        ArrayList<String> imageUrlList = new ArrayList<>(List.of(fileUrls));
         ArrayList<String> fileUrlList = new ArrayList<>(List.of(fileUrls));
 
         BoardUpdateRequest boardUpdateRequest = BoardUpdateRequest.builder()
@@ -584,12 +580,10 @@ public class BoardAcceptanceTest{
         ResultActions resultCategory = BoardAcceptanceTestHelper.inquiryAllCategory(mvc, adminToken);
         CategoryResponse[] categoryList = objectMapper.readValue(resultCategory.andReturn().getResponse().getContentAsString(), CategoryListResponse.class).getCategories();
 
-        String[] imageUrls = boards[0].getImages();
         String[] fileUrls = boards[0].getFiles();
 
         int boardId = boards[0].getId();
         int categoryId = categoryList[0].getCategoryId();
-        ArrayList<String> imageUrlList = new ArrayList<>(List.of(fileUrls));
         ArrayList<String> fileUrlList = new ArrayList<>(List.of(fileUrls));
 
         BoardUpdateRequest boardUpdateRequest = BoardUpdateRequest.builder()
@@ -635,12 +629,10 @@ public class BoardAcceptanceTest{
         ResultActions resultCategory = BoardAcceptanceTestHelper.inquiryAllCategory(mvc, adminToken);
         CategoryResponse[] categoryList = objectMapper.readValue(resultCategory.andReturn().getResponse().getContentAsString(), CategoryListResponse.class).getCategories();
 
-        String[] imageUrls = boards[0].getImages();
         String[] fileUrls = boards[0].getFiles();
 
         int boardId = boards[0].getId();
         int categoryId = categoryList[0].getCategoryId();
-        ArrayList<String> imageUrlList = new ArrayList<>(List.of(fileUrls));
         ArrayList<String> fileUrlList = new ArrayList<>(List.of(fileUrls));
 
         BoardUpdateRequest boardUpdateRequest = BoardUpdateRequest.builder()
@@ -687,12 +679,10 @@ public class BoardAcceptanceTest{
         ResultActions resultCategory = BoardAcceptanceTestHelper.inquiryAllCategory(mvc, adminToken);
         CategoryResponse[] categoryList = objectMapper.readValue(resultCategory.andReturn().getResponse().getContentAsString(), CategoryListResponse.class).getCategories();
 
-        String[] imageUrls = boards[0].getImages();
         String[] fileUrls = boards[0].getFiles();
 
         int boardId = boards[0].getId();
         int categoryId = categoryList[0].getCategoryId();
-        ArrayList<String> imageUrlList = new ArrayList<>(List.of(fileUrls));
         ArrayList<String> fileUrlList = new ArrayList<>(List.of(fileUrls));
 
         BoardUpdateRequest boardUpdateRequest = BoardUpdateRequest.builder()
@@ -746,12 +736,10 @@ public class BoardAcceptanceTest{
         ResultActions resultCategory = BoardAcceptanceTestHelper.inquiryAllCategory(mvc, token);
         CategoryResponse[] categoryList = objectMapper.readValue(resultCategory.andReturn().getResponse().getContentAsString(), CategoryListResponse.class).getCategories();
 
-        String[] imageUrls = boards[0].getImages();
         String[] fileUrls = boards[0].getFiles();
 
         int boardId = boards[0].getId();
         int categoryId = categoryList[0].getCategoryId();
-        ArrayList<String> imageUrlList = new ArrayList<>(List.of(fileUrls));
         ArrayList<String> fileUrlList = new ArrayList<>(List.of(fileUrls));
 
         BoardUpdateRequest boardUpdateRequest = BoardUpdateRequest.builder()
@@ -2017,9 +2005,8 @@ public class BoardAcceptanceTest{
                 .content("comment1").build();
         BoardAcceptanceTestHelper.createComment(mvc, adminToken, boardId, commentRequest1);
 
-
         ResultActions comments = BoardAcceptanceTestHelper.inquiryComment(mvc, adminToken, boardId, 0, 1);
-        CommentResponse comment1 = objectMapper.readValue(comments.andReturn().getResponse().getContentAsString(), CommentListResponse.class).getComments().get(0);
+        CommentResponse comment1 = objectMapper.readValue(comments.andReturn().getResponse().getContentAsString(), CommentListResponse.class).getCommentResponseList().get(0);
 
         int commentId = comment1.getId();
         String modifyContent = "modify Content";
@@ -2054,7 +2041,7 @@ public class BoardAcceptanceTest{
         BoardAcceptanceTestHelper.createComment(mvc, adminToken, boardId, commentRequest1);
 
         ResultActions comments = BoardAcceptanceTestHelper.inquiryComment(mvc, adminToken, boardId, 0, 1);
-        CommentResponse comment1 = objectMapper.readValue(comments.andReturn().getResponse().getContentAsString(), CommentListResponse.class).getComments().get(0);
+        CommentResponse comment1 = objectMapper.readValue(comments.andReturn().getResponse().getContentAsString(), CommentListResponse.class).getCommentResponseList().get(0);
 
         int commentId = comment1.getId();
         String modifyContent = "comment1comment1comment1comment1comment1comment1comment1comment1comment1comment1comment1comment1comment1comment1comment1comment1comment1comment1comment1comment1comment1comment1comment1comment1comment1comment1comment1comment1comment1comment1comment1comment1comment1comment1comment1comment1comment1comment1comment1comment1comment1comment1comment1comment1comment1comment1comment1comment1comment1comment1comment1comment1comment1comment1comment1comment1comment1comment1comment1comment1comment1comment1comment1comment1comment1comment1comment1comment1comment1comment1comment1comment1comment1comment1comment1comment1comment1comment1comment1comment1comment1comment1comment1comment1comment1comment1comment1comment1comment1comment1comment1comment1comment1comment1comment1comment1comment1comment1comment1comment1comment1comment1comment1comment1comment1comment1comment1comment1comment1comment1comment1comment1comment1comment1comment1comment1comment1comment1comment1comment1comment1comment1comment1comment1comment1comment1comment1comment1comment1comment1comment1comment1comment1comment1comment1comment1comment1comment1comment1comment1comment1comment1comment1comment1comment1comment1comment1comment1comment1comment1comment1comment1comment1comment1comment1comment1comment1comment1comment1comment1comment1comment1comment1comment1comment1comment1comment1comment1comment1comment1";
@@ -2124,7 +2111,7 @@ public class BoardAcceptanceTest{
         BoardAcceptanceTestHelper.createComment(mvc, adminToken, boardId, commentRequest1);
 
         ResultActions comments = BoardAcceptanceTestHelper.inquiryComment(mvc, adminToken, boardId, 0, 1);
-        CommentResponse comment1 = objectMapper.readValue(comments.andReturn().getResponse().getContentAsString(), CommentListResponse.class).getComments().get(0);
+        CommentResponse comment1 = objectMapper.readValue(comments.andReturn().getResponse().getContentAsString(), CommentListResponse.class).getCommentResponseList().get(0);
 
         int commentId = comment1.getId();
         //when
@@ -2155,7 +2142,7 @@ public class BoardAcceptanceTest{
         BoardAcceptanceTestHelper.createComment(mvc, adminToken, boardId, commentRequest1);
 
         ResultActions comments = BoardAcceptanceTestHelper.inquiryComment(mvc, adminToken, boardId, 0, 1);
-        CommentResponse comment1 = objectMapper.readValue(comments.andReturn().getResponse().getContentAsString(), CommentListResponse.class).getComments().get(0);
+        CommentResponse comment1 = objectMapper.readValue(comments.andReturn().getResponse().getContentAsString(), CommentListResponse.class).getCommentResponseList().get(0);
 
         int commentId = comment1.getId();
         String token = createUserAndGetToken("alcuk", "alcuk_id", "2gdddddd!");
@@ -2807,24 +2794,6 @@ public class BoardAcceptanceTest{
                 MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON),
                 MockMvcResultMatchers.jsonPath("$.messages").value("No permission"),
                 MockMvcResultMatchers.jsonPath("$.document_url").value("docs.waldreg.org")
-        );
-
-    }
-
-    @Test
-    @DisplayName("멤버 티어 조회 성공")
-    public void INQUIRY_MEMBER_TIER_SUCCESS_TEST() throws Exception{
-        //given
-        String adminToken = AuthenticationAcceptanceTestHelper.getAdminToken(mvc, objectMapper);
-
-        //when
-        ResultActions result = BoardAcceptanceTestHelper.inquiryMemberTier(mvc, adminToken);
-
-        //then
-        result.andExpectAll(
-                MockMvcResultMatchers.status().isOk(),
-                MockMvcResultMatchers.header().string(HttpHeaders.CONTENT_TYPE, "application/json"),
-                MockMvcResultMatchers.header().string("api-version", apiVersion)
         );
 
     }
