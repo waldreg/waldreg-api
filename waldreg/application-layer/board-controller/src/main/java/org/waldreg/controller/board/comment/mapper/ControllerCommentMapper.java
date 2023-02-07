@@ -2,11 +2,13 @@ package org.waldreg.controller.board.comment.mapper;
 
 import java.util.ArrayList;
 import java.util.List;
+import org.springframework.stereotype.Service;
 import org.waldreg.board.dto.CommentDto;
 import org.waldreg.controller.board.comment.request.CommentRequest;
 import org.waldreg.controller.board.comment.response.CommentListResponse;
 import org.waldreg.controller.board.comment.response.CommentResponse;
 
+@Service
 public class ControllerCommentMapper{
 
     public CommentDto commentRequestToCommentDto(CommentRequest commentRequest){

@@ -3,6 +3,7 @@ package org.waldreg.board.reaction.management;
 
 import java.util.List;
 import java.util.Map;
+import org.springframework.stereotype.Service;
 import org.waldreg.board.dto.BoardServiceReactionType;
 import org.waldreg.board.dto.ReactionDto;
 import org.waldreg.board.dto.ReactionRequestDto;
@@ -12,6 +13,7 @@ import org.waldreg.board.exception.ReactionTypeDoesNotExistException;
 import org.waldreg.board.reaction.spi.ReactionInBoardRepository;
 import org.waldreg.board.reaction.spi.ReactionUserRepository;
 
+@Service
 public class DefaultReactionManager implements ReactionManager{
 
     private final ReactionInBoardRepository reactionInBoardRepository;

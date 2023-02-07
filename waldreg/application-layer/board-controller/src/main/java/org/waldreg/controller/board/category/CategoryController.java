@@ -1,5 +1,6 @@
 package org.waldreg.controller.board.category;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -22,6 +23,11 @@ public class CategoryController{
     private CategoryManager categoryManager;
 
     private ControllerCategoryMapper controllerCategoryMapper;
+    @Autowired
+    public CategoryController(CategoryManager categoryManager, ControllerCategoryMapper controllerCategoryMapper){
+        this.categoryManager = categoryManager;
+        this.controllerCategoryMapper = controllerCategoryMapper;
+    }
 
     @Authenticating
     @PermissionVerifying(value = "Category manager")

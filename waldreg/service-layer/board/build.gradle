@@ -23,6 +23,7 @@ dependencyManagement {
 }
 
 dependencies {
+    implementation project(':stable-service-layer:character')
     implementation project(':core-layer:util')
     implementation 'org.springframework.boot:spring-boot-starter'
     implementation 'org.springframework.boot:spring-boot-starter-web'

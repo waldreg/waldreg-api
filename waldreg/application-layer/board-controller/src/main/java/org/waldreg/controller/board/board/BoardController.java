@@ -3,6 +3,7 @@ package org.waldreg.controller.board.board;
 
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.MediaType;
 import org.springframework.stereotype.Component;
 import org.springframework.util.ObjectUtils;
 import org.springframework.validation.annotation.Validated;
@@ -10,6 +11,8 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
@@ -40,7 +43,7 @@ public class BoardController{
     private final FileManager fileManager;
     private final ControllerBoardMapper controllerBoardMapper;
 
-
+    @Autowired
     public BoardController(BoardManager boardManager, FileManager fileManager, ControllerBoardMapper controllerBoardMapper){
         this.boardManager = boardManager;
         this.fileManager = fileManager;
@@ -48,11 +51,11 @@ public class BoardController{
     }
 
     @Authenticating
-    @PermissionVerifying(value = "Board create manager")
-    @PostMapping("/board")
+    @PermissionVerifying("Board create manager")
+    @RequestMapping(value = "/board", method = RequestMethod.POST, consumes = {MediaType.APPLICATION_JSON_VALUE, MediaType.MULTIPART_FORM_DATA_VALUE})
     public void createBoard(@Validated @RequestPart(value = "boardCreateRequest") BoardCreateRequest boardCreateRequest,
-                            @RequestPart(value = "image") List<MultipartFile> imageFileList,
-                            @RequestPart(value = "file") List<MultipartFile> fileList
+                            @RequestPart(value = "image", required = false) List<MultipartFile> imageFileList,
+                            @RequestPart(value = "file", required = false) List<MultipartFile> fileList
     ){
         saveAllFile(imageFileList);
         saveAllFile(fileList);
@@ -75,7 +78,7 @@ public class BoardController{
 
     @Authenticating
     @GetMapping("/boards")
-    public BoardListResponse getBoardList(@RequestParam("category-id") int categoryId, @RequestParam("from") int from, @RequestParam("to") int to){
+    public BoardListResponse getBoardList(@RequestParam(value = "category-id", required = false) Integer categoryId, @RequestParam("from") int from, @RequestParam("to") int to){
         List<BoardDto> boardDtoList;
         if (ObjectUtils.isEmpty(categoryId)){
             boardDtoList = boardManager.inquiryAllBoard(from, to);

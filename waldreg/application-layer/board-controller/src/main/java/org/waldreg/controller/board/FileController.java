@@ -1,6 +1,7 @@
 package org.waldreg.controller.board;
 
 import java.io.File;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.FileSystemResource;
 import org.springframework.core.io.Resource;
 import org.springframework.http.HttpStatus;
@@ -18,6 +19,7 @@ public class FileController{
 
     private FileManager fileManager;
 
+    @Autowired
     public FileController(FileManager fileManager){
         this.fileManager = fileManager;
     }

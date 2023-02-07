@@ -1,6 +1,7 @@
 package org.waldreg.controller.board.comment;
 
 import java.util.List;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -32,6 +33,7 @@ public class CommentController{
 
     private final ControllerCommentMapper controllerCommentMapper;
 
+    @Autowired
     public CommentController(CommentManager commentManager, ControllerCommentMapper controllerCommentMapper){
         this.commentManager = commentManager;
         this.controllerCommentMapper = controllerCommentMapper;

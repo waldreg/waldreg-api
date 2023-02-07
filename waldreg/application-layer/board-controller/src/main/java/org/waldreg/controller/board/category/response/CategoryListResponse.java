@@ -4,6 +4,8 @@ public class CategoryListResponse{
 
     private CategoryResponse[] categories;
 
+    public CategoryListResponse(){};
+
     public CategoryListResponse(CategoryResponse[] categories){
         this.categories = categories;
     }

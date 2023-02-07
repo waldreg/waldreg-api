@@ -3,6 +3,7 @@ package org.waldreg.controller.board.board.mapper;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import org.springframework.stereotype.Service;
 import org.waldreg.board.board.management.BoardManager.BoardRequest;
 import org.waldreg.board.dto.BoardDto;
 import org.waldreg.board.dto.BoardServiceReactionType;
@@ -15,6 +16,7 @@ import org.waldreg.controller.board.board.response.ReactionResponse;
 import org.waldreg.controller.board.board.response.Author;
 import org.waldreg.controller.board.board.response.BoardResponse;
 
+@Service
 public class ControllerBoardMapper{
 
     public BoardRequest boardCreateRequestToBoardRequest(BoardCreateRequest boardCreateRequest){

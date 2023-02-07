@@ -16,13 +16,12 @@ public class BoardAcceptanceTestHelper{
 
     private final static String apiVersion = "1.0";
 
-    public static ResultActions createBoardWithAll(MockMvc mvc, String token, MockPart jsonContent, List<MockMultipartFile> imgFile,  List<MockMultipartFile> docxFile) throws Exception{
+    public static ResultActions createBoardWithAll(MockMvc mvc, String token, MockMultipartFile jsonContent, List<MockMultipartFile> imgFile, List<MockMultipartFile> docxFile) throws Exception{
         return mvc.perform(MockMvcRequestBuilders.multipart("/board")
-                                   .part(jsonContent)
+                                   .file(jsonContent)
                                    .file(imgFile.get(0))
                                    .file(docxFile.get(0))
                                    .header(HttpHeaders.AUTHORIZATION, token)
-                                   .contentType(MediaType.APPLICATION_JSON)
                                    .accept(MediaType.APPLICATION_JSON)
                                    .header("api-version", apiVersion));
     }
@@ -107,7 +106,7 @@ public class BoardAcceptanceTestHelper{
 
 
     public static ResultActions inquiryAllBoard(MockMvc mvc, String token) throws Exception{
-        return mvc.perform(MockMvcRequestBuilders.get("/boards")
+        return mvc.perform(MockMvcRequestBuilders.get("/boards?from=1&to=4")
                                    .header(HttpHeaders.AUTHORIZATION, token)
                                    .accept(MediaType.APPLICATION_JSON)
                                    .header("api-version", apiVersion));
