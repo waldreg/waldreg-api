@@ -25,6 +25,7 @@ import org.springframework.web.multipart.MultipartFile;
 import org.waldreg.board.board.management.BoardManager;
 import org.waldreg.board.board.management.BoardManager.BoardRequest;
 import org.waldreg.board.dto.BoardDto;
+import org.waldreg.board.dto.BoardServiceReactionType;
 import org.waldreg.board.exception.BoardDeletePermissionException;
 import org.waldreg.board.exception.BoardModifyPermissionException;
 import org.waldreg.board.file.FileManager;

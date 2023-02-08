@@ -14,12 +14,12 @@ public class ReactionResponse{
     public ReactionResponse(){}
 
     private ReactionResponse(Builder builder){
-        this.good = builder().good;
-        this.bad = builder().bad;
-        this.check = builder().check;
-        this.heart = builder().heart;
-        this.smile = builder().smile;
-        this.sad = builder().sad;
+        this.good = builder.good;
+        this.bad = builder.bad;
+        this.check = builder.check;
+        this.heart = builder.heart;
+        this.smile = builder.smile;
+        this.sad = builder.sad;
         this.users = builder.users;
     }
 
@@ -51,11 +51,11 @@ public class ReactionResponse{
         this.check = check;
     }
 
-    public int getHear(){
+    public int getHeart(){
         return heart;
     }
 
-    public void setHear(int heart){
+    public void setHeart(int heart){
         this.heart = heart;
     }
 

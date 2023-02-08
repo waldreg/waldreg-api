@@ -1,5 +1,6 @@
 package org.waldreg.controller.board.exceptionadvice;
 
+import java.io.FileNotFoundException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -114,7 +115,7 @@ public class BoardControllerAdvice{
         return new ResponseEntity<>(exceptionTemplate, HttpStatus.BAD_REQUEST);
     }
 
-    @ExceptionHandler(UnknownFileId.class)
+    @ExceptionHandler({UnknownFileId.class})
     public ResponseEntity<ExceptionTemplate> catchUnknownFileIdException(UnknownFileId unknownFileId){
         ExceptionTemplate exceptionTemplate = ExceptionTemplate.builder()
                 .code("BOARD-408")
@@ -123,6 +124,5 @@ public class BoardControllerAdvice{
                 .build();
         return new ResponseEntity<>(exceptionTemplate, HttpStatus.BAD_REQUEST);
     }
-
 
 }

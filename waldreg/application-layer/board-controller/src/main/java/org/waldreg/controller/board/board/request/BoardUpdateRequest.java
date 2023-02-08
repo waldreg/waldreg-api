@@ -10,6 +10,7 @@ public class BoardUpdateRequest{
     private String title;
     private String content;
 
+    @JsonProperty("category-id")
     private int categoryId;
     @JsonProperty("delete_file_urls")
     private ArrayList<String> deleteFileUrls;

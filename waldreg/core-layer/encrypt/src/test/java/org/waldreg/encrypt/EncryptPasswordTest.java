@@ -36,7 +36,6 @@ public class EncryptPasswordTest{
         String encryptedPassword = encrypt.getEncryptPassword(password,salt);
 
         //then
-        System.out.println("salt = " + salt + "\n encryptedPassword = "+ encryptedPassword);
         Assertions.assertNotNull(encryptedPassword);
     }
 

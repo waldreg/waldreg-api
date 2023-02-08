@@ -12,7 +12,10 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 import org.waldreg.board.file.FileManager;
 import org.waldreg.character.aop.annotation.PermissionVerifying;
+import org.waldreg.character.aop.parameter.PermissionVerifyState;
+import org.waldreg.character.exception.NoPermissionException;
 import org.waldreg.token.aop.annotation.Authenticating;
+import org.waldreg.token.aop.parameter.AuthenticateVerifyState;
 
 @RestController
 public class FileController{

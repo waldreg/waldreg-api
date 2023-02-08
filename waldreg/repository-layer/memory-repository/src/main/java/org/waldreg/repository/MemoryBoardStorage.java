@@ -6,8 +6,10 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicInteger;
 import org.springframework.stereotype.Repository;
+import org.waldreg.board.dto.BoardServiceReactionType;
 import org.waldreg.domain.board.Board;
 import org.waldreg.domain.board.comment.Comment;
+import org.waldreg.domain.board.reaction.ReactionType;
 import org.waldreg.domain.category.Category;
 
 @Repository

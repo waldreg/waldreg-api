@@ -1,5 +1,6 @@
 package org.waldreg.controller.board.board.request;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import javax.validation.constraints.NotBlank;
 
 public class BoardCreateRequest{
@@ -7,6 +8,8 @@ public class BoardCreateRequest{
     @NotBlank(message = "BOARD-409 Blank board title")
     private String title;
     private String content;
+    @JsonProperty("category-id")
+
     private int categoryId;
 
     public BoardCreateRequest(){}

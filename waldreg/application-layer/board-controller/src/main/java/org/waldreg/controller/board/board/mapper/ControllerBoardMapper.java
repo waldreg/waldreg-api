@@ -82,11 +82,11 @@ public class ControllerBoardMapper{
         }
         return ReactionResponse.builder()
                 .good(reactionMap.get(BoardServiceReactionType.GOOD).size())
-                .good(reactionMap.get(BoardServiceReactionType.BAD).size())
-                .good(reactionMap.get(BoardServiceReactionType.CHECK).size())
-                .good(reactionMap.get(BoardServiceReactionType.HEART).size())
-                .good(reactionMap.get(BoardServiceReactionType.SMILE).size())
-                .good(reactionMap.get(BoardServiceReactionType.SAD).size())
+                .bad(reactionMap.get(BoardServiceReactionType.BAD).size())
+                .check(reactionMap.get(BoardServiceReactionType.CHECK).size())
+                .heart(reactionMap.get(BoardServiceReactionType.HEART).size())
+                .smile(reactionMap.get(BoardServiceReactionType.SMILE).size())
+                .sad(reactionMap.get(BoardServiceReactionType.SAD).size())
                 .users(users.toArray(new String[0]))
                 .build();
     }

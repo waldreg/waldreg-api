@@ -31,6 +31,7 @@ public class BoardPermissionConfigurer{
         setCommentDeleteManager();
         setImageManager();
         setFileManager();
+        setReactionManager();
     }
 
     private void setBoardCreateManager(){
@@ -148,6 +149,16 @@ public class BoardPermissionConfigurer{
                 DefaultPermissionUnit.builder()
                         .name("File download manager")
                         .info("If set true, can download file.")
+                        .statusList(List.of("true", "false"))
+                        .permissionVerifiable(s -> s.equals("true"))
+                        .build()
+        );
+    }
+    private void setReactionManager(){
+        permissionExtension.extend(
+                DefaultPermissionUnit.builder()
+                        .name("Reaction manager")
+                        .info("If set true, can reaction to board.")
                         .statusList(List.of("true", "false"))
                         .permissionVerifiable(s -> s.equals("true"))
                         .build()

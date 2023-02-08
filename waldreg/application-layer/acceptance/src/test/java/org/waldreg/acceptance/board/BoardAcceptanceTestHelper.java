@@ -235,14 +235,14 @@ public class BoardAcceptanceTestHelper{
     public static ResultActions getImage(MockMvc mvc, String token, String url) throws Exception{
         return mvc.perform(MockMvcRequestBuilders.get(url)
                                    .header(HttpHeaders.AUTHORIZATION, token)
-                                   .accept(MediaType.IMAGE_JPEG)
+                                   .accept(MediaType.IMAGE_JPEG,MediaType.APPLICATION_JSON)
                                    .header("api-version", apiVersion));
     }
 
     public static ResultActions downloadFile(MockMvc mvc, String token, String url) throws Exception{
         return mvc.perform(MockMvcRequestBuilders.get(url)
                                    .header(HttpHeaders.AUTHORIZATION, token)
-                                   .accept(MediaType.APPLICATION_JSON)
+                                   .accept(MediaType.APPLICATION_JSON,MediaType.APPLICATION_PDF)
                                    .header("api-version", apiVersion));
     }
 }

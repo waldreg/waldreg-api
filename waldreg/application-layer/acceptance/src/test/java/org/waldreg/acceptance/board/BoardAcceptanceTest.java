@@ -400,14 +400,14 @@ public class BoardAcceptanceTest{
         MockMultipartFile jsonContent = new MockMultipartFile("boardCreateRequest", "", MediaType.APPLICATION_JSON_VALUE, objectMapper.writeValueAsString(boardCreateRequest).getBytes());
 
         //when
-        BoardAcceptanceTestHelper.createBoardWithOnlyJson(mvc, token, jsonContent);
-        ResultActions boards = BoardAcceptanceTestHelper.inquiryAllBoard(mvc, token);
+        BoardAcceptanceTestHelper.createBoardWithOnlyJson(mvc, adminToken, jsonContent);
+        ResultActions boards = BoardAcceptanceTestHelper.inquiryAllBoard(mvc, adminToken);
 
         BoardListResponse boardListResponse = objectMapper.readValue(boards.andReturn()
                                                                              .getResponse()
                                                                              .getContentAsString(), BoardListResponse.class);
         int boardId = boardListResponse.getBoards()[0].getId();
-        ResultActions result = BoardAcceptanceTestHelper.inquiryBoardById(mvc, token, boardId);
+        ResultActions result = BoardAcceptanceTestHelper.inquiryBoardById(mvc, adminToken, boardId);
 
         //then
         result.andExpectAll(
@@ -419,17 +419,17 @@ public class BoardAcceptanceTest{
                 MockMvcResultMatchers.jsonPath("$.title").value(title),
                 MockMvcResultMatchers.jsonPath("$.content").value(content),
                 MockMvcResultMatchers.jsonPath("$.category").value(categoryName),
-                MockMvcResultMatchers.jsonPath("$.author.user_id").value(userId),
-                MockMvcResultMatchers.jsonPath("$.author.name").value(name),
+                MockMvcResultMatchers.jsonPath("$.author.user_id").value("Admin"),
+                MockMvcResultMatchers.jsonPath("$.author.name").value("Admin"),
                 MockMvcResultMatchers.jsonPath("$.created_at").isNotEmpty(),
                 MockMvcResultMatchers.jsonPath("$.last_modified_at").isNotEmpty(),
                 MockMvcResultMatchers.jsonPath("$.exist_file").value("false"),
-                MockMvcResultMatchers.jsonPath("$.reactions.good").doesNotExist(),
-                MockMvcResultMatchers.jsonPath("$.reactions.bad").doesNotExist(),
-                MockMvcResultMatchers.jsonPath("$.reactions.check").doesNotExist(),
-                MockMvcResultMatchers.jsonPath("$.reactions.heart").doesNotExist(),
-                MockMvcResultMatchers.jsonPath("$.reactions.smile").doesNotExist(),
-                MockMvcResultMatchers.jsonPath("$.reactions.sad").doesNotExist(),
+                MockMvcResultMatchers.jsonPath("$.reactions.good").isNumber(),
+                MockMvcResultMatchers.jsonPath("$.reactions.bad").isNumber(),
+                MockMvcResultMatchers.jsonPath("$.reactions.check").isNumber(),
+                MockMvcResultMatchers.jsonPath("$.reactions.heart").isNumber(),
+                MockMvcResultMatchers.jsonPath("$.reactions.smile").isNumber(),
+                MockMvcResultMatchers.jsonPath("$.reactions.sad").isNumber(),
                 MockMvcResultMatchers.jsonPath("$.reactions.users").isArray()
         );
 
@@ -507,14 +507,14 @@ public class BoardAcceptanceTest{
         MockMultipartFile jsonContent = new MockMultipartFile("boardCreateRequest", "", MediaType.APPLICATION_JSON_VALUE, objectMapper.writeValueAsString(boardCreateRequest).getBytes());
 
         //when
-        BoardAcceptanceTestHelper.createBoardWithOnlyJson(mvc, token, jsonContent);
+        BoardAcceptanceTestHelper.createBoardWithOnlyJson(mvc, adminToken, jsonContent);
         ResultActions boards = BoardAcceptanceTestHelper.inquiryAllBoard(mvc, token);
 
         BoardListResponse boardListResponse = objectMapper.readValue(boards.andReturn()
                                                                              .getResponse()
                                                                              .getContentAsString(), BoardListResponse.class);
         int boardId = boardListResponse.getBoards()[0].getId();
-        ResultActions result = BoardAcceptanceTestHelper.inquiryBoardById(mvc, adminToken, boardId);
+        ResultActions result = BoardAcceptanceTestHelper.inquiryBoardById(mvc, token, boardId);
 
         //then
         result.andExpectAll(
@@ -1091,12 +1091,12 @@ public class BoardAcceptanceTest{
                 MockMvcResultMatchers.jsonPath("$.boards.[0].created_at").isNotEmpty(),
                 MockMvcResultMatchers.jsonPath("$.boards.[0].last_modified_at").isNotEmpty(),
                 MockMvcResultMatchers.jsonPath("$.boards.[0].exist_file").value("false"),
-                MockMvcResultMatchers.jsonPath("$.boards.[0].reactions.good").doesNotExist(),
-                MockMvcResultMatchers.jsonPath("$.boards.[0].reactions.bad").doesNotExist(),
-                MockMvcResultMatchers.jsonPath("$.boards.[0].reactions.check").doesNotExist(),
-                MockMvcResultMatchers.jsonPath("$.boards.[0].reactions.heart").doesNotExist(),
-                MockMvcResultMatchers.jsonPath("$.boards.[0].reactions.smile").doesNotExist(),
-                MockMvcResultMatchers.jsonPath("$.boards.[0].reactions.sad").doesNotExist(),
+                MockMvcResultMatchers.jsonPath("$.boards.[0].reactions.good").isNumber(),
+                MockMvcResultMatchers.jsonPath("$.boards.[0].reactions.bad").isNumber(),
+                MockMvcResultMatchers.jsonPath("$.boards.[0].reactions.check").isNumber(),
+                MockMvcResultMatchers.jsonPath("$.boards.[0].reactions.heart").isNumber(),
+                MockMvcResultMatchers.jsonPath("$.boards.[0].reactions.smile").isNumber(),
+                MockMvcResultMatchers.jsonPath("$.boards.[0].reactions.sad").isNumber(),
                 MockMvcResultMatchers.jsonPath("$.boards.[1].title").value(title2),
                 MockMvcResultMatchers.jsonPath("$.boards.[2].title").value(title3)
         );
@@ -1164,19 +1164,19 @@ public class BoardAcceptanceTest{
                 MockMvcResultMatchers.jsonPath("$.max_idx").value(2),
                 MockMvcResultMatchers.jsonPath("$.boards.[0].title").value(title1),
                 MockMvcResultMatchers.jsonPath("$.boards.[0].content").value(content1),
-                MockMvcResultMatchers.jsonPath("$.boards.[0].category").value("cate2"),
+                MockMvcResultMatchers.jsonPath("$.boards.[0].category").value("cate1"),
                 MockMvcResultMatchers.jsonPath("$.boards.[0].author.user_id").value("Admin"),
                 MockMvcResultMatchers.jsonPath("$.boards.[0].author.name").value("Admin"),
                 MockMvcResultMatchers.jsonPath("$.boards.[0].created_at").isNotEmpty(),
                 MockMvcResultMatchers.jsonPath("$.boards.[0].last_modified_at").isNotEmpty(),
                 MockMvcResultMatchers.jsonPath("$.boards.[0].exist_file").value("false"),
-                MockMvcResultMatchers.jsonPath("$.boards.[0].reactions.good").doesNotExist(),
-                MockMvcResultMatchers.jsonPath("$.boards.[0].reactions.bad").doesNotExist(),
-                MockMvcResultMatchers.jsonPath("$.boards.[0].reactions.check").doesNotExist(),
-                MockMvcResultMatchers.jsonPath("$.boards.[0].reactions.heart").doesNotExist(),
-                MockMvcResultMatchers.jsonPath("$.boards.[0].reactions.smile").doesNotExist(),
-                MockMvcResultMatchers.jsonPath("$.boards.[0].reactions.sad").doesNotExist(),
-                MockMvcResultMatchers.jsonPath("$.boards.[1].category").value("cate2")
+                MockMvcResultMatchers.jsonPath("$.boards.[0].reactions.good").isNumber(),
+                MockMvcResultMatchers.jsonPath("$.boards.[0].reactions.bad").isNumber(),
+                MockMvcResultMatchers.jsonPath("$.boards.[0].reactions.check").isNumber(),
+                MockMvcResultMatchers.jsonPath("$.boards.[0].reactions.heart").isNumber(),
+                MockMvcResultMatchers.jsonPath("$.boards.[0].reactions.smile").isNumber(),
+                MockMvcResultMatchers.jsonPath("$.boards.[0].reactions.sad").isNumber(),
+                MockMvcResultMatchers.jsonPath("$.boards.[1].category").value("cate1")
         );
     }
 
@@ -1242,12 +1242,12 @@ public class BoardAcceptanceTest{
                 MockMvcResultMatchers.jsonPath("$.boards.[0].created_at").isNotEmpty(),
                 MockMvcResultMatchers.jsonPath("$.boards.[0].last_modified_at").isNotEmpty(),
                 MockMvcResultMatchers.jsonPath("$.boards.[0].exist_file").value("false"),
-                MockMvcResultMatchers.jsonPath("$.boards.[0].reactions.good").doesNotExist(),
-                MockMvcResultMatchers.jsonPath("$.boards.[0].reactions.bad").doesNotExist(),
-                MockMvcResultMatchers.jsonPath("$.boards.[0].reactions.check").doesNotExist(),
-                MockMvcResultMatchers.jsonPath("$.boards.[0].reactions.heart").doesNotExist(),
-                MockMvcResultMatchers.jsonPath("$.boards.[0].reactions.smile").doesNotExist(),
-                MockMvcResultMatchers.jsonPath("$.boards.[0].reactions.sad").doesNotExist(),
+                MockMvcResultMatchers.jsonPath("$.boards.[0].reactions.good").isNumber(),
+                MockMvcResultMatchers.jsonPath("$.boards.[0].reactions.bad").isNumber(),
+                MockMvcResultMatchers.jsonPath("$.boards.[0].reactions.check").isNumber(),
+                MockMvcResultMatchers.jsonPath("$.boards.[0].reactions.heart").isNumber(),
+                MockMvcResultMatchers.jsonPath("$.boards.[0].reactions.smile").isNumber(),
+                MockMvcResultMatchers.jsonPath("$.boards.[0].reactions.sad").isNumber(),
                 MockMvcResultMatchers.jsonPath("$.boards.[1].category").value("cate1")
         );
     }
@@ -1333,12 +1333,12 @@ public class BoardAcceptanceTest{
                 MockMvcResultMatchers.jsonPath("$.boards.[0].created_at").isNotEmpty(),
                 MockMvcResultMatchers.jsonPath("$.boards.[0].last_modified_at").isNotEmpty(),
                 MockMvcResultMatchers.jsonPath("$.boards.[0].exist_file").value("false"),
-                MockMvcResultMatchers.jsonPath("$.boards.[0].reactions.good").doesNotExist(),
-                MockMvcResultMatchers.jsonPath("$.boards.[0].reactions.bad").doesNotExist(),
-                MockMvcResultMatchers.jsonPath("$.boards.[0].reactions.check").doesNotExist(),
-                MockMvcResultMatchers.jsonPath("$.boards.[0].reactions.heart").doesNotExist(),
-                MockMvcResultMatchers.jsonPath("$.boards.[0].reactions.smile").doesNotExist(),
-                MockMvcResultMatchers.jsonPath("$.boards.[0].reactions.sad").doesNotExist(),
+                MockMvcResultMatchers.jsonPath("$.boards.[0].reactions.good").isNumber(),
+                MockMvcResultMatchers.jsonPath("$.boards.[0].reactions.bad").isNumber(),
+                MockMvcResultMatchers.jsonPath("$.boards.[0].reactions.check").isNumber(),
+                MockMvcResultMatchers.jsonPath("$.boards.[0].reactions.heart").isNumber(),
+                MockMvcResultMatchers.jsonPath("$.boards.[0].reactions.smile").isNumber(),
+                MockMvcResultMatchers.jsonPath("$.boards.[0].reactions.sad").isNumber(),
                 MockMvcResultMatchers.jsonPath("$.boards.[1].category").value("cate1")
         );
     }
@@ -1552,12 +1552,12 @@ public class BoardAcceptanceTest{
                 MockMvcResultMatchers.jsonPath("$.boards.[0].created_at").isNotEmpty(),
                 MockMvcResultMatchers.jsonPath("$.boards.[0].last_modified_at").isNotEmpty(),
                 MockMvcResultMatchers.jsonPath("$.boards.[0].exist_file").value("false"),
-                MockMvcResultMatchers.jsonPath("$.boards.[0].reactions.good").doesNotExist(),
-                MockMvcResultMatchers.jsonPath("$.boards.[0].reactions.bad").doesNotExist(),
-                MockMvcResultMatchers.jsonPath("$.boards.[0].reactions.check").doesNotExist(),
-                MockMvcResultMatchers.jsonPath("$.boards.[0].reactions.heart").doesNotExist(),
-                MockMvcResultMatchers.jsonPath("$.boards.[0].reactions.smile").doesNotExist(),
-                MockMvcResultMatchers.jsonPath("$.boards.[0].reactions.sad").doesNotExist(),
+                MockMvcResultMatchers.jsonPath("$.boards.[0].reactions.good").isNumber(),
+                MockMvcResultMatchers.jsonPath("$.boards.[0].reactions.bad").isNumber(),
+                MockMvcResultMatchers.jsonPath("$.boards.[0].reactions.check").isNumber(),
+                MockMvcResultMatchers.jsonPath("$.boards.[0].reactions.heart").isNumber(),
+                MockMvcResultMatchers.jsonPath("$.boards.[0].reactions.smile").isNumber(),
+                MockMvcResultMatchers.jsonPath("$.boards.[0].reactions.sad").isNumber(),
                 MockMvcResultMatchers.jsonPath("$.boards.[1].title").value(title2),
                 MockMvcResultMatchers.jsonPath("$.boards.[1].content").value(content2),
                 MockMvcResultMatchers.jsonPath("$.boards.[1].category").value("cate2"),
@@ -1566,12 +1566,12 @@ public class BoardAcceptanceTest{
                 MockMvcResultMatchers.jsonPath("$.boards.[1].created_at").isNotEmpty(),
                 MockMvcResultMatchers.jsonPath("$.boards.[1].last_modified_at").isNotEmpty(),
                 MockMvcResultMatchers.jsonPath("$.boards.[1].exist_file").value("false"),
-                MockMvcResultMatchers.jsonPath("$.boards.[1].reactions.good").doesNotExist(),
-                MockMvcResultMatchers.jsonPath("$.boards.[1].reactions.bad").doesNotExist(),
-                MockMvcResultMatchers.jsonPath("$.boards.[1].reactions.check").doesNotExist(),
-                MockMvcResultMatchers.jsonPath("$.boards.[1].reactions.heart").doesNotExist(),
-                MockMvcResultMatchers.jsonPath("$.boards.[1].reactions.smile").doesNotExist(),
-                MockMvcResultMatchers.jsonPath("$.boards.[1].reactions.sad").doesNotExist()
+                MockMvcResultMatchers.jsonPath("$.boards.[1].reactions.good").isNumber(),
+                MockMvcResultMatchers.jsonPath("$.boards.[1].reactions.bad").isNumber(),
+                MockMvcResultMatchers.jsonPath("$.boards.[1].reactions.check").isNumber(),
+                MockMvcResultMatchers.jsonPath("$.boards.[1].reactions.heart").isNumber(),
+                MockMvcResultMatchers.jsonPath("$.boards.[1].reactions.smile").isNumber(),
+                MockMvcResultMatchers.jsonPath("$.boards.[1].reactions.sad").isNumber()
         );
     }
 
@@ -1639,12 +1639,12 @@ public class BoardAcceptanceTest{
                 MockMvcResultMatchers.jsonPath("$.boards.[0].created_at").isNotEmpty(),
                 MockMvcResultMatchers.jsonPath("$.boards.[0].last_modified_at").isNotEmpty(),
                 MockMvcResultMatchers.jsonPath("$.boards.[0].exist_file").value("false"),
-                MockMvcResultMatchers.jsonPath("$.boards.[0].reactions.good").doesNotExist(),
-                MockMvcResultMatchers.jsonPath("$.boards.[0].reactions.bad").doesNotExist(),
-                MockMvcResultMatchers.jsonPath("$.boards.[0].reactions.check").doesNotExist(),
-                MockMvcResultMatchers.jsonPath("$.boards.[0].reactions.heart").doesNotExist(),
-                MockMvcResultMatchers.jsonPath("$.boards.[0].reactions.smile").doesNotExist(),
-                MockMvcResultMatchers.jsonPath("$.boards.[0].reactions.sad").doesNotExist(),
+                MockMvcResultMatchers.jsonPath("$.boards.[0].reactions.good").isNumber(),
+                MockMvcResultMatchers.jsonPath("$.boards.[0].reactions.bad").isNumber(),
+                MockMvcResultMatchers.jsonPath("$.boards.[0].reactions.check").isNumber(),
+                MockMvcResultMatchers.jsonPath("$.boards.[0].reactions.heart").isNumber(),
+                MockMvcResultMatchers.jsonPath("$.boards.[0].reactions.smile").isNumber(),
+                MockMvcResultMatchers.jsonPath("$.boards.[0].reactions.sad").isNumber(),
                 MockMvcResultMatchers.jsonPath("$.boards.[1].title").value(title2),
                 MockMvcResultMatchers.jsonPath("$.boards.[1].content").value(content2),
                 MockMvcResultMatchers.jsonPath("$.boards.[1].category").value("cate1"),
@@ -1653,12 +1653,12 @@ public class BoardAcceptanceTest{
                 MockMvcResultMatchers.jsonPath("$.boards.[1].created_at").isNotEmpty(),
                 MockMvcResultMatchers.jsonPath("$.boards.[1].last_modified_at").isNotEmpty(),
                 MockMvcResultMatchers.jsonPath("$.boards.[1].exist_file").value("false"),
-                MockMvcResultMatchers.jsonPath("$.boards.[1].reactions.good").doesNotExist(),
-                MockMvcResultMatchers.jsonPath("$.boards.[1].reactions.bad").doesNotExist(),
-                MockMvcResultMatchers.jsonPath("$.boards.[1].reactions.check").doesNotExist(),
-                MockMvcResultMatchers.jsonPath("$.boards.[1].reactions.heart").doesNotExist(),
-                MockMvcResultMatchers.jsonPath("$.boards.[1].reactions.smile").doesNotExist(),
-                MockMvcResultMatchers.jsonPath("$.boards.[1].reactions.sad").doesNotExist()
+                MockMvcResultMatchers.jsonPath("$.boards.[1].reactions.good").isNumber(),
+                MockMvcResultMatchers.jsonPath("$.boards.[1].reactions.bad").isNumber(),
+                MockMvcResultMatchers.jsonPath("$.boards.[1].reactions.check").isNumber(),
+                MockMvcResultMatchers.jsonPath("$.boards.[1].reactions.heart").isNumber(),
+                MockMvcResultMatchers.jsonPath("$.boards.[1].reactions.smile").isNumber(),
+                MockMvcResultMatchers.jsonPath("$.boards.[1].reactions.sad").isNumber()
         );
     }
 
@@ -1716,12 +1716,12 @@ public class BoardAcceptanceTest{
                 MockMvcResultMatchers.jsonPath("$.boards.[0].created_at").isNotEmpty(),
                 MockMvcResultMatchers.jsonPath("$.boards.[0].last_modified_at").isNotEmpty(),
                 MockMvcResultMatchers.jsonPath("$.boards.[0].exist_file").value("false"),
-                MockMvcResultMatchers.jsonPath("$.boards.[0].reactions.good").doesNotExist(),
-                MockMvcResultMatchers.jsonPath("$.boards.[0].reactions.bad").doesNotExist(),
-                MockMvcResultMatchers.jsonPath("$.boards.[0].reactions.check").doesNotExist(),
-                MockMvcResultMatchers.jsonPath("$.boards.[0].reactions.heart").doesNotExist(),
-                MockMvcResultMatchers.jsonPath("$.boards.[0].reactions.smile").doesNotExist(),
-                MockMvcResultMatchers.jsonPath("$.boards.[0].reactions.sad").doesNotExist(),
+                MockMvcResultMatchers.jsonPath("$.boards.[0].reactions.good").isNumber(),
+                MockMvcResultMatchers.jsonPath("$.boards.[0].reactions.bad").isNumber(),
+                MockMvcResultMatchers.jsonPath("$.boards.[0].reactions.check").isNumber(),
+                MockMvcResultMatchers.jsonPath("$.boards.[0].reactions.heart").isNumber(),
+                MockMvcResultMatchers.jsonPath("$.boards.[0].reactions.smile").isNumber(),
+                MockMvcResultMatchers.jsonPath("$.boards.[0].reactions.sad").isNumber(),
                 MockMvcResultMatchers.jsonPath("$.boards.[1].title").value(title2),
                 MockMvcResultMatchers.jsonPath("$.boards.[1].content").value(content2),
                 MockMvcResultMatchers.jsonPath("$.boards.[1].category").value("cate1"),
@@ -1730,12 +1730,12 @@ public class BoardAcceptanceTest{
                 MockMvcResultMatchers.jsonPath("$.boards.[1].created_at").isNotEmpty(),
                 MockMvcResultMatchers.jsonPath("$.boards.[1].last_modified_at").isNotEmpty(),
                 MockMvcResultMatchers.jsonPath("$.boards.[1].exist_file").value("false"),
-                MockMvcResultMatchers.jsonPath("$.boards.[1].reactions.good").doesNotExist(),
-                MockMvcResultMatchers.jsonPath("$.boards.[1].reactions.bad").doesNotExist(),
-                MockMvcResultMatchers.jsonPath("$.boards.[1].reactions.check").doesNotExist(),
-                MockMvcResultMatchers.jsonPath("$.boards.[1].reactions.heart").doesNotExist(),
-                MockMvcResultMatchers.jsonPath("$.boards.[1].reactions.smile").doesNotExist(),
-                MockMvcResultMatchers.jsonPath("$.boards.[1].reactions.sad").doesNotExist()
+                MockMvcResultMatchers.jsonPath("$.boards.[1].reactions.good").isNumber(),
+                MockMvcResultMatchers.jsonPath("$.boards.[1].reactions.bad").isNumber(),
+                MockMvcResultMatchers.jsonPath("$.boards.[1].reactions.check").isNumber(),
+                MockMvcResultMatchers.jsonPath("$.boards.[1].reactions.heart").isNumber(),
+                MockMvcResultMatchers.jsonPath("$.boards.[1].reactions.smile").isNumber(),
+                MockMvcResultMatchers.jsonPath("$.boards.[1].reactions.sad").isNumber()
         );
     }
 
@@ -2798,7 +2798,6 @@ public class BoardAcceptanceTest{
         String[] imagesUrls = boardListResponse.getBoards()[0].getImages();
 
         //when
-        //BoardAcceptanceTestHelper.getImage(mvc,adminToken,imageId);
         ResultActions result = BoardAcceptanceTestHelper.getImage(mvc, adminToken, "/image/" + imagesUrls[0]);
         //then
 
@@ -2857,7 +2856,7 @@ public class BoardAcceptanceTest{
                 MockMvcResultMatchers.header().string(HttpHeaders.CONTENT_TYPE, "application/json"),
                 MockMvcResultMatchers.header().string("api-version", apiVersion),
                 MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON),
-                MockMvcResultMatchers.jsonPath("$.messages").value("No Permission"),
+                MockMvcResultMatchers.jsonPath("$.messages").value("No permission"),
                 MockMvcResultMatchers.jsonPath("$.document_url").value("docs.waldreg.org")
         );
 
@@ -2874,9 +2873,8 @@ public class BoardAcceptanceTest{
         ResultActions resultActions = BoardAcceptanceTestHelper.inquiryAllBoard(mvc, adminToken);
         BoardListResponse boardListResponse = objectMapper.readValue(resultActions.andReturn().getResponse().getContentAsString(), BoardListResponse.class);
         String[] fileUrls = boardListResponse.getBoards()[0].getFiles();
-
         //when
-        ResultActions result = BoardAcceptanceTestHelper.downloadFile(mvc, adminToken, "application/msword"+ fileUrls[0]);
+        ResultActions result = BoardAcceptanceTestHelper.downloadFile(mvc, adminToken, "/file/" + fileUrls[0]);
 
         //then
         result.andExpectAll(
@@ -2895,10 +2893,10 @@ public class BoardAcceptanceTest{
 
         createTier1BoardWithAll();
 
-        String failFileRequestUrl = "/file?file-id=-1";
+        String failFileRequestUrl = "test.msword";
 
         //when
-        ResultActions result = BoardAcceptanceTestHelper.downloadFile(mvc, adminToken, failFileRequestUrl);
+        ResultActions result = BoardAcceptanceTestHelper.downloadFile(mvc, adminToken, "/file/" + failFileRequestUrl);
 
         //then
         result.andExpectAll(
@@ -2926,7 +2924,7 @@ public class BoardAcceptanceTest{
         String[] fileUrls = boardListResponse.getBoards()[0].getFiles();
 
         //when
-        ResultActions result = BoardAcceptanceTestHelper.downloadFile(mvc, token, fileUrls[0]);
+        ResultActions result = BoardAcceptanceTestHelper.downloadFile(mvc, token, "/file/" + fileUrls[0]);
 
         //then
         result.andExpectAll(
