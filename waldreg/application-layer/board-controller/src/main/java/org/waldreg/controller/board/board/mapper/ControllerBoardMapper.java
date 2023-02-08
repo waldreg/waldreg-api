@@ -3,6 +3,7 @@ package org.waldreg.controller.board.board.mapper;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.waldreg.board.board.management.BoardManager.BoardRequest;
 import org.waldreg.board.dto.BoardDto;
@@ -15,12 +16,21 @@ import org.waldreg.controller.board.board.response.BoardListResponse;
 import org.waldreg.controller.board.board.response.ReactionResponse;
 import org.waldreg.controller.board.board.response.Author;
 import org.waldreg.controller.board.board.response.BoardResponse;
+import org.waldreg.util.token.DecryptedTokenContextGetter;
 
 @Service
 public class ControllerBoardMapper{
 
+    private final DecryptedTokenContextGetter decryptedTokenContextGetter;
+
+    @Autowired
+    public ControllerBoardMapper(DecryptedTokenContextGetter decryptedTokenContextGetter){
+        this.decryptedTokenContextGetter = decryptedTokenContextGetter;
+    }
+
     public BoardRequest boardCreateRequestToBoardRequest(BoardCreateRequest boardCreateRequest){
         return BoardRequest.builder()
+                .authorId(decryptedTokenContextGetter.get())
                 .title(boardCreateRequest.getTitle())
                 .content(boardCreateRequest.getContent())
                 .categoryId(boardCreateRequest.getCategoryId())

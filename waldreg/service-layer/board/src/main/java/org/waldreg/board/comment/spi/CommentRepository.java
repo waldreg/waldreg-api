@@ -11,6 +11,8 @@ public interface CommentRepository{
 
     List<CommentDto> inquiryAllCommentByBoardId(int boardId, int startIdx, int endIdx);
 
+    CommentDto inquiryCommentById(int commentId);
+
     void modifyComment(CommentDto commentDto);
 
     boolean isExistComment(int commentId);

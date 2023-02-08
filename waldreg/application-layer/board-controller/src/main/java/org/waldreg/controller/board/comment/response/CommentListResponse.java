@@ -9,6 +9,7 @@ public class CommentListResponse{
     @JsonProperty("max_idx")
     private int maxIdx;
 
+    @JsonProperty("comments")
     private List<CommentResponse> commentResponseList;
 
     public CommentListResponse(){}

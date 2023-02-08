@@ -44,6 +44,12 @@ public class MemoryCommentRepository implements CommentRepository{
     }
 
     @Override
+    public CommentDto inquiryCommentById(int commentId){
+        Comment comment = memoryCommentStorage.inquiryCommentById(commentId);
+        return commentMapper.commentDomainToCommentDto(comment);
+    }
+
+    @Override
     public void modifyComment(CommentDto commentDto){
         int boardId = commentDto.getBoardId();
         Comment comment = commentMapper.commentDtoToCommentDomain(commentDto);

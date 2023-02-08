@@ -19,11 +19,13 @@ import org.waldreg.board.exception.CommentModifyPermissionException;
 import org.waldreg.character.aop.annotation.PermissionVerifying;
 import org.waldreg.character.aop.behavior.VerifyingFailBehavior;
 import org.waldreg.character.aop.parameter.PermissionVerifyState;
+import org.waldreg.character.exception.NoPermissionException;
 import org.waldreg.controller.board.comment.mapper.ControllerCommentMapper;
 import org.waldreg.controller.board.comment.request.CommentRequest;
 import org.waldreg.controller.board.comment.response.CommentListResponse;
 import org.waldreg.token.aop.annotation.Authenticating;
 import org.waldreg.token.aop.annotation.CommentIdAuthenticating;
+import org.waldreg.token.aop.behavior.AuthFailBehavior;
 import org.waldreg.token.aop.parameter.AuthenticateVerifyState;
 
 @RestController
@@ -40,6 +42,7 @@ public class CommentController{
     }
 
     @Authenticating
+    @PermissionVerifying(value = "Comment create manager")
     @PostMapping("/comment/{board-id}")
     public void createComment(@PathVariable("board-id") int boardId, @RequestBody @Validated CommentRequest commentRequest){
         CommentDto commentDto = controllerCommentMapper.commentRequestToCommentDto(commentRequest);
@@ -48,14 +51,15 @@ public class CommentController{
     }
 
     @Authenticating
+    @PermissionVerifying(value = "Comment read manager")
     @GetMapping("/board/comment/{board-id}")
     public CommentListResponse getCommentList(@PathVariable("board-id") int boardId, @RequestParam("from") int from, @RequestParam("to") int to){
         List<CommentDto> commentDtoList = commentManager.inquiryAllCommentByBoardId(boardId, from, to);
         return controllerCommentMapper.commentDtoListToCommentListResponse(commentDtoList);
     }
 
-    @CommentIdAuthenticating
-    @PermissionVerifying(value = "Comment manager", fail = VerifyingFailBehavior.PASS)
+    @CommentIdAuthenticating(fail = AuthFailBehavior.PASS)
+    @PermissionVerifying(value = "Comment modify manager", fail = VerifyingFailBehavior.PASS)
     @PutMapping("/comment/{comment-id}")
     public void modifyComment(@PathVariable("comment-id") int commentId,
                               AuthenticateVerifyState authenticateVerifyState,
@@ -69,12 +73,12 @@ public class CommentController{
 
     private void throwIfDoseNotHaveCommentModifyPermission(AuthenticateVerifyState authenticateVerifyState, PermissionVerifyState permissionVerifyState){
         if (!authenticateVerifyState.isVerified() && !permissionVerifyState.isVerified()){
-            throw new CommentModifyPermissionException();
+            throw new NoPermissionException();
         }
     }
 
-    @CommentIdAuthenticating
-    @PermissionVerifying(value = "Comment manager", fail = VerifyingFailBehavior.PASS)
+    @CommentIdAuthenticating(fail = AuthFailBehavior.PASS)
+    @PermissionVerifying(value = "Comment delete manager", fail = VerifyingFailBehavior.PASS)
     @DeleteMapping("/comment/{comment-id}")
     public void deleteComment(@PathVariable("comment-id") int commentId,
                               AuthenticateVerifyState authenticateVerifyState,
@@ -85,7 +89,7 @@ public class CommentController{
 
     private void throwIfDoseNotHaveCommentDeletePermission(AuthenticateVerifyState authenticateVerifyState, PermissionVerifyState permissionVerifyState){
         if (!authenticateVerifyState.isVerified() && !permissionVerifyState.isVerified()){
-            throw new CommentDeletePermissionException();
+            throw new NoPermissionException();
         }
     }
 

@@ -12,7 +12,9 @@ import org.waldreg.controller.board.comment.response.CommentResponse;
 public class ControllerCommentMapper{
 
     public CommentDto commentRequestToCommentDto(CommentRequest commentRequest){
-        return CommentDto.builder().content(commentRequest.getContent()).build();
+        return CommentDto.builder()
+                .content(commentRequest.getContent())
+                .build();
     }
 
     public CommentListResponse commentDtoListToCommentListResponse(List<CommentDto> commentDtoList){

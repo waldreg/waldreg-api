@@ -7,13 +7,10 @@ import java.nio.file.Files;
 import java.nio.file.InvalidPathException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.UUID;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
-import java.util.concurrent.Future;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -21,7 +18,6 @@ import org.springframework.util.MimeType;
 import org.springframework.util.MimeTypeUtils;
 import org.springframework.web.multipart.MultipartFile;
 import org.waldreg.board.file.data.FileData;
-import org.waldreg.board.file.exception.DuplicateFileId;
 import org.waldreg.board.file.exception.UnknownFileId;
 
 @Service
@@ -66,6 +62,7 @@ public class DefaultFileManager implements FileManager{
         } catch (FileAlreadyExistsException faee){
             return createFile(multipartFile);
         } catch (IOException ioe){
+            ioe.printStackTrace();
             throw new IllegalStateException("Something went wrong in progress \"createFile()\" cause " + ioe.getMessage());
         }
     }
@@ -113,10 +110,9 @@ public class DefaultFileManager implements FileManager{
             Path existSource = Paths.get(getPath(target));
             return Files.readAllBytes(existSource);
         } catch(InvalidPathException ipe){
+            throw new IllegalStateException(ipe);
+        } catch(Exception e){
             throw new UnknownFileId(target);
-        }
-        catch(Exception e){
-            throw new IllegalStateException(e);
         }
     }
 
@@ -126,10 +122,9 @@ public class DefaultFileManager implements FileManager{
             Path existSource = Paths.get(getPath(target));
             return existSource.toFile();
         } catch(InvalidPathException ipe){
+            throw new IllegalStateException(ipe);
+        } catch(Exception e){
             throw new UnknownFileId(target);
-        }
-        catch(Exception e){
-            throw new IllegalStateException(e);
         }
     }
 

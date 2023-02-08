@@ -47,6 +47,7 @@ public class DefaultBoardManager implements BoardManager{
         BoardDto boardDto = buildBoardDto(request);
         boardDto.setFileUrls(saveFileNameList);
         boardDto.setImageUrls(saveImageNameList);
+
         boardDto = boardRepository.createBoard(boardDto);
         boardInCategoryRepository.addBoardInCategoryBoardList(boardDto);
     }

@@ -3,6 +3,8 @@ package org.waldreg.board.comment.management;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.waldreg.board.comment.spi.CommentUserRepository;
+import org.waldreg.board.dto.UserDto;
 import org.waldreg.board.exception.BoardDoesNotExistException;
 import org.waldreg.board.exception.CommentDoesNotExistException;
 import org.waldreg.board.exception.ContentOverFlowException;
@@ -10,26 +12,32 @@ import org.waldreg.board.exception.InvalidRangeException;
 import org.waldreg.board.comment.spi.CommentInBoardRepository;
 import org.waldreg.board.comment.spi.CommentRepository;
 import org.waldreg.board.dto.CommentDto;
+import org.waldreg.util.token.DecryptedTokenContextGetter;
 
 @Service
 public class DefaultCommentManager implements CommentManager{
 
     private final int perPage = 20;
     private CommentRepository commentRepository;
-
+    private CommentUserRepository commentUserRepository;
     private CommentInBoardRepository commentInBoardRepository;
+    private DecryptedTokenContextGetter decryptedTokenContextGetter;
 
     @Autowired
-    public void DefaultBoardManager(CommentRepository commentRepository, CommentInBoardRepository commentInBoardRepository){
+    public DefaultCommentManager(CommentRepository commentRepository, CommentUserRepository commentUserRepository, CommentInBoardRepository commentInBoardRepository, DecryptedTokenContextGetter decryptedTokenContextGetter){
         this.commentRepository = commentRepository;
+        this.commentUserRepository = commentUserRepository;
         this.commentInBoardRepository = commentInBoardRepository;
+        this.decryptedTokenContextGetter = decryptedTokenContextGetter;
     }
-
 
     @Override
     public void createComment(CommentDto commentDto){
         throwIfBoardDoesNotExist(commentDto.getBoardId());
         throwIfContentOverFlowThousand(commentDto.getContent());
+        int id = decryptedTokenContextGetter.get();
+        UserDto userDto = commentUserRepository.getUserInfo(id);
+        commentDto.setUserDto(userDto);
         CommentDto storedCommentDto = commentRepository.createComment(commentDto);
         commentInBoardRepository.addCommentInBoardCommentList(storedCommentDto);
     }
@@ -52,7 +60,8 @@ public class DefaultCommentManager implements CommentManager{
         throwIfInvalidRangeDetected(startIdx, endIdx);
         int maxIdx = commentRepository.getCommentMaxIdxByBoardId(boardId);
         endIdx = adjustEndIdx(startIdx, endIdx, maxIdx);
-        return commentRepository.inquiryAllCommentByBoardId(boardId, startIdx, endIdx);
+        List<CommentDto> commentDtoList = commentRepository.inquiryAllCommentByBoardId(boardId, startIdx, endIdx);
+        return commentDtoList;
     }
 
     private void throwIfInvalidRangeDetected(int startIdx, int endIdx){
@@ -73,10 +82,12 @@ public class DefaultCommentManager implements CommentManager{
 
     @Override
     public void modifyComment(CommentDto commentDto){
-        throwIfBoardDoesNotExist(commentDto.getBoardId());
         throwIfCommentDoesNotExist(commentDto.getId());
         throwIfContentOverFlowThousand(commentDto.getContent());
-        commentRepository.modifyComment(commentDto);
+        CommentDto storedCommentDto = commentRepository.inquiryCommentById(commentDto.getId());
+        storedCommentDto.setContent(commentDto.getContent());
+        throwIfBoardDoesNotExist(storedCommentDto.getBoardId());
+        commentRepository.modifyComment(storedCommentDto);
     }
 
     private void throwIfCommentDoesNotExist(int commentId){

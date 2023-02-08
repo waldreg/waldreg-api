@@ -23,6 +23,7 @@ public class BoardResponse{
 
     private String[] files;
 
+    @JsonProperty("reactions")
     private ReactionResponse reactionResponse;
 
     public BoardResponse(){}

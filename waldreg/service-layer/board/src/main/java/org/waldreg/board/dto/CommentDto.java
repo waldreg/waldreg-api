@@ -35,6 +35,10 @@ public class CommentDto{
         this.id = id;
     }
 
+    public void setUserDto(UserDto userDto){
+        this.userDto = userDto;
+    }
+
     public void setBoardId(int boardId){
         this.boardId = boardId;
     }
@@ -53,6 +57,10 @@ public class CommentDto{
 
     public String getContent(){
         return content;
+    }
+
+    public void setContent(String content){
+        this.content = content;
     }
 
     public int getBoardId(){

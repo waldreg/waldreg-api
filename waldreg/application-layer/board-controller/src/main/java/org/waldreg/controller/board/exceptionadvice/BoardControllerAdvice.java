@@ -6,6 +6,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.waldreg.board.exception.BoardDoesNotExistException;
 import org.waldreg.board.exception.CategoryDoesNotExistException;
+import org.waldreg.board.exception.CommentDeletePermissionException;
 import org.waldreg.board.exception.CommentDoesNotExistException;
 import org.waldreg.board.exception.CommentModifyPermissionException;
 import org.waldreg.board.exception.ContentOverFlowException;
@@ -14,6 +15,7 @@ import org.waldreg.board.exception.FileDoesNotSavedException;
 import org.waldreg.board.exception.InvalidRangeException;
 import org.waldreg.board.exception.ReactionTypeDoesNotExistException;
 import org.waldreg.board.exception.UserDoesNotExistException;
+import org.waldreg.board.file.exception.UnknownFileId;
 import org.waldreg.core.template.exception.ExceptionTemplate;
 
 @RestControllerAdvice
@@ -84,7 +86,7 @@ public class BoardControllerAdvice{
     @ExceptionHandler(InvalidRangeException.class)
     public ResponseEntity<ExceptionTemplate> catchInvalidRangeException(InvalidRangeException invalidRangeException){
         ExceptionTemplate exceptionTemplate = ExceptionTemplate.builder()
-                .code("BOARD-402")
+                .code("BOARD-404")
                 .message(invalidRangeException.getMessage())
                 .documentUrl(documentUrl)
                 .build();
@@ -111,5 +113,16 @@ public class BoardControllerAdvice{
                 .build();
         return new ResponseEntity<>(exceptionTemplate, HttpStatus.BAD_REQUEST);
     }
+
+    @ExceptionHandler(UnknownFileId.class)
+    public ResponseEntity<ExceptionTemplate> catchUnknownFileIdException(UnknownFileId unknownFileId){
+        ExceptionTemplate exceptionTemplate = ExceptionTemplate.builder()
+                .code("BOARD-408")
+                .message(unknownFileId.getMessage())
+                .documentUrl(documentUrl)
+                .build();
+        return new ResponseEntity<>(exceptionTemplate, HttpStatus.BAD_REQUEST);
+    }
+
 
 }

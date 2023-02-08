@@ -31,7 +31,7 @@ public class DefaultReactionManager implements ReactionManager{
         Map<BoardServiceReactionType, List<UserDto>> reactionMap = reactionInBoardRepository.getReactionDto(reactionRequestDto.getBoardId()).getReactionMap();
         BoardServiceReactionType beforeType = findBoardServiceReactionTypeByUserId(reactionMap, reactionRequestDto.getUserId());
         reactionMap = allRequestReaction(reactionMap, beforeType, reactionRequestDto);
-        reactionInBoardRepository.storeReactionDto(ReactionDto.builder().reactionMap(reactionMap).build());
+        reactionInBoardRepository.storeReactionDto(ReactionDto.builder().boardId(reactionRequestDto.getBoardId()).reactionMap(reactionMap).build());
     }
 
     private void throwIfBoardDoesNotExist(int boardId){
@@ -95,6 +95,7 @@ public class DefaultReactionManager implements ReactionManager{
         List<UserDto> typeUserDtoList = reactionMap.get(type);
         typeUserDtoList = addReactionUserList(typeUserDtoList, userId);
         reactionMap.put(type, typeUserDtoList);
+
         return reactionMap;
     }
 

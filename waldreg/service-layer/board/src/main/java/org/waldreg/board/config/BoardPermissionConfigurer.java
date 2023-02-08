@@ -21,10 +21,15 @@ public class BoardPermissionConfigurer{
     @PostConstruct
     public void setUpBoardPermissions(){
         setBoardCreateManager();
+        setBoardReadManager();
         setBoardModifyManager();
         setBoardDeleteManager();
         setCategoryManager();
-        setCommentManager();
+        setCommentCreateManager();
+        setCommentModifyManager();
+        setCommentReadeManager();
+        setCommentDeleteManager();
+        setImageManager();
         setFileManager();
     }
 
@@ -38,6 +43,18 @@ public class BoardPermissionConfigurer{
                         .build()
         );
     }
+
+    private void setBoardReadManager(){
+        permissionExtension.extend(
+                DefaultPermissionUnit.builder()
+                        .name("Board read manager")
+                        .info("If set true, can read board")
+                        .statusList(List.of("true", "false"))
+                        .permissionVerifiable(s -> s.equals("true"))
+                        .build()
+        );
+    }
+
     private void setBoardModifyManager(){
         permissionExtension.extend(
                 DefaultPermissionUnit.builder()
@@ -70,16 +87,62 @@ public class BoardPermissionConfigurer{
                         .build()
         );
     }
-    private void setCommentManager(){
+
+    private void setCommentCreateManager(){
         permissionExtension.extend(
                 DefaultPermissionUnit.builder()
-                        .name("Comment manager")
-                        .info("If set true, all permissions related to the comment are accessible.")
+                        .name("Comment create manager")
+                        .info("If set true, can create comments.")
                         .statusList(List.of("true", "false"))
                         .permissionVerifiable(s -> s.equals("true"))
                         .build()
         );
     }
+
+    private void setCommentReadeManager(){
+        permissionExtension.extend(
+                DefaultPermissionUnit.builder()
+                        .name("Comment read manager")
+                        .info("If set true, can read comments.")
+                        .statusList(List.of("true", "false"))
+                        .permissionVerifiable(s -> s.equals("true"))
+                        .build()
+        );
+    }
+
+    private void setCommentModifyManager(){
+        permissionExtension.extend(
+                DefaultPermissionUnit.builder()
+                        .name("Comment modify manager")
+                        .info("If set true, can modify comments.")
+                        .statusList(List.of("true", "false"))
+                        .permissionVerifiable(s -> s.equals("true"))
+                        .build()
+        );
+    }
+
+    private void setCommentDeleteManager(){
+        permissionExtension.extend(
+                DefaultPermissionUnit.builder()
+                        .name("Comment delete manager")
+                        .info("If set true, can delete comments.")
+                        .statusList(List.of("true", "false"))
+                        .permissionVerifiable(s -> s.equals("true"))
+                        .build()
+        );
+    }
+
+    private void setImageManager(){
+        permissionExtension.extend(
+                DefaultPermissionUnit.builder()
+                        .name("Image manager")
+                        .info("If set true, can load Image.")
+                        .statusList(List.of("true", "false"))
+                        .permissionVerifiable(s -> s.equals("true"))
+                        .build()
+        );
+    }
+
     private void setFileManager(){
         permissionExtension.extend(
                 DefaultPermissionUnit.builder()

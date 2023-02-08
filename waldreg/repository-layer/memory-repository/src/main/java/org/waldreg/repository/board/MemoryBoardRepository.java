@@ -15,6 +15,7 @@ import org.waldreg.board.reaction.spi.ReactionInBoardRepository;
 import org.waldreg.domain.board.Board;
 import org.waldreg.domain.board.comment.Comment;
 import org.waldreg.domain.board.reaction.Reaction;
+import org.waldreg.domain.board.reaction.ReactionType;
 import org.waldreg.domain.category.Category;
 import org.waldreg.repository.MemoryBoardStorage;
 import org.waldreg.repository.MemoryCategoryStorage;

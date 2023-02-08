@@ -1,13 +1,17 @@
 
 package org.waldreg.controller.board.board;
 
+import java.util.ArrayList;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 import org.springframework.util.ObjectUtils;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -16,6 +20,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 import org.springframework.web.multipart.MultipartFile;
 import org.waldreg.board.board.management.BoardManager;
 import org.waldreg.board.board.management.BoardManager.BoardRequest;
@@ -26,11 +31,13 @@ import org.waldreg.board.file.FileManager;
 import org.waldreg.character.aop.annotation.PermissionVerifying;
 import org.waldreg.character.aop.behavior.VerifyingFailBehavior;
 import org.waldreg.character.aop.parameter.PermissionVerifyState;
+import org.waldreg.character.exception.NoPermissionException;
 import org.waldreg.controller.board.board.mapper.ControllerBoardMapper;
 import org.waldreg.controller.board.board.request.BoardCreateRequest;
 import org.waldreg.controller.board.board.request.BoardUpdateRequest;
 import org.waldreg.controller.board.board.response.BoardListResponse;
 import org.waldreg.controller.board.board.response.BoardResponse;
+import org.waldreg.core.template.exception.ExceptionTemplate;
 import org.waldreg.token.aop.annotation.Authenticating;
 import org.waldreg.token.aop.annotation.BoardIdAuthenticating;
 import org.waldreg.token.aop.behavior.AuthFailBehavior;
@@ -57,8 +64,12 @@ public class BoardController{
                             @RequestPart(value = "image", required = false) List<MultipartFile> imageFileList,
                             @RequestPart(value = "file", required = false) List<MultipartFile> fileList
     ){
-        saveAllFile(imageFileList);
-        saveAllFile(fileList);
+        if(imageFileList !=null){
+            saveAllFile(imageFileList);
+        }
+        if (fileList != null){
+            saveAllFile(fileList);
+        }
         BoardRequest boardRequest = controllerBoardMapper.boardCreateRequestToBoardRequest(boardCreateRequest);
         boardManager.createBoard(boardRequest);
     }
@@ -69,7 +80,14 @@ public class BoardController{
         }
     }
 
+    private void deleteAllFile(List<String> deleteUrls){
+        for (String url : deleteUrls){
+            fileManager.deleteFile(url);
+        }
+    }
+
     @Authenticating
+    @PermissionVerifying("Board read manager")
     @GetMapping("/board/{board-id}")
     public BoardResponse getBoardById(@PathVariable("board-id") int id){
         BoardDto boardDto = boardManager.inquiryBoardById(id);
@@ -81,10 +99,8 @@ public class BoardController{
     public BoardListResponse getBoardList(@RequestParam(value = "category-id", required = false) Integer categoryId, @RequestParam("from") int from, @RequestParam("to") int to){
         List<BoardDto> boardDtoList;
         if (categoryId == null){
-            System.out.println("11");
             boardDtoList = boardManager.inquiryAllBoard(from, to);
         } else{
-            System.out.println("22");
             boardDtoList = boardManager.inquiryAllBoardByCategory(categoryId, from, to);
         }
         return controllerBoardMapper.boardDtoListToBoardListResponse(boardDtoList);
@@ -97,12 +113,17 @@ public class BoardController{
                             AuthenticateVerifyState authenticateVerifyState,
                             PermissionVerifyState permissionVerifyState,
                             @Validated @RequestPart(value = "boardUpdateRequest") BoardUpdateRequest boardUpdateRequest,
-                            @RequestPart(value = "image") List<MultipartFile> imageFileList,
-                            @RequestPart(value = "file") List<MultipartFile> fileList
+                            @RequestPart(value = "image", required = false) List<MultipartFile> imageFileList,
+                            @RequestPart(value = "file", required = false) List<MultipartFile> fileList
     ){
         throwIfDoseNotHaveBoardModifyPermission(authenticateVerifyState, permissionVerifyState);
-        saveAllFile(imageFileList);
-        saveAllFile(fileList);
+        if(imageFileList !=null){
+            saveAllFile(imageFileList);
+        }
+        if (fileList != null){
+            saveAllFile(fileList);
+        }
+        deleteAllFile(boardUpdateRequest.getDeleteFileUrls());
         BoardRequest boardRequest = controllerBoardMapper.boardUpdateRequestToBoardRequest(boardUpdateRequest);
         boardRequest.setId(boardId);
         boardManager.modifyBoard(boardRequest);
@@ -110,7 +131,7 @@ public class BoardController{
 
     private void throwIfDoseNotHaveBoardModifyPermission(AuthenticateVerifyState authenticateVerifyState, PermissionVerifyState permissionVerifyState){
         if (!authenticateVerifyState.isVerified() && !permissionVerifyState.isVerified()){
-            throw new BoardModifyPermissionException();
+            throw new NoPermissionException();
         }
     }
 
@@ -126,7 +147,7 @@ public class BoardController{
 
     private void throwIfDoseNotHaveBoardDeletePermission(AuthenticateVerifyState authenticateVerifyState, PermissionVerifyState permissionVerifyState){
         if (!authenticateVerifyState.isVerified() && !permissionVerifyState.isVerified()){
-            throw new BoardDeletePermissionException();
+            throw new NoPermissionException();
         }
     }
 
@@ -135,6 +156,16 @@ public class BoardController{
     public BoardListResponse searchBoard(@RequestParam("type") Type type, @RequestParam(value = "keyword", required = false, defaultValue = "") String keyword, @RequestParam("from") int from, @RequestParam("to") int to){
         List<BoardDto> boardDtoList = type.searchRunnable.search(keyword, from, to);
         return controllerBoardMapper.boardDtoListToBoardListResponse(boardDtoList);
+    }
+
+    @ExceptionHandler({MethodArgumentTypeMismatchException.class})
+    public ResponseEntity<ExceptionTemplate> catchMethodArgumentTypeMismatchException(MethodArgumentTypeMismatchException methodArgumentTypeMismatchException){
+        ExceptionTemplate exceptionTemplate = ExceptionTemplate.builder()
+                .code("BOARD-407")
+                .message("Unknown type")
+                .documentUrl("docs.waldreg.org")
+                .build();
+        return new ResponseEntity<>(exceptionTemplate, HttpStatus.BAD_REQUEST);
     }
 
     public enum Type{

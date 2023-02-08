@@ -25,6 +25,7 @@ public class FileController{
     }
 
     @Authenticating
+    @PermissionVerifying(value = "Image manager")
     @GetMapping("/image/{image-name}")
     public @ResponseBody byte[] getImage(@PathVariable("image-name") String imageName){
         return fileManager.getFileIntoByteArray(imageName);
