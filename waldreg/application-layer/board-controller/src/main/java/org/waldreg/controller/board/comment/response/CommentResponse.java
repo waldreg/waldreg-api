@@ -2,8 +2,6 @@ package org.waldreg.controller.board.comment.response;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import java.time.LocalDateTime;
-import org.waldreg.controller.board.comment.request.CommentRequest;
-import org.waldreg.controller.board.comment.request.CommentRequest.Builder;
 
 public class CommentResponse{
 

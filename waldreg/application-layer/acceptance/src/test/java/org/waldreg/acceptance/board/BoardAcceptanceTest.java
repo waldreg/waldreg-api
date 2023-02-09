@@ -17,7 +17,6 @@ import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
-import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import org.waldreg.acceptance.authentication.AuthenticationAcceptanceTestHelper;
 import org.waldreg.acceptance.user.UserAcceptanceTestHelper;
@@ -2904,7 +2903,7 @@ public class BoardAcceptanceTest{
                 MockMvcResultMatchers.header().string(HttpHeaders.CONTENT_TYPE, "application/json"),
                 MockMvcResultMatchers.header().string("api-version", apiVersion),
                 MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON),
-                MockMvcResultMatchers.jsonPath("$.messages").value("Unknown file id"),
+                MockMvcResultMatchers.jsonPath("$.messages").value("Unknown file id \"test.msword\""),
                 MockMvcResultMatchers.jsonPath("$.document_url").value("docs.waldreg.org")
         );
 

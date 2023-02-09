@@ -24,7 +24,7 @@ import org.waldreg.board.file.exception.UnknownFileId;
 @Service
 public class DefaultFileManager implements FileManager{
 
-    @Value("${file.path}")
+    @Value("${file.path:none}")
     private String path;
     private final ExecutorService executorService;
     private final FileData fileData;
@@ -63,7 +63,6 @@ public class DefaultFileManager implements FileManager{
         } catch (FileAlreadyExistsException faee){
             return createFile(multipartFile);
         } catch (IOException ioe){
-            ioe.printStackTrace();
             throw new IllegalStateException("Something went wrong in progress \"createFile()\" cause " + ioe.getMessage());
         }
     }
@@ -97,6 +96,7 @@ public class DefaultFileManager implements FileManager{
         return () -> {
             try{
                 Path existSource = Paths.get(getPath(target));
+                throwIfFileDoesNotExist(existSource, target);
                 Files.delete(existSource);
             } catch (InvalidPathException ipe){
                 throw new UnknownFileId(target);
@@ -109,6 +109,7 @@ public class DefaultFileManager implements FileManager{
     public byte[] getFileIntoByteArray(String target){
         try{
             Path existSource = Paths.get(getPath(target));
+            throwIfFileDoesNotExist(existSource, target);
             return Files.readAllBytes(existSource);
         } catch(InvalidPathException ipe){
             throw new IllegalStateException(ipe);
@@ -121,6 +122,7 @@ public class DefaultFileManager implements FileManager{
     public File getFileIntoFile(String target){
         try{
             Path existSource = Paths.get(getPath(target));
+            throwIfFileDoesNotExist(existSource, target);
             return existSource.toFile();
         } catch(InvalidPathException ipe){
             throw new IllegalStateException(ipe);
@@ -131,6 +133,12 @@ public class DefaultFileManager implements FileManager{
 
     private String getPath(String id){
         return path + id;
+    }
+
+    private void throwIfFileDoesNotExist(Path path, String target){
+        if(!Files.exists(path)){
+            throw new UnknownFileId(target);
+        }
     }
 
     private static final class NameWithPath{

@@ -13,6 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
+import org.waldreg.board.comment.spi.CommentUserRepository;
 import org.waldreg.board.exception.BoardDoesNotExistException;
 import org.waldreg.board.exception.CommentDoesNotExistException;
 import org.waldreg.board.exception.ContentOverFlowException;
@@ -41,6 +42,9 @@ public class CommentManagerTest{
 
     @MockBean
     private CommentInBoardRepository commentInBoardRepository;
+    @MockBean
+    private CommentUserRepository commentUserRepository;
+
 
     @BeforeEach
     @AfterEach
@@ -259,6 +263,13 @@ public class CommentManagerTest{
                 .name("1234")
                 .build();
         int boardId = 2;
+
+        CommentDto commentDto2 = CommentDto.builder()
+                .boardId(boardId)
+                .userDto(userDto)
+                .content("comment111")
+                .id(3)
+                .build();
         CommentDto commentDto = CommentDto.builder()
                 .boardId(boardId)
                 .userDto(userDto)
@@ -268,6 +279,7 @@ public class CommentManagerTest{
         //when
         Mockito.when(commentInBoardRepository.isExistBoard(Mockito.anyInt())).thenReturn(true);
         Mockito.when(commentRepository.isExistComment(Mockito.anyInt())).thenReturn(true);
+        Mockito.when(commentRepository.inquiryCommentById(Mockito.anyInt())).thenReturn(commentDto2);
         //then
         Assertions.assertDoesNotThrow(() -> commentManager.modifyComment(commentDto));
 
@@ -283,7 +295,12 @@ public class CommentManagerTest{
                 .name("1234")
                 .build();
         int boardId = 2;
-
+        CommentDto commentDto2 = CommentDto.builder()
+                .boardId(boardId)
+                .userDto(userDto)
+                .content("comment111")
+                .id(3)
+                .build();
         CommentDto commentDto = CommentDto.builder()
                 .boardId(boardId)
                 .userDto(userDto)
@@ -293,6 +310,8 @@ public class CommentManagerTest{
         //when
         Mockito.when(commentInBoardRepository.isExistBoard(Mockito.anyInt())).thenReturn(false);
         Mockito.when(commentRepository.isExistComment(Mockito.anyInt())).thenReturn(true);
+        Mockito.when(commentRepository.inquiryCommentById(Mockito.anyInt())).thenReturn(commentDto2);
+
         //then
         Assertions.assertThrows(BoardDoesNotExistException.class, () -> commentManager.modifyComment(commentDto));
     }
