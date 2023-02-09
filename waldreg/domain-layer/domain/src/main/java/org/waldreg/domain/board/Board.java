@@ -5,25 +5,22 @@ import java.util.ArrayList;
 import java.util.List;
 import org.waldreg.domain.board.comment.Comment;
 import org.waldreg.domain.board.reaction.Reaction;
-import org.waldreg.domain.category.Category;
-import org.waldreg.domain.tier.MemberTier;
 import org.waldreg.domain.user.User;
 
 public final class Board{
 
     private int id;
-    private final String title;
-    private final Category category;
-    private final String content;
+    private String title;
+    private int categoryId;
+    private String content;
     private User user;
-    private final LocalDateTime createdAt;
-    private final LocalDateTime lastModifiedAt;
-    private final MemberTier memberTier;
-    private final List<String> imagePathList;
-    private final List<String> filePathList;
-    private final Reaction reactions;
-    private final List<Comment> commentList;
-    private final int views;
+    private LocalDateTime createdAt;
+    private LocalDateTime lastModifiedAt;
+    private List<String> imagePathList;
+    private List<String> filePathList;
+    private Reaction reactions;
+    private List<Comment> commentList;
+    private int views;
 
     private Board(){
         throw new UnsupportedOperationException("Can not invoke constructor \"Board()\"");
@@ -32,12 +29,11 @@ public final class Board{
     private Board(Builder builder){
         this.id = builder.id;
         this.title = builder.title;
-        this.category = builder.category;
+        this.categoryId = builder.categoryId;
         this.content = builder.content;
         this.user = builder.user;
         this.createdAt = builder.createdAt;
         this.lastModifiedAt = builder.lastModifiedAt;
-        this.memberTier = builder.memberTier;
         this.imagePathList = builder.imagePathList;
         this.filePathList = builder.filePathList;
         this.reactions = builder.reactions;
@@ -59,8 +55,8 @@ public final class Board{
         return title;
     }
 
-    public Category getCategory(){
-        return category;
+    public int getCategoryId(){
+        return categoryId;
     }
 
     public String getContent(){
@@ -71,18 +67,12 @@ public final class Board{
         return user;
     }
 
-    public void setUser(User user){this.user = user;}
-
     public LocalDateTime getCreatedAt(){
         return createdAt;
     }
 
     public LocalDateTime getLastModifiedAt(){
         return lastModifiedAt;
-    }
-
-    public MemberTier getMemberTier(){
-        return memberTier;
     }
 
     public List<String> getImagePathList(){
@@ -103,17 +93,59 @@ public final class Board{
         return views;
     }
 
+    public void setTitle(String title){
+        this.title = title;
+    }
+
+    public void setCategoryId(int categoryId){
+        this.categoryId = categoryId;
+    }
+
+    public void setContent(String content){
+        this.content = content;
+    }
+
+    public void setUser(User user){
+        this.user = user;
+    }
+
+    public void setLastModifiedAt(LocalDateTime lastModifiedAt){
+        this.lastModifiedAt = lastModifiedAt;
+    }
+
+    public void setImagePathList(List<String> imagePathList){
+        this.imagePathList = imagePathList;
+    }
+
+    public void setFilePathList(List<String> filePathList){
+        this.filePathList = filePathList;
+    }
+
+    public void setReactions(Reaction reactions){
+        this.reactions = reactions;
+    }
+
+    public void setCommentList(List<Comment> commentList){
+        this.commentList = commentList;
+    }
+
+    public void setViews(int views){
+        this.views = views;
+    }
+
+    public void addComment(Comment comment){
+        this.commentList.add(comment);
+    }
 
     public static final class Builder{
 
         private int id;
         private String title;
-        private Category category;
+        private int categoryId;
         private String content;
         private User user;
-        private final LocalDateTime createdAt;
+        private LocalDateTime createdAt;
         private LocalDateTime lastModifiedAt;
-        private MemberTier memberTier;
         private List<String> imagePathList;
         private List<String> filePathList;
         private Reaction reactions;
@@ -123,8 +155,6 @@ public final class Board{
         {
             createdAt = LocalDateTime.now();
             lastModifiedAt = createdAt;
-            imagePathList = new ArrayList<>();
-            filePathList = new ArrayList<>();
             reactions = Reaction.builder().build();
             commentList = new ArrayList<>();
             views = 0;
@@ -142,8 +172,8 @@ public final class Board{
             return this;
         }
 
-        public Builder category(Category category){
-            this.category = category;
+        public Builder categoryId(int categoryId){
+            this.categoryId = categoryId;
             return this;
         }
 
@@ -157,15 +187,16 @@ public final class Board{
             return this;
         }
 
+        public Builder createdAt(LocalDateTime createdAt){
+            this.createdAt = createdAt;
+            return this;
+        }
+
         public Builder lastModifiedAt(LocalDateTime lastModifiedAt){
             this.lastModifiedAt = lastModifiedAt;
             return this;
         }
 
-        public Builder memberTier(MemberTier memberTier){
-            this.memberTier = memberTier;
-            return this;
-        }
 
         public Builder imagePathList(List<String> imagePathList){
             this.imagePathList = imagePathList;

@@ -6,17 +6,24 @@ import java.util.Map;
 
 public class ReactionDto{
 
+    private int boardId;
     private Map<BoardServiceReactionType, List<UserDto>> reactionMap;
 
     private ReactionDto(){}
 
     private ReactionDto(Builder builder){
+        this.boardId = builder.boardId;
         this.reactionMap = builder.reactionMap;
     }
 
     public static Builder builder(){
         return new Builder();
     }
+
+    public int getBoardId(){
+        return boardId;
+    }
+
     public Map<BoardServiceReactionType, List<UserDto>> getReactionMap(){
         return reactionMap;
     }
@@ -27,6 +34,7 @@ public class ReactionDto{
 
     public final static class Builder{
 
+        private int boardId;
         private Map<BoardServiceReactionType, List<UserDto>> reactionMap;
 
         {
@@ -34,6 +42,11 @@ public class ReactionDto{
         }
 
         private Builder(){}
+
+        public Builder boardId(int boardId){
+            this.boardId = boardId;
+            return this;
+        }
 
         public Builder reactionMap(Map<BoardServiceReactionType, List<UserDto>> reactionMap){
             this.reactionMap = reactionMap;

@@ -1,9 +1,13 @@
 package org.waldreg.board.category.management;
 
-import org.waldreg.board.category.exception.DuplicateCategoryNameException;
+import java.util.List;
+import org.springframework.stereotype.Service;
+import org.waldreg.board.exception.CategoryDoesNotExistException;
+import org.waldreg.board.exception.DuplicateCategoryNameException;
 import org.waldreg.board.category.spi.CategoryRepository;
 import org.waldreg.board.dto.CategoryDto;
 
+@Service
 public class DefaultCategoryManager implements CategoryManager{
 
     private CategoryRepository categoryRepository;
@@ -19,9 +23,35 @@ public class DefaultCategoryManager implements CategoryManager{
     }
 
     private void throwIfCategoryNameDuplicated(String categoryName){
-        if(categoryRepository.isDuplicateCategoryName(categoryName)){
-            throw new DuplicateCategoryNameException(categoryName);
+        if (categoryRepository.isDuplicateCategoryName(categoryName)){
+            throw new DuplicateCategoryNameException("BOARD-412","Duplicated category name : " + categoryName);
         }
     }
+
+
+    @Override
+    public List<CategoryDto> inquiryAllCategory(){
+        return categoryRepository.inquiryAllCategory();
+    }
+
+    @Override
+    public void modifyCategory(CategoryDto categoryDto){
+        throwIfCategoryDoesNotExist(categoryDto.getId());
+        throwIfCategoryNameDuplicated(categoryDto.getCategoryName());
+        categoryRepository.modifyCategory(categoryDto);
+    }
+
+    private void throwIfCategoryDoesNotExist(int categoryId){
+        if (!categoryRepository.isExistCategory(categoryId)){
+            throw new CategoryDoesNotExistException("BOARD-403","Unknown category id : " + categoryId);
+        }
+    }
+
+    @Override
+    public void deleteCategory(int id){
+        throwIfCategoryDoesNotExist(id);
+        categoryRepository.deleteCategory(id);
+    }
+
 
 }

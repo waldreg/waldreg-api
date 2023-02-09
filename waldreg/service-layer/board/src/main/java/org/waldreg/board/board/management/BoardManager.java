@@ -2,11 +2,10 @@ package org.waldreg.board.board.management;
 
 import java.util.List;
 import org.waldreg.board.dto.BoardDto;
-import org.waldreg.board.dto.BoardServiceMemberTier;
 
 public interface BoardManager{
 
-    BoardDto createBoard(BoardRequest request);
+    void createBoard(BoardRequest request);
 
     BoardDto inquiryBoardById(int id);
 
@@ -20,43 +19,45 @@ public interface BoardManager{
 
     List<BoardDto> searchBoardByAuthorUserId(String keyword, int from, int to);
 
-    BoardDto modifyBoard(BoardDto boardDto);
+    void modifyBoard(BoardRequest boardRequest);
 
     void deleteBoard(int boardId);
 
 
     final class BoardRequest{
 
+        private int id;
         private int authorId;
         private String title;
         private int categoryId;
         private String content;
-        private BoardServiceMemberTier boardServiceMemberTier;
-        private int fileCount;
-        private int imageCount;
+        private List<String> deleteFileNameList;
 
         private BoardRequest(){}
 
         private BoardRequest(Builder builder){
+            this.id = builder.id;
             this.authorId = builder.authorId;
             this.categoryId = builder.categoryId;
             this.title = builder.title;
             this.content = builder.content;
-            this.boardServiceMemberTier = builder.boardServiceMemberTier;
-            this.fileCount = builder.fileCount;
-            this.imageCount = builder.imageCount;
+            this.deleteFileNameList = builder.deleteFileNameList;
         }
 
         public static Builder builder(){
             return new Builder();
         }
 
-        public int getAuthorId(){
-            return authorId;
+        public int getId(){
+            return id;
         }
 
-        public void setAuthorId(int authorId){
-            this.authorId = authorId;
+        public void setId(int id){
+            this.id = id;
+        }
+
+        public int getAuthorId(){
+            return authorId;
         }
 
         public String getTitle(){
@@ -83,39 +84,23 @@ public interface BoardManager{
             this.content = content;
         }
 
-        public BoardServiceMemberTier getMemberTier(){
-            return boardServiceMemberTier;
-        }
-
-        public void setMemberTier(BoardServiceMemberTier boardServiceMemberTier){
-            this.boardServiceMemberTier = boardServiceMemberTier;
-        }
-
-        public int getFileCount(){
-            return fileCount;
-        }
-
-        public void setFileCount(int fileCount){
-            this.fileCount = fileCount;
-        }
-
-        public int getImageCount(){
-            return imageCount;
-        }
-
-        public void setImageCount(int imageCount){
-            this.imageCount = imageCount;
+        public List<String> getDeleteFileNameList(){
+            return deleteFileNameList;
         }
 
         public static final class Builder{
 
+            private int id;
             private int authorId;
             private String title;
             private int categoryId;
             private String content;
-            private BoardServiceMemberTier boardServiceMemberTier;
-            private int fileCount;
-            private int imageCount;
+            private List<String> deleteFileNameList;
+
+            public Builder id(int id){
+                this.id = id;
+                return this;
+            }
 
             public Builder authorId(int authorId){
                 this.authorId = authorId;
@@ -137,18 +122,8 @@ public interface BoardManager{
                 return this;
             }
 
-            public Builder memberTier(BoardServiceMemberTier boardServiceMemberTier){
-                this.boardServiceMemberTier = boardServiceMemberTier;
-                return this;
-            }
-
-            public Builder fileCount(int fileCount){
-                this.fileCount = fileCount;
-                return this;
-            }
-
-            public Builder imageCount(int imageCount){
-                this.imageCount = imageCount;
+            public Builder deleteFileNameList(List<String> deleteFileNameList){
+                this.deleteFileNameList = deleteFileNameList;
                 return this;
             }
 

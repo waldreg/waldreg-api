@@ -1,17 +1,20 @@
 package org.waldreg.board.dto;
 
+import java.util.List;
+
 public class CategoryDto{
 
-    private  int id;
-    private  String categoryName;
-    private BoardServiceMemberTier boardServiceMemberTier;
+    private int id;
+    private String categoryName;
+
+    private List<BoardDto> boardDtoList;
 
     private CategoryDto(){}
 
     private CategoryDto(Builder builder){
         this.id = builder.id;
         this.categoryName = builder.categoryName;
-        this.boardServiceMemberTier = builder.boardServiceMemberTier;
+        this.boardDtoList = builder.boardDtoList;
     }
 
     public static Builder builder(){
@@ -26,15 +29,15 @@ public class CategoryDto{
         return categoryName;
     }
 
-    public BoardServiceMemberTier getMemberTier(){
-        return boardServiceMemberTier;
+    public List<BoardDto> getBoardDtoList(){
+        return boardDtoList;
     }
 
     public final static class Builder{
 
         private int id;
         private String categoryName;
-        private BoardServiceMemberTier boardServiceMemberTier;
+        private List<BoardDto> boardDtoList;
 
         private Builder(){}
 
@@ -48,8 +51,8 @@ public class CategoryDto{
             return this;
         }
 
-        public Builder memberTier(BoardServiceMemberTier boardServiceMemberTier){
-            this.boardServiceMemberTier = boardServiceMemberTier;
+        public Builder boardDtoList(List<BoardDto> boardDtoList){
+            this.boardDtoList = boardDtoList;
             return this;
         }
 

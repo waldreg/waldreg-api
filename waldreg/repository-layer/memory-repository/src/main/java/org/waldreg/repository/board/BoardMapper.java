@@ -4,78 +4,142 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.waldreg.board.dto.BoardDto;
-import org.waldreg.board.dto.BoardServiceMemberTier;
 import org.waldreg.board.dto.BoardServiceReactionType;
-import org.waldreg.board.dto.CategoryDto;
 import org.waldreg.board.dto.CommentDto;
 import org.waldreg.board.dto.ReactionDto;
 import org.waldreg.board.dto.UserDto;
 import org.waldreg.domain.board.Board;
-import org.waldreg.domain.board.comment.Comment;
+import org.waldreg.domain.board.reaction.Reaction;
 import org.waldreg.domain.board.reaction.ReactionType;
-import org.waldreg.domain.category.Category;
-import org.waldreg.domain.character.Character;
-import org.waldreg.domain.character.Permission;
-import org.waldreg.domain.tier.MemberTier;
 import org.waldreg.domain.user.User;
+import org.waldreg.repository.category.BoardInCategoryMapper;
 
 @Service
-public class BoardMapper{
+public class BoardMapper implements BoardInCategoryMapper{
 
+    private final CommentInBoardMapper commentInBoardMapper;
+    private UserInBoardMapper userInBoardMapper;
+
+    @Autowired
+    public BoardMapper(CommentInBoardMapper commentInBoardMapper, UserInBoardMapper userInBoardMapper){
+        this.commentInBoardMapper = commentInBoardMapper;
+        this.userInBoardMapper = userInBoardMapper;
+    }
+
+    @Override
+    public List<Board> boardDtoListToBoardDomainList(List<BoardDto> boardDtoList){
+        List<Board> boardList = new ArrayList<>();
+        for (BoardDto boardDto : boardDtoList){
+            boardList.add(boardDtoToBoardDomain(boardDto));
+        }
+        return boardList;
+    }
+
+    @Override
     public Board boardDtoToBoardDomain(BoardDto boardDto){
-        return Board.builder()
+        Board.Builder builder = Board.builder()
                 .title(boardDto.getTitle())
                 .content(boardDto.getContent())
-                .category(categoryDtoToCategoryDomain(boardDto.getCategoryDto()))
-                .memberTier(BoardServiceMemberTierToMemberTier(boardDto.getMemberTier()))
+                .categoryId(boardDto.getCategoryId())
+                .user(userDtoToUserDomain(boardDto.getUserDto()))
+                .filePathList(boardDto.getFileUrls())
+                .imagePathList(boardDto.getImageUrls());
+        if (isCreateBoard(boardDto)){
+            return builder.build();
+        }
+        return boardDtoToBoardDomainIfNotCreateBoard(boardDto, builder);
+    }
+
+    boolean isCreateBoard(BoardDto boardDto){
+        return boardDto.getCreatedAt() == null;
+    }
+
+    public Board boardDtoToBoardDomainIfNotCreateBoard(BoardDto boardDto, Board.Builder builder){
+        builder = builder
+                .id(boardDto.getId())
+                .reactions(reactionDtoToReactionDomain(boardDto.getReactions()))
+                .createdAt(boardDto.getCreatedAt())
+                .lastModifiedAt(boardDto.getLastModifiedAt())
+                .views(boardDto.getViews());
+        if (isCommentListNotEmpty(boardDto.getCommentList())){
+            builder = builder.commentList(commentInBoardMapper.commentDtoListToCommentDomainList(boardDto.getCommentList()));
+        }
+        return builder.build();
+    }
+
+    private boolean isCommentListNotEmpty(List<CommentDto> commentList){
+        return commentList != null;
+    }
+
+    public Reaction reactionDtoToReactionDomain(ReactionDto reactionDto){
+        Map<ReactionType, List<User>> reactionTypeListMap = new HashMap<>();
+        for (Map.Entry<BoardServiceReactionType, List<UserDto>> reactionEntry : reactionDto.getReactionMap().entrySet()){
+            reactionTypeListMap.put(ReactionTypeToBoardServiceReactionType(reactionEntry.getKey()), userDtoListToUserDomainList((reactionEntry.getValue())));
+        }
+        return Reaction.builder()
+                .boardId(reactionDto.getBoardId())
+                .reactionMap(reactionTypeListMap)
                 .build();
     }
 
-    private Category categoryDtoToCategoryDomain(CategoryDto categoryDto){
-        return Category.builder()
-                .categoryName(categoryDto.getCategoryName())
+    private ReactionType ReactionTypeToBoardServiceReactionType(BoardServiceReactionType boardServiceReactionType){
+        return ReactionType.valueOf(boardServiceReactionType.name());
+    }
+
+    private List<User> userDtoListToUserDomainList(List<UserDto> userDtoList){
+        List<User> userList = new ArrayList<>();
+        for (UserDto userDto : userDtoList){
+            userList.add(userDtoToUserDomain(userDto));
+        }
+        return userList;
+    }
+
+
+
+    public User userDtoToUserDomain(UserDto userDto){
+        return User.builder()
+                .id(userDto.getId())
+                .userId(userDto.getUserId())
+                .name(userDto.getName())
                 .build();
     }
 
-    private MemberTier BoardServiceMemberTierToMemberTier(BoardServiceMemberTier boardServiceMemberTier){
-        return MemberTier.valueOf(boardServiceMemberTier.name());
+    @Override
+    public List<BoardDto> boardDomainListToBoardDtoList(List<Board> boardList){
+        List<BoardDto> boardDtoList = new ArrayList<>();
+        for (Board board : boardList){
+            boardDtoList.add(boardDomainToBoardDto(board));
+        }
+        return boardDtoList;
     }
 
     public BoardDto boardDomainToBoardDto(Board board){
         return BoardDto.builder()
                 .id(board.getId())
                 .title(board.getTitle())
-                .categoryDto(categoryDomainToCategoryDto(board.getCategory()))
+                .categoryId(board.getCategoryId())
                 .content(board.getContent())
-                .userDto(userDomainToUserDto(board.getUser()))
+                .userDto(userInBoardMapper.userDomainToUserDto(board.getUser()))
                 .createdAt(board.getCreatedAt())
                 .lastModifiedAt(board.getLastModifiedAt())
-                .boardServiceMemberTier(memberTierToBoardServiceMemberTier(board.getMemberTier()))
-                .reactions(reactionDomainToReactionDto(board.getReactions().getReactionMap()))
-                .commentList(commentDomainListToCommentDtoList(board.getCommentList()))
+                .fileUrls(board.getFilePathList())
+                .imageUrls(board.getImagePathList())
+                .reactions(reactionDomainToReactionDto(board.getReactions()))
+                .commentList(commentInBoardMapper.commentDomainListToCommentDtoList(board.getCommentList()))
                 .views(board.getViews())
                 .build();
     }
 
-    private CategoryDto categoryDomainToCategoryDto(Category category){
-        return CategoryDto.builder()
-                .categoryName(category.getCategoryName())
-                .build();
-    }
-
-    private BoardServiceMemberTier memberTierToBoardServiceMemberTier(MemberTier memberTier){
-        return BoardServiceMemberTier.valueOf(memberTier.name());
-    }
-
-    private ReactionDto reactionDomainToReactionDto(Map<ReactionType, List<User>> reactionMap){
+    public ReactionDto reactionDomainToReactionDto(Reaction reaction){
         Map<BoardServiceReactionType, List<UserDto>> reactionTypeListMap = new HashMap<>();
-        List<UserDto> userDtoList = new ArrayList<>();
-        for (Map.Entry<ReactionType, List<User>> reactionEntry : reactionMap.entrySet()){
+        for (Map.Entry<ReactionType, List<User>> reactionEntry : reaction.getReactionMap().entrySet()){
             reactionTypeListMap.put(boardServiceReactionTypeToReactionType(reactionEntry.getKey()), userDomainListToUserDtoList(reactionEntry.getValue()));
         }
         return ReactionDto.builder()
+                .boardId(reaction.getBoardId())
                 .reactionMap(reactionTypeListMap)
                 .build();
     }
@@ -87,47 +151,9 @@ public class BoardMapper{
     private List<UserDto> userDomainListToUserDtoList(List<User> userList){
         List<UserDto> userDtoList = new ArrayList<>();
         for (User user : userList){
-            userDtoList.add(userDomainToUserDto(user));
+            userDtoList.add(userInBoardMapper.userDomainToUserDto(user));
         }
         return userDtoList;
-    }
-
-    private List<CommentDto> commentDomainListToCommentDtoList(List<Comment> commentList){
-        List<CommentDto> commentDtoList = new ArrayList<>();
-        for (Comment comment : commentList){
-            commentDtoList.add(CommentDto.builder()
-                    .id(comment.getId())
-                    .userDto(userDomainToUserDto(comment.getUser()))
-                    .createdAt(comment.getCreatedAt())
-                    .lastModifiedAt(comment.getLastModifiedAt())
-                    .content(comment.getContent())
-                    .build());
-        }
-        return commentDtoList;
-    }
-
-    private UserDto userDomainToUserDto(User user){
-        return UserDto.builder()
-                .id(user.getId())
-                .userId(user.getUserId())
-                .memberTier(BoardServiceMemberTier.valueOf(findTier(user.getCharacter())))
-                .name(user.getName())
-                .build();
-    }
-
-    private String findTier(Character character){
-        List<Permission> permissionList = character.getPermissionList();
-        for (Permission permission : permissionList){
-            if (isPermissionTierTrue(permission)){
-                System.out.println("######" + permission.getName());
-                return permission.getName();
-            }
-        }
-        throw new IllegalStateException();
-    }
-
-    private boolean isPermissionTierTrue(Permission permission){
-        return permission.getName().contains("TIER") && permission.getStatus().equals("true");
     }
 
 }
