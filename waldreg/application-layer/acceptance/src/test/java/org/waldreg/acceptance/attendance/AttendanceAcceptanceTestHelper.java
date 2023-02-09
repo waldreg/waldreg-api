@@ -1,5 +1,6 @@
 package org.waldreg.acceptance.attendance;
 
+import java.time.LocalDate;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
@@ -58,6 +59,27 @@ public class AttendanceAcceptanceTestHelper{
 
     public static ResultActions acceptWaiver(MockMvc mvc, String token, int waiverId, String waiverType) throws Exception{
         return mvc.perform(MockMvcRequestBuilders.get("/attendance/waiver/{waiver-id}/{waiver-type}", waiverId, waiverType)
+                .contentType(MediaType.APPLICATION_JSON)
+                .accept(MediaType.APPLICATION_JSON)
+                .header("api-version", API_VERSION)
+                .header(HttpHeaders.AUTHORIZATION, token));
+    }
+
+    public static ResultActions modifyAttendance(MockMvc mvc, String token, String content) throws Exception{
+        return mvc.perform(MockMvcRequestBuilders.post("/attendance/status")
+                .contentType(MediaType.APPLICATION_JSON)
+                .accept(MediaType.APPLICATION_JSON)
+                .header("api-version", API_VERSION)
+                .header(HttpHeaders.AUTHORIZATION, token)
+                .content(content));
+    }
+
+    public static ResultActions readAttendanceUsers(MockMvc mvc, String token, LocalDate from, LocalDate to) throws Exception{
+        return readAttendanceUsers(mvc, token, from.toString(), to.toString());
+    }
+
+    public static ResultActions readAttendanceUsers(MockMvc mvc, String token, String from, String to) throws Exception{
+        return mvc.perform(MockMvcRequestBuilders.get("/attendance/calendar?from={from}&to={to}", from, to)
                 .contentType(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON)
                 .header("api-version", API_VERSION)

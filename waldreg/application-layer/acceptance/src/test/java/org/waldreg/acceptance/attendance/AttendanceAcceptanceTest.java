@@ -7,6 +7,7 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import net.bytebuddy.asm.Advice.Local;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -100,9 +101,10 @@ public class AttendanceAcceptanceTest{
         // given
         String adminToken = AuthenticationAcceptanceTestHelper.getAdminToken(mvc, objectMapper);
         String adminUserId = "Admin";
+        int adminId = getUsersId(adminUserId);
 
         // when
-        ResultActions result = AttendanceAcceptanceTestHelper.subscribeAttendance(mvc, adminToken, adminUserId);
+        ResultActions result = AttendanceAcceptanceTestHelper.subscribeAttendance(mvc, adminToken, ""+adminId);
 
         // then
         expectedIsOk(result);
@@ -114,9 +116,10 @@ public class AttendanceAcceptanceTest{
         // given
         String token = createUserAndGetToken("hong gil dong", "hello world", "abc1234!!!");
         String userId = "hello world";
+        int id = getUsersId(userId);
 
         // when
-        ResultActions result = AttendanceAcceptanceTestHelper.subscribeAttendance(mvc, token, userId);
+        ResultActions result = AttendanceAcceptanceTestHelper.subscribeAttendance(mvc, token, ""+id);
 
         // then
         expectedIsNoPermission(result);
@@ -128,7 +131,9 @@ public class AttendanceAcceptanceTest{
         // given
         String adminToken = AuthenticationAcceptanceTestHelper.getAdminToken(mvc, objectMapper);
         createUserAndGetToken("hong gil dong", "hello world", "abc1234!!!");
-        String multipleUserId = "hello world, Admin";
+        int id1 = getUsersId("hello world");
+        int id2 = getUsersId("Admin");
+        String multipleUserId = id1 + ", " + id2;
 
         // when
         ResultActions result = AttendanceAcceptanceTestHelper.subscribeAttendance(mvc, adminToken, multipleUserId);
@@ -142,13 +147,13 @@ public class AttendanceAcceptanceTest{
     void SUBSCRIBE_ATTENDANCE_FAIL_CANNOT_FIND_USER_TEST() throws Exception{
         // given
         String adminToken = AuthenticationAcceptanceTestHelper.getAdminToken(mvc, objectMapper);
-        String userId = "someone";
+        int id = 999;
 
         // when
-        ResultActions result = AttendanceAcceptanceTestHelper.subscribeAttendance(mvc, adminToken, userId);
+        ResultActions result = AttendanceAcceptanceTestHelper.subscribeAttendance(mvc, adminToken, "" + id);
 
         // then
-        expectedIsUnknownUserId(result, userId);
+        expectedIsUnknownUserId(result, id);
     }
 
     @Test
@@ -157,9 +162,10 @@ public class AttendanceAcceptanceTest{
         // given
         String adminToken = AuthenticationAcceptanceTestHelper.getAdminToken(mvc, objectMapper);
         String userId = "Admin";
+        int id = getUsersId(userId);
 
         // when
-        ResultActions result = AttendanceAcceptanceTestHelper.deleteSubscribedAttendance(mvc, adminToken, userId);
+        ResultActions result = AttendanceAcceptanceTestHelper.deleteSubscribedAttendance(mvc, adminToken, "" + id);
 
         // then
         expectedIsOk(result);
@@ -171,7 +177,9 @@ public class AttendanceAcceptanceTest{
         // given
         String adminToken = AuthenticationAcceptanceTestHelper.getAdminToken(mvc, objectMapper);
         createUserAndGetToken("hong gil dong", "hello world", "abc1234!!!");
-        String multipleUserId = "hello world, Admin";
+        int id1 = getUsersId("hello world");
+        int id2 = getUsersId("Admin");
+        String multipleUserId = id1 + ", " + id2;
 
         // when
         ResultActions result = AttendanceAcceptanceTestHelper.deleteSubscribedAttendance(mvc, adminToken, multipleUserId);
@@ -186,9 +194,10 @@ public class AttendanceAcceptanceTest{
         // given
         String token = createUserAndGetToken("hong gil dong", "hello world", "abc1234!!!");
         String userId = "hello world";
+        int id = getUsersId(userId);
 
         // when
-        ResultActions resultActions = AttendanceAcceptanceTestHelper.deleteSubscribedAttendance(mvc, token, userId);
+        ResultActions resultActions = AttendanceAcceptanceTestHelper.deleteSubscribedAttendance(mvc, token, "" + id);
 
         // then
         expectedIsNoPermission(resultActions);
@@ -199,13 +208,13 @@ public class AttendanceAcceptanceTest{
     void DELETE_SUBSCRIBED_ATTENDANCE_FAIL_CANNOT_FIND_USER_ID_TEST() throws Exception{
         // given
         String adminToken = AuthenticationAcceptanceTestHelper.getAdminToken(mvc, objectMapper);
-        String userId = "someone";
+        int id = 9999;
 
         // when
-        ResultActions resultActions = AttendanceAcceptanceTestHelper.deleteSubscribedAttendance(mvc, adminToken, userId);
+        ResultActions resultActions = AttendanceAcceptanceTestHelper.deleteSubscribedAttendance(mvc, adminToken, "" + id);
 
         // then
-        expectedIsUnknownUserId(resultActions, userId);
+        expectedIsUnknownUserId(resultActions, id);
     }
 
     @Test
@@ -214,9 +223,10 @@ public class AttendanceAcceptanceTest{
         // given
         String adminToken = AuthenticationAcceptanceTestHelper.getAdminToken(mvc, objectMapper);
         String userId = "Admin";
+        int id = getUsersId(userId);
 
         // when
-        AttendanceAcceptanceTestHelper.subscribeAttendance(mvc, adminToken, userId);
+        AttendanceAcceptanceTestHelper.subscribeAttendance(mvc, adminToken, ""+id);
         ResultActions resultActions = AttendanceAcceptanceTestHelper.amIAttendanceTarget(mvc, adminToken);
 
         // then
@@ -233,7 +243,6 @@ public class AttendanceAcceptanceTest{
     void AM_ID_ATTENDANCE_TARGET_FAIL_DOES_NOT_SUBSCRIBED_TEST() throws Exception{
         // given
         String adminToken = AuthenticationAcceptanceTestHelper.getAdminToken(mvc, objectMapper);
-        String userId = "Admin";
 
         // when
         ResultActions resultActions = AttendanceAcceptanceTestHelper.amIAttendanceTarget(mvc, adminToken);
@@ -247,6 +256,7 @@ public class AttendanceAcceptanceTest{
     void WAIVER_ATTENDANCE_SUCCESS_TEST() throws Exception{
         // given
         String adminToken = AuthenticationAcceptanceTestHelper.getAdminToken(mvc, objectMapper);
+        int id = getUsersId("Admin");
         String token = createUserAndGetToken("hong gil dong", "hello world", "abc1234!!!");
         AttendanceWaiverRequest attendanceWaiverRequest = AttendanceWaiverRequest.builder()
                 .waiverDate(LocalDate.now())
@@ -254,7 +264,7 @@ public class AttendanceAcceptanceTest{
                 .build();
 
         // when
-        AttendanceAcceptanceTestHelper.subscribeAttendance(mvc, adminToken, "hello world");
+        AttendanceAcceptanceTestHelper.subscribeAttendance(mvc, adminToken, "" + id);
         ResultActions resultActions = AttendanceAcceptanceTestHelper.waiver(mvc, token, objectMapper.writeValueAsString(attendanceWaiverRequest));
 
         // then
@@ -333,6 +343,7 @@ public class AttendanceAcceptanceTest{
         resultActions.andExpectAll(
                 MockMvcResultMatchers.jsonPath("$.waivers.[0].waiver_id").isNumber(),
                 MockMvcResultMatchers.jsonPath("$.waivers.[0].user_id").value("Admin"),
+                MockMvcResultMatchers.jsonPath("$.waivers.[0].id").isNumber(),
                 MockMvcResultMatchers.jsonPath("$.waivers.[0].user_name").value("Admin"),
                 MockMvcResultMatchers.jsonPath("$.waivers.[0].wavier_date").value(date.toString()),
                 MockMvcResultMatchers.jsonPath("$.waivers.[0].waiver_reason").value("doctor's appointment")
@@ -391,7 +402,7 @@ public class AttendanceAcceptanceTest{
         String adminToken = AuthenticationAcceptanceTestHelper.getAdminToken(mvc, objectMapper);
 
         // when
-        ResultActions resultActions = AttendanceAcceptanceTestHelper.acceptWaiver(mvc, adminToken, 1, AttendanceType.LATE_ATTENDANCE);
+        ResultActions resultActions = AttendanceAcceptanceTestHelper.acceptWaiver(mvc, adminToken, 1000, AttendanceType.LATE_ATTENDANCE);
 
         // then
         expectedIsUnknownWaiverId(resultActions, 1);
@@ -416,6 +427,191 @@ public class AttendanceAcceptanceTest{
         expectedIsUnknownAttendanceType(resultActions, "UNKNOWN");
     }
 
+    @Test
+    @DisplayName("출석 상태 강제 변경 성공 인수 테스트")
+    void FORCE_MODIFY_ATTENDANCE_TYPE_SUCCESS_TEST() throws Exception{
+        // given
+        String adminToken = AuthenticationAcceptanceTestHelper.getAdminToken(mvc, objectMapper);
+        String userId = "Admin";
+        int id = getUsersId(userId);
+        AttendanceModifyRequest attendanceModifyRequest = AttendanceModifyRequest.builder()
+                .id(id)
+                .attendanceType(AttendanceType.ACKNOWLEDGE_ABSENCE.toString())
+                .attendanceDate(LocalDate.now())
+                .build();
+
+        // when
+        AttendanceAcceptanceTestHelper.subscribeAttendance(mvc, adminToken, ""+id);
+        ResultActions resultActions = AttendanceAcceptanceTestHelper.modifyAttendance(mvc, adminToken, objectMapper.writeValueAsString(attendanceModifyRequest));
+
+        // then
+        expectedIsOk(resultActions);
+    }
+
+    @Test
+    @DisplayName("출석 상태 강제 변경 실패 인수 테스트 - 출석 대상이 아님")
+    void FORCE_MODIFY_ATTENDANCE_TYPE_FAIL_TEST() throws Exception{
+        // given
+        String adminToken = AuthenticationAcceptanceTestHelper.getAdminToken(mvc, objectMapper);
+        int id = getUsersId("Admin");
+        AttendanceModifyRequest attendanceModifyRequest = AttendanceModifyRequest.builder()
+                .id(id)
+                .attendanceType(AttendanceType.ACKNOWLEDGE_ABSENCE.toString())
+                .attendanceDate(LocalDate.now())
+                .build();
+
+        // when
+        ResultActions resultActions = AttendanceAcceptanceTestHelper.modifyAttendance(mvc, adminToken, objectMapper.writeValueAsString(attendanceModifyRequest));
+
+        // then
+        expectedIsNotRegisteredOnAttendance(resultActions);
+    }
+
+    @Test
+    @DisplayName("출석 상태 강제 변경 실패 인수 테스트 - attendance-type을 찾을 수 없음")
+    void FORCE_MODIFY_ATTENDANCE_TYPE_FAIL_CANNOT_FIND_ATTENDANCE_TYPE_TEST() throws Exception{
+        // given
+        String adminToken = AuthenticationAcceptanceTestHelper.getAdminToken(mvc, objectMapper);
+        int id = getUsersId("Admin");
+        AttendanceModifyRequest attendanceModifyRequest = AttendanceModifyRequest.builder()
+                .id(id)
+                .attendanceType("UNKNOWN")
+                .attendanceDate(LocalDate.now())
+                .build();
+
+        // when
+        AttendanceAcceptanceTestHelper.subscribeAttendance(mvc, adminToken, id + "");
+        ResultActions resultActions = AttendanceAcceptanceTestHelper.modifyAttendance(mvc, adminToken, objectMapper.writeValueAsString(attendanceModifyRequest));
+
+        // then
+        expectedIsUnknownAttendanceType(resultActions, "UNKNOWN");
+    }
+
+    @Test
+    @DisplayName("출석 상태 강제 변경 실패 인수 테스트 - user id에 해당하는 user를 찾을 수 없음")
+    void FORCE_MODIFY_ATTENDANCE_TYPE_FAIL_UNKNOWN_USER_ID_TEST() throws Exception{
+        // given
+        String adminToken = AuthenticationAcceptanceTestHelper.getAdminToken(mvc, objectMapper);
+        int id = getUsersId("Admin");
+        AttendanceModifyRequest attendanceModifyRequest = AttendanceModifyRequest.builder()
+                .id(999)
+                .attendanceType("UNKNOWN")
+                .attendanceDate(LocalDate.now())
+                .build();
+
+        // when
+        AttendanceAcceptanceTestHelper.subscribeAttendance(mvc, adminToken, id + "");
+        ResultActions resultActions = AttendanceAcceptanceTestHelper.modifyAttendance(mvc, adminToken, objectMapper.writeValueAsString(attendanceModifyRequest));
+
+        // then
+        expectedIsUnknownUserId(resultActions, 999);
+    }
+
+    @Test
+    @DisplayName("출석 상태 강제 변경 실패 인수 테스트 - attendance_date가 서버의 현재 날짜보다 100일 이상 early 일때 발생함")
+    void FORCE_MODIFY_ATTENDANCE_TYPE_FAIL_BEFORE_HUNDRED_DAYS_TEST() throws Exception{
+        // given
+        String adminToken = AuthenticationAcceptanceTestHelper.getAdminToken(mvc, objectMapper);
+        int id = getUsersId("Admin");
+        LocalDate date = LocalDate.now().minusDays(100);
+        AttendanceModifyRequest attendanceModifyRequest = AttendanceModifyRequest.builder()
+                .id(id)
+                .attendanceType("UNKNOWN")
+                .attendanceDate(date)
+                .build();
+
+        // when
+        AttendanceAcceptanceTestHelper.subscribeAttendance(mvc, adminToken, id + "");
+        ResultActions resultActions = AttendanceAcceptanceTestHelper.modifyAttendance(mvc, adminToken, objectMapper.writeValueAsString(attendanceModifyRequest));
+
+        // then
+        expectedIsTooEarlyDate(resultActions, date);
+    }
+
+    @Test
+    @DisplayName("출석 상태 강제 변경 실패 인수 테스트 - attendance_date가 서버의 현재 날짜보다 100일 이상 뒤일때 발생함.")
+    void FORCE_MODIFY_ATTENDANCE_TYPE_FAIL_AFTER_HUNDRED_DAYS_TEST() throws Exception{
+        // given
+        String adminToken = AuthenticationAcceptanceTestHelper.getAdminToken(mvc, objectMapper);
+        int id = getUsersId("Admin");
+        LocalDate date = LocalDate.now().plusDays(100);
+        AttendanceModifyRequest attendanceModifyRequest = AttendanceModifyRequest.builder()
+                .id(id)
+                .attendanceType("UNKNOWN")
+                .attendanceDate(date)
+                .build();
+
+        // when
+        AttendanceAcceptanceTestHelper.subscribeAttendance(mvc, adminToken, id + "");
+        ResultActions resultActions = AttendanceAcceptanceTestHelper.modifyAttendance(mvc, adminToken, objectMapper.writeValueAsString(attendanceModifyRequest));
+
+        // then
+        expectedIsTooFarDate(resultActions, date);
+    }
+
+    @Test
+    @DisplayName("출석 상태 강제 변경 실패 인수 테스트 - 권한 없음")
+    void FORCE_MODIFY_ATTENDANCE_TYPE_FAIL_NO_PERMISSION_TEST() throws Exception{
+        // given
+        String adminToken = AuthenticationAcceptanceTestHelper.getAdminToken(mvc, objectMapper);
+        String token = createUserAndGetToken("hong gil dong", "hello world", "abc1234!!!");
+        int id = getUsersId("Admin");
+        LocalDate date = LocalDate.now().plusDays(30);
+        AttendanceModifyRequest attendanceModifyRequest = AttendanceModifyRequest.builder()
+                .id(id)
+                .attendanceType("UNKNOWN")
+                .attendanceDate(date)
+                .build();
+
+        // when
+        AttendanceAcceptanceTestHelper.subscribeAttendance(mvc, adminToken, id + "");
+        ResultActions resultActions = AttendanceAcceptanceTestHelper.modifyAttendance(mvc, token, objectMapper.writeValueAsString(attendanceModifyRequest));
+
+        // then
+        expectedIsNoPermission(resultActions);
+    }
+
+    @Test
+    @DisplayName("모든 출석 대상 유저의 출석 현황 조회 성공 인수 테스트")
+    void READ_ALL_USERS_ATTENDANCE_STATUS_SUCCESS_TEST() throws Exception{
+        // given
+        String adminToken = AuthenticationAcceptanceTestHelper.getAdminToken(mvc, objectMapper);
+        createUserAndGetToken("hong gil dong", "hello world", "abc1234!!!");
+        int id1 = getUsersId("Admin");
+        int id2 = getUsersId("hello world");
+        LocalDate from = LocalDate.now().minusMonths(1);
+        LocalDate to = LocalDate.now().plusMonths(1);
+
+        // when
+        AttendanceAcceptanceTestHelper.subscribeAttendance(mvc, adminToken, id1 + ", " + id2);
+        ResultActions resultActions = AttendanceAcceptanceTestHelper.readAttendanceUsers(mvc, adminToken, from, to);
+
+        // then
+        expectedIsOk(resultActions);
+        resultActions.andExpectAll(
+                MockMvcResultMatchers.jsonPath("$.attendances.[0].attendance_date").value(from.toString()),
+                MockMvcResultMatchers.jsonPath("$.attendances.[0].attendance_users.[0].id").isNumber(),
+                MockMvcResultMatchers.jsonPath("$.attendances.[0].attendance_users.[0].user_id").isString(),
+                MockMvcResultMatchers.jsonPath("$.attendances.[0].attendance_users.[0].user_name").isString(),
+                MockMvcResultMatchers.jsonPath("$.attendances.[0].attendance_users.[0].attendance_status").value(AttendanceType.ABSENCE)
+        );
+    }
+
+    @Test
+    @DisplayName("모든 출석 대상 유저의 출석 현황 조회 실패 인수테스트 - 권한 없음")
+    void READ_ALL_USERS_ATTENDANCE_STATUS_FAIL_NO_PERMISSION_TEST() throws Exception{
+        // given
+        String token = createUserAndGetToken("hong gil dong", "hello world", "abc1234!!!");
+        LocalDate from = LocalDate.now().minusMonths(1);
+        LocalDate to = LocalDate.now().plusMonths(1);
+
+        // when
+        ResultActions resultActions = AttendanceAcceptanceTestHelper.readAttendanceUsers(mvc, token, from, to);
+
+        // then
+        expectedIsNoPermission(resultActions);
+    }
+
     private void expectedIsOk(ResultActions resultActions) throws Exception{
         resultActions.andExpectAll(
                 MockMvcResultMatchers.status().isOk(),
@@ -435,14 +631,14 @@ public class AttendanceAcceptanceTest{
         );
     }
 
-    private void expectedIsUnknownUserId(ResultActions resultActions, String userId) throws Exception{
+    private void expectedIsUnknownUserId(ResultActions resultActions, int id) throws Exception{
         resultActions.andExpectAll(
                 MockMvcResultMatchers.status().isBadRequest(),
                 MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON),
                 MockMvcResultMatchers.header().string(HttpHeaders.CONTENT_TYPE, "application/json"),
                 MockMvcResultMatchers.header().string("api-version", apiVersion),
                 MockMvcResultMatchers.jsonPath("$.code").value("ATTENDANCE-413"),
-                MockMvcResultMatchers.jsonPath("$.messages").value("Unknown user id \"" + userId + "\""),
+                MockMvcResultMatchers.jsonPath("$.messages").value("Unknown user id \"" + id + "\""),
                 MockMvcResultMatchers.jsonPath("$.document_url").value("docs.waldreg.org")
         );
     }
@@ -467,6 +663,18 @@ public class AttendanceAcceptanceTest{
                 MockMvcResultMatchers.header().string("api-version", apiVersion),
                 MockMvcResultMatchers.jsonPath("$.code").value("ATTENDANCE-416"),
                 MockMvcResultMatchers.jsonPath("$.messages").value("Invalid waiver date"),
+                MockMvcResultMatchers.jsonPath("$.document_url").value("docs.waldreg.org")
+        );
+    }
+
+    private void expectedIsTooEarlyDate(ResultActions resultActions, LocalDate date) throws Exception{
+        resultActions.andExpectAll(
+                MockMvcResultMatchers.status().isBadRequest(),
+                MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON),
+                MockMvcResultMatchers.header().string(HttpHeaders.CONTENT_TYPE, "application/json"),
+                MockMvcResultMatchers.header().string("api-version", apiVersion),
+                MockMvcResultMatchers.jsonPath("$.code").value("ATTENDANCE-415"),
+                MockMvcResultMatchers.jsonPath("$.messages").value("Date is too early \"" + date.toString() + "\""),
                 MockMvcResultMatchers.jsonPath("$.document_url").value("docs.waldreg.org")
         );
     }
@@ -521,6 +729,12 @@ public class AttendanceAcceptanceTest{
                 .userId(userId)
                 .userPassword(userPassword)
                 .build());
+    }
+
+    private int getUsersId(String userId) throws Exception{
+        ResultActions resultActions = UserAcceptanceTestHelper.inquiryUserWithoutToken(mvc, userId);
+        UserResponse userResponse = objectMapper.readValue(resultActions.andReturn().getResponse().getContentAsString(), UserResponse.class);
+        return userResponse.getId();
     }
 
     public List<AttendanceWaiverResponse> getAttendanceWaiverResponseList() throws Exception{
@@ -584,16 +798,23 @@ public class AttendanceAcceptanceTest{
 
     public static final class AttendanceWaiverResponse{
 
+        @JsonProperty("waiver_id")
         private int waiverId;
+        private int id;
+        @JsonProperty("user_id")
         private String userId;
+        @JsonProperty("user_name")
         private String userName;
+        @JsonProperty("waiver_date")
         private LocalDate waiverDate;
+        @JsonProperty("waiver_reason")
         private String waiverReason;
 
         public AttendanceWaiverResponse(){}
 
         private AttendanceWaiverResponse(Builder builder){
             this.waiverId = builder.waiverId;
+            this.id = builder.id;
             this.userId = builder.userId;
             this.userName = builder.userName;
             this.waiverDate = builder.waiverDate;
@@ -606,6 +827,10 @@ public class AttendanceAcceptanceTest{
 
         public int getWaiverId(){
             return waiverId;
+        }
+
+        public int getId(){
+            return id;
         }
 
         public String getUserId(){
@@ -627,6 +852,7 @@ public class AttendanceAcceptanceTest{
         public static final class Builder{
 
             private int waiverId;
+            private int id;
             private String userId;
             private String userName;
             private LocalDate waiverDate;
@@ -636,6 +862,11 @@ public class AttendanceAcceptanceTest{
 
             public Builder waiverId(int waiverId){
                 this.waiverId = waiverId;
+                return this;
+            }
+
+            public Builder id(int id){
+                this.id = id;
                 return this;
             }
 
@@ -661,6 +892,69 @@ public class AttendanceAcceptanceTest{
 
             public AttendanceWaiverResponse build(){
                 return new AttendanceWaiverResponse(this);
+            }
+
+        }
+
+    }
+
+    public static final class AttendanceModifyRequest{
+
+        private int id;
+        @JsonProperty("attendance_type")
+        private String attendanceType;
+        @JsonProperty("attendance_date")
+        private LocalDate attendanceDate;
+
+        public AttendanceModifyRequest(){}
+
+        private AttendanceModifyRequest(Builder builder){
+            this.id = builder.id;
+            this.attendanceType = builder.attendanceType;
+            this.attendanceDate = builder.attendanceDate;
+        }
+
+        public static Builder builder(){
+            return new Builder();
+        }
+
+        public int getId(){
+            return id;
+        }
+
+        public String getAttendanceType(){
+            return attendanceType;
+        }
+
+        public LocalDate getAttendanceDate(){
+            return attendanceDate;
+        }
+
+        public static final class Builder{
+
+            private int id;
+            private String attendanceType;
+            private LocalDate attendanceDate;
+
+            private Builder(){}
+
+            public Builder id(int id){
+                this.id = id;
+                return this;
+            }
+
+            public Builder attendanceType(String attendanceType){
+                this.attendanceType = attendanceType;
+                return this;
+            }
+
+            public Builder attendanceDate(LocalDate attendanceDate){
+                this.attendanceDate = attendanceDate;
+                return this;
+            }
+
+            public AttendanceModifyRequest build(){
+                return new AttendanceModifyRequest(this);
             }
 
         }
