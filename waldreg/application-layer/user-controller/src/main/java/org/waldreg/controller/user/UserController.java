@@ -26,6 +26,7 @@ import org.waldreg.token.aop.annotation.Authenticating;
 import org.waldreg.token.aop.annotation.HeaderPasswordAuthenticating;
 import org.waldreg.token.aop.behavior.AuthFailBehavior;
 import org.waldreg.user.dto.UserDto;
+import org.waldreg.user.management.PerPage;
 import org.waldreg.user.management.UserManager;
 import org.waldreg.util.token.DecryptedTokenContextGetter;
 
@@ -63,7 +64,11 @@ public class UserController{
     @Authenticating(fail = AuthFailBehavior.PASS)
     @PermissionVerifying(value = "User info read manager", fail = VerifyingFailBehavior.PASS)
     @RequestMapping(value = "/users")
-    public UserListResponse readAllUser(@RequestParam("from") int startIdx, @RequestParam("to") int endIdx, @Nullable PermissionVerifyState permissionVerifyState){
+    public UserListResponse readAllUser(@RequestParam(value = "from", required = false) Integer startIdx, @RequestParam(value = "to", required = false) Integer endIdx, @Nullable PermissionVerifyState permissionVerifyState){
+        if (isInvalidRange(startIdx, endIdx)){
+            startIdx = 1;
+            endIdx = PerPage.PER_PAGE;
+        }
         int maxIdx = userManager.readMaxIdx();
         List<UserDto> userDtoList = userManager.readUserList(startIdx, endIdx);
         if (permissionVerifyState.isVerified()){
@@ -72,6 +77,10 @@ public class UserController{
         }
         List<UserResponse> userResponseList = controllerUserMapper.userDtoListToUserListResponseWithoutPermission(userDtoList);
         return controllerUserMapper.createUserListResponse(maxIdx, userResponseList);
+    }
+
+    private boolean isInvalidRange(Integer from, Integer to){
+        return from == null || to == null;
     }
 
     @Authenticating

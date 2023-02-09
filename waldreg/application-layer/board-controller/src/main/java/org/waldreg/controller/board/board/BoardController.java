@@ -24,10 +24,8 @@ import org.springframework.web.method.annotation.MethodArgumentTypeMismatchExcep
 import org.springframework.web.multipart.MultipartFile;
 import org.waldreg.board.board.management.BoardManager;
 import org.waldreg.board.board.management.BoardManager.BoardRequest;
+import org.waldreg.board.board.management.PerPage;
 import org.waldreg.board.dto.BoardDto;
-import org.waldreg.board.dto.BoardServiceReactionType;
-import org.waldreg.board.exception.BoardDeletePermissionException;
-import org.waldreg.board.exception.BoardModifyPermissionException;
 import org.waldreg.board.file.FileManager;
 import org.waldreg.character.aop.annotation.PermissionVerifying;
 import org.waldreg.character.aop.behavior.VerifyingFailBehavior;
@@ -65,7 +63,7 @@ public class BoardController{
                             @RequestPart(value = "image", required = false) List<MultipartFile> imageFileList,
                             @RequestPart(value = "file", required = false) List<MultipartFile> fileList
     ){
-        if(imageFileList !=null){
+        if (imageFileList != null){
             saveAllFile(imageFileList);
         }
         if (fileList != null){
@@ -97,14 +95,26 @@ public class BoardController{
 
     @Authenticating
     @GetMapping("/boards")
-    public BoardListResponse getBoardList(@RequestParam(value = "category-id", required = false) Integer categoryId, @RequestParam("from") int from, @RequestParam("to") int to){
+    public BoardListResponse getBoardList(@RequestParam(value = "category-id", required = false) Integer categoryId, @RequestParam(value = "from", required = false) Integer from, @RequestParam(value = "to", required = false) Integer to){
         List<BoardDto> boardDtoList;
-        if (categoryId == null){
-            boardDtoList = boardManager.inquiryAllBoard(from, to);
-        } else{
-            boardDtoList = boardManager.inquiryAllBoardByCategory(categoryId, from, to);
+        if (isInvalidRange(from, to)){
+            from = 1;
+            to = PerPage.PER_PAGE;
         }
+        if (isCategoryIdNull(categoryId)){
+            boardDtoList = boardManager.inquiryAllBoard(from, to);
+            return controllerBoardMapper.boardDtoListToBoardListResponse(boardDtoList);
+        }
+        boardDtoList = boardManager.inquiryAllBoardByCategory(categoryId, from, to);
         return controllerBoardMapper.boardDtoListToBoardListResponse(boardDtoList);
+    }
+
+    private boolean isInvalidRange(Integer from, Integer to){
+        return from == null || to == null;
+    }
+
+    private boolean isCategoryIdNull(Integer categoryId){
+        return categoryId == null;
     }
 
     @BoardIdAuthenticating(fail = AuthFailBehavior.PASS)
@@ -118,7 +128,7 @@ public class BoardController{
                             @RequestPart(value = "file", required = false) List<MultipartFile> fileList
     ){
         throwIfDoseNotHaveBoardModifyPermission(authenticateVerifyState, permissionVerifyState);
-        if(imageFileList !=null){
+        if (imageFileList != null){
             saveAllFile(imageFileList);
         }
         if (fileList != null){
@@ -154,7 +164,11 @@ public class BoardController{
 
     @Authenticating
     @GetMapping("/board/search")
-    public BoardListResponse searchBoard(@RequestParam("type") Type type, @RequestParam(value = "keyword", required = false, defaultValue = "") String keyword, @RequestParam("from") int from, @RequestParam("to") int to){
+    public BoardListResponse searchBoard(@RequestParam("type") Type type, @RequestParam(value = "keyword", required = false, defaultValue = "") String keyword, @RequestParam(value = "from", required = false) Integer from, @RequestParam(value = "to", required = false) Integer to){
+        if (isInvalidRange(from, to)){
+            from = 1;
+            to = PerPage.PER_PAGE;
+        }
         List<BoardDto> boardDtoList = type.searchRunnable.search(keyword, from, to);
         return controllerBoardMapper.boardDtoListToBoardListResponse(boardDtoList);
     }

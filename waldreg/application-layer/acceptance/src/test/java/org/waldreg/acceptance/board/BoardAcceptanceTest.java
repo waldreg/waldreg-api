@@ -1534,7 +1534,7 @@ public class BoardAcceptanceTest{
         BoardAcceptanceTestHelper.createBoardWithOnlyJson(mvc, adminToken, jsonContent2);
         BoardAcceptanceTestHelper.createBoardWithOnlyJson(mvc, adminToken, jsonContent3);
 
-        ResultActions result = BoardAcceptanceTestHelper.searchBoard(mvc, token, "title", "notice", 0, 1);
+        ResultActions result = BoardAcceptanceTestHelper.searchBoard(mvc, token, "title", "notice", 1, 2);
 
         //then
         result.andExpectAll(
@@ -1621,7 +1621,7 @@ public class BoardAcceptanceTest{
         BoardAcceptanceTestHelper.createBoardWithOnlyJson(mvc, adminToken, jsonContent2);
         BoardAcceptanceTestHelper.createBoardWithOnlyJson(mvc, adminToken, jsonContent3);
 
-        ResultActions result = BoardAcceptanceTestHelper.searchBoard(mvc, adminToken, "content", "content", 0, 1);
+        ResultActions result = BoardAcceptanceTestHelper.searchBoard(mvc, adminToken, "content", "content", 1, 2);
 
         //then
         result.andExpectAll(
@@ -1698,7 +1698,7 @@ public class BoardAcceptanceTest{
         BoardAcceptanceTestHelper.createBoardWithOnlyJson(mvc, adminToken, jsonContent1);
         BoardAcceptanceTestHelper.createBoardWithOnlyJson(mvc, adminToken, jsonContent2);
 
-        ResultActions result = BoardAcceptanceTestHelper.searchBoard(mvc, token, "author", "Admin", 0, 1);
+        ResultActions result = BoardAcceptanceTestHelper.searchBoard(mvc, token, "author", "Admin", 1, 2);
 
         //then
         result.andExpectAll(
@@ -1981,7 +1981,7 @@ public class BoardAcceptanceTest{
         BoardAcceptanceTestHelper.createComment(mvc, adminToken, boardId, content2);
 
         //when
-        ResultActions result = BoardAcceptanceTestHelper.inquiryComment(mvc, adminToken, boardId, 0, 2);
+        ResultActions result = BoardAcceptanceTestHelper.inquiryComment(mvc, adminToken, boardId, 1, 3);
         //then
         result.andExpectAll(
                 MockMvcResultMatchers.status().isOk(),
@@ -2124,7 +2124,7 @@ public class BoardAcceptanceTest{
         String content = objectMapper.writeValueAsString(commentRequest1);
         BoardAcceptanceTestHelper.createComment(mvc, adminToken, boardId, content);
 
-        ResultActions comments = BoardAcceptanceTestHelper.inquiryComment(mvc, adminToken, boardId, 0, 1);
+        ResultActions comments = BoardAcceptanceTestHelper.inquiryComment(mvc, adminToken, boardId, 1, 2);
         CommentResponse comment1 = objectMapper.readValue(comments.andReturn().getResponse().getContentAsString(), CommentListResponse.class).getCommentResponseList().get(0);
 
         int commentId = comment1.getId();
@@ -2159,7 +2159,7 @@ public class BoardAcceptanceTest{
         String content = objectMapper.writeValueAsString(commentRequest1);
         BoardAcceptanceTestHelper.createComment(mvc, adminToken, boardId, content);
 
-        ResultActions comments = BoardAcceptanceTestHelper.inquiryComment(mvc, adminToken, boardId, 0, 1);
+        ResultActions comments = BoardAcceptanceTestHelper.inquiryComment(mvc, adminToken, boardId, 1, 2);
         CommentResponse comment1 = objectMapper.readValue(comments.andReturn().getResponse().getContentAsString(), CommentListResponse.class).getCommentResponseList().get(0);
 
         int commentId = comment1.getId();
@@ -2237,7 +2237,7 @@ public class BoardAcceptanceTest{
         String content = objectMapper.writeValueAsString(commentRequest1);
         BoardAcceptanceTestHelper.createComment(mvc, adminToken, boardId, content);
 
-        ResultActions comments = BoardAcceptanceTestHelper.inquiryComment(mvc, adminToken, boardId, 0, 1);
+        ResultActions comments = BoardAcceptanceTestHelper.inquiryComment(mvc, adminToken, boardId, 1, 2);
         CommentResponse comment1 = objectMapper.readValue(comments.andReturn().getResponse().getContentAsString(), CommentListResponse.class).getCommentResponseList().get(0);
 
         int commentId = comment1.getId();
@@ -2268,7 +2268,7 @@ public class BoardAcceptanceTest{
         String content = objectMapper.writeValueAsString(commentRequest1);
         BoardAcceptanceTestHelper.createComment(mvc, adminToken, boardId, content);
 
-        ResultActions comments = BoardAcceptanceTestHelper.inquiryComment(mvc, adminToken, boardId, 0, 1);
+        ResultActions comments = BoardAcceptanceTestHelper.inquiryComment(mvc, adminToken, boardId, 1, 2);
         CommentResponse comment1 = objectMapper.readValue(comments.andReturn().getResponse().getContentAsString(), CommentListResponse.class).getCommentResponseList().get(0);
 
         int commentId = comment1.getId();

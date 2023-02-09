@@ -17,7 +17,6 @@ import org.waldreg.util.token.DecryptedTokenContextGetter;
 @Service
 public class DefaultCommentManager implements CommentManager{
 
-    private final int perPage = 20;
     private CommentRepository commentRepository;
     private CommentUserRepository commentUserRepository;
     private CommentInBoardRepository commentInBoardRepository;
@@ -65,7 +64,7 @@ public class DefaultCommentManager implements CommentManager{
     }
 
     private void throwIfInvalidRangeDetected(int startIdx, int endIdx){
-        if (startIdx > endIdx || startIdx < 0){
+        if (startIdx > endIdx || startIdx < 1){
             throw new InvalidRangeException("BOARD-404","Invalid range from : " + startIdx + " to : " + endIdx);
         }
     }
@@ -74,8 +73,8 @@ public class DefaultCommentManager implements CommentManager{
         if (maxIdx < endIdx){
             endIdx = maxIdx;
         }
-        if (endIdx - startIdx + 1 > perPage){
-            return startIdx + perPage - 1;
+        if (endIdx - startIdx + 1 > PerPage.PER_PAGE){
+            return startIdx + PerPage.PER_PAGE - 1;
         }
         return endIdx;
     }

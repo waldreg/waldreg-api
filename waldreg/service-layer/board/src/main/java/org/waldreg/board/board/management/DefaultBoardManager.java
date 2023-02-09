@@ -7,7 +7,6 @@ import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.waldreg.board.dto.BoardServiceReactionType;
 import org.waldreg.board.exception.BoardDoesNotExistException;
 import org.waldreg.board.exception.CategoryDoesNotExistException;
 import org.waldreg.board.exception.FileDoesNotSavedException;
@@ -24,7 +23,6 @@ import org.waldreg.util.token.DecryptedTokenContextGetter;
 @Service
 public class DefaultBoardManager implements BoardManager{
 
-    private final int perPage = 20;
     private final BoardRepository boardRepository;
     private final BoardUserRepository boardUserRepository;
     private final BoardInCategoryRepository boardInCategoryRepository;
@@ -122,7 +120,7 @@ public class DefaultBoardManager implements BoardManager{
     }
 
     private void throwIfInvalidRangeDetected(int from, int to){
-        if (from > to || from < 0){
+        if (from > to || from < 1){
             throw new InvalidRangeException("BOARD-404","Invalid range from : " + from + " to : " + to);
         }
     }
@@ -131,8 +129,8 @@ public class DefaultBoardManager implements BoardManager{
         if (maxIdx < to){
             to = maxIdx;
         }
-        if (to - from + 1 > perPage){
-            return from + perPage - 1;
+        if (to - from + 1 > PerPage.PER_PAGE){
+            return from + PerPage.PER_PAGE - 1;
         }
         return to;
     }

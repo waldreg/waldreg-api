@@ -10,7 +10,6 @@ import org.waldreg.user.spi.UserRepository;
 @Service
 public class DefaultUserManager implements UserManager{
 
-    private final int perPage = 20;
     private final UserRepository userRepository;
 
     @Autowired
@@ -45,7 +44,7 @@ public class DefaultUserManager implements UserManager{
     }
 
     private void throwIfInvalidRangeDetected(int startIdx, int endIdx, int maxIdx){
-        if (endIdx > maxIdx || startIdx > endIdx || 1 > endIdx){
+        if (startIdx > endIdx || 1 > endIdx){
             throw new InvalidRangeException("Invalid range start-idx \"" + startIdx + "\", end-idx \"" + endIdx + "\"");
         }
     }
@@ -57,8 +56,8 @@ public class DefaultUserManager implements UserManager{
     }
 
     private int adjustEndIdxToPerPage(int startIdx, int endIdx){
-        if (endIdx - startIdx + 1 > perPage){
-            return startIdx + perPage - 1;
+        if (endIdx - startIdx + 1 > PerPage.PER_PAGE){
+            return startIdx + PerPage.PER_PAGE - 1;
         }
         return endIdx;
     }

@@ -11,11 +11,9 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.waldreg.board.board.management.PerPage;
 import org.waldreg.board.comment.management.CommentManager;
 import org.waldreg.board.dto.CommentDto;
-import org.waldreg.board.exception.BoardDeletePermissionException;
-import org.waldreg.board.exception.CommentDeletePermissionException;
-import org.waldreg.board.exception.CommentModifyPermissionException;
 import org.waldreg.character.aop.annotation.PermissionVerifying;
 import org.waldreg.character.aop.behavior.VerifyingFailBehavior;
 import org.waldreg.character.aop.parameter.PermissionVerifyState;
@@ -53,9 +51,17 @@ public class CommentController{
     @Authenticating
     @PermissionVerifying(value = "Comment read manager")
     @GetMapping("/board/comment/{board-id}")
-    public CommentListResponse getCommentList(@PathVariable("board-id") int boardId, @RequestParam("from") int from, @RequestParam("to") int to){
+    public CommentListResponse getCommentList(@PathVariable("board-id") int boardId, @RequestParam("from") Integer from, @RequestParam("to") Integer to){
+        if (isInvalidRange(from, to)){
+            from = 1;
+            to = PerPage.PER_PAGE;
+        }
         List<CommentDto> commentDtoList = commentManager.inquiryAllCommentByBoardId(boardId, from, to);
         return controllerCommentMapper.commentDtoListToCommentListResponse(commentDtoList);
+    }
+
+    private boolean isInvalidRange(Integer from, Integer to){
+        return from == null || to == null;
     }
 
     @CommentIdAuthenticating(fail = AuthFailBehavior.PASS)
