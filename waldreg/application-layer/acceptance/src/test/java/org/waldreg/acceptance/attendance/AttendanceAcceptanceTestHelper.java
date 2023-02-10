@@ -86,4 +86,38 @@ public class AttendanceAcceptanceTestHelper{
                 .header(HttpHeaders.AUTHORIZATION, token));
     }
 
+    public static ResultActions readSelfAttendance(MockMvc mvc, String token, LocalDate from, LocalDate to) throws Exception{
+        return readSelfAttendance(mvc, token, from.toString(), to.toString());
+    }
+
+    public static ResultActions readSelfAttendance(MockMvc mvc, String token, String from, String to) throws Exception{
+        return mvc.perform(MockMvcRequestBuilders.get("/attendance/user?from={from}&to={to}", from, to)
+                .contentType(MediaType.APPLICATION_JSON)
+                .accept(MediaType.APPLICATION_JSON)
+                .header("api-version", API_VERSION)
+                .header(HttpHeaders.AUTHORIZATION, token));
+    }
+
+    public static ResultActions confirmAttendance(MockMvc mvc, String token, String content) throws Exception{
+        return mvc.perform(MockMvcRequestBuilders.post("/attendance/confirm")
+                .contentType(MediaType.APPLICATION_JSON)
+                .accept(MediaType.APPLICATION_JSON)
+                .header("api-version", API_VERSION)
+                .header(HttpHeaders.AUTHORIZATION, token)
+                .content(content));
+    }
+
+    public static ResultActions setAttendanceTagsReward(MockMvc mvc, String token, AttendanceType attendanceType, int rewardTagId) throws Exception{
+        return setAttendanceTagsReward(mvc, token, attendanceType.toString(), rewardTagId);
+    }
+
+    public static ResultActions setAttendanceTagsReward(MockMvc mvc, String token, String attendanceType, int rewardTagId) throws Exception{
+        return mvc.perform(MockMvcRequestBuilders
+                .post("/attendance/reward-tag?attendance-type={attendance-type}&reward-tag-id={reward-tag-id}", attendanceType, rewardTagId)
+                .contentType(MediaType.APPLICATION_JSON)
+                .accept(MediaType.APPLICATION_JSON)
+                .header("api-version", API_VERSION)
+                .header(HttpHeaders.AUTHORIZATION, token));
+    }
+
 }
