@@ -5,7 +5,8 @@ import org.waldreg.domain.user.User;
 
 public final class Comment{
 
-    private final int id;
+    private int id;
+    private final int boardId;
     private final User user;
     private final LocalDateTime createdAt;
     private final LocalDateTime lastModifiedAt;
@@ -17,14 +18,27 @@ public final class Comment{
 
     private Comment(Builder builder){
         this.id = builder.id;
+        this.boardId = builder.boardId;
         this.user = builder.user;
         this.createdAt = builder.createdAt;
         this.lastModifiedAt = builder.lastModifiedAt;
         this.content = builder.content;
     }
 
+    public static Builder builder(){
+        return new Builder();
+    }
+
     public int getId(){
         return id;
+    }
+
+    public void setId(int id){
+        this.id = id;
+    }
+
+    public int getBoardId(){
+        return boardId;
     }
 
     public User getUser(){
@@ -46,8 +60,10 @@ public final class Comment{
     public final static class Builder{
 
         private int id;
+
+        private int boardId;
         private User user;
-        private final LocalDateTime createdAt;
+        private LocalDateTime createdAt;
         private LocalDateTime lastModifiedAt;
         private String content;
 
@@ -63,6 +79,11 @@ public final class Comment{
             return this;
         }
 
+        public Builder boardId(int boardId){
+            this.boardId = boardId;
+            return this;
+        }
+
         public Builder user(User user){
             this.user = user;
             return this;
@@ -70,6 +91,11 @@ public final class Comment{
 
         public Builder lastModifiedAt(LocalDateTime lastModifiedAt){
             this.lastModifiedAt = lastModifiedAt;
+            return this;
+        }
+
+        public Builder createdAt(LocalDateTime createdAt){
+            this.createdAt = createdAt;
             return this;
         }
 

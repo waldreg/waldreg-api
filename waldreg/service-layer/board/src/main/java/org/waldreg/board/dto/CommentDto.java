@@ -5,6 +5,8 @@ import java.time.LocalDateTime;
 public class CommentDto{
 
     private int id;
+
+    private int boardId;
     private UserDto userDto;
     private LocalDateTime createdAt;
     private LocalDateTime lastModifiedAt;
@@ -14,6 +16,7 @@ public class CommentDto{
 
     private CommentDto(Builder builder){
         this.id = builder.id;
+        this.boardId = builder.boardId;
         this.userDto = builder.userDto;
         this.createdAt = builder.createdAt;
         this.lastModifiedAt = builder.lastModifiedAt;
@@ -26,6 +29,18 @@ public class CommentDto{
 
     public int getId(){
         return id;
+    }
+
+    public void setId(int id){
+        this.id = id;
+    }
+
+    public void setUserDto(UserDto userDto){
+        this.userDto = userDto;
+    }
+
+    public void setBoardId(int boardId){
+        this.boardId = boardId;
     }
 
     public UserDto getUserDto(){
@@ -44,9 +59,18 @@ public class CommentDto{
         return content;
     }
 
+    public void setContent(String content){
+        this.content = content;
+    }
+
+    public int getBoardId(){
+        return boardId;
+    }
+
     public final static class Builder{
 
         private int id;
+        private int boardId;
         private UserDto userDto;
         private LocalDateTime createdAt;
         private LocalDateTime lastModifiedAt;
@@ -61,6 +85,11 @@ public class CommentDto{
 
         public Builder id(int id){
             this.id = id;
+            return this;
+        }
+
+        public Builder boardId(int boardId){
+            this.boardId = boardId;
             return this;
         }
 

@@ -24,6 +24,14 @@ dependencyManagement {
 
 dependencies {
 
+    implementation project(':service-layer:user')
+    implementation project(':service-layer:board')
+    implementation project(':repository-layer:memory-repository')
+    implementation project(':stable-service-layer:character')
+    implementation project(':core-layer:util')
+    implementation project(':core-layer:template')
+    implementation project(':service-layer:auth')
+
     implementation 'org.springframework.boot:spring-boot-starter'
     implementation 'org.springframework.boot:spring-boot-starter-web'
     testImplementation 'org.springframework.boot:spring-boot-starter-test'

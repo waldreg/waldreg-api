@@ -40,7 +40,7 @@ public class MemoryUserRepository implements UserRepository{
         } catch (RuntimeException isNotDuplicated){
             return;
         }
-        throw new DuplicatedUserIdException(userId);
+        throw new DuplicatedUserIdException("Duplicated user_id \""+userId+"\"");
     }
 
     @Override
