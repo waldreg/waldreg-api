@@ -1,21 +1,17 @@
 package org.waldreg.controller.board.exceptionadvice;
 
-import java.io.FileNotFoundException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.waldreg.board.exception.BoardDoesNotExistException;
 import org.waldreg.board.exception.CategoryDoesNotExistException;
-import org.waldreg.board.exception.CommentDeletePermissionException;
 import org.waldreg.board.exception.CommentDoesNotExistException;
-import org.waldreg.board.exception.CommentModifyPermissionException;
 import org.waldreg.board.exception.ContentOverFlowException;
 import org.waldreg.board.exception.DuplicateCategoryNameException;
 import org.waldreg.board.exception.FileDoesNotSavedException;
 import org.waldreg.board.exception.InvalidRangeException;
 import org.waldreg.board.exception.ReactionTypeDoesNotExistException;
-import org.waldreg.board.exception.UserDoesNotExistException;
 import org.waldreg.board.file.exception.UnknownFileId;
 import org.waldreg.core.template.exception.ExceptionTemplate;
 
@@ -99,17 +95,6 @@ public class BoardControllerAdvice{
         ExceptionTemplate exceptionTemplate = ExceptionTemplate.builder()
                 .code("BOARD-402")
                 .message(reactionTypeDoesNotExistException.getMessage())
-                .documentUrl(documentUrl)
-                .build();
-        return new ResponseEntity<>(exceptionTemplate, HttpStatus.BAD_REQUEST);
-    }
-
-
-    @ExceptionHandler(UserDoesNotExistException.class)
-    public ResponseEntity<ExceptionTemplate> catchUserDoesNotExistException(UserDoesNotExistException userDoesNotExistException){
-        ExceptionTemplate exceptionTemplate = ExceptionTemplate.builder()
-                .code("USER-408")
-                .message(userDoesNotExistException.getMessage())
                 .documentUrl(documentUrl)
                 .build();
         return new ResponseEntity<>(exceptionTemplate, HttpStatus.BAD_REQUEST);
