@@ -17,6 +17,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
+import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import org.waldreg.acceptance.authentication.AuthenticationAcceptanceTestHelper;
@@ -1325,6 +1326,93 @@ public class UserAcceptanceTest{
                 .andReturn()
                 .getResponse()
                 .getContentAsString(), UserListResponse.class);
+
+        //then
+        result.andExpectAll(
+                MockMvcResultMatchers.status().isOk(),
+                MockMvcResultMatchers.header().string(HttpHeaders.CONTENT_TYPE, "application/json"),
+                MockMvcResultMatchers.header().string("api-version", apiVersion),
+                MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON),
+                MockMvcResultMatchers.jsonPath("$.max_idx").value(4),
+                MockMvcResultMatchers.jsonPath("$.users.[0].id").isNumber(),
+                MockMvcResultMatchers.jsonPath("$.users.[0].name").value(userCreateRequest2.getName()),
+                MockMvcResultMatchers.jsonPath("$.users.[0].user_id").value(userCreateRequest2.getUserId()),
+                MockMvcResultMatchers.jsonPath("$.users.[0].phone_number").value(userCreateRequest2.getPhoneNumber()),
+                MockMvcResultMatchers.jsonPath("$.users.[0].character").isString(),
+                MockMvcResultMatchers.jsonPath("$.users.[0].created_at").isNotEmpty(),
+                MockMvcResultMatchers.jsonPath("$.users.[0].reward_point").isNumber(),
+                MockMvcResultMatchers.jsonPath("$.users.[0].social_login").isArray(),
+                MockMvcResultMatchers.jsonPath("$.users.[1].id").isNumber(),
+                MockMvcResultMatchers.jsonPath("$.users.[1].name").value(userCreateRequest3.getName()),
+                MockMvcResultMatchers.jsonPath("$.users.[1].user_id").value(userCreateRequest3.getUserId()),
+                MockMvcResultMatchers.jsonPath("$.users.[1].phone_number").value(userCreateRequest3.getPhoneNumber()),
+                MockMvcResultMatchers.jsonPath("$.users.[1].character").isString(),
+                MockMvcResultMatchers.jsonPath("$.users.[1].created_at").isNotEmpty(),
+                MockMvcResultMatchers.jsonPath("$.users.[1].reward_point").isNumber(),
+                MockMvcResultMatchers.jsonPath("$.users.[1].social_login").isArray(),
+                MockMvcResultMatchers.jsonPath("$.users.[2].name").value(userCreateRequest1.getName()),
+                MockMvcResultMatchers.jsonPath("$.users.[2].user_id").value(userCreateRequest1.getUserId()),
+                MockMvcResultMatchers.jsonPath("$.users.[2].phone_number").value(userCreateRequest1.getPhoneNumber()),
+                MockMvcResultMatchers.jsonPath("$.users.[2].character").isString(),
+                MockMvcResultMatchers.jsonPath("$.users.[2].created_at").isNotEmpty(),
+                MockMvcResultMatchers.jsonPath("$.users.[2].reward_point").isNumber(),
+                MockMvcResultMatchers.jsonPath("$.users.[2].social_login").isArray()
+        ).andDo(MockMvcResultHandlers.print());
+
+    }
+    @Test
+    @DisplayName("전체 유저 조회 성공 인수테스트 - 토큰 있을 때, 범위 없이")
+    public void INQUIRY_ALL_USER_WITH_TOKEN_WITHOUT_RANGESUCCESS_TEST() throws Exception{
+        //given
+        String name1 = "alcuk1";
+        String userId1 = "alcuk_id1";
+        String userPassword1 = "alcuk_pwd1!";
+        String phoneNumber1 = "010-1234-1111";
+        String adminToken = AuthenticationAcceptanceTestHelper.getAdminToken(mvc, objectMapper);
+        UserRequest userCreateRequest1 = UserRequest.builder()
+                .name(name1)
+                .userId(userId1)
+                .userPassword(userPassword1)
+                .phoneNumber(phoneNumber1)
+                .build();
+        String name2 = "alcuk2";
+        String userId2 = "alcuk_id2";
+        String userPassword2 = "alcuk_pwd2!";
+        String phoneNumber2 = "010-1234-2222";
+        UserRequest userCreateRequest2 = UserRequest.builder()
+                .name(name2)
+                .userId(userId2)
+                .userPassword(userPassword2)
+                .phoneNumber(phoneNumber2)
+                .build();
+        String name3 = "alcuk3";
+        String userId3 = "alcuk_id3";
+        String userPassword3 = "alcuk_pwd3!";
+        String phoneNumber3 = "010-1234-3333";
+        UserRequest userCreateRequest3 = UserRequest.builder()
+                .name(name3)
+                .userId(userId3)
+                .userPassword(userPassword3)
+                .phoneNumber(phoneNumber3)
+                .build();
+
+        //when
+        UserAcceptanceTestHelper.createUser(mvc, objectMapper.writeValueAsString(userCreateRequest1));
+        UserAcceptanceTestHelper.createUser(mvc, objectMapper.writeValueAsString(userCreateRequest2));
+        UserAcceptanceTestHelper.createUser(mvc, objectMapper.writeValueAsString(userCreateRequest3));
+        userCreateRequestList.add(userCreateRequest1);
+        userCreateRequestList.add(userCreateRequest2);
+        userCreateRequestList.add(userCreateRequest3);
+        ResultActions result = mvc.perform(MockMvcRequestBuilders
+                                                 .get("/users")
+                                                 .accept(MediaType.APPLICATION_JSON)
+                                                 .header("api-version", apiVersion)
+                                                 .header(HttpHeaders.AUTHORIZATION, adminToken));
+
+        UserListResponse userList = objectMapper.readValue(result
+                                                                   .andReturn()
+                                                                   .getResponse()
+                                                                   .getContentAsString(), UserListResponse.class);
 
         //then
         result.andExpectAll(

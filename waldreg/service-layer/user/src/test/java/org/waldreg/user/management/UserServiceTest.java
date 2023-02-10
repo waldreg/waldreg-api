@@ -183,8 +183,8 @@ public class UserServiceTest{
                 .userPassword(userPassword)
                 .phoneNumber(phoneNumber)
                 .build();
-        int startIdx = 1;
-        int endIdx = 3;
+        int startIdx = 3;
+        int endIdx = 1;
         int maxIdx = 2;
         List<UserDto> userDtoList = new ArrayList<>();
 
