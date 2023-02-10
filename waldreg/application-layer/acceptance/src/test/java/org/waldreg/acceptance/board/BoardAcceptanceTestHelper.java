@@ -8,10 +8,8 @@ import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
-import org.waldreg.controller.board.comment.request.CommentRequest;
 
 public class BoardAcceptanceTestHelper{
-
 
     private final static String apiVersion = "1.0";
 
@@ -245,4 +243,5 @@ public class BoardAcceptanceTestHelper{
                                    .accept(MediaType.APPLICATION_JSON,MediaType.APPLICATION_PDF)
                                    .header("api-version", apiVersion));
     }
+
 }

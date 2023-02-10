@@ -6,21 +6,17 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicInteger;
 import org.springframework.stereotype.Repository;
-import org.waldreg.board.dto.BoardServiceReactionType;
 import org.waldreg.domain.board.Board;
 import org.waldreg.domain.board.comment.Comment;
-import org.waldreg.domain.board.reaction.ReactionType;
-import org.waldreg.domain.category.Category;
 
 @Repository
 public class MemoryBoardStorage{
 
     private final AtomicInteger atomicInteger;
     private final int startIndex = 0;
-
     private final Map<Integer, Board> storage;
 
-    {
+    public MemoryBoardStorage(){
         storage = new ConcurrentHashMap<>();
         atomicInteger = new AtomicInteger(1);
     }
@@ -57,19 +53,24 @@ public class MemoryBoardStorage{
         for (Map.Entry<Integer, Board> boardEntry : storage.entrySet()){
             if (isInRange(index, from, to)){
                 boardList.add(boardEntry.getValue());
-                index++;
             }
+            index++;
         }
         return boardList;
     }
 
     public List<Board> inquiryAllBoardByCategory(int categoryId, int from, int to){
-        int index = startIndex;
+        int matchedIdx = startIndex;
         List<Board> boardList = new ArrayList<>();
         for (Map.Entry<Integer, Board> boardEntry : storage.entrySet()){
-            if (isCategoryIdEqual(boardEntry.getValue().getCategoryId(), categoryId) && isInRange(index, from, to)){
-                boardList.add(boardEntry.getValue());
-                index++;
+            if (isCategoryIdEqual(boardEntry.getValue().getCategoryId(), categoryId)){
+                if(isInRange(matchedIdx,from,to)){
+                    boardList.add(boardEntry.getValue());
+                }
+                matchedIdx++;
+                if(matchedIdx > to){
+                    return boardList;
+                }
             }
         }
         return boardList;
@@ -90,37 +91,57 @@ public class MemoryBoardStorage{
     }
 
     public List<Board> searchByTitle(String keyword, int from, int to){
-        int index = startIndex;
+        int matchedIdx = startIndex;
         List<Board> boardList = new ArrayList<>();
         for (Map.Entry<Integer, Board> boardEntry : storage.entrySet()){
-            if (isKeywordContained(boardEntry.getValue().getTitle(), keyword) && isInRange(index, from, to)){
-                boardList.add(boardEntry.getValue());
+            if (isKeywordContained(boardEntry.getValue().getTitle(), keyword)){
+                if(isInRange(matchedIdx,from,to)){
+                    boardList.add(boardEntry.getValue());
+                }
+                matchedIdx++;
+                if(matchedIdx > to){
+                    return boardList;
+                }
             }
         }
         return boardList;
     }
 
     public List<Board> searchByContent(String keyword, int from, int to){
-        int index = startIndex;
+        int matchedIdx = startIndex;
         List<Board> boardList = new ArrayList<>();
         for (Map.Entry<Integer, Board> boardEntry : storage.entrySet()){
-            if (isKeywordContained(boardEntry.getValue().getContent(), keyword) && isInRange(index, from, to)){
-                boardList.add(boardEntry.getValue());
+            if (isKeywordContained(boardEntry.getValue().getContent(), keyword)){
+                if(isInRange(matchedIdx,from,to)){
+                    boardList.add(boardEntry.getValue());
+                }
+                matchedIdx++;
+                if(matchedIdx > to){
+                    return boardList;
+                }
             }
         }
         return boardList;
     }
 
     public List<Board> searchByAuthorUserId(String keyword, int from, int to){
-        int index = startIndex;
+        int matchedIdx = startIndex;
         List<Board> boardList = new ArrayList<>();
         for (Map.Entry<Integer, Board> boardEntry : storage.entrySet()){
-            if (isKeywordContained(boardEntry.getValue().getUser().getUserId(), keyword) && isInRange(index, from, to)){
-                boardList.add(boardEntry.getValue());
+            if (isKeywordContained(boardEntry.getValue().getUser().getUserId(), keyword)){
+                if(isInRange(matchedIdx,from,to)){
+                    boardList.add(boardEntry.getValue());
+                }
+                matchedIdx++;
+                if(matchedIdx > to){
+                    return boardList;
+                }
             }
         }
         return boardList;
     }
+
+
 
     private boolean isInRange(int index, int from, int to){
         return index >= from && index <= to;

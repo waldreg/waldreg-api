@@ -41,18 +41,6 @@ public class DefaultCommentManager implements CommentManager{
         commentInBoardRepository.addCommentInBoardCommentList(storedCommentDto);
     }
 
-    private void throwIfBoardDoesNotExist(int boardId){
-        if (!commentInBoardRepository.isExistBoard(boardId)){
-            throw new BoardDoesNotExistException("BOARD-401","Unknown board id : " + boardId);
-        }
-    }
-
-    private void throwIfContentOverFlowThousand(String content){
-        if (content.length() > 1000){
-            throw new ContentOverFlowException();
-        }
-    }
-
     @Override
     public List<CommentDto> inquiryAllCommentByBoardId(int boardId, int startIdx, int endIdx){
         throwIfBoardDoesNotExist(boardId);
@@ -65,7 +53,7 @@ public class DefaultCommentManager implements CommentManager{
 
     private void throwIfInvalidRangeDetected(int startIdx, int endIdx){
         if (startIdx > endIdx || startIdx < 1){
-            throw new InvalidRangeException("BOARD-404","Invalid range from : " + startIdx + " to : " + endIdx);
+            throw new InvalidRangeException("BOARD-404", "Invalid range from : " + startIdx + " to : " + endIdx);
         }
     }
 
@@ -89,9 +77,15 @@ public class DefaultCommentManager implements CommentManager{
         commentRepository.modifyComment(storedCommentDto);
     }
 
-    private void throwIfCommentDoesNotExist(int commentId){
-        if (!commentRepository.isExistComment(commentId)){
-            throw new CommentDoesNotExistException("BOARD-406","Unknown comment id : " + commentId);
+    private void throwIfContentOverFlowThousand(String content){
+        if (content.length() > 1000){
+            throw new ContentOverFlowException();
+        }
+    }
+
+    private void throwIfBoardDoesNotExist(int boardId){
+        if (!commentInBoardRepository.isExistBoard(boardId)){
+            throw new BoardDoesNotExistException("BOARD-401", "Unknown board id : " + boardId);
         }
     }
 
@@ -99,6 +93,12 @@ public class DefaultCommentManager implements CommentManager{
     public void deleteComment(int commentId){
         throwIfCommentDoesNotExist(commentId);
         commentRepository.deleteComment(commentId);
+    }
+
+    private void throwIfCommentDoesNotExist(int commentId){
+        if (!commentRepository.isExistComment(commentId)){
+            throw new CommentDoesNotExistException("BOARD-406", "Unknown comment id : " + commentId);
+        }
     }
 
 }

@@ -79,11 +79,9 @@ public class BoardAcceptanceTest{
                     MockMvcResultMatchers.jsonPath("$.code").value("BOARD-401")
             );
         }
-
+        INITIATE_CATEGORY();
     }
 
-    @BeforeEach
-    @AfterEach
     public void INITIATE_CATEGORY() throws Exception{
         String adminToken = AuthenticationAcceptanceTestHelper.getAdminToken(mvc, objectMapper);
 
@@ -405,7 +403,7 @@ public class BoardAcceptanceTest{
         BoardListResponse boardListResponse = objectMapper.readValue(boards.andReturn()
                                                                              .getResponse()
                                                                              .getContentAsString(), BoardListResponse.class);
-        int boardId = boardListResponse.getBoards()[0].getId();
+        int boardId = boardListResponse.getBoards().get(0).getId();
         ResultActions result = BoardAcceptanceTestHelper.inquiryBoardById(mvc, adminToken, boardId);
 
         //then
@@ -512,7 +510,7 @@ public class BoardAcceptanceTest{
         BoardListResponse boardListResponse = objectMapper.readValue(boards.andReturn()
                                                                              .getResponse()
                                                                              .getContentAsString(), BoardListResponse.class);
-        int boardId = boardListResponse.getBoards()[0].getId();
+        int boardId = boardListResponse.getBoards().get(0).getId();
         ResultActions result = BoardAcceptanceTestHelper.inquiryBoardById(mvc, token, boardId);
 
         //then
@@ -546,9 +544,9 @@ public class BoardAcceptanceTest{
         ResultActions resultCategory = BoardAcceptanceTestHelper.inquiryAllCategory(mvc, adminToken);
         CategoryResponse[] categoryList = objectMapper.readValue(resultCategory.andReturn().getResponse().getContentAsString(), CategoryListResponse.class).getCategories();
 
-        String[] fileUrls = boardListResponse.getBoards()[0].getFiles();
+        String[] fileUrls = boardListResponse.getBoards().get(0).getFiles();
 
-        int boardId = boardListResponse.getBoards()[0].getId();
+        int boardId = boardListResponse.getBoards().get(0).getId();
         int categoryId = categoryList[0].getCategoryId();
         ArrayList<String> fileUrlList = new ArrayList<>(List.of(fileUrls));
 
@@ -604,9 +602,9 @@ public class BoardAcceptanceTest{
         ResultActions resultCategory = BoardAcceptanceTestHelper.inquiryAllCategory(mvc, adminToken);
         CategoryResponse[] categoryList = objectMapper.readValue(resultCategory.andReturn().getResponse().getContentAsString(), CategoryListResponse.class).getCategories();
 
-        String[] fileUrls = boardListResponse.getBoards()[0].getFiles();
+        String[] fileUrls = boardListResponse.getBoards().get(0).getFiles();
 
-        int boardId = boardListResponse.getBoards()[0].getId();
+        int boardId = boardListResponse.getBoards().get(0).getId();
         int categoryId = categoryList[0].getCategoryId();
         ArrayList<String> fileUrlList = new ArrayList<>(List.of(fileUrls));
 
@@ -647,9 +645,9 @@ public class BoardAcceptanceTest{
         ResultActions resultCategory = BoardAcceptanceTestHelper.inquiryAllCategory(mvc, adminToken);
         CategoryResponse[] categoryList = objectMapper.readValue(resultCategory.andReturn().getResponse().getContentAsString(), CategoryListResponse.class).getCategories();
 
-        String[] fileUrls = boardListResponse.getBoards()[0].getFiles();
+        String[] fileUrls = boardListResponse.getBoards().get(0).getFiles();
 
-        int boardId = boardListResponse.getBoards()[0].getId();
+        int boardId = boardListResponse.getBoards().get(0).getId();
         int categoryId = categoryList[0].getCategoryId();
         ArrayList<String> fileUrlList = new ArrayList<>(List.of(fileUrls));
 
@@ -697,9 +695,9 @@ public class BoardAcceptanceTest{
         ResultActions resultCategory = BoardAcceptanceTestHelper.inquiryAllCategory(mvc, adminToken);
         CategoryResponse[] categoryList = objectMapper.readValue(resultCategory.andReturn().getResponse().getContentAsString(), CategoryListResponse.class).getCategories();
 
-        String[] fileUrls = boardListResponse.getBoards()[0].getFiles();
+        String[] fileUrls = boardListResponse.getBoards().get(0).getFiles();
 
-        int boardId = boardListResponse.getBoards()[0].getId();
+        int boardId = boardListResponse.getBoards().get(0).getId();
         int categoryId = categoryList[0].getCategoryId();
         ArrayList<String> fileUrlList = new ArrayList<>(List.of(fileUrls));
 
@@ -748,7 +746,7 @@ public class BoardAcceptanceTest{
         ResultActions resultCategory = BoardAcceptanceTestHelper.inquiryAllCategory(mvc, adminToken);
         CategoryResponse[] categoryList = objectMapper.readValue(resultCategory.andReturn().getResponse().getContentAsString(), CategoryListResponse.class).getCategories();
 
-        String[] fileUrls = boardListResponse.getBoards()[0].getFiles();
+        String[] fileUrls = boardListResponse.getBoards().get(0).getFiles();
 
         int categoryId = categoryList[0].getCategoryId();
         ArrayList<String> fileUrlList = new ArrayList<>(List.of(fileUrls));
@@ -765,7 +763,7 @@ public class BoardAcceptanceTest{
         String imgPath2 = "./src/test/java/org/waldreg/acceptance/board/TestImage2.jpg";
 
         String fileName2 = "TestDocx2";
-        String fileContentType2 = "application/json";
+        String fileContentType2 = "application/msword";
         String filePath2 = "./src/test/java/org/waldreg/acceptance/board/TestDocx2.docx";
 
         MockMultipartFile jsonContent2 = new MockMultipartFile("boardUpdateRequest", "", MediaType.APPLICATION_JSON_VALUE, objectMapper.writeValueAsString(boardUpdateRequest).getBytes());
@@ -810,9 +808,9 @@ public class BoardAcceptanceTest{
         ResultActions resultCategory = BoardAcceptanceTestHelper.inquiryAllCategory(mvc, token);
         CategoryResponse[] categoryList = objectMapper.readValue(resultCategory.andReturn().getResponse().getContentAsString(), CategoryListResponse.class).getCategories();
 
-        String[] fileUrls = boardListResponse.getBoards()[0].getFiles();
+        String[] fileUrls = boardListResponse.getBoards().get(0).getFiles();
 
-        int boardId = boardListResponse.getBoards()[0].getId();
+        int boardId = boardListResponse.getBoards().get(0).getId();
         int categoryId = categoryList[0].getCategoryId();
         ArrayList<String> fileUrlList = new ArrayList<>(List.of(fileUrls));
 
@@ -828,7 +826,7 @@ public class BoardAcceptanceTest{
         String imgPath2 = "./src/test/java/org/waldreg/acceptance/board/TestImage2.jpg";
 
         String fileName2 = "TestDocx2";
-        String fileContentType2 = "application/json";
+        String fileContentType2 = "application/msword";
         String filePath2 = "./src/test/java/org/waldreg/acceptance/board/TestDocx2.docx";
 
         MockMultipartFile jsonContent2 = new MockMultipartFile("boardUpdateRequest", "", MediaType.APPLICATION_JSON_VALUE, objectMapper.writeValueAsString(boardUpdateRequest).getBytes());
@@ -898,7 +896,7 @@ public class BoardAcceptanceTest{
         BoardListResponse boardListResponse = objectMapper.readValue(boards.andReturn()
                                                                              .getResponse()
                                                                              .getContentAsString(), BoardListResponse.class);
-        int boardId = boardListResponse.getBoards()[0].getId();
+        int boardId = boardListResponse.getBoards().get(0).getId();
         ResultActions result = BoardAcceptanceTestHelper.deleteBoard(mvc, adminToken, boardId);
 
         //then
@@ -955,7 +953,7 @@ public class BoardAcceptanceTest{
         BoardListResponse boardListResponse = objectMapper.readValue(boards.andReturn()
                                                                              .getResponse()
                                                                              .getContentAsString(), BoardListResponse.class);
-        int boardId = boardListResponse.getBoards()[0].getId();
+        int boardId = boardListResponse.getBoards().get(0).getId();
         ResultActions result = BoardAcceptanceTestHelper.deleteBoard(mvc, otherUserToken, boardId);
 
         //then
@@ -1013,7 +1011,7 @@ public class BoardAcceptanceTest{
         BoardListResponse boardListResponse = objectMapper.readValue(boards.andReturn()
                                                                              .getResponse()
                                                                              .getContentAsString(), BoardListResponse.class);
-        int boardId = boardListResponse.getBoards()[0].getId();
+        int boardId = boardListResponse.getBoards().get(0).getId();
         ResultActions result = BoardAcceptanceTestHelper.deleteBoard(mvc, adminToken, boardId);
 
         //then
@@ -1879,7 +1877,7 @@ public class BoardAcceptanceTest{
 
         ResultActions resultActions = BoardAcceptanceTestHelper.inquiryAllBoard(mvc, adminToken);
         BoardListResponse boardListResponse = objectMapper.readValue(resultActions.andReturn().getResponse().getContentAsString(), BoardListResponse.class);
-        int boardId = boardListResponse.getBoards()[0].getId();
+        int boardId = boardListResponse.getBoards().get(0).getId();
         CommentRequest commentRequest1 = CommentRequest.builder()
                 .content("comment1")
                 .build();
@@ -1908,7 +1906,7 @@ public class BoardAcceptanceTest{
 
         ResultActions resultActions = BoardAcceptanceTestHelper.inquiryAllBoard(mvc, adminToken);
         BoardListResponse boardListResponse = objectMapper.readValue(resultActions.andReturn().getResponse().getContentAsString(), BoardListResponse.class);
-        int boardId = boardListResponse.getBoards()[0].getId();
+        int boardId = boardListResponse.getBoards().get(0).getId();
         CommentRequest commentRequest1 = CommentRequest.builder()
                 .content("comment1").build();
         String content = objectMapper.writeValueAsString(commentRequest1);
@@ -1937,7 +1935,7 @@ public class BoardAcceptanceTest{
 
         ResultActions resultActions = BoardAcceptanceTestHelper.inquiryAllBoard(mvc, adminToken);
         BoardListResponse boardListResponse = objectMapper.readValue(resultActions.andReturn().getResponse().getContentAsString(), BoardListResponse.class);
-        int boardId = boardListResponse.getBoards()[0].getId();
+        int boardId = boardListResponse.getBoards().get(0).getId();
         String overFlowContent = "comment1comment1comment1comment1comment1comment1comment1comment1comment1comment1comment1comment1comment1comment1comment1comment1comment1comment1comment1comment1comment1comment1comment1comment1comment1comment1comment1comment1comment1comment1comment1comment1comment1comment1comment1comment1comment1comment1comment1comment1comment1comment1comment1comment1comment1comment1comment1comment1comment1comment1comment1comment1comment1comment1comment1comment1comment1comment1comment1comment1comment1comment1comment1comment1comment1comment1comment1comment1comment1comment1comment1comment1comment1comment1comment1comment1comment1comment1comment1comment1comment1comment1comment1comment1comment1comment1comment1comment1comment1comment1comment1comment1comment1comment1comment1comment1comment1comment1comment1comment1comment1comment1comment1comment1comment1comment1comment1comment1comment1comment1comment1comment1comment1comment1comment1comment1comment1comment1comment1comment1comment1comment1comment1comment1comment1comment1comment1comment1comment1comment1comment1comment1comment1comment1comment1comment1comment1comment1comment1comment1comment1comment1comment1comment1comment1comment1comment1comment1comment1comment1comment1comment1comment1comment1comment1comment1comment1comment1comment1comment1comment1comment1comment1comment1comment1comment1comment1comment1comment1comment1";
         CommentRequest commentRequest1 = CommentRequest.builder()
                 .content(overFlowContent).build();
@@ -1969,7 +1967,7 @@ public class BoardAcceptanceTest{
 
         ResultActions resultActions = BoardAcceptanceTestHelper.inquiryAllBoard(mvc, adminToken);
         BoardListResponse boardListResponse = objectMapper.readValue(resultActions.andReturn().getResponse().getContentAsString(), BoardListResponse.class);
-        int boardId = boardListResponse.getBoards()[0].getId();
+        int boardId = boardListResponse.getBoards().get(0).getId();
         CommentRequest commentRequest1 = CommentRequest.builder()
                 .content("comment1").build();
         CommentRequest commentRequest2 = CommentRequest.builder()
@@ -2012,7 +2010,7 @@ public class BoardAcceptanceTest{
 
         ResultActions resultActions = BoardAcceptanceTestHelper.inquiryAllBoard(mvc, adminToken);
         BoardListResponse boardListResponse = objectMapper.readValue(resultActions.andReturn().getResponse().getContentAsString(), BoardListResponse.class);
-        int boardId = boardListResponse.getBoards()[0].getId();
+        int boardId = boardListResponse.getBoards().get(0).getId();
         CommentRequest commentRequest1 = CommentRequest.builder()
                 .content("comment1").build();
         CommentRequest commentRequest2 = CommentRequest.builder()
@@ -2048,7 +2046,7 @@ public class BoardAcceptanceTest{
 
         ResultActions resultActions = BoardAcceptanceTestHelper.inquiryAllBoard(mvc, adminToken);
         BoardListResponse boardListResponse = objectMapper.readValue(resultActions.andReturn().getResponse().getContentAsString(), BoardListResponse.class);
-        int boardId = boardListResponse.getBoards()[0].getId();
+        int boardId = boardListResponse.getBoards().get(0).getId();
         CommentRequest commentRequest1 = CommentRequest.builder()
                 .content("comment1").build();
         CommentRequest commentRequest2 = CommentRequest.builder()
@@ -2082,7 +2080,7 @@ public class BoardAcceptanceTest{
 
         ResultActions resultActions = BoardAcceptanceTestHelper.inquiryAllBoard(mvc, adminToken);
         BoardListResponse boardListResponse = objectMapper.readValue(resultActions.andReturn().getResponse().getContentAsString(), BoardListResponse.class);
-        int boardId = boardListResponse.getBoards()[0].getId();
+        int boardId = boardListResponse.getBoards().get(0).getId();
         CommentRequest commentRequest1 = CommentRequest.builder()
                 .content("comment1").build();
         CommentRequest commentRequest2 = CommentRequest.builder()
@@ -2118,7 +2116,7 @@ public class BoardAcceptanceTest{
 
         ResultActions resultActions = BoardAcceptanceTestHelper.inquiryAllBoard(mvc, adminToken);
         BoardListResponse boardListResponse = objectMapper.readValue(resultActions.andReturn().getResponse().getContentAsString(), BoardListResponse.class);
-        int boardId = boardListResponse.getBoards()[0].getId();
+        int boardId = boardListResponse.getBoards().get(0).getId();
         CommentRequest commentRequest1 = CommentRequest.builder()
                 .content("comment1").build();
         String content = objectMapper.writeValueAsString(commentRequest1);
@@ -2153,7 +2151,7 @@ public class BoardAcceptanceTest{
 
         ResultActions resultActions = BoardAcceptanceTestHelper.inquiryAllBoard(mvc, adminToken);
         BoardListResponse boardListResponse = objectMapper.readValue(resultActions.andReturn().getResponse().getContentAsString(), BoardListResponse.class);
-        int boardId = boardListResponse.getBoards()[0].getId();
+        int boardId = boardListResponse.getBoards().get(0).getId();
         CommentRequest commentRequest1 = CommentRequest.builder()
                 .content("comment1").build();
         String content = objectMapper.writeValueAsString(commentRequest1);
@@ -2194,7 +2192,7 @@ public class BoardAcceptanceTest{
 
         ResultActions resultActions = BoardAcceptanceTestHelper.inquiryAllBoard(mvc, adminToken);
         BoardListResponse boardListResponse = objectMapper.readValue(resultActions.andReturn().getResponse().getContentAsString(), BoardListResponse.class);
-        int boardId = boardListResponse.getBoards()[0].getId();
+        int boardId = boardListResponse.getBoards().get(0).getId();
         CommentRequest commentRequest1 = CommentRequest.builder()
                 .content("comment1").build();
         String content = objectMapper.writeValueAsString(commentRequest1);
@@ -2231,7 +2229,7 @@ public class BoardAcceptanceTest{
 
         ResultActions resultActions = BoardAcceptanceTestHelper.inquiryAllBoard(mvc, adminToken);
         BoardListResponse boardListResponse = objectMapper.readValue(resultActions.andReturn().getResponse().getContentAsString(), BoardListResponse.class);
-        int boardId = boardListResponse.getBoards()[0].getId();
+        int boardId = boardListResponse.getBoards().get(0).getId();
         CommentRequest commentRequest1 = CommentRequest.builder()
                 .content("comment1").build();
         String content = objectMapper.writeValueAsString(commentRequest1);
@@ -2262,7 +2260,7 @@ public class BoardAcceptanceTest{
 
         ResultActions resultActions = BoardAcceptanceTestHelper.inquiryAllBoard(mvc, adminToken);
         BoardListResponse boardListResponse = objectMapper.readValue(resultActions.andReturn().getResponse().getContentAsString(), BoardListResponse.class);
-        int boardId = boardListResponse.getBoards()[0].getId();
+        int boardId = boardListResponse.getBoards().get(0).getId();
         CommentRequest commentRequest1 = CommentRequest.builder()
                 .content("comment1").build();
         String content = objectMapper.writeValueAsString(commentRequest1);
@@ -2298,7 +2296,7 @@ public class BoardAcceptanceTest{
 
         ResultActions resultActions = BoardAcceptanceTestHelper.inquiryAllBoard(mvc, adminToken);
         BoardListResponse boardListResponse = objectMapper.readValue(resultActions.andReturn().getResponse().getContentAsString(), BoardListResponse.class);
-        int boardId = boardListResponse.getBoards()[0].getId();
+        int boardId = boardListResponse.getBoards().get(0).getId();
         CommentRequest commentRequest1 = CommentRequest.builder()
                 .content("comment1").build();
         String content = objectMapper.writeValueAsString(commentRequest1);
@@ -2330,7 +2328,7 @@ public class BoardAcceptanceTest{
 
         ResultActions resultActions = BoardAcceptanceTestHelper.inquiryAllBoard(mvc, adminToken);
         BoardListResponse boardListResponse = objectMapper.readValue(resultActions.andReturn().getResponse().getContentAsString(), BoardListResponse.class);
-        int boardId = boardListResponse.getBoards()[0].getId();
+        int boardId = boardListResponse.getBoards().get(0).getId();
         String reactionType = "GOOD";
         //when
         ResultActions result = BoardAcceptanceTestHelper.createReaction(mvc, adminToken, boardId, reactionType);
@@ -2353,7 +2351,7 @@ public class BoardAcceptanceTest{
 
         ResultActions resultActions = BoardAcceptanceTestHelper.inquiryAllBoard(mvc, adminToken);
         BoardListResponse boardListResponse = objectMapper.readValue(resultActions.andReturn().getResponse().getContentAsString(), BoardListResponse.class);
-        int boardId = boardListResponse.getBoards()[0].getId();
+        int boardId = boardListResponse.getBoards().get(0).getId();
         String reactionType = "GOOD";
         //when
         BoardAcceptanceTestHelper.createReaction(mvc, adminToken, boardId, reactionType);
@@ -2379,7 +2377,7 @@ public class BoardAcceptanceTest{
 
         ResultActions resultActions = BoardAcceptanceTestHelper.inquiryAllBoard(mvc, adminToken);
         BoardListResponse boardListResponse = objectMapper.readValue(resultActions.andReturn().getResponse().getContentAsString(), BoardListResponse.class);
-        int boardId = boardListResponse.getBoards()[0].getId();
+        int boardId = boardListResponse.getBoards().get(0).getId();
         String reactionType = "GOOD";
         String modifyReactionType = "BAD";
         //when
@@ -2431,7 +2429,7 @@ public class BoardAcceptanceTest{
 
         ResultActions resultActions = BoardAcceptanceTestHelper.inquiryAllBoard(mvc, adminToken);
         BoardListResponse boardListResponse = objectMapper.readValue(resultActions.andReturn().getResponse().getContentAsString(), BoardListResponse.class);
-        int boardId = boardListResponse.getBoards()[0].getId();
+        int boardId = boardListResponse.getBoards().get(0).getId();
 
         String reactionType = "Invalid reaction type";
         //when
@@ -2462,7 +2460,7 @@ public class BoardAcceptanceTest{
 
         ResultActions resultActions = BoardAcceptanceTestHelper.inquiryAllBoard(mvc, adminToken);
         BoardListResponse boardListResponse = objectMapper.readValue(resultActions.andReturn().getResponse().getContentAsString(), BoardListResponse.class);
-        int boardId = boardListResponse.getBoards()[0].getId();
+        int boardId = boardListResponse.getBoards().get(0).getId();
 
         String reactionType = "GOOD";
         //when
@@ -2794,7 +2792,7 @@ public class BoardAcceptanceTest{
 
         ResultActions resultActions = BoardAcceptanceTestHelper.inquiryAllBoard(mvc, adminToken);
         BoardListResponse boardListResponse = objectMapper.readValue(resultActions.andReturn().getResponse().getContentAsString(), BoardListResponse.class);
-        String[] imagesUrls = boardListResponse.getBoards()[0].getImages();
+        String[] imagesUrls = boardListResponse.getBoards().get(0).getImages();
 
         //when
         ResultActions result = BoardAcceptanceTestHelper.getImage(mvc, adminToken, "/image/" + imagesUrls[0]);
@@ -2844,7 +2842,7 @@ public class BoardAcceptanceTest{
 
         ResultActions resultActions = BoardAcceptanceTestHelper.inquiryAllBoard(mvc, adminToken);
         BoardListResponse boardListResponse = objectMapper.readValue(resultActions.andReturn().getResponse().getContentAsString(), BoardListResponse.class);
-        String[] imagesUrls = boardListResponse.getBoards()[0].getImages();
+        String[] imagesUrls = boardListResponse.getBoards().get(0).getImages();
 
         //when
         ResultActions result = BoardAcceptanceTestHelper.getImage(mvc, token, "/image/" + imagesUrls[0]);
@@ -2871,7 +2869,7 @@ public class BoardAcceptanceTest{
 
         ResultActions resultActions = BoardAcceptanceTestHelper.inquiryAllBoard(mvc, adminToken);
         BoardListResponse boardListResponse = objectMapper.readValue(resultActions.andReturn().getResponse().getContentAsString(), BoardListResponse.class);
-        String[] fileUrls = boardListResponse.getBoards()[0].getFiles();
+        String[] fileUrls = boardListResponse.getBoards().get(0).getFiles();
         //when
         ResultActions result = BoardAcceptanceTestHelper.downloadFile(mvc, adminToken, "/file/" + fileUrls[0]);
 
@@ -2920,7 +2918,7 @@ public class BoardAcceptanceTest{
 
         ResultActions resultActions = BoardAcceptanceTestHelper.inquiryAllBoard(mvc, adminToken);
         BoardListResponse boardListResponse = objectMapper.readValue(resultActions.andReturn().getResponse().getContentAsString(), BoardListResponse.class);
-        String[] fileUrls = boardListResponse.getBoards()[0].getFiles();
+        String[] fileUrls = boardListResponse.getBoards().get(0).getFiles();
 
         //when
         ResultActions result = BoardAcceptanceTestHelper.downloadFile(mvc, token, "/file/" + fileUrls[0]);

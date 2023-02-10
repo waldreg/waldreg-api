@@ -1,26 +1,21 @@
 package org.waldreg.repository.board;
 
 import java.util.List;
-import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 import org.waldreg.board.board.spi.BoardRepository;
 import org.waldreg.board.comment.spi.CommentInBoardRepository;
 import org.waldreg.board.dto.BoardDto;
-import org.waldreg.board.dto.BoardServiceReactionType;
 import org.waldreg.board.dto.CommentDto;
 import org.waldreg.board.dto.ReactionDto;
-import org.waldreg.board.dto.UserDto;
 import org.waldreg.board.reaction.spi.ReactionInBoardRepository;
 import org.waldreg.domain.board.Board;
 import org.waldreg.domain.board.comment.Comment;
 import org.waldreg.domain.board.reaction.Reaction;
-import org.waldreg.domain.board.reaction.ReactionType;
 import org.waldreg.domain.category.Category;
 import org.waldreg.repository.MemoryBoardStorage;
 import org.waldreg.repository.MemoryCategoryStorage;
 import org.waldreg.repository.MemoryCommentStorage;
-import org.waldreg.repository.MemoryUserStorage;
 
 @Repository
 public class MemoryBoardRepository implements BoardRepository, CommentInBoardRepository, ReactionInBoardRepository{
@@ -28,17 +23,14 @@ public class MemoryBoardRepository implements BoardRepository, CommentInBoardRep
     private final MemoryBoardStorage memoryBoardStorage;
     private final MemoryCommentStorage memoryCommentStorage;
     private final MemoryCategoryStorage memoryCategoryStorage;
-    private final MemoryUserStorage memoryUserStorage;
     private final BoardMapper boardMapper;
-
     private final CommentInBoardMapper commentInBoardMapper;
 
     @Autowired
-    public MemoryBoardRepository(MemoryBoardStorage memoryBoardStorage, MemoryCommentStorage memoryCommentStorage, MemoryCategoryStorage memoryCategoryStorage, MemoryUserStorage memoryUserStorage, BoardMapper boardMapper, CommentInBoardMapper commentInBoardMapper){
+    public MemoryBoardRepository(MemoryBoardStorage memoryBoardStorage, MemoryCommentStorage memoryCommentStorage, MemoryCategoryStorage memoryCategoryStorage, BoardMapper boardMapper, CommentInBoardMapper commentInBoardMapper){
         this.memoryBoardStorage = memoryBoardStorage;
         this.memoryCommentStorage = memoryCommentStorage;
         this.memoryCategoryStorage = memoryCategoryStorage;
-        this.memoryUserStorage = memoryUserStorage;
         this.boardMapper = boardMapper;
         this.commentInBoardMapper = commentInBoardMapper;
     }
@@ -66,7 +58,7 @@ public class MemoryBoardRepository implements BoardRepository, CommentInBoardRep
     public ReactionDto getReactionDto(int boardId){
         Board board = memoryBoardStorage.inquiryBoardById(boardId);
         Reaction reaction = board.getReactions();
-        return  boardMapper.reactionDomainToReactionDto(reaction);
+        return boardMapper.reactionDomainToReactionDto(reaction);
     }
 
     @Override
@@ -123,7 +115,7 @@ public class MemoryBoardRepository implements BoardRepository, CommentInBoardRep
     }
 
     private void deleteCommentInBoardCommentList(List<Comment> commentList){
-        for(Comment comment : commentList){
+        for (Comment comment : commentList){
             memoryCommentStorage.deleteComment(comment.getId());
         }
     }
@@ -132,7 +124,7 @@ public class MemoryBoardRepository implements BoardRepository, CommentInBoardRep
         int startIdx = 1;
         int maxIdx = getBoardMaxIdxByCategory(categoryId);
         Category category = memoryCategoryStorage.inquiryCategoryById(categoryId);
-        List<BoardDto> boardDtoList = inquiryAllBoardByCategory(categoryId,startIdx,maxIdx);
+        List<BoardDto> boardDtoList = inquiryAllBoardByCategory(categoryId, startIdx, maxIdx);
         category.setBoardList(boardMapper.boardDtoListToBoardDomainList(boardDtoList));
         memoryCategoryStorage.modifyCategory(category);
     }

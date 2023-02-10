@@ -46,41 +46,8 @@ public class DefaultBoardManager implements BoardManager{
         BoardDto boardDto = buildBoardDto(request);
         boardDto.setFileUrls(saveFileNameList);
         boardDto.setImageUrls(saveImageNameList);
-
         boardDto = boardRepository.createBoard(boardDto);
         boardInCategoryRepository.addBoardInCategoryBoardList(boardDto);
-    }
-
-    private void throwIfCategoryDoesNotExist(int categoryId){
-        if (!boardInCategoryRepository.isExistCategory(categoryId)){
-            throw new CategoryDoesNotExistException("BOARD-403","Unknown category id : " + categoryId);
-        }
-    }
-
-    private List<String> getFileNameList(){
-        List<String> fileNameList = new ArrayList<>();
-        for (Future<String> future : fileInfoGettable.getSavedFileNameList()){
-            String fileName = throwIfFileDoesNotSaved(future);
-            fileNameList.add(fileName);
-        }
-        return fileNameList;
-    }
-
-    private List<String> getImageNameList(){
-        List<String> fileNameList = new ArrayList<>();
-        for (Future<String> future : fileInfoGettable.getSavedImageNameList()){
-            String fileName = throwIfFileDoesNotSaved(future);
-            fileNameList.add(fileName);
-        }
-        return fileNameList;
-    }
-
-    private String throwIfFileDoesNotSaved(Future<String> future){
-        try{
-            return future.get();
-        } catch (InterruptedException | ExecutionException e){
-            throw new FileDoesNotSavedException("BOARD-502","File does not saved");
-        }
     }
 
     private BoardDto buildBoardDto(BoardRequest request){
@@ -104,12 +71,6 @@ public class DefaultBoardManager implements BoardManager{
         return boardDto;
     }
 
-    private void throwIfBoardDoesNotExist(int boardId){
-        if (!boardRepository.isExistBoard(boardId)){
-            throw new BoardDoesNotExistException("BOARD-401","Unknown board id : " + boardId);
-        }
-    }
-
     @Override
     public List<BoardDto> inquiryAllBoard(int from, int to){
         throwIfInvalidRangeDetected(from, to);
@@ -117,32 +78,6 @@ public class DefaultBoardManager implements BoardManager{
         to = adjustEndIdx(from, to, maxIdx);
         List<BoardDto> boardDtoList = boardRepository.inquiryAllBoard(from, to);
         return setCategoryName(boardDtoList);
-    }
-
-    private void throwIfInvalidRangeDetected(int from, int to){
-        if (from > to || from < 1){
-            throw new InvalidRangeException("BOARD-404","Invalid range from : " + from + " to : " + to);
-        }
-    }
-
-    private int adjustEndIdx(int from, int to, int maxIdx){
-        if (maxIdx < to){
-            to = maxIdx;
-        }
-        if (to - from + 1 > PerPage.PER_PAGE){
-            return from + PerPage.PER_PAGE - 1;
-        }
-        return to;
-    }
-
-    private List<BoardDto> setCategoryName(List<BoardDto> boardDtoList){
-        List<BoardDto> updatedBoardDtoList = new ArrayList<>();
-        for (BoardDto boardDto : boardDtoList){
-            CategoryDto categoryDto = boardInCategoryRepository.inquiryCategoryById(boardDto.getCategoryId());
-            boardDto.setCategoryName(categoryDto.getCategoryName());
-            updatedBoardDtoList.add(boardDto);
-        }
-        return updatedBoardDtoList;
     }
 
     @Override
@@ -183,6 +118,32 @@ public class DefaultBoardManager implements BoardManager{
         return setCategoryName(boardDtoList);
     }
 
+    private int adjustEndIdx(int from, int to, int maxIdx){
+        if (maxIdx < to){
+            to = maxIdx;
+        }
+        if (to - from + 1 > PerPage.PER_PAGE){
+            return from + PerPage.PER_PAGE - 1;
+        }
+        return to;
+    }
+
+    private void throwIfInvalidRangeDetected(int from, int to){
+        if (from > to || from < 1){
+            throw new InvalidRangeException("BOARD-404", "Invalid range from : " + from + " to : " + to);
+        }
+    }
+
+    private List<BoardDto> setCategoryName(List<BoardDto> boardDtoList){
+        List<BoardDto> updatedBoardDtoList = new ArrayList<>();
+        for (BoardDto boardDto : boardDtoList){
+            CategoryDto categoryDto = boardInCategoryRepository.inquiryCategoryById(boardDto.getCategoryId());
+            boardDto.setCategoryName(categoryDto.getCategoryName());
+            updatedBoardDtoList.add(boardDto);
+        }
+        return updatedBoardDtoList;
+    }
+
     @Override
     public void modifyBoard(BoardRequest boardRequest){
         throwIfBoardDoesNotExist(boardRequest.getId());
@@ -192,16 +153,36 @@ public class DefaultBoardManager implements BoardManager{
         boardRepository.modifyBoard(updatedBoardDto);
     }
 
-    private BoardDto updateBoardDto(BoardDto boardDto, BoardRequest boardRequest){
+    private void throwIfCategoryDoesNotExist(int categoryId){
+        if (!boardInCategoryRepository.isExistCategory(categoryId)){
+            throw new CategoryDoesNotExistException("BOARD-403", "Unknown category id : " + categoryId);
+        }
+    }
+
+    @Override
+    public void modifyBoardFileList(BoardRequest boardRequest){
+        BoardDto boardDto = boardRepository.inquiryBoardById(boardRequest.getId());
         deleteFilePathList(boardDto, boardRequest);
-        setBoardDto(boardDto, boardRequest);
         addSavedFilePathList(boardDto, boardRequest);
+        boardRepository.modifyBoard(boardDto);
+    }
+
+    private BoardDto updateBoardDto(BoardDto boardDto, BoardRequest boardRequest){
+        setBoardDto(boardDto, boardRequest);
         return boardDto;
     }
 
     private BoardDto deleteFilePathList(BoardDto boardDto, BoardRequest boardRequest){
         Future<Boolean> future = fileInfoGettable.isFileDeleteSuccess();
+        if (future == null){
+            return boardDto;
+        }
         throwIfFileDoesNotDeleted(future);
+        updateFileList(boardDto, boardRequest);
+        return boardDto;
+    }
+
+    private BoardDto updateFileList(BoardDto boardDto, BoardRequest boardRequest){
         List<String> deleteFileNameList = boardRequest.getDeleteFileNameList();
         List<String> updatedFilePaths = deleteFilePath(boardDto.getFileUrls(), deleteFileNameList);
         List<String> updatedImagePaths = deleteFilePath(boardDto.getImageUrls(), deleteFileNameList);
@@ -214,7 +195,7 @@ public class DefaultBoardManager implements BoardManager{
         try{
             future.get();
         } catch (InterruptedException | ExecutionException e){
-            throw new FileDoesNotSavedException("BOARD-502","File does not saved");
+            throw new FileDoesNotSavedException("BOARD-502", "File does not saved");
         }
 
     }
@@ -244,6 +225,32 @@ public class DefaultBoardManager implements BoardManager{
         return boardDto;
     }
 
+    private List<String> getFileNameList(){
+        List<String> fileNameList = new ArrayList<>();
+        for (Future<String> future : fileInfoGettable.getSavedFileNameList()){
+            String fileName = throwIfFileDoesNotSaved(future);
+            fileNameList.add(fileName);
+        }
+        return fileNameList;
+    }
+
+    private List<String> getImageNameList(){
+        List<String> fileNameList = new ArrayList<>();
+        for (Future<String> future : fileInfoGettable.getSavedImageNameList()){
+            String fileName = throwIfFileDoesNotSaved(future);
+            fileNameList.add(fileName);
+        }
+        return fileNameList;
+    }
+
+    private String throwIfFileDoesNotSaved(Future<String> future){
+        try{
+            return future.get();
+        } catch (InterruptedException | ExecutionException e){
+            throw new FileDoesNotSavedException("BOARD-502", "File does not saved");
+        }
+    }
+
     private List<String> saveFilePath(List<String> beforeFilePathList, List<String> requestFilePathList){
         for (String requestFilePath : requestFilePathList){
             beforeFilePathList.add(requestFilePath);
@@ -255,6 +262,12 @@ public class DefaultBoardManager implements BoardManager{
     public void deleteBoard(int boardId){
         throwIfBoardDoesNotExist(boardId);
         boardRepository.deleteBoard(boardId);
+    }
+
+    private void throwIfBoardDoesNotExist(int boardId){
+        if (!boardRepository.isExistBoard(boardId)){
+            throw new BoardDoesNotExistException("BOARD-401", "Unknown board id : " + boardId);
+        }
     }
 
 }

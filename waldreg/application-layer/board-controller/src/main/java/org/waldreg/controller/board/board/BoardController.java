@@ -1,14 +1,12 @@
 
 package org.waldreg.controller.board.board;
 
-import java.util.ArrayList;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
-import org.springframework.util.ObjectUtils;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -73,18 +71,6 @@ public class BoardController{
         boardManager.createBoard(boardRequest);
     }
 
-    private void saveAllFile(List<MultipartFile> multipartFileList){
-        for (MultipartFile file : multipartFileList){
-            fileManager.saveFile(file);
-        }
-    }
-
-    private void deleteAllFile(List<String> deleteUrls){
-        for (String url : deleteUrls){
-            fileManager.deleteFile(url);
-        }
-    }
-
     @Authenticating
     @PermissionVerifying("Board read manager")
     @GetMapping("/board/{board-id}")
@@ -109,10 +95,6 @@ public class BoardController{
         return controllerBoardMapper.boardDtoListToBoardListResponse(boardDtoList);
     }
 
-    private boolean isInvalidRange(Integer from, Integer to){
-        return from == null || to == null;
-    }
-
     private boolean isCategoryIdNull(Integer categoryId){
         return categoryId == null;
     }
@@ -128,16 +110,23 @@ public class BoardController{
                             @RequestPart(value = "file", required = false) List<MultipartFile> fileList
     ){
         throwIfDoseNotHaveBoardModifyPermission(authenticateVerifyState, permissionVerifyState);
+        BoardRequest boardRequest = controllerBoardMapper.boardUpdateRequestToBoardRequest(boardUpdateRequest);
+        boardRequest.setId(boardId);
+        boardManager.modifyBoard(boardRequest);
         if (imageFileList != null){
             saveAllFile(imageFileList);
         }
         if (fileList != null){
             saveAllFile(fileList);
         }
-        deleteAllFile(boardUpdateRequest.getDeleteFileUrls());
-        BoardRequest boardRequest = controllerBoardMapper.boardUpdateRequestToBoardRequest(boardUpdateRequest);
-        boardRequest.setId(boardId);
-        boardManager.modifyBoard(boardRequest);
+        deleteFile(boardUpdateRequest.getDeleteFileUrls());
+        boardManager.modifyBoardFileList(boardRequest);
+    }
+
+    private void saveAllFile(List<MultipartFile> multipartFileList){
+        for (MultipartFile file : multipartFileList){
+            fileManager.saveFile(file);
+        }
     }
 
     private void throwIfDoseNotHaveBoardModifyPermission(AuthenticateVerifyState authenticateVerifyState, PermissionVerifyState permissionVerifyState){
@@ -153,7 +142,20 @@ public class BoardController{
                                 AuthenticateVerifyState authenticateVerifyState,
                                 PermissionVerifyState permissionVerifyState){
         throwIfDoseNotHaveBoardDeletePermission(authenticateVerifyState, permissionVerifyState);
+        deleteFileByBoardId(boardId);
         boardManager.deleteBoard(boardId);
+    }
+
+    private void deleteFileByBoardId(int boardId){
+        BoardDto boardDto = boardManager.inquiryBoardById(boardId);
+        deleteFile(boardDto.getFileUrls());
+        deleteFile(boardDto.getImageUrls());
+    }
+
+    private void deleteFile(List<String> urlList){
+        for (String url : urlList){
+            fileManager.deleteFile(url);
+        }
     }
 
     private void throwIfDoseNotHaveBoardDeletePermission(AuthenticateVerifyState authenticateVerifyState, PermissionVerifyState permissionVerifyState){
@@ -171,6 +173,10 @@ public class BoardController{
         }
         List<BoardDto> boardDtoList = type.searchRunnable.search(keyword, from, to);
         return controllerBoardMapper.boardDtoListToBoardListResponse(boardDtoList);
+    }
+
+    private boolean isInvalidRange(Integer from, Integer to){
+        return from == null || to == null;
     }
 
     @ExceptionHandler({MethodArgumentTypeMismatchException.class})
