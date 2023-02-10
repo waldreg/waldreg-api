@@ -21,6 +21,8 @@ public interface BoardManager{
 
     void modifyBoard(BoardRequest boardRequest);
 
+    void modifyBoardFileList(BoardRequest boardRequest);
+
     void deleteBoard(int boardId);
 
 

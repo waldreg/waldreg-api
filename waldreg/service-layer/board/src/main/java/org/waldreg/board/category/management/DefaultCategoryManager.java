@@ -22,13 +22,6 @@ public class DefaultCategoryManager implements CategoryManager{
         categoryRepository.createCategory(categoryDto);
     }
 
-    private void throwIfCategoryNameDuplicated(String categoryName){
-        if (categoryRepository.isDuplicateCategoryName(categoryName)){
-            throw new DuplicateCategoryNameException("BOARD-412","Duplicated category name : " + categoryName);
-        }
-    }
-
-
     @Override
     public List<CategoryDto> inquiryAllCategory(){
         return categoryRepository.inquiryAllCategory();
@@ -41,9 +34,9 @@ public class DefaultCategoryManager implements CategoryManager{
         categoryRepository.modifyCategory(categoryDto);
     }
 
-    private void throwIfCategoryDoesNotExist(int categoryId){
-        if (!categoryRepository.isExistCategory(categoryId)){
-            throw new CategoryDoesNotExistException("BOARD-403","Unknown category id : " + categoryId);
+    private void throwIfCategoryNameDuplicated(String categoryName){
+        if (categoryRepository.isDuplicateCategoryName(categoryName)){
+            throw new DuplicateCategoryNameException("BOARD-412", "Duplicated category name : " + categoryName);
         }
     }
 
@@ -51,6 +44,12 @@ public class DefaultCategoryManager implements CategoryManager{
     public void deleteCategory(int id){
         throwIfCategoryDoesNotExist(id);
         categoryRepository.deleteCategory(id);
+    }
+
+    private void throwIfCategoryDoesNotExist(int categoryId){
+        if (!categoryRepository.isExistCategory(categoryId)){
+            throw new CategoryDoesNotExistException("BOARD-403", "Unknown category id : " + categoryId);
+        }
     }
 
 

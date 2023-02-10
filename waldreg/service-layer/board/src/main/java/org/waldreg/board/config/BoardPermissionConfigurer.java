@@ -10,7 +10,6 @@ import org.waldreg.character.permission.extension.PermissionExtension;
 @Configuration
 public class BoardPermissionConfigurer{
 
-
     private final PermissionExtension permissionExtension;
 
     @Autowired
@@ -154,6 +153,7 @@ public class BoardPermissionConfigurer{
                         .build()
         );
     }
+
     private void setReactionManager(){
         permissionExtension.extend(
                 DefaultPermissionUnit.builder()

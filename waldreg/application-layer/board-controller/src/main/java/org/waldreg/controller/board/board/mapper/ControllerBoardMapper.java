@@ -98,7 +98,7 @@ public class ControllerBoardMapper{
         }
         return BoardListResponse.builder()
                 .maxIdx(boardResponseList.size())
-                .boards(boardResponseList.toArray(new BoardResponse[0]))
+                .boards(boardResponseList)
                 .build();
     }
 

@@ -1,13 +1,14 @@
 package org.waldreg.controller.board.board.response;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import java.util.List;
 
 public class BoardListResponse{
 
     @JsonProperty("max_idx")
     private int maxIdx;
 
-    private BoardResponse[] boards;
+    private List<BoardResponse> boards;
 
     public BoardListResponse(){}
 
@@ -28,24 +29,26 @@ public class BoardListResponse{
         this.maxIdx = maxIdx;
     }
 
-    public BoardResponse[] getBoards(){
+    public List<BoardResponse> getBoards(){
         return boards;
     }
 
-    public void setBoards(BoardResponse[] boards){
+    public void setBoards(List<BoardResponse> boards){
         this.boards = boards;
     }
 
     public final static class Builder{
+
         private int maxIdx;
 
-        private BoardResponse[] boards;
+        private List<BoardResponse> boards;
 
         public Builder maxIdx(int maxIdx){
             this.maxIdx = maxIdx;
             return this;
         }
-        public Builder boards(BoardResponse[] boards){
+
+        public Builder boards(List<BoardResponse> boards){
             this.boards = boards;
             return this;
         }

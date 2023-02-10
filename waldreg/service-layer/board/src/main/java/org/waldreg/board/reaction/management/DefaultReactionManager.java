@@ -50,11 +50,19 @@ public class DefaultReactionManager implements ReactionManager{
 
     private BoardServiceReactionType findBoardServiceReactionTypeByUserId(Map<BoardServiceReactionType, List<UserDto>> reactionMap, String userId){
         for (Map.Entry<BoardServiceReactionType, List<UserDto>> typeList : reactionMap.entrySet()){
-            List<UserDto> userDtoList = typeList.getValue();
-            for (UserDto userDto : userDtoList){
-                if (userDto.getUserId().equals(userId)){
-                    return typeList.getKey();
-                }
+            BoardServiceReactionType reactionType = getReactionType(typeList,userId);
+            if(reactionType != null){
+                return reactionType;
+            }
+        }
+        return null;
+    }
+
+    private BoardServiceReactionType getReactionType(Map.Entry<BoardServiceReactionType, List<UserDto>> typeList, String userId){
+        List<UserDto> userDtoList = typeList.getValue();
+        for (UserDto userDto : userDtoList){
+            if (userDto.getUserId().equals(userId)){
+                return typeList.getKey();
             }
         }
         return null;
