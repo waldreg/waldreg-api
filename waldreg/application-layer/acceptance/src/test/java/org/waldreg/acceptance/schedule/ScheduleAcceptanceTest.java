@@ -96,8 +96,8 @@ public class ScheduleAcceptanceTest{
         //given
         String adminToken = AuthenticationAcceptanceTestHelper.getAdminToken(mvc, objectMapper);
 
-        String scheduleTitle = "seminar";
-        String scheduleContent = "BFS";
+        String scheduleTitle = "ㅇㅇ";
+        String scheduleContent = "ㅇ";
         String startedAt = "2023-01-24T20:52";
         String finishAt = "2023-01-31T23:59";
         ScheduleRequest scheduleRequest = ScheduleRequest.builder()
@@ -125,8 +125,8 @@ public class ScheduleAcceptanceTest{
         //given
         String adminToken = AuthenticationAcceptanceTestHelper.getAdminToken(mvc, objectMapper);
 
-        String scheduleTitle = "seminar";
-        String scheduleContent = "BFS";
+        String scheduleTitle = "adf";
+        String scheduleContent = "ff";
         String startedAt = "2023-01-24T20:52";
         String finishAt = "2023-01-31T23:59";
         int cycle = 123;
