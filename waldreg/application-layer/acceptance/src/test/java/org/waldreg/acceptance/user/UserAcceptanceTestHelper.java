@@ -19,6 +19,33 @@ public class UserAcceptanceTestHelper{
                 .content(content));
     }
 
+    public static ResultActions inquiryAllUserInJoiningPool(MockMvc mvc, String token, int startIdx, int endIdx) throws Exception{
+        return mvc.perform(MockMvcRequestBuilders
+                                   .get("/user/?from={from}&to={to}", startIdx, endIdx)
+                                   .header(HttpHeaders.AUTHORIZATION, token)
+                                   .accept(MediaType.APPLICATION_JSON)
+                                   .header("api-version", apiVersion));
+    }
+
+    public static ResultActions approveJoinRequest(MockMvc mvc, String token, String userId) throws Exception{
+        return mvc.perform(MockMvcRequestBuilders
+                                   .get("/user/joiningpool/{user-id}",userId)
+                                   .accept(MediaType.APPLICATION_JSON)
+                                   .header("api-version", apiVersion)
+                                   .header(HttpHeaders.AUTHORIZATION, token));
+    }
+
+
+    public static ResultActions rejectJoinRequest(MockMvc mvc, String token, String userId) throws Exception{
+        return mvc.perform(MockMvcRequestBuilders
+                                   .delete("/user/joiningpool/{user-id}",userId)
+                                   .accept(MediaType.APPLICATION_JSON)
+                                   .header("api-version", apiVersion)
+                                   .header(HttpHeaders.AUTHORIZATION, token));
+    }
+
+
+
     public static ResultActions inquiryUserWithToken(MockMvc mvc, String userId, String token) throws Exception{
         return mvc.perform(MockMvcRequestBuilders
                 .get("/user/{user-id}", userId)
