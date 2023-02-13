@@ -4,6 +4,7 @@ import java.time.LocalDate;
 
 public final class WaiverDto{
 
+    private final int id;
     private final LocalDate waiverDate;
     private final String waiverReason;
 
@@ -12,6 +13,7 @@ public final class WaiverDto{
     }
 
     private WaiverDto(Builder builder){
+        this.id = builder.id;
         this.waiverDate = builder.waiverDate;
         this.waiverReason = builder.waiverReason;
     }
@@ -20,20 +22,30 @@ public final class WaiverDto{
         return new Builder();
     }
 
+    public int getId(){
+        return id;
+    }
+
     public LocalDate getWaiverDate(){
         return waiverDate;
     }
 
-    public String waiverReason(){
+    public String getWaiverReason(){
         return waiverReason;
     }
 
     public static final class Builder{
 
+        private int id;
         private LocalDate waiverDate;
         private String waiverReason;
 
         private Builder(){}
+
+        public Builder id(int id){
+            this.id = id;
+            return this;
+        }
 
         public Builder waiverDate(LocalDate waiverDate){
             this.waiverDate = waiverDate;
