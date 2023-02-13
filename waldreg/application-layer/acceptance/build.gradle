@@ -1,47 +1,3 @@
-<<<<<<< HEAD
-plugins {
-    id 'org.springframework.boot' version '2.7.1'
-    id 'io.spring.dependency-management' version '1.1.0'
-    id 'java'
-}
-
-sourceCompatibility = '11'
-targetCompatibility = '11'
-
-group 'org.waldreg'
-
-version '0.3.1-SNAPSHOT'
-
-jar {
-    enabled = false;
-}
-
-repositories {
-    mavenCentral()
-}
-
-dependencies {
-    implementation project(':application-layer:board-controller')
-    implementation project(':application-layer:character-controller')
-    implementation project(':application-layer:user-controller')
-    implementation project(':application-layer:auth-controller')
-    implementation project(':application-layer:schedule-controller')
-    implementation project(':application-layer:reward-controller')
-    implementation project(':application-layer:application-configurer')
-
-    implementation 'org.springframework.boot:spring-boot-starter'
-    implementation 'org.springframework.boot:spring-boot-starter-web'
-    testImplementation 'org.springframework.boot:spring-boot-starter-test'
-
-    implementation 'org.springframework.boot:spring-boot-starter-websocket'
-
-    testImplementation 'org.junit.jupiter:junit-jupiter-api:5.8.1'
-    testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.8.1'
-}
-
-test {
-    useJUnitPlatform()
-=======
 plugins {
     id 'org.springframework.boot' version '2.7.1'
     id 'io.spring.dependency-management' version '1.1.0'
@@ -82,5 +38,4 @@ dependencies {
 
 test {
     useJUnitPlatform()
->>>>>>> origin/main
 }
