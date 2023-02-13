@@ -89,6 +89,7 @@ class WaiverTest{
     void CREATE_NEW_WAIVER_FAIL_TOO_FAR_WAIVER_DATE_TEST(){
         // given
         WaiverDto request = WaiverDto.builder()
+                .waiverId(1)
                 .id(1)
                 .waiverDate(LocalDate.now().plusDays(AttendanceRule.ATTENDANCE_SAVED_DATE+1))
                 .waiverReason("for test")

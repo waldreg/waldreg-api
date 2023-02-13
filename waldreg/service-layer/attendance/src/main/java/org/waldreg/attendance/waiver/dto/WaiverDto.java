@@ -28,7 +28,7 @@ public final class WaiverDto{
         return new Builder();
     }
 
-    public int getWaiverId(){
+    public Integer getWaiverId(){
         return waiverId;
     }
 
