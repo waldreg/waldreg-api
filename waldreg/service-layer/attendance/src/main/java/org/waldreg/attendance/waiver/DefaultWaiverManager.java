@@ -1,6 +1,7 @@
 package org.waldreg.attendance.waiver;
 
 import java.time.LocalDate;
+import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.waldreg.attendance.exception.DoesNotRegisteredAttendanceException;
@@ -40,6 +41,11 @@ public class DefaultWaiverManager implements WaiverManager{
         if(!waiverRepository.isAttendanceTarget(id)){
             throw new DoesNotRegisteredAttendanceException();
         }
+    }
+
+    @Override
+    public List<WaiverDto> readWaiverList(){
+        return waiverRepository.readWaiverList();
     }
 
 }
