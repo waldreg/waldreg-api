@@ -2,7 +2,7 @@ package org.waldreg.attendance.management.dto;
 
 import org.waldreg.attendance.type.AttendanceType;
 
-public class AttendanceTargetDto{
+public final class AttendanceTargetDto{
 
     private final int id;
     private final String userId;

@@ -1,6 +1,7 @@
 package org.waldreg.attendance.management.spi;
 
 import java.util.Optional;
+import org.waldreg.attendance.management.dto.AttendanceStatusChangeDto;
 import org.waldreg.attendance.management.dto.AttendanceTargetDto;
 
 public interface AttendanceRepository{
@@ -10,5 +11,7 @@ public interface AttendanceRepository{
     void deleteRegisteredAttendanceTarget(int id);
 
     Optional<AttendanceTargetDto> getAttendanceTarget(int id);
+
+    void changeAttendanceStatus(AttendanceStatusChangeDto attendanceStatusChangeDto);
 
 }
