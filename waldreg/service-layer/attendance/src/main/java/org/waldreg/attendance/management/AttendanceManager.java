@@ -1,5 +1,8 @@
 package org.waldreg.attendance.management;
 
+import java.time.LocalDate;
+import java.util.List;
+import org.waldreg.attendance.management.dto.AttendanceDayDto;
 import org.waldreg.attendance.management.dto.AttendanceStatusChangeDto;
 import org.waldreg.attendance.management.dto.AttendanceTargetDto;
 
@@ -9,8 +12,10 @@ public interface AttendanceManager{
 
     void deleteRegisteredAttendanceTarget(int id);
 
-    AttendanceTargetDto getAttendanceTarget(int id);
+    AttendanceTargetDto readAttendanceTarget(int id);
 
     void changeAttendanceStatus(AttendanceStatusChangeDto attendanceStatusChangeDto);
+
+    List<AttendanceDayDto> readAttendanceStatusList(LocalDate from, LocalDate to);
 
 }
