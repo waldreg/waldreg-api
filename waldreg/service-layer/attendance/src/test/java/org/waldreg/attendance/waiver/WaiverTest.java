@@ -1,6 +1,7 @@
 package org.waldreg.attendance.waiver;
 
 import java.time.LocalDate;
+import java.util.List;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -94,6 +95,32 @@ class WaiverTest{
 
         // then
         Assertions.assertThrows(TooFarDateException.class, () -> waiverManager.waive(request));
+    }
+
+    @Test
+    @DisplayName("출석 면제 요청 리스트 조회 성공 테스트")
+    void READ_ATTENDANCE_WAIVER_LIST_SUCCESS_TEST(){
+        WaiverDto waiverDto = WaiverDto.builder()
+                .waiverId(1)
+                .id(2)
+                .userId("hello world")
+                .userName("hello world!!!")
+                .waiverDate(LocalDate.now())
+                .waiverReason("for test")
+                .build();
+
+        // when
+        Mockito.when(waiverRepository.readWaiverList()).thenReturn(List.of(waiverDto));
+
+        // then
+        Assertions.assertAll(
+                () -> Assertions.assertEquals(waiverDto.getWaiverId(), waiverDto.getWaiverId()),
+                () -> Assertions.assertEquals(waiverDto.getId(), waiverDto.getId()),
+                () -> Assertions.assertEquals(waiverDto.getUserId(), waiverDto.getUserId()),
+                () -> Assertions.assertEquals(waiverDto.getUserName(), waiverDto.getUserName()),
+                () -> Assertions.assertEquals(waiverDto.getWaiverDate(), waiverDto.getWaiverDate()),
+                () -> Assertions.assertEquals(waiverDto.getWaiverReason(), waiverDto.getWaiverReason())
+        );
     }
 
 }
