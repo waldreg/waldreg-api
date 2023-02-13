@@ -21,6 +21,30 @@ public class DefaultUserManager implements UserManager{
     }
 
     @Override
+    public List<UserDto> readUserJoiningPool(int startIdx, int endIdx){
+        int maxIdx = readJoiningPoolMaxIdx();
+        throwIfInvalidRangeDetected(startIdx, endIdx, maxIdx);
+        endIdx = adjustEndIdx(startIdx, endIdx, maxIdx);
+        return userRepository.readUserJoiningPool(startIdx, endIdx);
+    }
+
+    @Override
+    public int readJoiningPoolMaxIdx(){
+        return userRepository.readJoiningPoolMaxIdx();
+    }
+
+
+    @Override
+    public void approveJoin(String userId){
+        userRepository.approveJoin(userId);
+    }
+
+    @Override
+    public void rejectJoin(String userId){
+        userRepository.rejectJoin(userId);
+    }
+
+    @Override
     public UserDto readUserById(int id){
         return userRepository.readUserById(id);
     }
@@ -63,7 +87,7 @@ public class DefaultUserManager implements UserManager{
     }
 
     private int adjustEndIdxToMaxIdx(int endIdx, int maxIdx){
-        if(endIdx>maxIdx){
+        if (endIdx > maxIdx){
             return maxIdx;
         }
         return endIdx;
