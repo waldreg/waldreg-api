@@ -45,7 +45,7 @@ public class MemoryScheduleStorage{
 
     public void updateScheduleById(int id, Schedule schedule){
         schedule.setId(id);
-        storage.put(id, schedule);
+        storage.replace(id, schedule);
     }
 
     public void deleteScheduleById(int id){

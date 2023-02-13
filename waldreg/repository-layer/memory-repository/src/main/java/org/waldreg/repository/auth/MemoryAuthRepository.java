@@ -3,6 +3,8 @@ package org.waldreg.repository.auth;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 import org.waldreg.domain.user.User;
+import org.waldreg.repository.MemoryBoardStorage;
+import org.waldreg.repository.MemoryCommentStorage;
 import org.waldreg.repository.MemoryUserStorage;
 import org.waldreg.token.dto.TokenUserDto;
 import org.waldreg.token.exception.PasswordMissMatchException;
@@ -12,10 +14,15 @@ import org.waldreg.token.spi.AuthRepository;
 public class MemoryAuthRepository implements AuthRepository{
 
     private final MemoryUserStorage memoryUserStorage;
+    private final MemoryBoardStorage memoryBoardStorage;
+
+    private final MemoryCommentStorage memoryCommentStorage;
 
     @Autowired
-    public MemoryAuthRepository(MemoryUserStorage memoryUserStorage){
+    public MemoryAuthRepository(MemoryUserStorage memoryUserStorage, MemoryBoardStorage memoryBoardStorage, MemoryCommentStorage memoryCommentStorage){
         this.memoryUserStorage = memoryUserStorage;
+        this.memoryBoardStorage = memoryBoardStorage;
+        this.memoryCommentStorage = memoryCommentStorage;
     }
 
     @Override
@@ -38,6 +45,26 @@ public class MemoryAuthRepository implements AuthRepository{
     @Override
     public TokenUserDto findUserById(int id){
         User user = memoryUserStorage.readUserById(id);
+        return TokenUserDto.builder()
+                .id(user.getId())
+                .userId(user.getUserId())
+                .userPassword(user.getUserPassword())
+                .build();
+    }
+
+    @Override
+    public TokenUserDto findUserByBoardId(int boardId){
+        User user = memoryBoardStorage.inquiryBoardById(boardId).getUser();
+        return TokenUserDto.builder()
+                .id(user.getId())
+                .userId(user.getUserId())
+                .userPassword(user.getUserPassword())
+                .build();
+    }
+
+    @Override
+    public TokenUserDto findUserByCommentId(int commentId){
+        User user = memoryCommentStorage.inquiryCommentById(commentId).getUser();
         return TokenUserDto.builder()
                 .id(user.getId())
                 .userId(user.getUserId())
