@@ -8,7 +8,7 @@ public class BoardCreateRequest{
     @NotBlank(message = "BOARD-409 Blank board title")
     private String title;
     private String content;
-    @JsonProperty("category-id")
+    @JsonProperty("category_id")
 
     private int categoryId;
 
