@@ -46,4 +46,6 @@ include 'service-layer:board'
 findProject(':service-layer:board')?.name = 'board'
 include 'core-layer:encrypt'
 findProject(':core-layer:encrypt')?.name = 'encrypt'
+include 'service-layer:attendance'
+findProject(':service-layer:attendance')?.name = 'attendance'
 
