@@ -1,10 +1,11 @@
-package org.waldreg.user.management;
+package org.waldreg.user.management.user;
 
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.waldreg.user.dto.UserDto;
 import org.waldreg.user.exception.InvalidRangeException;
+import org.waldreg.user.management.PerPage;
 import org.waldreg.user.spi.UserRepository;
 
 @Service
@@ -63,7 +64,7 @@ public class DefaultUserManager implements UserManager{
     }
 
     private int adjustEndIdxToMaxIdx(int endIdx, int maxIdx){
-        if(endIdx>maxIdx){
+        if (endIdx > maxIdx){
             return maxIdx;
         }
         return endIdx;

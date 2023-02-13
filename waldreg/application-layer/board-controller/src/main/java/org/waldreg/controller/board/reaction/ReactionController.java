@@ -9,7 +9,7 @@ import org.waldreg.board.dto.ReactionRequestDto;
 import org.waldreg.board.reaction.management.ReactionManager;
 import org.waldreg.character.aop.annotation.PermissionVerifying;
 import org.waldreg.token.aop.annotation.Authenticating;
-import org.waldreg.user.management.UserManager;
+import org.waldreg.user.management.user.UserManager;
 import org.waldreg.util.token.DecryptedTokenContextGetter;
 
 @RestController

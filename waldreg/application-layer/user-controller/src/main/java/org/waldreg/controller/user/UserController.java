@@ -27,7 +27,7 @@ import org.waldreg.token.aop.annotation.HeaderPasswordAuthenticating;
 import org.waldreg.token.aop.behavior.AuthFailBehavior;
 import org.waldreg.user.dto.UserDto;
 import org.waldreg.user.management.PerPage;
-import org.waldreg.user.management.UserManager;
+import org.waldreg.user.management.user.UserManager;
 import org.waldreg.util.token.DecryptedTokenContextGetter;
 
 @RestController
