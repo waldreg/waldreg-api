@@ -4,4 +4,6 @@ public interface AttendanceManager{
 
     void registerAttendanceTarget(int id);
 
+    void deleteRegisteredAttendanceTarget(int id);
+
 }

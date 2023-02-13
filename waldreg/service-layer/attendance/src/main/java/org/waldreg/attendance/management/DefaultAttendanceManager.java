@@ -25,6 +25,12 @@ public class DefaultAttendanceManager implements AttendanceManager{
         attendanceRepository.registerAttendanceTarget(id);
     }
 
+    @Override
+    public void deleteRegisteredAttendanceTarget(int id){
+        throwIfCannotFindUser(id);
+        attendanceRepository.deleteRegisteredAttendanceTarget(id);
+    }
+
     private void throwIfCannotFindUser(int id){
         if(!userExistChecker.isExistUser(id)){
             throw new UnknownUsersIdException(id);

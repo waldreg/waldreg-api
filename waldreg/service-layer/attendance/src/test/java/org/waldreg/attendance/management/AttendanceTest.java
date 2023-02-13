@@ -52,4 +52,31 @@ class AttendanceTest{
         Assertions.assertThrows(UnknownUsersIdException.class, () -> attendanceManager.registerAttendanceTarget(id));
     }
 
+    @Test
+    @DisplayName("출석 대상에서 제거 성공 테스트")
+    void DELETE_REGISTERED_ATTENDANCE_TARGET_SUCCESS_TEST(){
+        // given
+        int id = 1;
+
+        // when
+        Mockito.when(userExistChecker.isExistUser(id)).thenReturn(true);
+
+        // then
+        Assertions.assertDoesNotThrow(() -> attendanceManager.deleteRegisteredAttendanceTarget(id));
+    }
+
+    @Test
+    @DisplayName("출석 대상에서 제거 실패 테스트 - id에 해당하는 user를 찾을 수 없음")
+    void DELETE_REGISTERED_ATTENDANCE_TARGET_FAIL_CANNOT_FIND_USER_BY_ID(){
+        // given
+        int id = 1;
+
+        // when
+        Mockito.when(userExistChecker.isExistUser(id)).thenReturn(false);
+
+        // then
+        Assertions.assertThrows(UnknownUsersIdException.class,
+                () -> attendanceManager.deleteRegisteredAttendanceTarget(id));
+    }
+
 }

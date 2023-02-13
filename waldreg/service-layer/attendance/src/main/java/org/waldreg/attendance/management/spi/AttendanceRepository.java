@@ -4,4 +4,6 @@ public interface AttendanceRepository{
 
     void registerAttendanceTarget(int id);
 
+    void deleteRegisteredAttendanceTarget(int id);
+
 }
