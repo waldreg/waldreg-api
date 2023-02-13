@@ -7,7 +7,7 @@ import org.springframework.stereotype.Component;
 import org.waldreg.config.character.AdminCharacterCreatedEvent;
 import org.waldreg.user.dto.UserDto;
 import org.waldreg.user.exception.UnknownUserIdException;
-import org.waldreg.user.management.UserManager;
+import org.waldreg.user.management.user.UserManager;
 
 @Component
 public class AdminUserConfigurer{

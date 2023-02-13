@@ -14,10 +14,15 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.waldreg.character.management.CharacterManager;
 import org.waldreg.user.dto.UserDto;
 import org.waldreg.user.exception.InvalidRangeException;
+import org.waldreg.user.management.joiningpool.DefaultJoiningPoolManager;
+import org.waldreg.user.management.joiningpool.JoiningPoolManager;
+import org.waldreg.user.management.user.DefaultUserManager;
+import org.waldreg.user.management.user.UserManager;
+import org.waldreg.user.spi.JoiningPoolRepository;
 import org.waldreg.user.spi.UserRepository;
 
 @ExtendWith(SpringExtension.class)
-@ContextConfiguration(classes = {DefaultUserManager.class})
+@ContextConfiguration(classes = {DefaultUserManager.class, DefaultJoiningPoolManager.class})
 public class UserServiceTest{
 
     @MockBean
@@ -26,8 +31,14 @@ public class UserServiceTest{
     @Autowired
     private UserManager userManager;
 
+    @Autowired
+    private JoiningPoolManager joiningPoolManager;
+
     @MockBean
     private UserRepository userRepository;
+
+    @MockBean
+    private JoiningPoolRepository joiningPoolRepository;
 
     @Test
     @DisplayName("유저 생성 성공 테스트")
@@ -95,9 +106,9 @@ public class UserServiceTest{
         userManager.createUser(createRequest3);
         userDtoList.add(createRequest3);
         int maxIdx = userDtoList.size();
-        Mockito.when(userRepository.readJoiningPoolMaxIdx()).thenReturn(maxIdx);
-        Mockito.when(userRepository.readUserJoiningPool(Mockito.anyInt(), Mockito.anyInt())).thenReturn(userDtoList);
-        List<UserDto> result = userManager.readUserJoiningPool(stIdx, enIdx);
+        Mockito.when(joiningPoolRepository.readJoiningPoolMaxIdx()).thenReturn(maxIdx);
+        Mockito.when(joiningPoolRepository.readUserJoiningPool(Mockito.anyInt(), Mockito.anyInt())).thenReturn(userDtoList);
+        List<UserDto> result = joiningPoolManager.readUserJoiningPool(stIdx, enIdx);
 
         //then
         Assertions.assertAll(
@@ -154,11 +165,11 @@ public class UserServiceTest{
         userManager.createUser(createRequest3);
         userDtoList.add(createRequest3);
         int maxIdx = userDtoList.size();
-        Mockito.when(userRepository.readJoiningPoolMaxIdx()).thenReturn(maxIdx);
-        Mockito.when(userRepository.readUserJoiningPool(Mockito.anyInt(), Mockito.anyInt())).thenReturn(userDtoList);
+        Mockito.when(joiningPoolRepository.readJoiningPoolMaxIdx()).thenReturn(maxIdx);
+        Mockito.when(joiningPoolRepository.readUserJoiningPool(Mockito.anyInt(), Mockito.anyInt())).thenReturn(userDtoList);
 
         //then
-        Assertions.assertThrows(InvalidRangeException.class, () -> userManager.readUserList(stIdx, enIdx));
+        Assertions.assertThrows(InvalidRangeException.class, () -> joiningPoolManager.readUserJoiningPool(stIdx, enIdx));
     }
 
     @Test
@@ -178,10 +189,10 @@ public class UserServiceTest{
         List<UserDto> joiningPoolList = new ArrayList<>();
         joiningPoolList.add(createRequest);
         //when
-        Mockito.when(userRepository.readUserJoiningPool(Mockito.anyInt(), Mockito.anyInt())).thenReturn(joiningPoolList);
+        Mockito.when(joiningPoolRepository.readUserJoiningPool(Mockito.anyInt(), Mockito.anyInt())).thenReturn(joiningPoolList);
 
         //then
-        Assertions.assertDoesNotThrow(() -> userManager.approveJoin(joiningPoolList.get(0).getUserId()));
+        Assertions.assertDoesNotThrow(() -> joiningPoolRepository.approveJoin(joiningPoolList.get(0).getUserId()));
 
     }
 
@@ -202,10 +213,10 @@ public class UserServiceTest{
         List<UserDto> joiningPoolList = new ArrayList<>();
         joiningPoolList.add(createRequest);
         //when
-        Mockito.when(userRepository.readUserJoiningPool(Mockito.anyInt(), Mockito.anyInt())).thenReturn(joiningPoolList);
+        Mockito.when(joiningPoolRepository.readUserJoiningPool(Mockito.anyInt(), Mockito.anyInt())).thenReturn(joiningPoolList);
 
         //then
-        Assertions.assertDoesNotThrow(() -> userManager.rejectJoin(joiningPoolList.get(0).getUserId()));
+        Assertions.assertDoesNotThrow(() -> joiningPoolManager.rejectJoin(joiningPoolList.get(0).getUserId()));
 
     }
 
@@ -228,7 +239,7 @@ public class UserServiceTest{
 
         //when
         userManager.createUser(createRequest);
-        userManager.approveJoin(createRequest.getUserId());
+        joiningPoolManager.approveJoin(createRequest.getUserId());
         Mockito.when(userRepository.readUserById(Mockito.anyInt())).thenReturn(createRequest);
         UserDto result = userManager.readUserById(id);
 
@@ -258,7 +269,7 @@ public class UserServiceTest{
 
         //when
         userManager.createUser(createRequest);
-        userManager.approveJoin(createRequest.getUserId());
+        joiningPoolManager.approveJoin(createRequest.getUserId());
         Mockito.when(userRepository.readUserByUserId(Mockito.anyString())).thenReturn(createRequest);
         UserDto result = userManager.readUserByUserId(createRequest.getUserId());
 
@@ -311,13 +322,13 @@ public class UserServiceTest{
 
         //when
         userManager.createUser(createRequest);
-        userManager.approveJoin(createRequest.getUserId());
+        joiningPoolManager.approveJoin(createRequest.getUserId());
         userDtoList.add(createRequest);
         userManager.createUser(createRequest2);
-        userManager.approveJoin(createRequest2.getUserId());
+        joiningPoolManager.approveJoin(createRequest2.getUserId());
         userDtoList.add(createRequest2);
         userManager.createUser(createRequest3);
-        userManager.approveJoin(createRequest3.getUserId());
+        joiningPoolManager.approveJoin(createRequest3.getUserId());
         userDtoList.add(createRequest3);
         int maxIdx = userDtoList.size();
         Mockito.when(userRepository.readMaxIdx()).thenReturn(maxIdx);
@@ -355,7 +366,7 @@ public class UserServiceTest{
 
         //when
         userManager.createUser(createRequest);
-        userManager.approveJoin(createRequest.getUserId());
+        joiningPoolManager.approveJoin(createRequest.getUserId());
         userDtoList.add(createRequest);
         Mockito.when(userRepository.readMaxIdx()).thenReturn(maxIdx);
 
@@ -394,7 +405,7 @@ public class UserServiceTest{
 
         //when
         userManager.createUser(createRequest);
-        userManager.approveJoin(createRequest.getUserId());
+        joiningPoolManager.approveJoin(createRequest.getUserId());
         Mockito.when(userRepository.readUserById(Mockito.anyInt())).thenReturn(createRequest);
         UserDto result = userManager.readUserById(id);
         userManager.updateUser(result.getId(), createUpdateRequest);
@@ -434,7 +445,7 @@ public class UserServiceTest{
 
         //when
         userManager.createUser(createRequest);
-        userManager.approveJoin(createRequest.getUserId());
+        joiningPoolManager.approveJoin(createRequest.getUserId());
         Mockito.when(userRepository.readUserByUserId(Mockito.anyString())).thenReturn(createRequest);
         UserDto origin = userManager.readUserByUserId(createRequest.getUserId());
         userManager.updateCharacter(origin.getId(), updateCharacter);
@@ -463,7 +474,7 @@ public class UserServiceTest{
 
         //when
         userManager.createUser(createRequest);
-        userManager.approveJoin(createRequest.getUserId());
+        joiningPoolManager.approveJoin(createRequest.getUserId());
         Mockito.when(userRepository.readUserById(Mockito.anyInt())).thenReturn(createRequest);
 
         //then
@@ -488,7 +499,7 @@ public class UserServiceTest{
 
         //when
         userManager.createUser(createRequest);
-        userManager.approveJoin(createRequest.getUserId());
+        joiningPoolManager.approveJoin(createRequest.getUserId());
         Mockito.when(userRepository.readUserById(Mockito.anyInt())).thenReturn(createRequest);
 
         //then

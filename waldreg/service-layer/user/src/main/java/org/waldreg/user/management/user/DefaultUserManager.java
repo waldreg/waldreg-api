@@ -1,10 +1,11 @@
-package org.waldreg.user.management;
+package org.waldreg.user.management.user;
 
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.waldreg.user.dto.UserDto;
 import org.waldreg.user.exception.InvalidRangeException;
+import org.waldreg.user.management.PerPage;
 import org.waldreg.user.spi.UserRepository;
 
 @Service
@@ -18,30 +19,6 @@ public class DefaultUserManager implements UserManager{
     @Override
     public void createUser(UserDto userDto){
         userRepository.createUser(userDto);
-    }
-
-    @Override
-    public List<UserDto> readUserJoiningPool(int startIdx, int endIdx){
-        int maxIdx = readJoiningPoolMaxIdx();
-        throwIfInvalidRangeDetected(startIdx, endIdx, maxIdx);
-        endIdx = adjustEndIdx(startIdx, endIdx, maxIdx);
-        return userRepository.readUserJoiningPool(startIdx, endIdx);
-    }
-
-    @Override
-    public int readJoiningPoolMaxIdx(){
-        return userRepository.readJoiningPoolMaxIdx();
-    }
-
-
-    @Override
-    public void approveJoin(String userId){
-        userRepository.approveJoin(userId);
-    }
-
-    @Override
-    public void rejectJoin(String userId){
-        userRepository.rejectJoin(userId);
     }
 
     @Override

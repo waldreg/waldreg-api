@@ -1,4 +1,4 @@
-package org.waldreg.user.management;
+package org.waldreg.user.management.user;
 
 import java.util.List;
 import org.waldreg.user.dto.UserDto;
@@ -6,14 +6,6 @@ import org.waldreg.user.dto.UserDto;
 public interface UserManager{
 
     void createUser(UserDto userDto);
-
-    int readJoiningPoolMaxIdx();
-
-    List<UserDto> readUserJoiningPool(int stIdx, int enIdx);
-
-    void approveJoin(String userId);
-
-    void rejectJoin(String userId);
 
     UserDto readUserById(int id);
 
