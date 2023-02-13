@@ -6,7 +6,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.waldreg.attendance.exception.DoesNotRegisteredAttendanceException;
 import org.waldreg.attendance.exception.InvalidWaiverDateException;
+import org.waldreg.attendance.exception.UnknownAttendanceTypeException;
+import org.waldreg.attendance.exception.UnknownWaiverIdException;
 import org.waldreg.attendance.rule.valid.AttendanceDateValidator;
+import org.waldreg.attendance.type.AttendanceType;
 import org.waldreg.attendance.waiver.dto.WaiverDto;
 import org.waldreg.attendance.waiver.spi.WaiverRepository;
 
@@ -46,6 +49,22 @@ public class DefaultWaiverManager implements WaiverManager{
     @Override
     public List<WaiverDto> readWaiverList(){
         return waiverRepository.readWaiverList();
+    }
+
+    @Override
+    public void acceptWaiver(int waiverId, AttendanceType attendanceType){
+        WaiverDto waiverDto = waiverRepository.readWaiverByWaiverId(waiverId).orElseThrow(
+                () -> {throw new UnknownWaiverIdException(waiverId);}
+        );
+        throwIfUnknownAttendanceType(attendanceType);
+        waiverRepository.acceptWaiver(waiverDto.getId(), waiverDto.getWaiverDate(), attendanceType);
+        waiverRepository.deleteWaiver(waiverDto.getWaiverId());
+    }
+
+    private void throwIfUnknownAttendanceType(AttendanceType attendanceType){
+        if(attendanceType == null){
+            throw new UnknownAttendanceTypeException(null);
+        }
     }
 
 }

@@ -4,7 +4,7 @@ import java.time.LocalDate;
 
 public final class WaiverDto{
 
-    private final int waiverId;
+    private final Integer waiverId;
     private final int id;
     private final String userId;
     private final String userName;

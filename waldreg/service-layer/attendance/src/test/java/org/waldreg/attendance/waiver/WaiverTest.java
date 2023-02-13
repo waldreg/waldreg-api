@@ -2,6 +2,7 @@ package org.waldreg.attendance.waiver;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Optional;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -14,8 +15,11 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.waldreg.attendance.exception.DoesNotRegisteredAttendanceException;
 import org.waldreg.attendance.exception.InvalidWaiverDateException;
 import org.waldreg.attendance.exception.TooFarDateException;
+import org.waldreg.attendance.exception.UnknownAttendanceTypeException;
+import org.waldreg.attendance.exception.UnknownWaiverIdException;
 import org.waldreg.attendance.rule.AttendanceRule;
 import org.waldreg.attendance.rule.valid.AttendanceDateValidator;
+import org.waldreg.attendance.type.AttendanceType;
 import org.waldreg.attendance.waiver.dto.WaiverDto;
 import org.waldreg.attendance.waiver.spi.WaiverRepository;
 
@@ -121,6 +125,59 @@ class WaiverTest{
                 () -> Assertions.assertEquals(waiverDto.getWaiverDate(), waiverDto.getWaiverDate()),
                 () -> Assertions.assertEquals(waiverDto.getWaiverReason(), waiverDto.getWaiverReason())
         );
+    }
+
+    @Test
+    @DisplayName("출석 면제 요청 승인 성공 테스트")
+    void ACCEPT_ATTENDANCE_WAIVER_SUCCESS_TEST(){
+        // given
+        WaiverDto waiverDto = WaiverDto.builder()
+                .waiverId(1)
+                .id(2)
+                .userId("hello world")
+                .userName("hello world!!!")
+                .waiverDate(LocalDate.now())
+                .waiverReason("for test")
+                .build();
+
+        // when
+        Mockito.when(waiverRepository.readWaiverByWaiverId(waiverDto.getWaiverId())).thenReturn(Optional.of(waiverDto));
+
+        // then
+        Assertions.assertDoesNotThrow(() -> waiverManager.acceptWaiver(waiverDto.getWaiverId(), AttendanceType.ATTENDANCED));
+    }
+
+    @Test
+    @DisplayName("출석 면제 요청 승인 실패 테스트 - waiver id를 찾을 수 없음")
+    void ACCEPT_ATTENDANCE_WAIVER_FAIL_CANNOT_FIND_WAIVER_BY_WAIVER_ID_TEST(){
+        // given
+        int waiverId = 1;
+
+        // when
+        Mockito.when(waiverRepository.readWaiverByWaiverId(waiverId)).thenReturn(Optional.empty());
+
+        // then
+        Assertions.assertThrows(UnknownWaiverIdException.class, () -> waiverManager.acceptWaiver(1, AttendanceType.ACKNOWLEDGE_ABSENCE));
+    }
+
+    @Test
+    @DisplayName("출석 면제 요청 승인 실패 테스트 - 알수없는 AttendanceType")
+    void ACCEPT_ATTENDANCE_WAIVER_FAIL_UNKNOWN_ATTENDANCE_TYPE_TEST(){
+        // given
+        WaiverDto waiverDto = WaiverDto.builder()
+                .waiverId(1)
+                .id(2)
+                .userId("hello world")
+                .userName("hello world!!!")
+                .waiverDate(LocalDate.now())
+                .waiverReason("for test")
+                .build();
+
+        // when
+        Mockito.when(waiverRepository.readWaiverByWaiverId(waiverDto.getWaiverId())).thenReturn(Optional.of(waiverDto));
+
+        // then
+        Assertions.assertThrows(UnknownAttendanceTypeException.class, () -> waiverManager.acceptWaiver(1, null));
     }
 
 }
