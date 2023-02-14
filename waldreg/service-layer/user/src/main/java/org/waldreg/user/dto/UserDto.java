@@ -14,7 +14,7 @@ public class UserDto{
     private final String phoneNumber;
     private final LocalDate createdAt;
     private final int rewardPoint;
-    private final String character;
+    private String character;
     private List<String> socialLogin;
 
     {
@@ -71,7 +71,12 @@ public class UserDto{
         return character;
     }
 
+    public void setCharacter(String character){
+        this.character = character;
+    }
+
     public List<String> getSocialLogin(){return socialLogin;}
+
 
     public final static class Builder{
 

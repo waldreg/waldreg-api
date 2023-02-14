@@ -1,33 +1,46 @@
-package org.waldreg.user.management;
+package org.waldreg.user.management.user;
 
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.waldreg.character.exception.UnknownCharacterException;
 import org.waldreg.user.dto.UserDto;
 import org.waldreg.user.exception.InvalidRangeException;
+import org.waldreg.user.exception.UnknownIdException;
+import org.waldreg.user.exception.UnknownUserIdException;
+import org.waldreg.user.management.PerPage;
+import org.waldreg.user.spi.JoiningPoolRepository;
 import org.waldreg.user.spi.UserRepository;
+import org.waldreg.user.spi.CharacterRepository;
 
 @Service
 public class DefaultUserManager implements UserManager{
 
     private final UserRepository userRepository;
+    private final CharacterRepository characterRepository;
 
     @Autowired
-    public DefaultUserManager(UserRepository userRepository){this.userRepository = userRepository;}
-
-    @Override
-    public void createUser(UserDto userDto){
-        userRepository.createUser(userDto);
+    public DefaultUserManager(UserRepository userRepository, CharacterRepository characterRepository){
+        this.userRepository = userRepository;
+        this.characterRepository = characterRepository;
     }
 
     @Override
     public UserDto readUserById(int id){
+        throwIfUnknownId(id);
         return userRepository.readUserById(id);
     }
 
     @Override
     public UserDto readUserByUserId(String userId){
+        throwIfUnknownUserId(userId);
         return userRepository.readUserByUserId(userId);
+    }
+
+    private void throwIfUnknownUserId(String userId){
+        if (!userRepository.isExistUserId(userId)){
+            throw new UnknownUserIdException("Unknown user_id \"" + userId + "\"");
+        }
     }
 
     @Override
@@ -63,7 +76,7 @@ public class DefaultUserManager implements UserManager{
     }
 
     private int adjustEndIdxToMaxIdx(int endIdx, int maxIdx){
-        if(endIdx>maxIdx){
+        if (endIdx > maxIdx){
             return maxIdx;
         }
         return endIdx;
@@ -76,7 +89,21 @@ public class DefaultUserManager implements UserManager{
 
     @Override
     public void updateCharacter(int id, String character){
+        throwIfUnknownId(id);
+        throwIfCharacterDoesNotExist(character);
         userRepository.updateCharacter(id, character);
+    }
+
+    private void throwIfUnknownId(int id){
+        if (!userRepository.isExistId(id)){
+            throw new UnknownIdException("Unknown id \"" + id + "\"");
+        }
+    }
+
+    public void throwIfCharacterDoesNotExist(String characterName){
+        if (!characterRepository.isExistCharacterName(characterName)){
+            throw new UnknownCharacterException(characterName);
+        }
     }
 
     @Override

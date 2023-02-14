@@ -1,18 +1,15 @@
-package org.waldreg.user.management;
+package org.waldreg.user.management.user;
 
 import java.util.List;
-import org.waldreg.character.dto.CharacterDto;
 import org.waldreg.user.dto.UserDto;
 
 public interface UserManager{
-
-    void createUser(UserDto userDto);
 
     UserDto readUserById(int id);
 
     UserDto readUserByUserId(String userId);
 
-    List<UserDto> readUserList(int stIdx, int enIdx);
+    List<UserDto> readUserList(int startIdx, int endIdx);
 
     void updateUser(int id, UserDto userDto);
 

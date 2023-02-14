@@ -14,25 +14,29 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.waldreg.domain.character.Character;
 import org.waldreg.repository.MemoryCharacterStorage;
+import org.waldreg.repository.MemoryJoiningPoolStorage;
 import org.waldreg.repository.MemoryUserStorage;
 import org.waldreg.user.dto.UserDto;
-import org.waldreg.user.exception.DuplicatedUserIdException;
-import org.waldreg.user.exception.UnknownIdException;
-import org.waldreg.user.exception.UnknownUserIdException;
+import org.waldreg.user.spi.JoiningPoolRepository;
 import org.waldreg.user.spi.UserRepository;
 
 @ExtendWith(SpringExtension.class)
-@ContextConfiguration(classes = {MemoryUserRepository.class, MemoryUserStorage.class, UserMapper.class})
+@ContextConfiguration(classes = {MemoryJoiningPoolRepository.class, MemoryUserRepository.class, MemoryUserStorage.class,MemoryJoiningPoolStorage.class, UserMapper.class})
 public class UserRepositoryTest{
 
     @Autowired
     UserRepository userRepository;
+    @Autowired
+    JoiningPoolRepository joiningPoolRepository;
 
     @Autowired
     MemoryUserStorage memoryUserStorage;
 
+    @Autowired
+    MemoryJoiningPoolStorage memoryJoiningPoolStorage;
     @MockBean
     MemoryCharacterStorage memoryCharacterStorage;
+
 
     @BeforeEach
     @AfterEach
@@ -40,48 +44,6 @@ public class UserRepositoryTest{
         memoryUserStorage.deleteAllUser();
     }
 
-    @Test
-    @DisplayName("유저 생성 성공 테스트")
-    public void CREATE_USER_SUCCESS_TEST(){
-        //given
-        UserDto userDto = UserDto.builder()
-                .userId("linirini_id")
-                .name("linirini")
-                .userPassword("linirini_pwd")
-                .phoneNumber("010-1234-1234")
-                .build();
-
-        //when&then
-        Mockito.when(memoryCharacterStorage.readCharacterByName(Mockito.anyString()))
-                .thenReturn(Character.builder().characterName("Guest").permissionList(List.of()).build());
-        Assertions.assertDoesNotThrow(() -> userRepository.createUser(userDto));
-    }
-
-    @Test
-    @DisplayName("유저 생성 실패 테스트 - 중복 user id")
-    public void CREATE_USER_FAIL_CAUSE_DUPLICATED_USER_ID_TEST(){
-        //given
-        UserDto userDto = UserDto.builder()
-                .userId("linirini_id")
-                .name("linirini")
-                .userPassword("linirini_pwd")
-                .phoneNumber("010-1234-1234")
-                .build();
-        UserDto userDto2 = UserDto.builder()
-                .userId("linirini_id")
-                .name("linirini2")
-                .userPassword("linirini_pwd2")
-                .phoneNumber("010-1234-2222")
-                .build();
-
-        //when
-        Mockito.when(memoryCharacterStorage.readCharacterByName(Mockito.anyString()))
-                .thenReturn(Character.builder().characterName("Guest").permissionList(List.of()).build());
-        userRepository.createUser(userDto);
-
-        //then
-        Assertions.assertThrows(DuplicatedUserIdException.class, () -> userRepository.createUser(userDto2));
-    }
 
     @Test
     @DisplayName("특정 유저 조회 성공 테스트")
@@ -92,12 +54,14 @@ public class UserRepositoryTest{
                 .name("linirini")
                 .userPassword("linirini_pwd")
                 .phoneNumber("010-1234-1234")
+                .character("Guest")
                 .build();
 
         //when
         Mockito.when(memoryCharacterStorage.readCharacterByName(Mockito.anyString()))
                 .thenReturn(Character.builder().characterName("Guest").permissionList(List.of()).build());
-        userRepository.createUser(userDto);
+        joiningPoolRepository.createUser(userDto);
+        joiningPoolRepository.approveJoin(userDto.getUserId());
         UserDto result = userRepository.readUserByUserId(userDto.getUserId());
 
         //then
@@ -110,28 +74,6 @@ public class UserRepositoryTest{
     }
 
     @Test
-    @DisplayName("특정 유저 조회 실패 테스트 - 없는 user id")
-    public void READ_SPECIFIC_USER_FAIL_UNKNOWN_USER_ID_TEST(){
-        //given
-        UserDto userDto = UserDto.builder()
-                .userId("linirini_id")
-                .name("linirini")
-                .userPassword("linirini_pwd")
-                .phoneNumber("010-1234-1234")
-                .build();
-        String wrongUserId = "wrong";
-
-        //when
-        Mockito.when(memoryCharacterStorage.readCharacterByName(Mockito.anyString()))
-                .thenReturn(Character.builder().characterName("Guest").permissionList(List.of()).build());
-        userRepository.createUser(userDto);
-
-        //then
-        Assertions.assertThrows(UnknownUserIdException.class, () -> userRepository.readUserByUserId(wrongUserId));
-
-    }
-
-    @Test
     @DisplayName("전체 유저 조회 성공 테스트")
     public void READ_ALL_USER_SUCCESS_TEST(){
         //given
@@ -140,26 +82,33 @@ public class UserRepositoryTest{
                 .name("linirini")
                 .userPassword("linirini_pwd")
                 .phoneNumber("010-1234-1234")
+                .character("Guest")
                 .build();
         UserDto userDto2 = UserDto.builder()
                 .userId("linirini_id2")
                 .name("linirini2")
                 .userPassword("linirini_pwd2")
                 .phoneNumber("010-1234-2222")
+                .character("Guest")
                 .build();
         UserDto userDto3 = UserDto.builder()
                 .userId("linirini_id3")
                 .name("linirini3")
                 .userPassword("linirini_pwd3")
                 .phoneNumber("010-1234-3333")
+                .character("Guest")
                 .build();
 
         //when
         Mockito.when(memoryCharacterStorage.readCharacterByName(Mockito.anyString()))
                 .thenReturn(Character.builder().characterName("Guest").permissionList(List.of()).build());
-        userRepository.createUser(userDto);
-        userRepository.createUser(userDto2);
-        userRepository.createUser(userDto3);
+        joiningPoolRepository.createUser(userDto);
+        joiningPoolRepository.createUser(userDto2);
+        joiningPoolRepository.createUser(userDto3);
+        joiningPoolRepository.approveJoin(userDto.getUserId());
+        joiningPoolRepository.approveJoin(userDto2.getUserId());
+        joiningPoolRepository.approveJoin(userDto3.getUserId());
+
         int maxIdx = userRepository.readMaxIdx();
         List<UserDto> result = userRepository.readUserList(1, 2);
 
@@ -180,6 +129,7 @@ public class UserRepositoryTest{
                 .name("linirini")
                 .userPassword("linirini_pwd")
                 .phoneNumber("010-1234-1234")
+                .character("Guest")
                 .build();
         String updateCharacter = "updateCharacter";
 
@@ -187,7 +137,8 @@ public class UserRepositoryTest{
         Mockito.when(memoryCharacterStorage.readCharacterByName("Guest"))
                 .thenReturn(Character.builder().characterName("Guest").permissionList(List.of()).build());
 
-        userRepository.createUser(userDto);
+        joiningPoolRepository.createUser(userDto);
+        joiningPoolRepository.approveJoin(userDto.getUserId());
         UserDto userDto1 = userRepository.readUserByUserId(userDto.getUserId());
 
         Mockito.when(memoryCharacterStorage.readCharacterByName(updateCharacter))
@@ -201,28 +152,6 @@ public class UserRepositoryTest{
     }
 
     @Test
-    @DisplayName("유저 역할 수정 실패 테스트 - 없는 id")
-    public void UPDATE_USER_CHARACTER_FAIL_CAUSE_UNKNOWN_ID_TEST(){
-        //given
-        UserDto userDto = UserDto.builder()
-                .userId("linirini_id")
-                .name("linirini")
-                .userPassword("linirini_pwd")
-                .phoneNumber("010-1234-1234")
-                .build();
-        String updateCharacter = "updateCharacter";
-        int id = 0;
-
-        //when
-        Mockito.when(memoryCharacterStorage.readCharacterByName(Mockito.anyString()))
-                .thenReturn(Character.builder().characterName("Guest").permissionList(List.of()).build());
-        userRepository.createUser(userDto);
-
-        //then
-        Assertions.assertThrows(UnknownIdException.class, () -> userRepository.updateCharacter(id, updateCharacter));
-    }
-
-    @Test
     @DisplayName("유저 삭제 테스트")
     public void DELETE_USER_ONLINE_SUCCESS_TEST(){
         //given
@@ -231,17 +160,19 @@ public class UserRepositoryTest{
                 .name("linirini")
                 .userPassword("linirini_pwd")
                 .phoneNumber("010-1234-1234")
+                .character("Guest")
                 .build();
 
         //when
         Mockito.when(memoryCharacterStorage.readCharacterByName(Mockito.anyString()))
                 .thenReturn(Character.builder().characterName("Guest").permissionList(List.of()).build());
-        userRepository.createUser(userDto);
+        joiningPoolRepository.createUser(userDto);
+        joiningPoolRepository.approveJoin(userDto.getUserId());
         UserDto userDto1 = userRepository.readUserByUserId(userDto.getUserId());
         userRepository.deleteById(userDto1.getId());
 
         //then
-        Assertions.assertThrows(UnknownUserIdException.class, () -> userRepository.readUserByUserId(userDto1.getUserId()));
+        Assertions.assertThrows(IllegalStateException.class, () -> userRepository.readUserByUserId(userDto1.getUserId()));
 
     }
 

@@ -3,6 +3,7 @@ package org.waldreg.repository.user;
 import java.util.ArrayList;
 import java.util.List;
 import org.springframework.stereotype.Service;
+import org.waldreg.domain.character.Character;
 import org.waldreg.domain.rewardtag.RewardTagWrapper;
 import org.waldreg.domain.user.User;
 import org.waldreg.user.dto.UserDto;
