@@ -5,6 +5,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.waldreg.user.dto.UserDto;
 import org.waldreg.user.exception.InvalidRangeException;
+import org.waldreg.user.exception.UnknownUserIdException;
 import org.waldreg.user.management.PerPage;
 import org.waldreg.user.spi.JoiningPoolRepository;
 
@@ -60,12 +61,20 @@ public class DefaultJoiningPoolManager implements JoiningPoolManager{
 
     @Override
     public void approveJoin(String userId){
+        throwIfUnknownUserId(userId);
         joiningPoolRepository.approveJoin(userId);
     }
 
     @Override
     public void rejectJoin(String userId){
+        throwIfUnknownUserId(userId);
         joiningPoolRepository.rejectJoin(userId);
+    }
+
+    private void throwIfUnknownUserId(String userId){
+        if (!joiningPoolRepository.isExistUserId(userId)){
+            throw new UnknownUserIdException("Unknown user_id \"" + userId + "\"");
+        }
     }
 
 }

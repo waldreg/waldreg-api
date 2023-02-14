@@ -21,4 +21,8 @@ public interface UserRepository{
 
     void deleteById(int id);
 
+    boolean isExistUserId(String userId);
+
+    boolean isExistId(int id);
+
 }

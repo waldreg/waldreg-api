@@ -109,6 +109,7 @@ public class ReactionInBoardRepositoryTest{
                 .name("alcuk")
                 .userPassword("alcuk123!")
                 .phoneNumber("010-1234-1234")
+                .character("Guest")
                 .build();
         CharacterDto characterDto = CharacterDto.builder()
                 .id(1)
@@ -186,6 +187,7 @@ public class ReactionInBoardRepositoryTest{
                 .name("alcuk")
                 .userPassword("alcuk123!")
                 .phoneNumber("010-1234-1234")
+                .character("Guest")
                 .build();
         CharacterDto characterDto = CharacterDto.builder()
                 .id(1)

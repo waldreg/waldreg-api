@@ -12,4 +12,6 @@ public interface JoiningPoolRepository{
     void approveJoin(String userId);
 
     void rejectJoin(String userId);
+
+    boolean isExistUserId(String userId);
 }
