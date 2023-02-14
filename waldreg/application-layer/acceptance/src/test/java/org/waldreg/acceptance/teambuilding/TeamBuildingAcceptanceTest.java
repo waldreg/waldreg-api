@@ -39,7 +39,28 @@ public class TeamBuildingAcceptanceTest{
 
     @BeforeEach
     @AfterEach
-    public void INITIATE_TEAM_BUILDING() throws Exception{}
+    public void INITIATE_TEAM_BUILDING() throws Exception{
+        String adminToken = AuthenticationAcceptanceTestHelper.getAdminToken(mvc, objectMapper);
+        ResultActions result = TeamBuildingAcceptanceTestHelper.inquiryAllTeamBuilding(mvc, 1, 30, adminToken);
+        TeamBuildingListResponse teamBuildingListResponse = objectMapper.readValue(result
+                .andReturn()
+                .getResponse()
+                .getContentAsString(), TeamBuildingListResponse.class);
+        for (TeamBuildingResponse teamBuildingResponse : teamBuildingListResponse.getTeamBuildingList()){
+            int id = teamBuildingResponse.getTeamBuildingId();
+            TeamBuildingAcceptanceTestHelper.deleteTeamBuilding(mvc, id, adminToken);
+            result = TeamBuildingAcceptanceTestHelper.inquirySpecificTeamBuilding(mvc, id, adminToken);
+            result.andExpectAll(
+                    MockMvcResultMatchers.status().isBadRequest(),
+                    MockMvcResultMatchers.header().string(HttpHeaders.CONTENT_TYPE, "application/json"),
+                    MockMvcResultMatchers.header().string("api-version", apiVersion),
+                    MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON),
+                    MockMvcResultMatchers.jsonPath("$.code").value("TEAMBUILDING-400"),
+                    MockMvcResultMatchers.jsonPath("$.messages").value("Cannot find teambuilding id \"" + id + "\""),
+                    MockMvcResultMatchers.jsonPath("$.document_url").value("docs.waldreg.org")
+            );
+        }
+    }
 
     @BeforeEach
     @AfterEach
@@ -1682,7 +1703,7 @@ public class TeamBuildingAcceptanceTest{
         UserRequest userRequest = UserRequest.builder()
                 .name("alcuk")
                 .userId(userId)
-                .userPassword("2dfgsd!")
+                .userPassword("2dfgsfvgdd!")
                 .phoneNumber("010-1234-1234")
                 .build();
         UserAcceptanceTestHelper.createUser(mvc, objectMapper.writeValueAsString(userRequest));
