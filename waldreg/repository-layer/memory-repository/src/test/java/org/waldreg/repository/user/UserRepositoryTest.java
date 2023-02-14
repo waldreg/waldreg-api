@@ -14,22 +14,29 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.waldreg.domain.character.Character;
 import org.waldreg.repository.MemoryCharacterStorage;
+import org.waldreg.repository.MemoryJoiningPoolStorage;
 import org.waldreg.repository.MemoryUserStorage;
 import org.waldreg.user.dto.UserDto;
+import org.waldreg.user.spi.JoiningPoolRepository;
 import org.waldreg.user.spi.UserRepository;
 
 @ExtendWith(SpringExtension.class)
-@ContextConfiguration(classes = {MemoryUserRepository.class, MemoryUserStorage.class, UserMapper.class})
+@ContextConfiguration(classes = {MemoryJoiningPoolRepository.class, MemoryUserRepository.class, MemoryUserStorage.class,MemoryJoiningPoolStorage.class, UserMapper.class})
 public class UserRepositoryTest{
 
     @Autowired
     UserRepository userRepository;
+    @Autowired
+    JoiningPoolRepository joiningPoolRepository;
 
     @Autowired
     MemoryUserStorage memoryUserStorage;
 
+    @Autowired
+    MemoryJoiningPoolStorage memoryJoiningPoolStorage;
     @MockBean
     MemoryCharacterStorage memoryCharacterStorage;
+
 
     @BeforeEach
     @AfterEach
@@ -37,22 +44,6 @@ public class UserRepositoryTest{
         memoryUserStorage.deleteAllUser();
     }
 
-    @Test
-    @DisplayName("유저 생성 성공 테스트")
-    public void CREATE_USER_SUCCESS_TEST(){
-        //given
-        UserDto userDto = UserDto.builder()
-                .userId("linirini_id")
-                .name("linirini")
-                .userPassword("linirini_pwd")
-                .phoneNumber("010-1234-1234")
-                .build();
-
-        //when&then
-        Mockito.when(memoryCharacterStorage.readCharacterByName(Mockito.anyString()))
-                .thenReturn(Character.builder().characterName("Guest").permissionList(List.of()).build());
-        Assertions.assertDoesNotThrow(() -> userRepository.createUser(userDto));
-    }
 
     @Test
     @DisplayName("특정 유저 조회 성공 테스트")
@@ -69,7 +60,8 @@ public class UserRepositoryTest{
         //when
         Mockito.when(memoryCharacterStorage.readCharacterByName(Mockito.anyString()))
                 .thenReturn(Character.builder().characterName("Guest").permissionList(List.of()).build());
-        userRepository.createUser(userDto);
+        joiningPoolRepository.createUser(userDto);
+        joiningPoolRepository.approveJoin(userDto.getUserId());
         UserDto result = userRepository.readUserByUserId(userDto.getUserId());
 
         //then
@@ -110,9 +102,13 @@ public class UserRepositoryTest{
         //when
         Mockito.when(memoryCharacterStorage.readCharacterByName(Mockito.anyString()))
                 .thenReturn(Character.builder().characterName("Guest").permissionList(List.of()).build());
-        userRepository.createUser(userDto);
-        userRepository.createUser(userDto2);
-        userRepository.createUser(userDto3);
+        joiningPoolRepository.createUser(userDto);
+        joiningPoolRepository.createUser(userDto2);
+        joiningPoolRepository.createUser(userDto3);
+        joiningPoolRepository.approveJoin(userDto.getUserId());
+        joiningPoolRepository.approveJoin(userDto2.getUserId());
+        joiningPoolRepository.approveJoin(userDto3.getUserId());
+
         int maxIdx = userRepository.readMaxIdx();
         List<UserDto> result = userRepository.readUserList(1, 2);
 
@@ -141,7 +137,8 @@ public class UserRepositoryTest{
         Mockito.when(memoryCharacterStorage.readCharacterByName("Guest"))
                 .thenReturn(Character.builder().characterName("Guest").permissionList(List.of()).build());
 
-        userRepository.createUser(userDto);
+        joiningPoolRepository.createUser(userDto);
+        joiningPoolRepository.approveJoin(userDto.getUserId());
         UserDto userDto1 = userRepository.readUserByUserId(userDto.getUserId());
 
         Mockito.when(memoryCharacterStorage.readCharacterByName(updateCharacter))
@@ -169,7 +166,8 @@ public class UserRepositoryTest{
         //when
         Mockito.when(memoryCharacterStorage.readCharacterByName(Mockito.anyString()))
                 .thenReturn(Character.builder().characterName("Guest").permissionList(List.of()).build());
-        userRepository.createUser(userDto);
+        joiningPoolRepository.createUser(userDto);
+        joiningPoolRepository.approveJoin(userDto.getUserId());
         UserDto userDto1 = userRepository.readUserByUserId(userDto.getUserId());
         userRepository.deleteById(userDto1.getId());
 

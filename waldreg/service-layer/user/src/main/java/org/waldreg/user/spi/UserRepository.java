@@ -5,8 +5,6 @@ import org.waldreg.user.dto.UserDto;
 
 public interface UserRepository{
 
-    void createUser(UserDto userDto);
-
     UserDto readUserById(int id);
 
     UserDto readUserByUserId(String userId);

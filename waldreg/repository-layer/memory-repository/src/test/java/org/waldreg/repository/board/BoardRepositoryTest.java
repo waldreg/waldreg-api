@@ -26,6 +26,7 @@ import org.waldreg.repository.MemoryBoardStorage;
 import org.waldreg.repository.MemoryCategoryStorage;
 import org.waldreg.repository.MemoryCharacterStorage;
 import org.waldreg.repository.MemoryCommentStorage;
+import org.waldreg.repository.MemoryJoiningPoolStorage;
 import org.waldreg.repository.MemoryUserStorage;
 import org.waldreg.repository.boarduserinfo.UserInfoMapper;
 import org.waldreg.repository.category.CategoryMapper;
@@ -34,12 +35,14 @@ import org.waldreg.repository.character.CharacterMapper;
 import org.waldreg.repository.character.MemoryCharacterRepository;
 import org.waldreg.repository.comment.CommentMapper;
 import org.waldreg.repository.comment.MemoryCommentRepository;
+import org.waldreg.repository.user.MemoryJoiningPoolRepository;
 import org.waldreg.repository.user.MemoryUserRepository;
 import org.waldreg.repository.user.UserMapper;
+import org.waldreg.user.spi.JoiningPoolRepository;
 import org.waldreg.user.spi.UserRepository;
 
 @ExtendWith(SpringExtension.class)
-@ContextConfiguration(classes = {UserInfoMapper.class, MemoryCommentStorage.class, MemoryCommentRepository.class, CategoryMapper.class, MemoryCategoryStorage.class, MemoryCategoryRepository.class, CommentMapper.class, MemoryBoardRepository.class, MemoryBoardStorage.class, MemoryUserRepository.class, MemoryUserStorage.class, MemoryCharacterRepository.class, MemoryCharacterStorage.class, BoardMapper.class, UserMapper.class, CharacterMapper.class})
+@ContextConfiguration(classes = {UserInfoMapper.class, MemoryCommentStorage.class, MemoryCommentRepository.class, CategoryMapper.class, MemoryCategoryStorage.class, MemoryCategoryRepository.class, CommentMapper.class, MemoryBoardRepository.class, MemoryBoardStorage.class, MemoryUserRepository.class, MemoryUserStorage.class, MemoryCharacterRepository.class, MemoryCharacterStorage.class, BoardMapper.class, UserMapper.class, CharacterMapper.class, MemoryJoiningPoolRepository.class, MemoryJoiningPoolStorage.class})
 public class BoardRepositoryTest{
 
     @Autowired
@@ -53,6 +56,9 @@ public class BoardRepositoryTest{
 
     @Autowired
     private MemoryUserStorage memoryUserStorage;
+
+    @Autowired
+    MemoryJoiningPoolStorage memoryJoiningPoolStorage;
 
     @Autowired
     private CharacterRepository characterRepository;
@@ -74,6 +80,9 @@ public class BoardRepositoryTest{
 
     @Autowired
     private MemoryCommentStorage memoryCommentStorage;
+
+    @Autowired
+    private JoiningPoolRepository joiningPoolRepository;
 
     @BeforeEach
     @AfterEach
@@ -110,7 +119,8 @@ public class BoardRepositoryTest{
                 .permissionDtoList(List.of())
                 .build();
         characterRepository.createCharacter(characterDto);
-        userRepository.createUser(user);
+        joiningPoolRepository.createUser(user);
+        joiningPoolRepository.approveJoin(user.getUserId());
         org.waldreg.user.dto.UserDto userResponse = userRepository.readUserByUserId("alcuk_id");
         String title = "title";
         String content = "content";
@@ -176,7 +186,8 @@ public class BoardRepositoryTest{
                 .permissionDtoList(List.of())
                 .build();
         characterRepository.createCharacter(characterDto);
-        userRepository.createUser(user);
+        joiningPoolRepository.createUser(user);
+        joiningPoolRepository.approveJoin(user.getUserId());
         org.waldreg.user.dto.UserDto userResponse = userRepository.readUserByUserId("alcuk_id");
         String title = "title";
         String content = "content";
@@ -243,7 +254,8 @@ public class BoardRepositoryTest{
                 .permissionDtoList(List.of())
                 .build();
         characterRepository.createCharacter(characterDto);
-        userRepository.createUser(user);
+        joiningPoolRepository.createUser(user);
+        joiningPoolRepository.approveJoin(user.getUserId());
         org.waldreg.user.dto.UserDto userResponse = userRepository.readUserByUserId("alcuk_id");
         String title = "title";
         String content = "content";
@@ -341,7 +353,8 @@ public class BoardRepositoryTest{
                 .permissionDtoList(List.of())
                 .build();
         characterRepository.createCharacter(characterDto);
-        userRepository.createUser(user);
+        joiningPoolRepository.createUser(user);
+        joiningPoolRepository.approveJoin(user.getUserId());
         org.waldreg.user.dto.UserDto userResponse = userRepository.readUserByUserId("alcuk_id");
         List<String> fileUrlList = new ArrayList<>();
         fileUrlList.add("uuid.pptx");
@@ -448,8 +461,11 @@ public class BoardRepositoryTest{
                 .permissionDtoList(List.of())
                 .build();
         characterRepository.createCharacter(characterDto);
-        userRepository.createUser(user);
-        userRepository.createUser(user2);
+        joiningPoolRepository.createUser(user);
+        joiningPoolRepository.approveJoin(user.getUserId());
+        joiningPoolRepository.createUser(user2);
+        joiningPoolRepository.approveJoin(user2.getUserId());
+
         org.waldreg.user.dto.UserDto userResponse = userRepository.readUserByUserId(user.getUserId());
         org.waldreg.user.dto.UserDto userResponse2 = userRepository.readUserByUserId(user2.getUserId());
         List<String> fileUrlList = new ArrayList<>();
@@ -545,7 +561,8 @@ public class BoardRepositoryTest{
                 .permissionDtoList(List.of())
                 .build();
         characterRepository.createCharacter(characterDto);
-        userRepository.createUser(user);
+        joiningPoolRepository.createUser(user);
+        joiningPoolRepository.approveJoin(user.getUserId());
         org.waldreg.user.dto.UserDto userResponse = userRepository.readUserByUserId("alcuk_id");
         String title = "title";
         String content = "content";
@@ -637,7 +654,8 @@ public class BoardRepositoryTest{
                 .permissionDtoList(List.of())
                 .build();
         characterRepository.createCharacter(characterDto);
-        userRepository.createUser(user);
+        joiningPoolRepository.createUser(user);
+        joiningPoolRepository.approveJoin(user.getUserId());
         org.waldreg.user.dto.UserDto userResponse = userRepository.readUserByUserId("alcuk_id");
         String title = "title";
         String content = "content";
@@ -735,7 +753,8 @@ public class BoardRepositoryTest{
                 .permissionDtoList(List.of())
                 .build();
         characterRepository.createCharacter(characterDto);
-        userRepository.createUser(user);
+        joiningPoolRepository.createUser(user);
+        joiningPoolRepository.approveJoin(user.getUserId());
         org.waldreg.user.dto.UserDto userResponse = userRepository.readUserByUserId("alcuk_id");
         String title = "title";
         String content = "content";
@@ -802,7 +821,8 @@ public class BoardRepositoryTest{
                 .permissionDtoList(List.of())
                 .build();
         characterRepository.createCharacter(characterDto);
-        userRepository.createUser(user);
+        joiningPoolRepository.createUser(user);
+        joiningPoolRepository.approveJoin(user.getUserId());
         org.waldreg.user.dto.UserDto userResponse = userRepository.readUserByUserId("alcuk_id");
         String title = "title";
         String content = "content";
@@ -885,7 +905,8 @@ public class BoardRepositoryTest{
                 .permissionDtoList(List.of())
                 .build();
         characterRepository.createCharacter(characterDto);
-        userRepository.createUser(user);
+        joiningPoolRepository.createUser(user);
+        joiningPoolRepository.approveJoin(user.getUserId());
         org.waldreg.user.dto.UserDto userResponse = userRepository.readUserByUserId("alcuk_id");
         String title = "title";
         String content = "content";

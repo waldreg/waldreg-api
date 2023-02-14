@@ -32,7 +32,7 @@ public class DefaultUserManager implements UserManager{
     public void createUser(UserDto userDto){
         throwIfDuplicatedUserId(userDto.getUserId());
         setDefaultCharacter(userDto);
-        userRepository.createUser(userDto);
+        joiningPoolRepository.createUser(userDto);
     }
 
     public void throwIfDuplicatedUserId(String userId){
