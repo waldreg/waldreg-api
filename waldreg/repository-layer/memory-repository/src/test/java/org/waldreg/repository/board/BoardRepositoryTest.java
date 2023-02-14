@@ -102,6 +102,7 @@ public class BoardRepositoryTest{
                 .name("alcuk")
                 .userPassword("alcuk123!")
                 .phoneNumber("010-1234-1234")
+                .character("Guest")
                 .build();
         CharacterDto characterDto = CharacterDto.builder()
                 .id(1)
@@ -167,6 +168,7 @@ public class BoardRepositoryTest{
                 .name("alcuk")
                 .userPassword("alcuk123!")
                 .phoneNumber("010-1234-1234")
+                .character("Guest")
                 .build();
         CharacterDto characterDto = CharacterDto.builder()
                 .id(1)
@@ -233,6 +235,7 @@ public class BoardRepositoryTest{
                 .name("alcuk")
                 .userPassword("alcuk123!")
                 .phoneNumber("010-1234-1234")
+                .character("Guest")
                 .build();
         CharacterDto characterDto = CharacterDto.builder()
                 .id(1)
@@ -330,6 +333,7 @@ public class BoardRepositoryTest{
                 .name("alcuk")
                 .userPassword("alcuk123!")
                 .phoneNumber("010-1234-1234")
+                .character("Guest")
                 .build();
         CharacterDto characterDto = CharacterDto.builder()
                 .id(1)
@@ -429,12 +433,14 @@ public class BoardRepositoryTest{
                 .name("alcuk")
                 .userPassword("alcuk123!")
                 .phoneNumber("010-1234-1234")
+                .character("Guest")
                 .build();
         org.waldreg.user.dto.UserDto user2 = org.waldreg.user.dto.UserDto.builder()
                 .userId("alcuk_id2")
                 .name("alcuk2")
                 .userPassword("alcuk1233!")
                 .phoneNumber("010-1234-3333")
+                .character("Guest")
                 .build();
         CharacterDto characterDto = CharacterDto.builder()
                 .id(1)
@@ -531,6 +537,7 @@ public class BoardRepositoryTest{
                 .name("alcuk")
                 .userPassword("alcuk123!")
                 .phoneNumber("010-1234-1234")
+                .character("Guest")
                 .build();
         CharacterDto characterDto = CharacterDto.builder()
                 .id(1)
@@ -622,6 +629,7 @@ public class BoardRepositoryTest{
                 .name("alcuk")
                 .userPassword("alcuk123!")
                 .phoneNumber("010-1234-1234")
+                .character("Guest")
                 .build();
         CharacterDto characterDto = CharacterDto.builder()
                 .id(1)
@@ -719,6 +727,7 @@ public class BoardRepositoryTest{
                 .name("alcuk")
                 .userPassword("alcuk123!")
                 .phoneNumber("010-1234-1234")
+                .character("Guest")
                 .build();
         CharacterDto characterDto = CharacterDto.builder()
                 .id(1)
@@ -785,6 +794,7 @@ public class BoardRepositoryTest{
                 .name("alcuk")
                 .userPassword("alcuk123!")
                 .phoneNumber("010-1234-1234")
+                .character("Guest")
                 .build();
         CharacterDto characterDto = CharacterDto.builder()
                 .id(1)
@@ -867,6 +877,7 @@ public class BoardRepositoryTest{
                 .name("alcuk")
                 .userPassword("alcuk123!")
                 .phoneNumber("010-1234-1234")
+                .character("Guest")
                 .build();
         CharacterDto characterDto = CharacterDto.builder()
                 .id(1)

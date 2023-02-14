@@ -3,12 +3,11 @@ package org.waldreg.repository.user;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
-import org.waldreg.character.exception.UnknownCharacterException;
+import org.waldreg.domain.character.Character;
 import org.waldreg.domain.user.User;
 import org.waldreg.repository.MemoryCharacterStorage;
 import org.waldreg.repository.MemoryUserStorage;
 import org.waldreg.user.dto.UserDto;
-import org.waldreg.user.exception.DuplicatedUserIdException;
 import org.waldreg.user.spi.UserRepository;
 
 @Repository
@@ -29,18 +28,13 @@ public class MemoryUserRepository implements UserRepository{
 
     @Override
     public void createUser(UserDto userDto){
-        throwIfDuplicatedUserId(userDto.getUserId());
         User user = userMapper.userDtoToUserDomain(userDto);
+        user.setCharacter(getCharacterByName(userDto.getCharacter()));
         memoryUserStorage.createUser(user);
     }
 
-    public void throwIfDuplicatedUserId(String userId){
-        try{
-            memoryUserStorage.readUserByUserId(userId);
-        } catch (RuntimeException isNotDuplicated){
-            return;
-        }
-        throw new DuplicatedUserIdException("Duplicated user_id \""+userId+"\"");
+    private Character getCharacterByName(String characterName){
+       return memoryCharacterStorage.readCharacterByName(characterName);
     }
 
     @Override
@@ -79,16 +73,20 @@ public class MemoryUserRepository implements UserRepository{
     }
 
     @Override
+    public boolean isExistUserId(String userId){
+        return memoryUserStorage.isExistUserId(userId);
+    }
+
+    @Override
+    public boolean isExistId(int id){
+        return memoryUserStorage.isExistId(id);
+    }
+
+    @Override
     public void updateCharacter(int id, String characterName){
         User user = memoryUserStorage.readUserById(id);
-        throwIfCharacterDoesNotExist(characterName);
         memoryUserStorage.updateCharacterOfUser(id, characterName);
     }
 
-    public void throwIfCharacterDoesNotExist(String characterName){
-        if (memoryCharacterStorage.readCharacterByName(characterName) == null){
-            throw new UnknownCharacterException(characterName);
-        }
-    }
 
 }
