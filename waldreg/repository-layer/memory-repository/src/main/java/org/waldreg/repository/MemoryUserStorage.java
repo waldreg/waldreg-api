@@ -10,9 +10,6 @@ import org.springframework.stereotype.Repository;
 import org.waldreg.domain.character.Character;
 import org.waldreg.domain.rewardtag.RewardTagWrapper;
 import org.waldreg.domain.user.User;
-import org.waldreg.user.exception.UnknownIdException;
-import org.waldreg.user.exception.UnknownUserIdException;
-
 @Repository
 public class MemoryUserStorage{
 

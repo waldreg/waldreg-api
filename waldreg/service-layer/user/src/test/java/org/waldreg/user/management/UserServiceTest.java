@@ -63,7 +63,7 @@ public class UserServiceTest{
         Mockito.when(characterRepository.isExistCharacterName(Mockito.anyString())).thenReturn(true);
 
         // when & then
-        Assertions.assertDoesNotThrow(() -> userManager.createUser(createRequest));
+        Assertions.assertDoesNotThrow(() -> joiningPoolManager.createUser(createRequest));
 
     }
 
@@ -87,7 +87,7 @@ public class UserServiceTest{
         //when
         Mockito.when(userRepository.isExistUserId(Mockito.anyString())).thenReturn(true);
         //then
-        Assertions.assertThrows(DuplicatedUserIdException.class, () -> userManager.createUser(userDto2));
+        Assertions.assertThrows(DuplicatedUserIdException.class, () -> joiningPoolManager.createUser(userDto2));
     }
 
     @Test
@@ -110,7 +110,7 @@ public class UserServiceTest{
         //when
         Mockito.when(joiningPoolRepository.isExistUserId(Mockito.anyString())).thenReturn(true);
         //then
-        Assertions.assertThrows(DuplicatedUserIdException.class, () -> userManager.createUser(userDto2));
+        Assertions.assertThrows(DuplicatedUserIdException.class, () -> joiningPoolManager.createUser(userDto2));
     }
 
     @Test
@@ -153,11 +153,11 @@ public class UserServiceTest{
 
         //when
         Mockito.when(characterRepository.isExistCharacterName(Mockito.anyString())).thenReturn(true);
-        userManager.createUser(createRequest);
+        joiningPoolManager.createUser(createRequest);
         userDtoList.add(createRequest);
-        userManager.createUser(createRequest2);
+        joiningPoolManager.createUser(createRequest2);
         userDtoList.add(createRequest2);
-        userManager.createUser(createRequest3);
+        joiningPoolManager.createUser(createRequest3);
         userDtoList.add(createRequest3);
         int maxIdx = userDtoList.size();
         Mockito.when(joiningPoolRepository.readJoiningPoolMaxIdx()).thenReturn(maxIdx);
@@ -213,11 +213,11 @@ public class UserServiceTest{
 
         //when
         Mockito.when(characterRepository.isExistCharacterName(Mockito.anyString())).thenReturn(true);
-        userManager.createUser(createRequest);
+        joiningPoolManager.createUser(createRequest);
         userDtoList.add(createRequest);
-        userManager.createUser(createRequest2);
+        joiningPoolManager.createUser(createRequest2);
         userDtoList.add(createRequest2);
-        userManager.createUser(createRequest3);
+        joiningPoolManager.createUser(createRequest3);
         userDtoList.add(createRequest3);
         int maxIdx = userDtoList.size();
         Mockito.when(joiningPoolRepository.readJoiningPoolMaxIdx()).thenReturn(maxIdx);
@@ -609,7 +609,7 @@ public class UserServiceTest{
 
         //when
         Mockito.when(characterRepository.isExistCharacterName(Mockito.anyString())).thenReturn(true);
-        userManager.createUser(createRequest);
+        joiningPoolManager.createUser(createRequest);
         Mockito.when(joiningPoolRepository.isExistUserId(Mockito.anyString())).thenReturn(true);
         joiningPoolManager.approveJoin(createRequest.getUserId());
         Mockito.when(userRepository.readUserById(Mockito.anyInt())).thenReturn(createRequest);
@@ -637,7 +637,7 @@ public class UserServiceTest{
 
         //when
         Mockito.when(characterRepository.isExistCharacterName(Mockito.anyString())).thenReturn(true);
-        userManager.createUser(createRequest);
+        joiningPoolManager.createUser(createRequest);
         Mockito.when(joiningPoolRepository.isExistUserId(Mockito.anyString())).thenReturn(true);
         joiningPoolManager.approveJoin(createRequest.getUserId());
         Mockito.when(userRepository.isExistId(Mockito.anyInt())).thenReturn(true);

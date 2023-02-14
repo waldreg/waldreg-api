@@ -5,6 +5,8 @@ import org.waldreg.user.dto.UserDto;
 
 public interface JoiningPoolManager{
 
+    void createUser(UserDto userDto);
+
     int readJoiningPoolMaxIdx();
 
     List<UserDto> readUserJoiningPool(int stIdx, int enIdx);
