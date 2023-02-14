@@ -6,6 +6,7 @@ import java.util.Optional;
 import org.waldreg.attendance.management.dto.AttendanceDayDto;
 import org.waldreg.attendance.management.dto.AttendanceStatusChangeDto;
 import org.waldreg.attendance.management.dto.AttendanceTargetDto;
+import org.waldreg.attendance.management.dto.AttendanceUserDto;
 
 public interface AttendanceRepository{
 
@@ -18,5 +19,7 @@ public interface AttendanceRepository{
     void changeAttendanceStatus(AttendanceStatusChangeDto attendanceStatusChangeDto);
 
     List<AttendanceDayDto> readAttendanceStatusList(LocalDate from, LocalDate to);
+
+    AttendanceUserDto readSpecificAttendanceStatusList(int id, LocalDate from, LocalDate to);
 
 }

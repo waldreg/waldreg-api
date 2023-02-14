@@ -11,6 +11,7 @@ import org.waldreg.attendance.exception.UnknownUsersIdException;
 import org.waldreg.attendance.management.dto.AttendanceDayDto;
 import org.waldreg.attendance.management.dto.AttendanceStatusChangeDto;
 import org.waldreg.attendance.management.dto.AttendanceTargetDto;
+import org.waldreg.attendance.management.dto.AttendanceUserDto;
 import org.waldreg.attendance.management.spi.AttendanceRepository;
 import org.waldreg.attendance.management.spi.UserExistChecker;
 import org.waldreg.attendance.rule.valid.AttendanceDateValidator;
@@ -61,13 +62,6 @@ public class DefaultAttendanceManager implements AttendanceManager{
         }
     }
 
-    @Override
-    public AttendanceTargetDto readAttendanceTarget(int id){
-        return attendanceRepository.readAttendanceTarget(id).orElseThrow(
-                () -> {throw new DoesNotRegisteredAttendanceException();}
-        );
-    }
-
     private void throwIfUnknownAttendanceType(AttendanceType attendanceType){
         if(attendanceType == null){
             throw new UnknownAttendanceTypeException(null);
@@ -80,6 +74,15 @@ public class DefaultAttendanceManager implements AttendanceManager{
         attendanceDateValidator.throwIfDateWasTooFar(to);
         throwIfInvalidDateDetected(from, to);
         return attendanceRepository.readAttendanceStatusList(from, to);
+    }
+
+    @Override
+    public AttendanceUserDto readSpecificAttendanceStatusList(int id, LocalDate from, LocalDate to){
+        attendanceDateValidator.throwIfDateWasTooEarly(from);
+        attendanceDateValidator.throwIfDateWasTooFar(to);
+        throwIfInvalidDateDetected(from, to);
+        readAttendanceTarget(id);
+        return attendanceRepository.readSpecificAttendanceStatusList(id, from, to);
     }
 
     private void throwIfInvalidDateDetected(LocalDate from, LocalDate to){
@@ -97,6 +100,13 @@ public class DefaultAttendanceManager implements AttendanceManager{
         if(from.plusDays(MAXIMUM_DIFFERENCE_BETWEEN_DAY).isBefore(to)){
             throw new InvalidDateException();
         }
+    }
+
+    @Override
+    public AttendanceTargetDto readAttendanceTarget(int id){
+        return attendanceRepository.readAttendanceTarget(id).orElseThrow(
+                () -> {throw new DoesNotRegisteredAttendanceException();}
+        );
     }
 
 }
