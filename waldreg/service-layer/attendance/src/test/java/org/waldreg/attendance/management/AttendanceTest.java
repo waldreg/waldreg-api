@@ -21,6 +21,7 @@ import org.waldreg.attendance.exception.UnknownUsersIdException;
 import org.waldreg.attendance.management.dto.AttendanceDayDto;
 import org.waldreg.attendance.management.dto.AttendanceStatusChangeDto;
 import org.waldreg.attendance.management.dto.AttendanceTargetDto;
+import org.waldreg.attendance.management.dto.AttendanceUserDto;
 import org.waldreg.attendance.management.spi.AttendanceRepository;
 import org.waldreg.attendance.management.spi.UserExistChecker;
 import org.waldreg.attendance.rule.AttendanceRule;
@@ -328,6 +329,102 @@ class AttendanceTest{
 
         // when & then
         Assertions.assertThrows(InvalidDateException.class, () -> attendanceManager.readAttendanceStatusList(from, to));
+    }
+
+    @Test
+    @DisplayName("자신의 출석 현황 조회 성공 테스트")
+    void READ_SELF_ATTENDANCE_STATUS_SUCCESS_TEST(){
+        // given
+        int id = 1;
+        LocalDate from = LocalDate.now();
+        LocalDate to = LocalDate.now();
+        AttendanceUserDto attendanceUserDto = AttendanceUserDto.builder()
+                .id(id)
+                .userId("hello world")
+                .userName("abc123")
+                .attendanceUserStatusList(List.of(
+                        AttendanceUserDto.AttendanceUserStatus.builder()
+                                .attendanceDate(from)
+                                .attendanceStatus(AttendanceType.ATTENDANCED)
+                                .build()
+                        )
+                ).build();
+
+        // when
+        Mockito.when(attendanceRepository.readSpecificAttendanceStatusList(id, from, to)).thenReturn(attendanceUserDto);
+        Mockito.when(attendanceRepository.readAttendanceTarget(id)).thenReturn(Optional.of(AttendanceTargetDto.builder().build()));
+        AttendanceUserDto result = attendanceManager.readSpecificAttendanceStatusList(id, from, to);
+
+        // then
+        Assertions.assertAll(
+                () -> Assertions.assertEquals(attendanceUserDto.getId(), result.getId()),
+                () -> Assertions.assertEquals(attendanceUserDto.getUserId(), result.getUserId()),
+                () -> Assertions.assertEquals(attendanceUserDto.getUserName(), result.getUserName()),
+                () -> Assertions.assertEquals(attendanceUserDto.getAttendanceUserStatusList().size(), result.getAttendanceUserStatusList().size())
+        );
+    }
+
+    @Test
+    @DisplayName("자신의 출석 현황 조회 실패 테스트 - 출석 대상에 등록되지 않은 유저")
+    void READ_SELF_ATTENDANCE_STATUS_FAIL_NOT_REGISTERED_ATTENDANCE_LIST_TEST(){
+        // given
+        int id = 1;
+        LocalDate from = LocalDate.now();
+        LocalDate to = LocalDate.now();
+
+        // when
+        Mockito.when(attendanceRepository.readAttendanceTarget(id)).thenReturn(Optional.empty());
+
+        // then
+        Assertions.assertThrows(DoesNotRegisteredAttendanceException.class, () -> attendanceManager.readSpecificAttendanceStatusList(id, from, to));
+    }
+
+    @Test
+    @DisplayName("자신의 출석 현황 조회 실패 테스트 - from > to")
+    void READ_SELF_ATTENDANCE_FAIL_FROM_IS_BIGGER_THAN_TO_TEST(){
+        // given
+        int id = 1;
+        LocalDate from = LocalDate.now().plusDays(1);
+        LocalDate to = LocalDate.now();
+
+        // when & then
+        Assertions.assertThrows(InvalidDateException.class, () -> attendanceManager.readSpecificAttendanceStatusList(id, from, to));
+    }
+
+    @Test
+    @DisplayName("자신의 출석 현황 조회 실패 테스트 - to - from > 60")
+    void READ_SELF_ATTENDANCE_FAIL_TEST(){
+        // given
+        int id = 1;
+        LocalDate from = LocalDate.now().minusDays(61);
+        LocalDate to = LocalDate.now();
+
+        // when & then
+        Assertions.assertThrows(InvalidDateException.class, () -> attendanceManager.readSpecificAttendanceStatusList(id, from, to));
+    }
+
+    @Test
+    @DisplayName("자신의 출석 현황 조회 실패 테스트 - to 가 너무 멈")
+    void READ_SELF_ATTENDANCE_FAIL_TO_IS_TOO_FAR_TEST(){
+        // given
+        int id = 1;
+        LocalDate from = LocalDate.now();
+        LocalDate to = LocalDate.now().plusDays(100);
+
+        // when & then
+        Assertions.assertThrows(TooFarDateException.class, () -> attendanceManager.readSpecificAttendanceStatusList(id, from, to));
+    }
+
+    @Test
+    @DisplayName("자신의 출석 현황 조회 실패 테스트 - from 이 너무 빠름")
+    void READ_SELF_ATTENDANCE_FAIL_FROM_IS_TOO_EARLY_TEST(){
+        // given
+        int id = 1;
+        LocalDate from = LocalDate.now().minusDays(100);
+        LocalDate to = LocalDate.now();
+
+        // when & then
+        Assertions.assertThrows(TooEarlyDateException.class, () -> attendanceManager.readSpecificAttendanceStatusList(id, from, to));
     }
 
 }
