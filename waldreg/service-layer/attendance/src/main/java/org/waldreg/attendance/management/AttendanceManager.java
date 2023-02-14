@@ -21,4 +21,6 @@ public interface AttendanceManager{
 
     AttendanceUserDto readSpecificAttendanceStatusList(int id, LocalDate from, LocalDate to);
 
+    void confirm(int id, String attendanceIdentify);
+
 }
