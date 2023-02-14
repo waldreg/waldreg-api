@@ -1,4 +1,4 @@
-package org.waldreg.controller.user.response;
+package org.waldreg.controller.joiningpool.response;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 

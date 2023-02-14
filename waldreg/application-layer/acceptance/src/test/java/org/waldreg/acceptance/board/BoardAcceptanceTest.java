@@ -31,7 +31,7 @@ import org.waldreg.controller.board.category.response.CategoryResponse;
 import org.waldreg.controller.board.comment.request.CommentRequest;
 import org.waldreg.controller.board.comment.response.CommentListResponse;
 import org.waldreg.controller.board.comment.response.CommentResponse;
-import org.waldreg.controller.user.request.UserRequest;
+import org.waldreg.controller.joiningpool.request.UserRequest;
 import org.waldreg.controller.user.response.UserResponse;
 
 @SpringBootTest

@@ -24,7 +24,7 @@ import org.waldreg.auth.request.AuthTokenRequest;
 import org.waldreg.controller.character.request.CharacterRequest;
 import org.waldreg.controller.character.request.PermissionRequest;
 import org.waldreg.controller.character.response.PermissionResponse;
-import org.waldreg.controller.user.request.UserRequest;
+import org.waldreg.controller.joiningpool.request.UserRequest;
 import org.waldreg.controller.user.response.UserResponse;
 
 @SpringBootTest

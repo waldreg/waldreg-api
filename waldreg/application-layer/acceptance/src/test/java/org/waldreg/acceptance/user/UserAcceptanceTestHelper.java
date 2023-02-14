@@ -21,7 +21,7 @@ public class UserAcceptanceTestHelper{
 
     public static ResultActions inquiryAllUserInJoiningPool(MockMvc mvc, String token, int startIdx, int endIdx) throws Exception{
         return mvc.perform(MockMvcRequestBuilders
-                                   .get("/user/?from={from}&to={to}", startIdx, endIdx)
+                                   .get("/user/joiningpool?from={from}&to={to}", startIdx, endIdx)
                                    .header(HttpHeaders.AUTHORIZATION, token)
                                    .accept(MediaType.APPLICATION_JSON)
                                    .header("api-version", apiVersion));
@@ -43,8 +43,6 @@ public class UserAcceptanceTestHelper{
                                    .header("api-version", apiVersion)
                                    .header(HttpHeaders.AUTHORIZATION, token));
     }
-
-
 
     public static ResultActions inquiryUserWithToken(MockMvc mvc, String userId, String token) throws Exception{
         return mvc.perform(MockMvcRequestBuilders
