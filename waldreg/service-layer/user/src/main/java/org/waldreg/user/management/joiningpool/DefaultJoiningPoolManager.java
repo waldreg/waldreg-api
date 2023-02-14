@@ -3,20 +3,57 @@ package org.waldreg.user.management.joiningpool;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.waldreg.character.exception.UnknownCharacterException;
 import org.waldreg.user.dto.UserDto;
+import org.waldreg.user.exception.DuplicatedUserIdException;
 import org.waldreg.user.exception.InvalidRangeException;
 import org.waldreg.user.exception.UnknownUserIdException;
 import org.waldreg.user.management.PerPage;
+import org.waldreg.user.spi.CharacterRepository;
 import org.waldreg.user.spi.JoiningPoolRepository;
+import org.waldreg.user.spi.UserRepository;
 
 @Service
 public class DefaultJoiningPoolManager implements JoiningPoolManager{
 
     private final JoiningPoolRepository joiningPoolRepository;
+    private final UserRepository userRepository;
+    private final CharacterRepository characterRepository;
 
     @Autowired
-    public DefaultJoiningPoolManager(JoiningPoolRepository joiningPoolRepository){
+    public DefaultJoiningPoolManager(JoiningPoolRepository joiningPoolRepository, UserRepository userRepository, CharacterRepository characterRepository){
         this.joiningPoolRepository = joiningPoolRepository;
+        this.userRepository = userRepository;
+        this.characterRepository = characterRepository;
+    }
+
+    @Override
+    public void createUser(UserDto userDto){
+        throwIfDuplicatedUserId(userDto.getUserId());
+        setDefaultCharacter(userDto);
+        joiningPoolRepository.createUser(userDto);
+    }
+
+    public void throwIfDuplicatedUserId(String userId){
+        if (userRepository.isExistUserId(userId) || joiningPoolRepository.isExistUserId(userId)){
+            throw new DuplicatedUserIdException("Duplicated user_id \"" + userId + "\"");
+        }
+    }
+
+    private void setDefaultCharacter(UserDto userDto){
+        if (userDto.getUserId().equals("Admin")){
+            throwIfUnknownCharacter("Admin");
+            userDto.setCharacter("Admin");
+            return;
+        }
+        throwIfUnknownCharacter("Guest");
+        userDto.setCharacter("Guest");
+    }
+
+    private void throwIfUnknownCharacter(String characterName){
+        if (!characterRepository.isExistCharacterName(characterName)){
+            throw new UnknownCharacterException(characterName);
+        }
     }
 
     @Override
