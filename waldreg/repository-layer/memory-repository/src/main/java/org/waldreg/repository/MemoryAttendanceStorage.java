@@ -34,11 +34,16 @@ public class MemoryAttendanceStorage{
                 .attendanceType(attendanceTypeMap.get(AttendanceType.ABSENCE.toString()))
                 .build();
         attendance.setAttendanceId(atomicInteger.getAndIncrement());
-        this.attendanceMap.put(attendanceUser.getAttendanceUserId(), attendance);
+        System.out.println("user name : " + attendance.getAttendanceUser().getUser().getUserId());
+        this.attendanceMap.put(attendanceUser.getUser().getId(), attendance);
     }
 
     public Attendance readAttendance(int id){
         return attendanceMap.get(id);
+    }
+
+    public void deleteAttendance(int id){
+        attendanceMap.remove(id);
     }
 
     @PostConstruct

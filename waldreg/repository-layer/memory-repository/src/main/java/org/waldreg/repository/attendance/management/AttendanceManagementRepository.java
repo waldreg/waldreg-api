@@ -39,7 +39,7 @@ public final class AttendanceManagementRepository implements AttendanceRepositor
 
     @Override
     public void deleteRegisteredAttendanceTarget(int id){
-
+        memoryAttendanceStorage.deleteAttendance(id);
     }
 
     @Override
@@ -65,11 +65,6 @@ public final class AttendanceManagementRepository implements AttendanceRepositor
     @Override
     public AttendanceUserDto readSpecificAttendanceStatusList(int id, LocalDate from, LocalDate to){
         return null;
-    }
-
-    @Override
-    public void confirm(int id){
-
     }
 
 }

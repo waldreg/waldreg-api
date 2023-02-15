@@ -17,12 +17,13 @@ import org.waldreg.attendance.management.dto.AttendanceUserDto;
 import org.waldreg.attendance.management.spi.AttendanceRepository;
 import org.waldreg.attendance.management.spi.AttendanceRewardRepository;
 import org.waldreg.attendance.management.spi.UserExistChecker;
-import org.waldreg.attendance.management.valid.AttendanceIdentifyValidable;
+import org.waldreg.attendance.valid.AttendanceIdentifyValidable;
 import org.waldreg.attendance.rule.valid.AttendanceDateValidator;
 import org.waldreg.attendance.type.AttendanceType;
+import org.waldreg.attendance.valid.AttendanceTargetValidable;
 
 @Service
-public class DefaultAttendanceManager implements AttendanceManager{
+public class DefaultAttendanceManager implements AttendanceManager, AttendanceTargetValidable{
 
     private static final int MAXIMUM_DIFFERENCE_BETWEEN_DAY = 60;
     private final UserExistChecker userExistChecker;
@@ -126,18 +127,12 @@ public class DefaultAttendanceManager implements AttendanceManager{
     }
 
     @Override
-    public void confirm(int id, String attendanceIdentify){
-        throwIfDoesNotAttendanceTarget(id);
-        throwIfDoesNotNeedAttendance(id);
-        attendanceIdentifyValidable.valid(attendanceIdentify);
-        attendanceRepository.confirm(id);
-    }
-
-    private void throwIfDoesNotAttendanceTarget(int id){
+    public void throwIfDoesNotAttendanceTarget(int id){
         readAttendanceTarget(id);
     }
 
-    private void throwIfDoesNotNeedAttendance(int id){
+    @Override
+    public void throwIfDoesNotNeedAttendance(int id){
         AttendanceTargetDto attendanceTargetDto = readAttendanceTarget(id);
         if(!attendanceTargetDto.isAttendanceRequired()){
             throw new AlreadyAttendanceException();
