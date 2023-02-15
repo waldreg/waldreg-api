@@ -5,7 +5,7 @@ import java.util.List;
 
 public final class AttendancePerDate{
 
-    private final int attendancePerDateId;
+    private int attendancePerDateId;
     private final LocalDate attendanceDate;
     private final List<Attendance> attendanceList;
 
@@ -19,6 +19,10 @@ public final class AttendancePerDate{
         this.attendanceList = builder.attendanceList;
     }
 
+    public void setAttendancePerDateId(int attendancePerDateId){
+        this.attendancePerDateId = attendancePerDateId;
+    }
+
     public int getAttendancePerDateId(){
         return attendancePerDateId;
     }
@@ -29,6 +33,10 @@ public final class AttendancePerDate{
 
     public List<Attendance> getAttendanceList(){
         return attendanceList;
+    }
+
+    public void addAttendance(Attendance attendance){
+        attendanceList.add(attendance);
     }
 
     public static final class Builder{
