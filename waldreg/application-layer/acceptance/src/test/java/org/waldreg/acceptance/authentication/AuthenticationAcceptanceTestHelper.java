@@ -8,6 +8,7 @@ import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.waldreg.auth.request.AuthTokenRequest;
 import org.waldreg.auth.response.AuthTokenResponse;
+import org.waldreg.auth.response.TemporaryTokenResponse;
 
 public class AuthenticationAcceptanceTestHelper{
 
@@ -49,19 +50,10 @@ public class AuthenticationAcceptanceTestHelper{
         );
     }
 
-    public static String getTemporaryToken(MockMvc mvc, ObjectMapper objectMapper, String token) throws Exception{
-        String content = AuthenticationAcceptanceTestHelper
-                .authenticateByToken(mvc, token)
-                .andReturn().getResponse().getContentAsString();
-        AuthTokenResponse response = objectMapper.readValue(content, AuthTokenResponse.class);
-        return response.getTokenType() + " " + response.getAccessToken();
-    }
-
     public static ResultActions authenticateByToken(MockMvc mvc, String token) throws Exception{
         return mvc.perform(MockMvcRequestBuilders
                                    .get("/token")
                                    .accept(MediaType.APPLICATION_JSON)
-                                   .contentType(MediaType.APPLICATION_JSON)
                                    .header("api-version", apiVersion)
                                    .header(HttpHeaders.AUTHORIZATION, token)
         );
