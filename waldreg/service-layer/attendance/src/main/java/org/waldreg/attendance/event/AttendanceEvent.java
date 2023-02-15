@@ -74,7 +74,7 @@ public final class AttendanceEvent implements AttendanceIdentifyValidable{
     }
 
     @EventListener(AttendanceStartEvent.class)
-    public synchronized void startAttendance(AttendanceStartEvent attendanceStartEvent){
+    public void startAttendance(AttendanceStartEvent attendanceStartEvent){
         stopAttendance();
         attendanceStarter = attendanceStartEvent.getAttendanceStarterId();
         attendanceIdentify = String.valueOf(random.nextInt(8000) + 1000);
@@ -87,7 +87,7 @@ public final class AttendanceEvent implements AttendanceIdentifyValidable{
 
     @EventListener(AttendanceStopEvent.class)
     @SuppressWarnings("all")
-    public synchronized void stopAttendance(){
+    public void stopAttendance(){
         ForkJoinPool.commonPool().shutdownNow();
         for(Map.Entry<Integer, Future<?>> entry : futureMap.entrySet()){
             entry.getValue().cancel(true);
