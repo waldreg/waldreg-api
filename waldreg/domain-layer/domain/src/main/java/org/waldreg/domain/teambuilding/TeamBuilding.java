@@ -57,6 +57,7 @@ public final class TeamBuilding{
 
         private Builder(){
             this.createdAt = LocalDateTime.now();
+            lastModifiedAt = createdAt;
         }
 
         public Builder teamBuildingId(int teamBuildingId){
