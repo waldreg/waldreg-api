@@ -22,6 +22,4 @@ public interface AttendanceManager{
 
     AttendanceUserDto readSpecificAttendanceStatusList(int id, LocalDate from, LocalDate to);
 
-    void setRewardTag(int rewardTagId, AttendanceType attendanceType);
-
 }
