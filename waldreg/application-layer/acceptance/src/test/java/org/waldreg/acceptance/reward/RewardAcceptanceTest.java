@@ -1,6 +1,5 @@
 package org.waldreg.acceptance.reward;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.util.ArrayList;
@@ -25,9 +24,8 @@ import org.waldreg.acceptance.user.UserAcceptanceTestHelper;
 import org.waldreg.auth.request.AuthTokenRequest;
 import org.waldreg.controller.reward.tag.request.RewardTagRequest;
 import org.waldreg.controller.reward.tag.response.RewardTagResponse;
-import org.waldreg.controller.reward.users.response.RewardTagWrapperResponse;
 import org.waldreg.controller.reward.users.response.UsersRewardTagResponse;
-import org.waldreg.controller.user.request.UserRequest;
+import org.waldreg.controller.joiningpool.request.UserRequest;
 import org.waldreg.controller.user.response.UserResponse;
 
 @SpringBootTest
@@ -429,6 +427,7 @@ public class RewardAcceptanceTest{
         int rewardTagId = rewardTagResponse.getRewardTagId();
 
         UserAcceptanceTestHelper.createUser(mvc, objectMapper.writeValueAsString(userRequest)).andDo(MockMvcResultHandlers.print());
+        UserAcceptanceTestHelper.approveJoinRequest(mvc,adminToken,userRequest.getUserId());
         userCreateRequestList.add(userRequest);
 
         int id = getUserResponse(userId, adminToken).getId();
@@ -480,6 +479,7 @@ public class RewardAcceptanceTest{
 
         // when
         UserAcceptanceTestHelper.createUser(mvc, objectMapper.writeValueAsString(userRequest)).andDo(MockMvcResultHandlers.print());
+        UserAcceptanceTestHelper.approveJoinRequest(mvc,adminToken,userRequest.getUserId());
         userCreateRequestList.add(userRequest);
 
         int id = getUserResponse(userId, adminToken).getId();
@@ -612,6 +612,7 @@ public class RewardAcceptanceTest{
         int rewardTagId = rewardTagResponse.getRewardTagId();
 
         UserAcceptanceTestHelper.createUser(mvc, objectMapper.writeValueAsString(userRequest)).andDo(MockMvcResultHandlers.print());
+        UserAcceptanceTestHelper.approveJoinRequest(mvc,adminToken,userRequest.getUserId());
         userCreateRequestList.add(userRequest);
 
         int id = getUserResponse(userId, adminToken).getId();
@@ -768,6 +769,7 @@ public class RewardAcceptanceTest{
         int rewardTagId = rewardTagResponse.getRewardTagId();
 
         UserAcceptanceTestHelper.createUser(mvc, objectMapper.writeValueAsString(userRequest)).andDo(MockMvcResultHandlers.print());
+        UserAcceptanceTestHelper.approveJoinRequest(mvc,adminToken,userRequest.getUserId());
         userCreateRequestList.add(userRequest);
 
         int id = getUserResponse(userId, adminToken).getId();
@@ -834,6 +836,7 @@ public class RewardAcceptanceTest{
         int rewardTagId = rewardTagResponse.getRewardTagId();
 
         UserAcceptanceTestHelper.createUser(mvc, objectMapper.writeValueAsString(userRequest)).andDo(MockMvcResultHandlers.print());
+        UserAcceptanceTestHelper.approveJoinRequest(mvc,adminToken,userRequest.getUserId());
         userCreateRequestList.add(userRequest);
 
         int id = getUserResponse(userId, adminToken).getId();
@@ -885,6 +888,8 @@ public class RewardAcceptanceTest{
     }
 
     private String createUserAndGetToken(String name, String userId, String userPassword) throws Exception{
+        String adminToken = AuthenticationAcceptanceTestHelper.getAdminToken(mvc, objectMapper);
+
         UserRequest userRequest = UserRequest.builder()
                 .name(name)
                 .userId(userId)
@@ -892,6 +897,7 @@ public class RewardAcceptanceTest{
                 .phoneNumber("010-1234-1234")
                 .build();
         UserAcceptanceTestHelper.createUser(mvc, objectMapper.writeValueAsString(userRequest)).andDo(MockMvcResultHandlers.print());
+        UserAcceptanceTestHelper.approveJoinRequest(mvc,adminToken,userRequest.getUserId());
         userCreateRequestList.add(userRequest);
 
         return AuthenticationAcceptanceTestHelper.getToken(mvc, objectMapper, AuthTokenRequest.builder()

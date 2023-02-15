@@ -8,14 +8,14 @@ import org.waldreg.core.template.exception.ExceptionTemplate;
 import org.waldreg.token.exception.AuthenticateFailException;
 import org.waldreg.token.exception.PasswordMissMatchException;
 import org.waldreg.token.exception.TokenExpiredException;
-import org.waldreg.token.exception.UserIdMissMatchException;
+import org.waldreg.token.exception.UnknownUserIdException;
 
 @RestControllerAdvice
 public class AuthExceptionAdvice{
 
     private final String documentUrl = "docs.waldreg.org";
 
-    @ExceptionHandler({UserIdMissMatchException.class, PasswordMissMatchException.class})
+    @ExceptionHandler({UnknownUserIdException.class, PasswordMissMatchException.class})
     public ResponseEntity<ExceptionTemplate> catchMissmatchException(RuntimeException runtimeException){
         ExceptionTemplate exceptionTemplate = ExceptionTemplate.builder()
                 .code("AUTH-404")

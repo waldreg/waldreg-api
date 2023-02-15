@@ -7,12 +7,9 @@ import java.util.Map;
 import java.util.concurrent.atomic.AtomicInteger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
-import org.waldreg.character.exception.UnknownCharacterException;
 import org.waldreg.domain.character.Character;
 import org.waldreg.domain.rewardtag.RewardTagWrapper;
 import org.waldreg.domain.user.User;
-import org.waldreg.user.exception.UnknownIdException;
-import org.waldreg.user.exception.UnknownUserIdException;
 
 @Repository
 public class MemoryUserStorage{
@@ -21,7 +18,6 @@ public class MemoryUserStorage{
     private final AtomicInteger atomicInteger;
     private final Map<String, User> storage;
     private final int startIndex = 0;
-
 
     {
         storage = new HashMap<>();
@@ -34,33 +30,15 @@ public class MemoryUserStorage{
     public void deleteAllUser(){storage.clear();}
 
     public void createUser(User user){
-        setDefaultCharacter(user);
         user.setId(atomicInteger.getAndIncrement());
         storage.put(user.getName(), user);
     }
 
-    private void setDefaultCharacter(User user){
-        if (user.getUserId().equals("Admin")){
-            throwIfUnknownCharacter("Admin");
-            user.setCharacter(memoryCharacterStorage.readCharacterByName("Admin"));
-            return;
-        }
-        throwIfUnknownCharacter("Guest");
-        user.setCharacter(memoryCharacterStorage.readCharacterByName("Guest"));
-    }
-
     public void updateCharacterOfUser(int id, String characterName){
-        throwIfUnknownCharacter(characterName);
         Character character = memoryCharacterStorage.readCharacterByName(characterName);
         User user = readUserById(id);
         user.setCharacter(character);
         storage.put(user.getName(), user);
-    }
-
-    private void throwIfUnknownCharacter(String characterName){
-        if (memoryCharacterStorage.readCharacterByName(characterName) == null){
-            throw new UnknownCharacterException(characterName);
-        }
     }
 
     public User readUserById(int id){
@@ -69,7 +47,7 @@ public class MemoryUserStorage{
                 return userEntry.getValue();
             }
         }
-        throw new UnknownIdException("Unknown id \"" + id + "\"");
+        throw new IllegalStateException("Can not verifiable status of id \"" + id + "\"");
     }
 
     public User readUserByUserId(String userId){
@@ -78,7 +56,7 @@ public class MemoryUserStorage{
                 return userEntry.getValue();
             }
         }
-        throw new UnknownUserIdException("Unknown user_id \"" + userId + "\"");
+        throw new IllegalStateException("Can not verifiable status of userId \"" + userId + "\"");
     }
 
     public List<User> readUserList(int startIdx, int endIdx){
@@ -138,7 +116,25 @@ public class MemoryUserStorage{
                 return;
             }
         }
-        throw new UnknownIdException("Unknown id \"" + id + "\"");
+        throw new IllegalStateException("Can not verifiable status of id \"" + id + "\"");
+    }
+
+    public boolean isExistUserId(String userId){
+        for (Map.Entry<String, User> userEntry : storage.entrySet()){
+            if (userEntry.getValue().getUserId().equals(userId)){
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public boolean isExistId(int id){
+        for (Map.Entry<String, User> userEntry : storage.entrySet()){
+            if (userEntry.getValue().getId() == id){
+                return true;
+            }
+        }
+        return false;
     }
 
 }

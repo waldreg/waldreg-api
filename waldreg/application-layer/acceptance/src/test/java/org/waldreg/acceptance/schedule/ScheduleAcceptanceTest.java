@@ -23,7 +23,7 @@ import org.waldreg.controller.schedule.request.ScheduleRepeatRequest;
 import org.waldreg.controller.schedule.request.ScheduleRequest;
 import org.waldreg.controller.schedule.response.ScheduleListResponse;
 import org.waldreg.controller.schedule.response.ScheduleResponse;
-import org.waldreg.controller.user.request.UserRequest;
+import org.waldreg.controller.joiningpool.request.UserRequest;
 import org.waldreg.controller.user.response.UserResponse;
 
 @SpringBootTest
@@ -1482,7 +1482,10 @@ public class ScheduleAcceptanceTest{
     }
 
     private String createUserAndGetToken(UserRequest userRequest) throws Exception{
+        String adminToken = AuthenticationAcceptanceTestHelper.getAdminToken(mvc, objectMapper);
+
         UserAcceptanceTestHelper.createUser(mvc, objectMapper.writeValueAsString(userRequest));
+        UserAcceptanceTestHelper.approveJoinRequest(mvc,adminToken,userRequest.getUserId());
         userCreateRequestList.add(userRequest);
 
         return AuthenticationAcceptanceTestHelper.getToken(mvc, objectMapper, AuthTokenRequest.builder()
