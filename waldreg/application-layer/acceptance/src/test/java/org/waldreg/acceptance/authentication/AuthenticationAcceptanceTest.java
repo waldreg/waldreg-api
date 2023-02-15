@@ -41,7 +41,6 @@ public class AuthenticationAcceptanceTest{
     @BeforeEach
     @AfterEach
     public void INITIATE() throws Exception{
-        String url = "/user/{id}";
         String adminToken = AuthenticationAcceptanceTestHelper.getAdminToken(mvc, objectMapper);
         for (UserRequest request : userCreateRequestList){
             UserResponse userResponse = objectMapper.readValue(UserAcceptanceTestHelper.inquiryUserWithoutToken(mvc, request.getUserId())
@@ -85,7 +84,7 @@ public class AuthenticationAcceptanceTest{
                 .phoneNumber(phoneNumber2)
                 .build();
         UserAcceptanceTestHelper.createUser(mvc, objectMapper.writeValueAsString(userRequest));
-        UserAcceptanceTestHelper.approveJoinRequest(mvc,adminToken,userRequest.getUserId());
+        UserAcceptanceTestHelper.approveJoinRequest(mvc, adminToken, userRequest.getUserId());
         userCreateRequestList.add(userRequest);
 
         //when
@@ -186,5 +185,90 @@ public class AuthenticationAcceptanceTest{
 
     }
 
+    @Test
+    @DisplayName("소켓용 임시토큰 발급 성공")
+    public void CREATE_TEMPORARY_TOKEN_SUCCESS_TEST() throws Exception{
+        //given
+        String adminToken = AuthenticationAcceptanceTestHelper.getAdminToken(mvc, objectMapper);
+        String userId = "Fixtar";
+        String userPassword = "1234abcd@";
+        AuthTokenRequest tokenCreateRequest = AuthTokenRequest.builder()
+                .userId(userId)
+                .userPassword(userPassword)
+                .build();
+
+        String name2 = "alcuk";
+        String userId2 = "Fixtar";
+        String userPassword2 = "1234abcd@";
+        String phoneNumber2 = "010-1234-1111";
+        UserRequest userRequest = UserRequest.builder()
+                .name(name2)
+                .userId(userId2)
+                .userPassword(userPassword2)
+                .phoneNumber(phoneNumber2)
+                .build();
+        UserAcceptanceTestHelper.createUser(mvc, objectMapper.writeValueAsString(userRequest));
+        UserAcceptanceTestHelper.approveJoinRequest(mvc, adminToken, userRequest.getUserId());
+        userCreateRequestList.add(userRequest);
+
+        //when
+
+        String token = objectMapper.readValue(AuthenticationAcceptanceTestHelper.authenticateByUserIdAndUserPassword(mvc, objectMapper.writeValueAsString(tokenCreateRequest))
+                                                      .andReturn().getResponse().getContentAsString(), String.class);
+
+        ResultActions result = AuthenticationAcceptanceTestHelper.authenticateByToken(mvc, token);
+        //then
+        result.andExpectAll(
+                MockMvcResultMatchers.status().isOk(),
+                MockMvcResultMatchers.header().string(HttpHeaders.CONTENT_TYPE,
+                                                      "application/json"),
+                MockMvcResultMatchers.jsonPath("$.temporary_token").isString(),
+                MockMvcResultMatchers.jsonPath("$.token_type").value("Bearer")
+        );
+
+    }
+
+    @Test
+    @DisplayName("소켓용 임시토큰 발급 실패 - 없는 아이디")
+    public void CREATE_TEMPORARY_TOKEN_FAIL_UNKNOWN_ID_TEST() throws Exception{
+        //given
+        String adminToken = AuthenticationAcceptanceTestHelper.getAdminToken(mvc, objectMapper);
+        String userId = "Fixtar";
+        String userPassword = "1234abcd@";
+        AuthTokenRequest tokenCreateRequest = AuthTokenRequest.builder()
+                .userId(userId)
+                .userPassword(userPassword)
+                .build();
+
+        String name2 = "alcuk";
+        String userId2 = "Fixtar";
+        String userPassword2 = "1234abcd@";
+        String phoneNumber2 = "010-1234-1111";
+        UserRequest userRequest = UserRequest.builder()
+                .name(name2)
+                .userId(userId2)
+                .userPassword(userPassword2)
+                .phoneNumber(phoneNumber2)
+                .build();
+        UserAcceptanceTestHelper.createUser(mvc, objectMapper.writeValueAsString(userRequest));
+        UserAcceptanceTestHelper.approveJoinRequest(mvc, adminToken, userRequest.getUserId());
+        userCreateRequestList.add(userRequest);
+
+        //when
+
+        String token = objectMapper.readValue(AuthenticationAcceptanceTestHelper.authenticateByUserIdAndUserPassword(mvc, objectMapper.writeValueAsString(tokenCreateRequest))
+                                                      .andReturn().getResponse().getContentAsString(), String.class);
+
+        ResultActions result = AuthenticationAcceptanceTestHelper.authenticateByToken(mvc, token);
+        //then
+        result.andExpectAll(
+                MockMvcResultMatchers.status().isBadRequest(),
+                MockMvcResultMatchers.header().string(HttpHeaders.CONTENT_TYPE, "application/json"),
+                MockMvcResultMatchers.jsonPath("$.code").value("AUTH-406"),
+                MockMvcResultMatchers.jsonPath("$.messages").value("Invalid token"),
+                MockMvcResultMatchers.jsonPath("$.document_url").value("docs.waldreg.org")
+        );
+
+    }
 
 }
