@@ -23,7 +23,7 @@ import org.waldreg.token.dto.TokenUserDto;
 import org.waldreg.token.exception.IdMissMatchException;
 import org.waldreg.token.exception.PasswordMissMatchException;
 import org.waldreg.token.exception.TokenExpiredException;
-import org.waldreg.token.exception.UserIdMissMatchException;
+import org.waldreg.token.exception.UnknownUserIdException;
 import org.waldreg.util.annotation.AnnotationExtractor;
 
 @Aspect
@@ -121,7 +121,7 @@ public class AuthenticateAop{
     private void throwIfUserIdDoesNotSame(TokenUserDto tokenUserDto, ProceedingJoinPoint proceedingJoinPoint, int argumentIdx){
         String userId = getParameterArgument(proceedingJoinPoint, argumentIdx, String.class);
         if (!tokenUserDto.getUserId().equals(userId)){
-            throw new UserIdMissMatchException(userId);
+            throw new UnknownUserIdException(userId);
         }
     }
 

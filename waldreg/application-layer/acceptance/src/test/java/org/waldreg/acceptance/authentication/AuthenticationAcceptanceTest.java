@@ -17,7 +17,7 @@ import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import org.waldreg.acceptance.user.UserAcceptanceTestHelper;
 import org.waldreg.auth.request.AuthTokenRequest;
-import org.waldreg.controller.user.request.UserRequest;
+import org.waldreg.controller.joiningpool.request.UserRequest;
 import org.waldreg.controller.user.response.UserResponse;
 
 @SpringBootTest
@@ -66,6 +66,7 @@ public class AuthenticationAcceptanceTest{
     @DisplayName("토큰 발급 요청 성공")
     public void CREATE_TOKEN_PUBLISH_REQUEST_TEST() throws Exception{
         //given
+        String adminToken = AuthenticationAcceptanceTestHelper.getAdminToken(mvc, objectMapper);
         String userId = "Fixtar";
         String userPassword = "1234abcd@";
         AuthTokenRequest tokenCreateRequest = AuthTokenRequest.builder()
@@ -84,6 +85,7 @@ public class AuthenticationAcceptanceTest{
                 .phoneNumber(phoneNumber2)
                 .build();
         UserAcceptanceTestHelper.createUser(mvc, objectMapper.writeValueAsString(userRequest));
+        UserAcceptanceTestHelper.approveJoinRequest(mvc,adminToken,userRequest.getUserId());
         userCreateRequestList.add(userRequest);
 
         //when
@@ -115,8 +117,8 @@ public class AuthenticationAcceptanceTest{
         //then
         result.andExpectAll(MockMvcResultMatchers.status().isBadRequest(),
                             MockMvcResultMatchers.header().string(HttpHeaders.CONTENT_TYPE, "application/json"),
-                            MockMvcResultMatchers.jsonPath("$.code").value("USER-406"),
-                            MockMvcResultMatchers.jsonPath("$.messages").value("Unknown user_id \"" + userId + "\""),
+                            MockMvcResultMatchers.jsonPath("$.code").value("AUTH-404"),
+                            MockMvcResultMatchers.jsonPath("$.messages").value("Invalid authentication information"),
                             MockMvcResultMatchers.jsonPath("$.document_url").value("docs.waldreg.org"))
                 .andDo(MockMvcResultHandlers.print());
     }

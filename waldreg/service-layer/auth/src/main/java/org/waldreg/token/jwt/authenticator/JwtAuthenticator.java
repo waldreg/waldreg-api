@@ -27,11 +27,15 @@ public class JwtAuthenticator implements TokenAuthenticator{
 
     @Override
     public int authenticate(String token) throws JwtException{
+        int id = getIdByToken(token);
+        decryptedTokenContextHolder.hold(id);
+        return id;
+    }
+
+    private int getIdByToken(String token){
         try{
             Jws<Claims> claim = Jwts.parserBuilder().setSigningKey(secret.getSecretKey()).build().parseClaimsJws(token.split(" ")[1]);
-            int id = Integer.parseInt(claim.getBody().getSubject());
-            decryptedTokenContextHolder.hold(id);
-            return id;
+            return Integer.parseInt(claim.getBody().getSubject());
         } catch (ExpiredJwtException EJE){
             throw new TokenExpiredException(EJE.getMessage(), EJE.getCause());
         }

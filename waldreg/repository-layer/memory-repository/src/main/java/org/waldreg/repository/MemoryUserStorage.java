@@ -10,6 +10,7 @@ import org.springframework.stereotype.Repository;
 import org.waldreg.domain.character.Character;
 import org.waldreg.domain.rewardtag.RewardTagWrapper;
 import org.waldreg.domain.user.User;
+
 @Repository
 public class MemoryUserStorage{
 

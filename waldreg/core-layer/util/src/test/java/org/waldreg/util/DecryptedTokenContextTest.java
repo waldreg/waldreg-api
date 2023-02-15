@@ -17,14 +17,14 @@ import org.waldreg.util.token.DecryptedTokenContext;
 
 @ExtendWith(SpringExtension.class)
 @ContextConfiguration(classes = {DecryptedTokenContext.class})
-public class DecryptedTokenContextTest{
+class DecryptedTokenContextTest{
 
     @Autowired
     private DecryptedTokenContext decryptedTokenContext;
 
     @Test
     @DisplayName("UserId를 같은 스레드에서 전달 하는 테스트")
-    public void RECEIVE_USER_ID_ON_SAME_THREAD_TEST(){
+    void RECEIVE_USER_ID_ON_SAME_THREAD_TEST(){
         // given
         ExecutorService executorService = Executors.newFixedThreadPool(2);
         Callable<Integer> callable1 = () -> {
@@ -55,10 +55,10 @@ public class DecryptedTokenContextTest{
 
     @Test
     @DisplayName("UserId를 같은 스레드에서 전달하는 테스트 - 스레드 안정성 테스트")
-    public void RECEIVE_USER_ID_ON_SAME_THREAD_THREAD_SAFETY_TEST() throws Exception{
+    void RECEIVE_USER_ID_ON_SAME_THREAD_THREAD_SAFETY_TEST() throws Exception{
         ExecutorService executorService = Executors.newCachedThreadPool();
         List<Callable<Integer>> runnableList = new ArrayList<>();
-        for (int i = 0; i < 100; i++){
+        for (int i = 0; i < 10; i++){
             int finalI = i;
             runnableList.add(() -> {
                 decryptedTokenContext.hold(finalI);

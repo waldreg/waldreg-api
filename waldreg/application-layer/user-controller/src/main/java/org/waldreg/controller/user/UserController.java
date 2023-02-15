@@ -7,7 +7,6 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -19,7 +18,6 @@ import org.waldreg.character.aop.parameter.PermissionVerifyState;
 import org.waldreg.controller.user.mapper.ControllerUserMapper;
 import org.waldreg.controller.user.request.CharacterRequest;
 import org.waldreg.controller.user.request.UpdateUserRequest;
-import org.waldreg.controller.user.request.UserRequest;
 import org.waldreg.controller.user.response.UserListResponse;
 import org.waldreg.controller.user.response.UserResponse;
 import org.waldreg.token.aop.annotation.Authenticating;
@@ -42,12 +40,6 @@ public class UserController{
         this.userManager = userManager;
         this.controllerUserMapper = controllerUserMapper;
         this.decryptedTokenContextGetter = decryptedTokenContextGetter;
-    }
-
-    @PostMapping("/user")
-    public void createUser(@RequestBody @Validated UserRequest createRequest){
-        UserDto userDto = controllerUserMapper.userRequestToUserDto(createRequest);
-        userManager.createUser(controllerUserMapper.userRequestToUserDto(createRequest));
     }
 
     @Authenticating(fail = AuthFailBehavior.PASS)
