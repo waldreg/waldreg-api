@@ -39,7 +39,7 @@ public final class AttendanceManagementRepository implements AttendanceRepositor
 
     @Override
     public void deleteRegisteredAttendanceTarget(int id){
-
+        memoryAttendanceStorage.deleteAttendance(id);
     }
 
     @Override

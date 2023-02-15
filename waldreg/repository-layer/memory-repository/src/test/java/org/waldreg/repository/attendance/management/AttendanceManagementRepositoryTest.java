@@ -1,7 +1,9 @@
 package org.waldreg.repository.attendance.management;
 
 import java.util.List;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -33,6 +35,12 @@ class AttendanceManagementRepositoryTest{
     @Autowired
     private MemoryUserStorage userStorage;
 
+    @BeforeEach
+    @AfterEach
+    void init(){
+        userStorage.deleteAllUser();
+    }
+
     @Test
     @DisplayName("유저 출석대상 등록 및 조회 성공 테스트")
     void REGISTER_USER_ON_ATTENDANCE_TARGET_SUCCESS_TEST(){
@@ -49,6 +57,21 @@ class AttendanceManagementRepositoryTest{
                 () -> Assertions.assertEquals(user.getId(), result.getId()),
                 () -> Assertions.assertEquals(AttendanceType.ABSENCE, result.getAttendanceStatus())
         );
+    }
+
+    @Test
+    @DisplayName("유저 출석대상 등록 및 삭제 성공 테스트")
+    void REGISTER_USER_ON_ATTENDANCE_TARGET_AND_DELETE_SUCCESS_TEST(){
+        // given
+        User user = addAndGetDefaultUser();
+
+        // when
+        repository.registerAttendanceTarget(user.getId());
+        repository.deleteRegisteredAttendanceTarget(user.getId());
+
+        // then
+        Assertions.assertThrows(IllegalStateException.class,
+                () -> repository.readAttendanceTarget(user.getId()).orElseThrow(IllegalStateException::new));
     }
 
     private User addAndGetDefaultUser(){

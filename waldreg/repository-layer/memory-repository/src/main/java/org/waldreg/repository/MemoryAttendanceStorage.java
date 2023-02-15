@@ -41,6 +41,10 @@ public class MemoryAttendanceStorage{
         return attendanceMap.get(id);
     }
 
+    public void deleteAttendance(int id){
+        attendanceMap.remove(id);
+    }
+
     @PostConstruct
     private void initAttendanceRewardTag(){
         initAbsenceAttendance();
