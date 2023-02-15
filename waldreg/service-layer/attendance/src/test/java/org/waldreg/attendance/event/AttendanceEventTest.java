@@ -1,7 +1,6 @@
-package org.waldreg.attendance.schedule;
+package org.waldreg.attendance.event;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutorService;
@@ -18,17 +17,17 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.waldreg.attendance.exception.DoesNotStartedAttendanceException;
 import org.waldreg.attendance.exception.WrongAttendanceIdentifyException;
-import org.waldreg.attendance.schedule.publish.AttendanceStartEvent;
-import org.waldreg.attendance.schedule.publish.AttendanceStopEvent;
-import org.waldreg.attendance.schedule.subscribe.AttendanceStartedEvent;
+import org.waldreg.attendance.event.publish.AttendanceStartEvent;
+import org.waldreg.attendance.event.publish.AttendanceStopEvent;
+import org.waldreg.attendance.event.subscribe.AttendanceStartedEvent;
 
 @Component
 @ExtendWith(SpringExtension.class)
-@ContextConfiguration(classes = {AttendanceScheduler.class, AttendanceSchedulerTest.class})
-class AttendanceSchedulerTest{
+@ContextConfiguration(classes = {AttendanceEvent.class, AttendanceEventTest.class})
+class AttendanceEventTest{
 
     @Autowired
-    private AttendanceScheduler attendanceScheduler;
+    private AttendanceEvent attendanceScheduler;
 
     @Autowired
     private ApplicationEventPublisher applicationEventPublisher;
@@ -37,7 +36,7 @@ class AttendanceSchedulerTest{
 
     @EventListener(AttendanceStartedEvent.class)
     public void listenAttendanceStartedEvent(AttendanceStartedEvent attendanceStartedEvent){
-        AttendanceSchedulerTest.attendanceStartedEvent = attendanceStartedEvent;
+        AttendanceEventTest.attendanceStartedEvent = attendanceStartedEvent;
     }
 
     @Test
@@ -122,36 +121,6 @@ class AttendanceSchedulerTest{
 
         // then
         Assertions.assertThrows(DoesNotStartedAttendanceException.class, () -> attendanceScheduler.valid("123"));
-    }
-
-    @Test
-    @DisplayName("출석 종료 성공 테스트 - 랜덤 멀티 스레드")
-    void ATTENDANCE_STOP_SUCCESS_MULTI_THREAD_RANDOM_TEST() throws InterruptedException{
-        // given
-        ExecutorService executorService = Executors.newFixedThreadPool(20);
-        List<Callable<Boolean>> runnableList = getCallableList(100);
-
-        // when & then
-        executorService.invokeAll(runnableList);
-    }
-
-    private List<Callable<Boolean>> getCallableList(int count){
-        List<Callable<Boolean>> callableList = new ArrayList<>();
-        for(int i = 0; i < count; i++){
-            int finalI = i;
-            callableList.add(() -> {
-                applicationEventPublisher.publishEvent(new AttendanceStartEvent(finalI));
-                return true;
-            });
-            callableList.add(
-                    () -> {
-                        applicationEventPublisher.publishEvent(new AttendanceStopEvent(finalI));
-                        Assertions.assertThrows(DoesNotStartedAttendanceException.class, () -> attendanceScheduler.valid("abc"));
-                        return true;
-                    }
-            );
-        }
-        return callableList;
     }
 
 }

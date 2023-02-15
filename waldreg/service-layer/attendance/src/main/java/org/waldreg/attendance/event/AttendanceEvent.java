@@ -1,4 +1,4 @@
-package org.waldreg.attendance.schedule;
+package org.waldreg.attendance.event;
 
 import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
@@ -20,13 +20,13 @@ import org.springframework.stereotype.Service;
 import org.waldreg.attendance.exception.DoesNotStartedAttendanceException;
 import org.waldreg.attendance.exception.WrongAttendanceIdentifyException;
 import org.waldreg.attendance.management.valid.AttendanceIdentifyValidable;
-import org.waldreg.attendance.schedule.publish.AttendanceStartEvent;
-import org.waldreg.attendance.schedule.publish.AttendanceStopEvent;
-import org.waldreg.attendance.schedule.subscribe.AttendanceStartedEvent;
-import org.waldreg.attendance.schedule.subscribe.AttendanceLeftTimeEvent;
+import org.waldreg.attendance.event.publish.AttendanceStartEvent;
+import org.waldreg.attendance.event.publish.AttendanceStopEvent;
+import org.waldreg.attendance.event.subscribe.AttendanceStartedEvent;
+import org.waldreg.attendance.event.subscribe.AttendanceLeftTimeEvent;
 
 @Service
-public final class AttendanceScheduler implements AttendanceIdentifyValidable{
+public final class AttendanceEvent implements AttendanceIdentifyValidable{
 
     @SuppressWarnings("all")
     private volatile int attendanceStarter;
@@ -38,7 +38,7 @@ public final class AttendanceScheduler implements AttendanceIdentifyValidable{
     private final AtomicInteger atomicInteger;
 
     @Autowired
-    public AttendanceScheduler(ApplicationEventPublisher applicationEventPublisher) throws NoSuchAlgorithmException{
+    public AttendanceEvent(ApplicationEventPublisher applicationEventPublisher) throws NoSuchAlgorithmException{
         this.executorService = Executors.newFixedThreadPool(1);
         this.applicationEventPublisher = applicationEventPublisher;
         this.random = SecureRandom.getInstanceStrong();

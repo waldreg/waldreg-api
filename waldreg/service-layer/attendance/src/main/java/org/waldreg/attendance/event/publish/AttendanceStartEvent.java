@@ -1,4 +1,4 @@
-package org.waldreg.attendance.schedule.publish;
+package org.waldreg.attendance.event.publish;
 
 public final class AttendanceStartEvent{
 

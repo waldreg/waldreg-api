@@ -1,4 +1,4 @@
-package org.waldreg.attendance.schedule.subscribe;
+package org.waldreg.attendance.event.subscribe;
 
 public final class AttendanceStartedEvent{
 
