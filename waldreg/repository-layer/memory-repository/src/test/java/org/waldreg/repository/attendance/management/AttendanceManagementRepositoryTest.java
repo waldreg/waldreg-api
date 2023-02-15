@@ -1,0 +1,66 @@
+package org.waldreg.repository.attendance.management;
+
+import java.util.List;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
+import org.waldreg.attendance.management.dto.AttendanceTargetDto;
+import org.waldreg.attendance.type.AttendanceType;
+import org.waldreg.domain.user.User;
+import org.waldreg.repository.MemoryAttendanceStorage;
+import org.waldreg.repository.MemoryCharacterStorage;
+import org.waldreg.repository.MemoryUserStorage;
+import org.waldreg.repository.attendance.management.mapper.AttendanceManagementMapper;
+
+@ExtendWith(SpringExtension.class)
+@ContextConfiguration(classes = {AttendanceManagementRepository.class,
+        MemoryAttendanceStorage.class,
+        MemoryUserStorage.class,
+        AttendanceManagementMapper.class,
+        MemoryCharacterStorage.class})
+class AttendanceManagementRepositoryTest{
+
+    @Autowired
+    private AttendanceManagementRepository repository;
+
+    @Autowired
+    private MemoryAttendanceStorage attendanceStorage;
+
+    @Autowired
+    private MemoryUserStorage userStorage;
+
+    @Test
+    @DisplayName("유저 출석대상 등록 및 조회 성공 테스트")
+    void REGISTER_USER_ON_ATTENDANCE_TARGET_SUCCESS_TEST(){
+        // given
+        User user = addAndGetDefaultUser();
+
+        // when
+        repository.registerAttendanceTarget(user.getId());
+        AttendanceTargetDto result = repository.readAttendanceTarget(user.getId()).orElseThrow(IllegalStateException::new);
+
+        // then
+        Assertions.assertAll(
+                () -> Assertions.assertEquals(user.getUserId(), result.getUserId()),
+                () -> Assertions.assertEquals(user.getId(), result.getId()),
+                () -> Assertions.assertEquals(AttendanceType.ABSENCE, result.getAttendanceStatus())
+        );
+    }
+
+    private User addAndGetDefaultUser(){
+        User user = User.builder()
+                .userId("Default")
+                .name("Default")
+                .userPassword("Default")
+                .socialLogin(List.of())
+                .phoneNumber("Default")
+                .build();
+        userStorage.createUser(user);
+        return userStorage.readUserByUserId("Default");
+    }
+
+}

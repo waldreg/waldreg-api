@@ -1,5 +1,7 @@
 package org.waldreg.attendance.type;
 
+import java.util.Locale;
+
 public enum AttendanceType{
 
     ATTENDANCED("attendanced", false),
@@ -22,6 +24,10 @@ public enum AttendanceType{
 
     public boolean isAttendanceRequire(){
         return attendanceRequire;
+    }
+
+    public static AttendanceType getAttendanceType(String name){
+        return AttendanceType.valueOf(name.toUpperCase(Locale.ROOT));
     }
 
 }
