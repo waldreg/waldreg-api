@@ -4,7 +4,7 @@ public final class Attendance{
 
     private int attendanceId;
     private final AttendanceUser attendanceUser;
-    private final AttendanceTypeReward attendanceType;
+    private AttendanceTypeReward attendanceType;
 
     private Attendance(){
         throw new UnsupportedOperationException("Cannot invoke constructor \"Attendance()\"");
@@ -34,6 +34,10 @@ public final class Attendance{
 
     public AttendanceTypeReward getAttendanceType(){
         return attendanceType;
+    }
+
+    public void setAttendanceType(AttendanceTypeReward attendanceType){
+        this.attendanceType = attendanceType;
     }
 
     public static final class Builder{

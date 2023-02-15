@@ -8,7 +8,6 @@ import org.waldreg.attendance.exception.AlreadyAttendanceException;
 import org.waldreg.attendance.exception.DoesNotRegisteredAttendanceException;
 import org.waldreg.attendance.exception.InvalidDateException;
 import org.waldreg.attendance.exception.UnknownAttendanceTypeException;
-import org.waldreg.attendance.exception.UnknownRewardTagIdException;
 import org.waldreg.attendance.exception.UnknownUsersIdException;
 import org.waldreg.attendance.management.dto.AttendanceDayDto;
 import org.waldreg.attendance.management.dto.AttendanceStatusChangeDto;
@@ -39,6 +38,7 @@ public class DefaultAttendanceManager implements AttendanceManager, AttendanceTa
 
     @Override
     public void registerAttendanceTarget(int id){
+        attendanceRepository.createNewAttendanceCalendarIfAbsent(LocalDate.now());
         throwIfCannotFindUser(id);
         attendanceRepository.registerAttendanceTarget(id);
     }
@@ -51,6 +51,7 @@ public class DefaultAttendanceManager implements AttendanceManager, AttendanceTa
 
     @Override
     public void changeAttendanceStatus(AttendanceStatusChangeDto attendanceStatusChangeDto){
+        attendanceRepository.createNewAttendanceCalendarIfAbsent(attendanceStatusChangeDto.getAttendanceDate());
         throwIfCannotFindUser(attendanceStatusChangeDto.getId());
         throwIfDoesNotAttendanceTarget(attendanceStatusChangeDto.getId());
         throwIfUnknownAttendanceType(attendanceStatusChangeDto.getAttendanceType());
@@ -76,6 +77,9 @@ public class DefaultAttendanceManager implements AttendanceManager, AttendanceTa
         attendanceDateValidator.throwIfDateWasTooEarly(from);
         attendanceDateValidator.throwIfDateWasTooFar(to);
         throwIfInvalidDateDetected(from, to);
+        for(LocalDate i = from; i.isBefore(to); i = i.plusDays(1)){
+            attendanceRepository.createNewAttendanceCalendarIfAbsent(i);
+        }
         return attendanceRepository.readAttendanceStatusList(from, to);
     }
 
@@ -85,6 +89,9 @@ public class DefaultAttendanceManager implements AttendanceManager, AttendanceTa
         attendanceDateValidator.throwIfDateWasTooFar(to);
         throwIfInvalidDateDetected(from, to);
         throwIfDoesNotAttendanceTarget(id);
+        for(LocalDate i = from; i.isBefore(to); i = i.plusDays(1)){
+            attendanceRepository.createNewAttendanceCalendarIfAbsent(i);
+        }
         return attendanceRepository.readSpecificAttendanceStatusList(id, from, to);
     }
 
@@ -107,11 +114,13 @@ public class DefaultAttendanceManager implements AttendanceManager, AttendanceTa
 
     @Override
     public void throwIfDoesNotAttendanceTarget(int id){
+        attendanceRepository.createNewAttendanceCalendarIfAbsent(LocalDate.now());
         readAttendanceTarget(id);
     }
 
     @Override
     public void throwIfDoesNotNeedAttendance(int id){
+        attendanceRepository.createNewAttendanceCalendarIfAbsent(LocalDate.now());
         AttendanceTargetDto attendanceTargetDto = readAttendanceTarget(id);
         if(!attendanceTargetDto.isAttendanceRequired()){
             throw new AlreadyAttendanceException();
@@ -120,6 +129,7 @@ public class DefaultAttendanceManager implements AttendanceManager, AttendanceTa
 
     @Override
     public AttendanceTargetDto readAttendanceTarget(int id){
+        attendanceRepository.createNewAttendanceCalendarIfAbsent(LocalDate.now());
         return attendanceRepository.readAttendanceTarget(id).orElseThrow(
                 () -> {throw new DoesNotRegisteredAttendanceException();}
         );

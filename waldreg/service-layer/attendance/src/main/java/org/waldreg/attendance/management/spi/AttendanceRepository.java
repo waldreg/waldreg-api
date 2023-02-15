@@ -22,4 +22,6 @@ public interface AttendanceRepository{
 
     AttendanceUserDto readSpecificAttendanceStatusList(int id, LocalDate from, LocalDate to);
 
+    void createNewAttendanceCalendarIfAbsent(LocalDate current);
+
 }

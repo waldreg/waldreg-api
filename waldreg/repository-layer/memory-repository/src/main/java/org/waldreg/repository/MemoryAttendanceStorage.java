@@ -1,5 +1,8 @@
 package org.waldreg.repository;
 
+import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -14,13 +17,13 @@ import org.waldreg.domain.attendance.AttendanceUser;
 @Repository
 public class MemoryAttendanceStorage{
 
-    private final Map<Integer, AttendancePerDate> attendancePerDateMap;
+    private final List<AttendancePerDate> attendancePerDateList;
     private final Map<Integer, Attendance> attendanceMap;
     private final Map<String, AttendanceTypeReward> attendanceTypeMap;
     private final AtomicInteger atomicInteger;
 
     public MemoryAttendanceStorage(){
-        this.attendancePerDateMap = new ConcurrentHashMap<>();
+        this.attendancePerDateList = new ArrayList<>();
         this.attendanceMap = new ConcurrentHashMap<>();
         this.attendanceTypeMap = new ConcurrentHashMap<>();
         this.atomicInteger = new AtomicInteger(1);
@@ -34,7 +37,6 @@ public class MemoryAttendanceStorage{
                 .attendanceType(attendanceTypeMap.get(AttendanceType.ABSENCE.toString()))
                 .build();
         attendance.setAttendanceId(atomicInteger.getAndIncrement());
-        System.out.println("user name : " + attendance.getAttendanceUser().getUser().getUserId());
         this.attendanceMap.put(attendanceUser.getUser().getId(), attendance);
     }
 
@@ -44,6 +46,32 @@ public class MemoryAttendanceStorage{
 
     public void deleteAttendance(int id){
         attendanceMap.remove(id);
+    }
+
+    public void changeAttendance(int targetUserId, LocalDate targetDate, AttendanceType changedType){
+        for(AttendancePerDate attendancePerDate : attendancePerDateList){
+            if(isMatchedAttendanceDate(attendancePerDate, targetDate)){
+                changeTargetUsersState(attendancePerDate.getAttendanceList(), targetUserId, changedType);
+                return;
+            }
+        }
+    }
+
+    private boolean isMatchedAttendanceDate(AttendancePerDate attendancePerDate, LocalDate targetDate){
+        return attendancePerDate.getAttendanceDate().equals(targetDate);
+    }
+
+    private void changeTargetUsersState(List<Attendance> attendanceList, int targetUserId, AttendanceType changedType){
+        for(Attendance attendance : attendanceList){
+            if(isEqualUser(attendance, targetUserId)){
+                attendance.setAttendanceType(attendanceTypeMap.get(changedType.toString()));
+                return;
+            }
+        }
+    }
+
+    private boolean isEqualUser(Attendance attendance, int userId){
+        return attendance.getAttendanceUser().getUser().getId() == userId;
     }
 
     @PostConstruct
