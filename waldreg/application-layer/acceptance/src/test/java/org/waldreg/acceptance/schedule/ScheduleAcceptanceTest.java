@@ -1482,7 +1482,10 @@ public class ScheduleAcceptanceTest{
     }
 
     private String createUserAndGetToken(UserRequest userRequest) throws Exception{
+        String adminToken = AuthenticationAcceptanceTestHelper.getAdminToken(mvc, objectMapper);
+
         UserAcceptanceTestHelper.createUser(mvc, objectMapper.writeValueAsString(userRequest));
+        UserAcceptanceTestHelper.approveJoinRequest(mvc,adminToken,userRequest.getUserId());
         userCreateRequestList.add(userRequest);
 
         return AuthenticationAcceptanceTestHelper.getToken(mvc, objectMapper, AuthTokenRequest.builder()
