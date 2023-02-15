@@ -67,9 +67,4 @@ public final class AttendanceManagementRepository implements AttendanceRepositor
         return null;
     }
 
-    @Override
-    public void confirm(int id){
-
-    }
-
 }

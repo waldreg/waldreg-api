@@ -1,4 +1,4 @@
-package org.waldreg.attendance.management.valid;
+package org.waldreg.attendance.valid;
 
 public interface AttendanceIdentifyValidable{
 

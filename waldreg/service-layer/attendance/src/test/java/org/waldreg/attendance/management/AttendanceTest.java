@@ -30,7 +30,7 @@ import org.waldreg.attendance.management.dto.AttendanceUserDto;
 import org.waldreg.attendance.management.spi.AttendanceRepository;
 import org.waldreg.attendance.management.spi.AttendanceRewardRepository;
 import org.waldreg.attendance.management.spi.UserExistChecker;
-import org.waldreg.attendance.management.valid.AttendanceIdentifyValidable;
+import org.waldreg.attendance.valid.AttendanceIdentifyValidable;
 import org.waldreg.attendance.rule.AttendanceRule;
 import org.waldreg.attendance.rule.valid.AttendanceDateValidator;
 import org.waldreg.attendance.type.AttendanceType;
@@ -438,106 +438,6 @@ class AttendanceTest{
 
         // when & then
         Assertions.assertThrows(TooEarlyDateException.class, () -> attendanceManager.readSpecificAttendanceStatusList(id, from, to));
-    }
-
-    @Test
-    @DisplayName("출석 체크 성공 테스트")
-    void CONFIRM_ATTENDANCE_SUCCESS_TEST(){
-        // given
-        int id = 1;
-        String identify = "123";
-
-        // when
-        Mockito.when(attendanceRepository.readAttendanceTarget(id)).thenReturn(Optional.of(
-                AttendanceTargetDto.builder()
-                        .id(id)
-                        .userId("hello world")
-                        .attendanceStatus(AttendanceType.ABSENCE)
-                        .build()
-                )
-        );
-
-        // then
-        Assertions.assertDoesNotThrow(() -> attendanceManager.confirm(id, identify));
-    }
-
-    @Test
-    @DisplayName("출석 체크 실패 테스트 - 출석 대상이 아님")
-    void CONFIRM_ATTENDANCE_FAIL_NOT_REGISTERED_ATTENDANCE_LIST_TEST(){
-        // given
-        int id = 1;
-        String identify = "123";
-
-        // when
-        Mockito.when(attendanceRepository.readAttendanceTarget(id)).thenReturn(Optional.empty());
-
-        // then
-        Assertions.assertThrows(DoesNotRegisteredAttendanceException.class, () -> attendanceManager.confirm(id, identify));
-    }
-
-    @Test
-    @DisplayName("출석 체크 실패 테스트 - 출석이 필요한 상태가 아님")
-    void CONFIRM_ATTENDANCE_FAIL_DOSE_NOT_NEED_ATTENDANCE_TEST(){
-        // given
-        int id = 1;
-        String identify = "123";
-
-        // when
-        Mockito.when(attendanceRepository.readAttendanceTarget(id)).thenReturn(Optional.of(
-                AttendanceTargetDto.builder()
-                        .id(id)
-                        .userId("hello world")
-                        .attendanceStatus(AttendanceType.ATTENDANCED)
-                        .build()
-                )
-        );
-
-        // then
-        Assertions.assertThrows(AlreadyAttendanceException.class, () -> attendanceManager.confirm(id, identify));
-    }
-
-    @Test
-    @DisplayName("출석 체크 실패 테스트 - 출석 번호가 다름")
-    void CONFIRM_ATTENDANCE_FAIL_WRONG_IDENTIFY_TEST(){
-        // given
-        int id = 1;
-        String identify = "123";
-
-        // when
-        Mockito.when(attendanceRepository.readAttendanceTarget(id)).thenReturn(Optional.of(
-                        AttendanceTargetDto.builder()
-                                .id(id)
-                                .userId("hello world")
-                                .attendanceStatus(AttendanceType.ABSENCE)
-                                .build()
-                )
-        );
-        Mockito.doThrow(WrongAttendanceIdentifyException.class).when(attendanceIdentifyValidable).valid(identify);
-
-        // then
-        Assertions.assertThrows(WrongAttendanceIdentifyException.class, () -> attendanceManager.confirm(id, identify));
-    }
-
-    @Test
-    @DisplayName("출석 체크 실패 테스트 - 출석을 아직 시작하지 않음")
-    void CONFIRM_ATTENDANCE_FAIL_DOES_NOT_STARTED_ATTENDANCE_TEST(){
-        // given
-        int id = 1;
-        String identify = "123";
-
-        // when
-        Mockito.when(attendanceRepository.readAttendanceTarget(id)).thenReturn(Optional.of(
-                        AttendanceTargetDto.builder()
-                                .id(id)
-                                .userId("hello world")
-                                .attendanceStatus(AttendanceType.ABSENCE)
-                                .build()
-                )
-        );
-        Mockito.doThrow(DoesNotStartedAttendanceException.class).when(attendanceIdentifyValidable).valid(identify);
-
-        // then
-        Assertions.assertThrows(DoesNotStartedAttendanceException.class, () -> attendanceManager.confirm(id, identify));
     }
 
     @Test
