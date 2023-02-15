@@ -1,12 +1,37 @@
 package org.waldreg.attendance.schedule;
 
+import java.util.List;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.EnableScheduling;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
+import org.waldreg.attendance.schedule.dto.AttendanceUserStatusDto;
+import org.waldreg.attendance.schedule.spi.AttendanceScheduleRepository;
+import org.waldreg.attendance.schedule.spi.AttendanceScheduleRewardRepository;
+import org.waldreg.attendance.type.AttendanceType;
 
 @Service
 @EnableScheduling
 public final class AttendanceScheduler{
 
+    private final AttendanceScheduleRepository attendanceScheduleRepository;
+    private final AttendanceScheduleRewardRepository attendanceScheduleRewardRepository;
 
+    @Autowired
+    public AttendanceScheduler(AttendanceScheduleRepository attendanceScheduleRepository,
+                                AttendanceScheduleRewardRepository attendanceScheduleRewardRepository){
+        this.attendanceScheduleRepository = attendanceScheduleRepository;
+        this.attendanceScheduleRewardRepository = attendanceScheduleRewardRepository;
+    }
+
+    @Scheduled(cron = "0 59 23 * * *")
+    public void schedule(){
+        List<AttendanceUserStatusDto> attendanceUserStatusDtoList = attendanceScheduleRepository.readAttendanceUserStatusList();
+        for(AttendanceUserStatusDto attendanceUserStatusDto : attendanceUserStatusDtoList){
+            if(attendanceScheduleRewardRepository.isRewardTagPresent(attendanceUserStatusDto.getAttendanceType())){
+                attendanceScheduleRewardRepository.assignRewardToUser(attendanceUserStatusDto.getId(), attendanceUserStatusDto.getAttendanceType());
+            }
+        }
+    }
 
 }
