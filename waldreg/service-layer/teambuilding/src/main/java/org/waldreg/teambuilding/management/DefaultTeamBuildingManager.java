@@ -33,6 +33,11 @@ public class DefaultTeamBuildingManager implements TeamBuildingManager{
     }
 
     @Override
+    public TeamBuildingDto readTeamBuildingById(int teamBuildingId){
+        return teamBuildingRepository.readTeamBuildingById(teamBuildingId);
+    }
+
+    @Override
     public void createTeamBuilding(TeamBuildingRequestDto teamBuildingRequestDto){
         List<TeamDto> teamDtoList = createTeamDtoList(teamBuildingRequestDto.getUserList(), teamBuildingRequestDto.getTeamCount());
         TeamBuildingDto teamBuildingDto = buildTeamBuildingDto(teamBuildingRequestDto.getTeamBuildingTitle(), teamDtoList);
