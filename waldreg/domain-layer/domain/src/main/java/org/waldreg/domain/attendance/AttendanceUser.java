@@ -4,7 +4,7 @@ import org.waldreg.domain.user.User;
 
 public final class AttendanceUser{
 
-    private final int attendanceUserId;
+    private int attendanceUserId;
     private final User user;
 
     private AttendanceUser(){
@@ -18,6 +18,10 @@ public final class AttendanceUser{
 
     public static Builder builder(){
         return new Builder();
+    }
+
+    public void setAttendanceUserId(int attendanceUserId){
+        this.attendanceUserId = attendanceUserId;
     }
 
     public int getAttendanceUserId(){

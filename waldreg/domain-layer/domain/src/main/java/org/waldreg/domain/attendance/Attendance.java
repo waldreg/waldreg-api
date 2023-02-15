@@ -2,10 +2,9 @@ package org.waldreg.domain.attendance;
 
 public final class Attendance{
 
-    private final int attendanceId;
-    private final AttendancePerDate attendancePerDate;
+    private int attendanceId;
     private final AttendanceUser attendanceUser;
-    private final AttendanceType attendanceType;
+    private final AttendanceTypeReward attendanceType;
 
     private Attendance(){
         throw new UnsupportedOperationException("Cannot invoke constructor \"Attendance()\"");
@@ -13,7 +12,6 @@ public final class Attendance{
 
     private Attendance(Builder builder){
         this.attendanceId = builder.attendanceId;
-        this.attendancePerDate = builder.attendancePerDate;
         this.attendanceUser = builder.attendanceUser;
         this.attendanceType = builder.attendanceType;
     }
@@ -22,28 +20,27 @@ public final class Attendance{
         return new Builder();
     }
 
-    public int getAttendanceId(){
-        return attendanceId;
+    public void setAttendanceId(int attendanceId){
+        this.attendanceId = attendanceId;
     }
 
-    public AttendancePerDate getAttendancePerDate(){
-        return attendancePerDate;
+    public int getAttendanceId(){
+        return attendanceId;
     }
 
     public AttendanceUser getAttendanceUser(){
         return attendanceUser;
     }
 
-    public AttendanceType getAttendanceType(){
+    public AttendanceTypeReward getAttendanceType(){
         return attendanceType;
     }
 
     public static final class Builder{
 
         private int attendanceId;
-        private AttendancePerDate attendancePerDate;
         private AttendanceUser attendanceUser;
-        private AttendanceType attendanceType;
+        private AttendanceTypeReward attendanceType;
 
         private Builder(){}
 
@@ -52,17 +49,12 @@ public final class Attendance{
             return this;
         }
 
-        public Builder attendancePerDate(AttendancePerDate attendancePerDate){
-            this.attendancePerDate = attendancePerDate;
-            return this;
-        }
-
         public Builder user(AttendanceUser attendanceUser){
             this.attendanceUser = attendanceUser;
             return this;
         }
 
-        public Builder attendanceType(AttendanceType attendanceType){
+        public Builder attendanceType(AttendanceTypeReward attendanceType){
             this.attendanceType = attendanceType;
             return this;
         }

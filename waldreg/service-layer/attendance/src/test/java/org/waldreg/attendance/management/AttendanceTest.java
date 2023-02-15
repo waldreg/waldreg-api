@@ -19,6 +19,8 @@ import org.waldreg.attendance.exception.DoesNotStartedAttendanceException;
 import org.waldreg.attendance.exception.InvalidDateException;
 import org.waldreg.attendance.exception.TooEarlyDateException;
 import org.waldreg.attendance.exception.TooFarDateException;
+import org.waldreg.attendance.exception.UnknownAttendanceTypeException;
+import org.waldreg.attendance.exception.UnknownRewardTagIdException;
 import org.waldreg.attendance.exception.UnknownUsersIdException;
 import org.waldreg.attendance.exception.WrongAttendanceIdentifyException;
 import org.waldreg.attendance.management.dto.AttendanceDayDto;
@@ -26,6 +28,7 @@ import org.waldreg.attendance.management.dto.AttendanceStatusChangeDto;
 import org.waldreg.attendance.management.dto.AttendanceTargetDto;
 import org.waldreg.attendance.management.dto.AttendanceUserDto;
 import org.waldreg.attendance.management.spi.AttendanceRepository;
+import org.waldreg.attendance.management.spi.AttendanceRewardRepository;
 import org.waldreg.attendance.management.spi.UserExistChecker;
 import org.waldreg.attendance.management.valid.AttendanceIdentifyValidable;
 import org.waldreg.attendance.rule.AttendanceRule;
@@ -47,6 +50,9 @@ class AttendanceTest{
 
     @MockBean
     private AttendanceIdentifyValidable attendanceIdentifyValidable;
+
+    @MockBean
+    private AttendanceRewardRepository attendanceRewardRepository;
 
     @Test
     @DisplayName("출석 대상 등록 성공 테스트")
@@ -533,5 +539,37 @@ class AttendanceTest{
         // then
         Assertions.assertThrows(DoesNotStartedAttendanceException.class, () -> attendanceManager.confirm(id, identify));
     }
+
+    @Test
+    @DisplayName("출석 태그에 상점 부여 성공 테스트")
+    void SET_REWARD_TAG_TO_ATTENDANCE_TYPE_SUCCESS_TEST(){
+        // when
+        Mockito.when(attendanceRewardRepository.isRewardTagExist(Mockito.anyInt())).thenReturn(true);
+
+        // then
+        Assertions.assertDoesNotThrow(() -> attendanceManager.setRewardTag(1, AttendanceType.LATE_ATTENDANCE));
+    }
+
+    @Test
+    @DisplayName("출석 태그에 상점 부여 실패 테스트 - reward-tag 가 없음")
+    void SET_REWARD_TAG_TO_ATTENDANCE_TYPE_FAIL_UNKNOWN_REWARD_TAG_TEST(){
+        // when
+        Mockito.when(attendanceRewardRepository.isRewardTagExist(Mockito.anyInt())).thenReturn(false);
+
+        // then
+        Assertions.assertThrows(UnknownRewardTagIdException.class, () -> attendanceManager.setRewardTag(1, AttendanceType.LATE_ATTENDANCE));
+    }
+
+    @Test
+    @DisplayName("출석 태그에 상점 부여 실패 테스트 - 알수없는 AttendanceType")
+    void SET_REWARD_TAG_TO_ATTENDANCE_TYPE_FAIL_UNKNOWN_ATTENDANCE_TYPE_TEST(){
+        // when
+        Mockito.when(attendanceRewardRepository.isRewardTagExist(Mockito.anyInt())).thenReturn(true);
+
+        // then
+        Assertions.assertThrows(UnknownAttendanceTypeException.class, () -> attendanceManager.setRewardTag(1, null));
+    }
+
+
 
 }

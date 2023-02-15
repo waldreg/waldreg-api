@@ -8,12 +8,14 @@ import org.waldreg.attendance.exception.AlreadyAttendanceException;
 import org.waldreg.attendance.exception.DoesNotRegisteredAttendanceException;
 import org.waldreg.attendance.exception.InvalidDateException;
 import org.waldreg.attendance.exception.UnknownAttendanceTypeException;
+import org.waldreg.attendance.exception.UnknownRewardTagIdException;
 import org.waldreg.attendance.exception.UnknownUsersIdException;
 import org.waldreg.attendance.management.dto.AttendanceDayDto;
 import org.waldreg.attendance.management.dto.AttendanceStatusChangeDto;
 import org.waldreg.attendance.management.dto.AttendanceTargetDto;
 import org.waldreg.attendance.management.dto.AttendanceUserDto;
 import org.waldreg.attendance.management.spi.AttendanceRepository;
+import org.waldreg.attendance.management.spi.AttendanceRewardRepository;
 import org.waldreg.attendance.management.spi.UserExistChecker;
 import org.waldreg.attendance.management.valid.AttendanceIdentifyValidable;
 import org.waldreg.attendance.rule.valid.AttendanceDateValidator;
@@ -27,16 +29,19 @@ public class DefaultAttendanceManager implements AttendanceManager{
     private final AttendanceRepository attendanceRepository;
     private final AttendanceDateValidator attendanceDateValidator;
     private final AttendanceIdentifyValidable attendanceIdentifyValidable;
+    private final AttendanceRewardRepository attendanceRewardRepository;
 
     @Autowired
     public DefaultAttendanceManager(UserExistChecker userExistChecker,
                                     AttendanceRepository attendanceRepository,
                                     AttendanceDateValidator attendanceDateValidator,
-                                    AttendanceIdentifyValidable attendanceIdentifyValidable){
+                                    AttendanceIdentifyValidable attendanceIdentifyValidable,
+                                    AttendanceRewardRepository attendanceRewardRepository){
         this.userExistChecker = userExistChecker;
         this.attendanceRepository = attendanceRepository;
         this.attendanceDateValidator = attendanceDateValidator;
         this.attendanceIdentifyValidable = attendanceIdentifyValidable;
+        this.attendanceRewardRepository = attendanceRewardRepository;
     }
 
     @Override
@@ -64,6 +69,19 @@ public class DefaultAttendanceManager implements AttendanceManager{
     private void throwIfCannotFindUser(int id){
         if(!userExistChecker.isExistUser(id)){
             throw new UnknownUsersIdException(id);
+        }
+    }
+
+    @Override
+    public void setRewardTag(int rewardTagId, AttendanceType attendanceType){
+        throwIfRewardTagDoesNotExist(rewardTagId);
+        throwIfUnknownAttendanceType(attendanceType);
+        attendanceRewardRepository.setRewardTag(rewardTagId, attendanceType);
+    }
+
+    private void throwIfRewardTagDoesNotExist(int rewardTagId){
+        if(!attendanceRewardRepository.isRewardTagExist(rewardTagId)){
+            throw new UnknownRewardTagIdException(rewardTagId);
         }
     }
 
