@@ -1,4 +1,4 @@
-package org.waldreg.attendance.management.spi;
+package org.waldreg.attendance.reward.spi;
 
 import org.waldreg.attendance.type.AttendanceType;
 
