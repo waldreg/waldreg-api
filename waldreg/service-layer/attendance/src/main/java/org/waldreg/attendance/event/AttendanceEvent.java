@@ -88,7 +88,6 @@ public final class AttendanceEvent implements AttendanceIdentifyValidable{
     @EventListener(AttendanceStopEvent.class)
     @SuppressWarnings("all")
     public void stopAttendance(){
-        ForkJoinPool.commonPool().shutdownNow();
         for(Map.Entry<Integer, Future<?>> entry : futureMap.entrySet()){
             entry.getValue().cancel(true);
             futureMap.remove(entry.getKey());

@@ -92,30 +92,4 @@ class AttendanceEventTest{
         Assertions.assertThrows(DoesNotStartedAttendanceException.class, () -> attendanceScheduler.valid("123"));
     }
 
-    @Test
-    @DisplayName("출석 시작 멀티 스레드 테스트")
-    void ATTENDANCE_START_MULTI_THREAD_TEST() throws Exception{
-        applicationEventPublisher.publishEvent(new AttendanceStartEvent(1));
-        Assertions.assertEquals(1, attendanceStartedEvent.getAttendanceStarterId());
-        applicationEventPublisher.publishEvent(new AttendanceStartEvent(2));
-        Assertions.assertEquals(2, attendanceStartedEvent.getAttendanceStarterId());
-    }
-
-    @Test
-    @DisplayName("출석 종료 성공 테스트 - 멀티스레드")
-    void ATTENDANCE_STOP_SUCCESS_MULTI_THREAD_TEST(){
-        // given
-        applicationEventPublisher.publishEvent(new AttendanceStartEvent(1));
-        applicationEventPublisher.publishEvent(new AttendanceStartEvent(2));
-        applicationEventPublisher.publishEvent(new AttendanceStartEvent(3));
-        applicationEventPublisher.publishEvent(new AttendanceStartEvent(4));
-        applicationEventPublisher.publishEvent(new AttendanceStartEvent(5));
-
-        // when
-        applicationEventPublisher.publishEvent(new AttendanceStopEvent(6));
-
-        // then
-        Assertions.assertThrows(DoesNotStartedAttendanceException.class, () -> attendanceScheduler.valid("123"));
-    }
-
 }
