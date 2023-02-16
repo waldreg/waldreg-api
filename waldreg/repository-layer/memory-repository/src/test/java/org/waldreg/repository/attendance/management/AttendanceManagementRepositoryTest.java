@@ -16,7 +16,6 @@ import org.waldreg.attendance.management.dto.AttendanceStatusChangeDto;
 import org.waldreg.attendance.management.dto.AttendanceTargetDto;
 import org.waldreg.attendance.management.dto.AttendanceUserDto;
 import org.waldreg.attendance.type.AttendanceType;
-import org.waldreg.domain.attendance.Attendance;
 import org.waldreg.domain.user.User;
 import org.waldreg.repository.MemoryAttendanceStorage;
 import org.waldreg.repository.MemoryCharacterStorage;
@@ -44,6 +43,7 @@ class AttendanceManagementRepositoryTest{
     @AfterEach
     void init(){
         userStorage.deleteAllUser();
+        attendanceStorage.deleteAll();
     }
 
     @Test
@@ -80,6 +80,32 @@ class AttendanceManagementRepositoryTest{
     }
 
     @Test
+    @DisplayName("유저 출석대상 등록 및 수정 성공 테스트")
+    void REGISTER_USER_AND_CHANGE_SUCCESS_TEST(){
+        // given
+        LocalDate targetDate = LocalDate.now().minusDays(1);
+        User user = addAndGetDefaultUser();
+        AttendanceStatusChangeDto attendanceStatusChangeDto = AttendanceStatusChangeDto.builder()
+                .id(user.getId())
+                .attendanceDate(targetDate)
+                .attendanceType(AttendanceType.ACKNOWLEDGE_ABSENCE)
+                .build();
+
+        // when
+        repository.registerAttendanceTarget(user.getId());
+        repository.changeAttendanceStatus(attendanceStatusChangeDto);
+        AttendanceUserDto result = repository.readSpecificAttendanceStatusList(user.getId(), targetDate, targetDate);
+
+        // then
+        result.getAttendanceUserStatusList().stream()
+                .filter(s -> s.getAttendanceDate().isEqual(targetDate))
+                .findAny()
+                .ifPresent(
+                        s -> Assertions.assertEquals(AttendanceType.ACKNOWLEDGE_ABSENCE, s.getAttendanceStatus())
+                );
+    }
+
+    @Test
     @DisplayName("모든 출석 대상 조회 성공 테스트")
     void READ_ALL_ATTENDANCE_TARGET_SUCCESS_TEST(){
         // given
@@ -87,7 +113,6 @@ class AttendanceManagementRepositoryTest{
 
         // when
         repository.registerAttendanceTarget(user1.getId());
-
         List<AttendanceDayDto> result = repository.readAttendanceStatusList(LocalDate.now().minusDays(1), LocalDate.now().plusDays(1));
 
         // then
@@ -103,6 +128,25 @@ class AttendanceManagementRepositoryTest{
                     }
                     Assertions.assertEquals(1, r.getAttendanceUserList().size());
                 }
+        );
+    }
+
+    @Test
+    @DisplayName("특정 유저 출석 조회 성공 테스트")
+    void READ_SPECIFIC_USERS_ATTENDANCE_SUCCESS_TEST(){
+        // given
+        User user = addAndGetDefaultUser();
+
+        // when
+        repository.registerAttendanceTarget(user.getId());
+        AttendanceUserDto attendanceUserDto = repository.readSpecificAttendanceStatusList(user.getId(), LocalDate.now(), LocalDate.now());
+
+        // then
+        Assertions.assertAll(
+                () -> Assertions.assertEquals(user.getId(), attendanceUserDto.getId()),
+                () -> Assertions.assertEquals(user.getUserId(), attendanceUserDto.getUserId()),
+                () -> Assertions.assertEquals(user.getName(), attendanceUserDto.getUserName()),
+                () -> Assertions.assertEquals(AttendanceType.ABSENCE, attendanceUserDto.getAttendanceUserStatusList().get(0).getAttendanceStatus())
         );
     }
 

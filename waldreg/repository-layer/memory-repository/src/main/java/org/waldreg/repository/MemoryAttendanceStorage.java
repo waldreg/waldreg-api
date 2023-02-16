@@ -100,6 +100,12 @@ public class MemoryAttendanceStorage{
                 .collect(Collectors.toCollection(ArrayList::new));
     }
 
+    public List<Attendance> readSpecificUsersAttendance(int id, LocalDate from, LocalDate to){
+        return attendanceList.stream()
+                .filter(a -> isMatchedDate(from, a.getAttendanceDate(), to) && a.getAttendanceUser().getUser().getId() == id)
+                .collect(Collectors.toCollection(ArrayList::new));
+    }
+
     private boolean isMatchedDate(LocalDate from, LocalDate matchedDate, LocalDate to){
         return from.isBefore(matchedDate) || from.isEqual(matchedDate)
                 && to.isAfter(matchedDate) || to.isEqual(matchedDate);
@@ -139,6 +145,11 @@ public class MemoryAttendanceStorage{
                 .rewardTag(null)
                 .name(AttendanceType.ACKNOWLEDGE_ABSENCE.toString())
                 .build());
+    }
+
+    public void deleteAll(){
+        attendanceList.clear();
+        attendanceTargetList.clear();
     }
 
 }
