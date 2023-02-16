@@ -2,6 +2,7 @@ package org.waldreg.repository.attendance.waiver.mapper;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 import org.springframework.stereotype.Service;
 import org.waldreg.attendance.waiver.dto.WaiverDto;
@@ -30,6 +31,22 @@ public final class MemoryWaiverMapper{
                         .waiverReason(w.getWaiverReason())
                         .build())
                 .collect(Collectors.toCollection(ArrayList::new));
+    }
+
+    public Optional<WaiverDto> waiverToOptionalWaiverDto(Waiver waiver){
+        if(waiver == null){
+            return Optional.empty();
+        }
+        return Optional.of(
+                WaiverDto.builder()
+                        .waiverId(waiver.getWaiverId())
+                        .id(waiver.getWaiverUser().getId())
+                        .userId(waiver.getWaiverUser().getUserId())
+                        .userName(waiver.getWaiverUser().getName())
+                        .waiverDate(waiver.getWaiverDate())
+                        .waiverReason(waiver.getWaiverReason())
+                        .build()
+        );
     }
 
 }

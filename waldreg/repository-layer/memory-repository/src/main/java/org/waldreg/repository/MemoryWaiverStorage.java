@@ -31,7 +31,13 @@ public class MemoryWaiverStorage{
         return waiverList.stream()
                 .filter(w -> w.getWaiverId() == waiverId)
                 .findFirst()
-                .orElseThrow(() -> {throw new IllegalStateException("Cannot find waiver id\"" + waiverId + "\"");});
+                .orElse(null);
+    }
+
+    public void deleteWaiverByWaiverId(int waiverId){
+        waiverList.stream()
+                .filter(w -> w.getWaiverId() == waiverId)
+                .findFirst().ifPresent(waiverList::remove);
     }
 
     public void deleteAll(){
