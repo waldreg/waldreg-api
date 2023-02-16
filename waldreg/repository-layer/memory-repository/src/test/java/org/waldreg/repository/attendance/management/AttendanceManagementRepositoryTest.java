@@ -11,9 +11,12 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
+import org.waldreg.attendance.management.dto.AttendanceDayDto;
 import org.waldreg.attendance.management.dto.AttendanceStatusChangeDto;
 import org.waldreg.attendance.management.dto.AttendanceTargetDto;
+import org.waldreg.attendance.management.dto.AttendanceUserDto;
 import org.waldreg.attendance.type.AttendanceType;
+import org.waldreg.domain.attendance.Attendance;
 import org.waldreg.domain.user.User;
 import org.waldreg.repository.MemoryAttendanceStorage;
 import org.waldreg.repository.MemoryCharacterStorage;
@@ -77,22 +80,30 @@ class AttendanceManagementRepositoryTest{
     }
 
     @Test
-    @DisplayName("유저 출석대상 등록 및 수정 성공 테스트")
-    void REGISTER_USER_AND_CHANGE_SUCCESS_TEST(){
+    @DisplayName("모든 출석 대상 조회 성공 테스트")
+    void READ_ALL_ATTENDANCE_TARGET_SUCCESS_TEST(){
         // given
-        User user = addAndGetDefaultUser();
-        AttendanceStatusChangeDto attendanceStatusChangeDto = AttendanceStatusChangeDto.builder()
-                .id(user.getId())
-                .attendanceDate(LocalDate.now().minusDays(1))
-                .attendanceType(AttendanceType.LATE_ATTENDANCE)
-                .build();
+        User user1 = addAndGetDefaultUser();
 
         // when
-        repository.registerAttendanceTarget(user.getId());
-        repository.changeAttendanceStatus(attendanceStatusChangeDto);
+        repository.registerAttendanceTarget(user1.getId());
+
+        List<AttendanceDayDto> result = repository.readAttendanceStatusList(LocalDate.now().minusDays(1), LocalDate.now().plusDays(1));
 
         // then
-
+        result.forEach(
+                r -> {
+                    System.out.println(r.getAttendanceDate());
+                    r.getAttendanceUserList().forEach(System.out::println);
+                    if(r.getAttendanceDate().isEqual(LocalDate.now())){
+                        Assertions.assertEquals(1, r.getAttendanceUserList().size());
+                        Assertions.assertEquals("Default", r.getAttendanceUserList().get(0).getUserId());
+                        Assertions.assertEquals("Default", r.getAttendanceUserList().get(0).getUserName());
+                        return;
+                    }
+                    Assertions.assertEquals(1, r.getAttendanceUserList().size());
+                }
+        );
     }
 
     private User addAndGetDefaultUser(){

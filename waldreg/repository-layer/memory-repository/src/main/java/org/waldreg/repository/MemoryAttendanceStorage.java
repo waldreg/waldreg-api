@@ -6,72 +6,103 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.stream.Collectors;
 import javax.annotation.PostConstruct;
 import org.springframework.stereotype.Repository;
 import org.waldreg.attendance.type.AttendanceType;
 import org.waldreg.domain.attendance.Attendance;
-import org.waldreg.domain.attendance.AttendancePerDate;
 import org.waldreg.domain.attendance.AttendanceTypeReward;
 import org.waldreg.domain.attendance.AttendanceUser;
 
 @Repository
 public class MemoryAttendanceStorage{
 
-    private final List<AttendancePerDate> attendancePerDateList;
-    private final Map<Integer, Attendance> attendanceMap;
+    private final List<Attendance> attendanceList;
+    private final List<AttendanceUser> attendanceTargetList;
     private final Map<String, AttendanceTypeReward> attendanceTypeMap;
     private final AtomicInteger atomicInteger;
 
     public MemoryAttendanceStorage(){
-        this.attendancePerDateList = new ArrayList<>();
-        this.attendanceMap = new ConcurrentHashMap<>();
+        this.attendanceList = new ArrayList<>();
+        this.attendanceTargetList = new ArrayList<>();
         this.attendanceTypeMap = new ConcurrentHashMap<>();
         this.atomicInteger = new AtomicInteger(1);
     }
 
     public void addAttendanceTarget(AttendanceUser attendanceUser){
         attendanceUser.setAttendanceUserId(atomicInteger.getAndIncrement());
-        Attendance attendance = Attendance.builder()
-                .attendanceId(atomicInteger.getAndIncrement())
-                .user(attendanceUser)
-                .attendanceType(attendanceTypeMap.get(AttendanceType.ABSENCE.toString()))
-                .build();
-        attendance.setAttendanceId(atomicInteger.getAndIncrement());
-        this.attendanceMap.put(attendanceUser.getUser().getId(), attendance);
+        boolean isPresent = attendanceTargetList.stream().anyMatch(a -> a.getUser().getId() == attendanceUser.getUser().getId());
+        if(isPresent){
+            return;
+        }
+        attendanceTargetList.add(attendanceUser);
+        stageAttendanceUser();
+    }
+
+    public void stageAttendanceUser(){
+        final LocalDate now = LocalDate.now();
+        attendanceTargetList
+                .forEach(a -> stageAttendanceUser(
+                        Attendance.builder()
+                                .attendanceId(atomicInteger.getAndIncrement())
+                                .user(a)
+                                .attendanceType(attendanceTypeMap.get(AttendanceType.ABSENCE.toString()))
+                                .attendanceDate(now)
+                                .build()
+                ));
+    }
+
+    private void stageAttendanceUser(Attendance attendance){
+        boolean isPresent = attendanceList.stream()
+                .anyMatch(s -> s.equals(attendance));
+        if(isPresent){
+            return;
+        }
+        attendanceList.add(attendance);
     }
 
     public Attendance readAttendance(int id){
-        return attendanceMap.get(id);
+        return attendanceList.stream()
+                .filter(a -> a.getAttendanceUser().getUser().getId() == id)
+                .findFirst()
+                .orElseThrow(() -> {throw new IllegalStateException("Cannot read attendance users id \"" + id + "\"");});
     }
 
-    public void deleteAttendance(int id){
-        attendanceMap.remove(id);
+    public void deleteAttendanceTarget(int id){
+        attendanceTargetList.stream()
+                .filter(at -> at.getUser().getId() == id)
+                .findAny()
+                .ifPresent(attendanceTargetList::remove);
+        deleteStagedAttendanceTarget(id);
+    }
+
+    private void deleteStagedAttendanceTarget(int id){
+        attendanceList.stream()
+                .filter(a -> a.getAttendanceUser().getUser().getId() == id)
+                .findAny()
+                .ifPresent(attendanceList::remove);
     }
 
     public void changeAttendance(int targetUserId, LocalDate targetDate, AttendanceType changedType){
-        for(AttendancePerDate attendancePerDate : attendancePerDateList){
-            if(isMatchedAttendanceDate(attendancePerDate, targetDate)){
-                changeTargetUsersState(attendancePerDate.getAttendanceList(), targetUserId, changedType);
-                return;
-            }
-        }
+        attendanceList.stream()
+                .filter(a -> isMatched(a, targetUserId, targetDate))
+                .findFirst()
+                .ifPresent(a -> a.setAttendanceType(attendanceTypeMap.get(changedType.toString())));
     }
 
-    private boolean isMatchedAttendanceDate(AttendancePerDate attendancePerDate, LocalDate targetDate){
-        return attendancePerDate.getAttendanceDate().equals(targetDate);
+    private boolean isMatched(Attendance attendance, int id, LocalDate targetDate){
+        return attendance.getAttendanceDate().equals(targetDate) && attendance.getAttendanceUser().getUser().getId() == id;
     }
 
-    private void changeTargetUsersState(List<Attendance> attendanceList, int targetUserId, AttendanceType changedType){
-        for(Attendance attendance : attendanceList){
-            if(isEqualUser(attendance, targetUserId)){
-                attendance.setAttendanceType(attendanceTypeMap.get(changedType.toString()));
-                return;
-            }
-        }
+    public List<Attendance> readAllAttendance(LocalDate from, LocalDate to){
+        return attendanceList.stream()
+                .filter(a -> isMatchedDate(from, a.getAttendanceDate(), to))
+                .collect(Collectors.toCollection(ArrayList::new));
     }
 
-    private boolean isEqualUser(Attendance attendance, int userId){
-        return attendance.getAttendanceUser().getUser().getId() == userId;
+    private boolean isMatchedDate(LocalDate from, LocalDate matchedDate, LocalDate to){
+        return from.isBefore(matchedDate) || from.isEqual(matchedDate)
+                && to.isAfter(matchedDate) || to.isEqual(matchedDate);
     }
 
     @PostConstruct

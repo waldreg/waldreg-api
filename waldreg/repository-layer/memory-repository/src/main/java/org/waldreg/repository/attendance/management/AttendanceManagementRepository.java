@@ -39,7 +39,7 @@ public final class AttendanceManagementRepository implements AttendanceRepositor
 
     @Override
     public void deleteRegisteredAttendanceTarget(int id){
-        memoryAttendanceStorage.deleteAttendance(id);
+        memoryAttendanceStorage.deleteAttendanceTarget(id);
     }
 
     @Override
@@ -61,7 +61,8 @@ public final class AttendanceManagementRepository implements AttendanceRepositor
 
     @Override
     public List<AttendanceDayDto> readAttendanceStatusList(LocalDate from, LocalDate to){
-        return null;
+        List<Attendance> attendanceList = memoryAttendanceStorage.readAllAttendance(from, to);
+        return attendanceManagementMapper.attendanceListToAttendanceDayDtoList(attendanceList);
     }
 
     @Override
