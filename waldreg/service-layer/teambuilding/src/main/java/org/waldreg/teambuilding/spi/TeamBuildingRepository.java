@@ -6,4 +6,6 @@ public interface TeamBuildingRepository{
 
     void createTeamBuilding(TeamBuildingDto teamBuildingDto);
 
+    TeamBuildingDto readTeamBuildingById(int teamBuildingId);
+
 }
