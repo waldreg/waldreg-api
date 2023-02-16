@@ -8,6 +8,8 @@ import org.waldreg.attendance.waiver.dto.WaiverDto;
 
 public interface WaiverRepository{
 
+    void waive(WaiverDto waiverRequest);
+
     boolean isAttendanceTarget(int id);
 
     List<WaiverDto> readWaiverList();

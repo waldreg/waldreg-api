@@ -111,6 +111,10 @@ public class MemoryAttendanceStorage{
                 && to.isAfter(matchedDate) || to.isEqual(matchedDate);
     }
 
+    public boolean isAttendanceTarget(int id){
+        return attendanceTargetList.stream().anyMatch(a -> a.getUser().getId() == id);
+    }
+
     @PostConstruct
     private void initAttendanceRewardTag(){
         initAbsenceAttendance();

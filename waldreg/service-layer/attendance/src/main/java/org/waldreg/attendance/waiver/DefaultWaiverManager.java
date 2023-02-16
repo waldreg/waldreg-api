@@ -31,6 +31,7 @@ public class DefaultWaiverManager implements WaiverManager{
         attendanceDateValidator.throwIfDateWasTooFar(waiverRequest.getWaiverDate());
         throwIfInvalidWaiverDate(waiverRequest.getWaiverDate());
         throwIfUserDoesNotAttendanceTarget(waiverRequest.getId());
+        waiverRepository.waive(waiverRequest);
     }
 
     private void throwIfInvalidWaiverDate(LocalDate waiverDate){
