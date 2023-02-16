@@ -1874,7 +1874,7 @@ public class UserAcceptanceTest{
 
     @Test
     @DisplayName("전체 유저 조회 성공 인수테스트 - 토큰 있을 때, 범위 없이")
-    public void INQUIRY_ALL_USER_WITH_TOKEN_WITHOUT_RANGESUCCESS_TEST() throws Exception{
+    public void INQUIRY_ALL_USER_WITH_TOKEN_WITHOUT_RANGE_SUCCESS_TEST() throws Exception{
         //given
         String adminToken = AuthenticationAcceptanceTestHelper.getAdminToken(mvc, objectMapper);
 
