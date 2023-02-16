@@ -52,6 +52,29 @@ public class MemoryAttendanceStorage{
                 ));
     }
 
+    public void changeAttendance(int targetUsersId, LocalDate targetDate, AttendanceType changedType){
+        stageAttendanceUser(targetUsersId, targetDate);
+        attendanceList.stream()
+                .filter(a -> isMatched(a, targetUsersId, targetDate))
+                .findFirst()
+                .ifPresent(a -> a.setAttendanceType(attendanceTypeMap.get(changedType.toString())));
+    }
+
+    private void stageAttendanceUser(int targetUserId, LocalDate targetDate){
+        attendanceTargetList
+                .stream().filter(a -> a.getUser().getId() == targetUserId)
+                .findFirst().ifPresentOrElse(
+                        a -> stageAttendanceUser(
+                                Attendance.builder()
+                                        .attendanceId(atomicInteger.getAndIncrement())
+                                        .user(a)
+                                        .attendanceType(attendanceTypeMap.get(AttendanceType.ABSENCE.toString()))
+                                        .attendanceDate(targetDate)
+                                        .build())
+                        , () -> {throw new IllegalStateException("Cannot find targetUsersId \"" + targetUserId + "\"");}
+                );
+    }
+
     private void stageAttendanceUser(Attendance attendance){
         boolean isPresent = attendanceList.stream()
                 .anyMatch(s -> s.equals(attendance));
@@ -59,6 +82,10 @@ public class MemoryAttendanceStorage{
             return;
         }
         attendanceList.add(attendance);
+    }
+
+    private boolean isMatched(Attendance attendance, int id, LocalDate targetDate){
+        return attendance.getAttendanceDate().equals(targetDate) && attendance.getAttendanceUser().getUser().getId() == id;
     }
 
     public Attendance readAttendance(int id){
@@ -83,17 +110,6 @@ public class MemoryAttendanceStorage{
                 .ifPresent(attendanceList::remove);
     }
 
-    public void changeAttendance(int targetUserId, LocalDate targetDate, AttendanceType changedType){
-        attendanceList.stream()
-                .filter(a -> isMatched(a, targetUserId, targetDate))
-                .findFirst()
-                .ifPresent(a -> a.setAttendanceType(attendanceTypeMap.get(changedType.toString())));
-    }
-
-    private boolean isMatched(Attendance attendance, int id, LocalDate targetDate){
-        return attendance.getAttendanceDate().equals(targetDate) && attendance.getAttendanceUser().getUser().getId() == id;
-    }
-
     public List<Attendance> readAllAttendance(LocalDate from, LocalDate to){
         return attendanceList.stream()
                 .filter(a -> isMatchedDate(from, a.getAttendanceDate(), to))
@@ -107,8 +123,8 @@ public class MemoryAttendanceStorage{
     }
 
     private boolean isMatchedDate(LocalDate from, LocalDate matchedDate, LocalDate to){
-        return from.isBefore(matchedDate) || from.isEqual(matchedDate)
-                && to.isAfter(matchedDate) || to.isEqual(matchedDate);
+        return (from.isBefore(matchedDate) || from.isEqual(matchedDate))
+                && (to.isAfter(matchedDate) || to.isEqual(matchedDate));
     }
 
     public boolean isAttendanceTarget(int id){
