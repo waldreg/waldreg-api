@@ -13,6 +13,7 @@ import org.waldreg.attendance.type.AttendanceType;
 import org.waldreg.domain.attendance.Attendance;
 import org.waldreg.domain.attendance.AttendanceTypeReward;
 import org.waldreg.domain.attendance.AttendanceUser;
+import org.waldreg.domain.rewardtag.RewardTag;
 
 @Repository
 public class MemoryAttendanceStorage{
@@ -129,6 +130,10 @@ public class MemoryAttendanceStorage{
 
     public boolean isAttendanceTarget(int id){
         return attendanceTargetList.stream().anyMatch(a -> a.getUser().getId() == id);
+    }
+
+    public void setRewardTagToAttendanceType(AttendanceType attendanceType, RewardTag rewardTag){
+        attendanceTypeMap.get(attendanceType.toString()).setRewardTag(rewardTag);
     }
 
     @PostConstruct

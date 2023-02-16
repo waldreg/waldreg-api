@@ -5,7 +5,7 @@ import org.waldreg.domain.rewardtag.RewardTag;
 public final class AttendanceTypeReward{
 
     private final String name;
-    private final RewardTag rewardTag;
+    private RewardTag rewardTag;
 
     private AttendanceTypeReward(){
         throw new UnsupportedOperationException("Cannot invoke constructor \"AttendanceTypeReward()\"");
@@ -22,6 +22,10 @@ public final class AttendanceTypeReward{
 
     public String getName(){
         return name;
+    }
+
+    public void setRewardTag(RewardTag rewardTag){
+        this.rewardTag = rewardTag;
     }
 
     public RewardTag getRewardTag(){
