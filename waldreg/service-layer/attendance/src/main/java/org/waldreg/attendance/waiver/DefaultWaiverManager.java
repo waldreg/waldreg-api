@@ -58,7 +58,7 @@ public class DefaultWaiverManager implements WaiverManager{
                 () -> {throw new UnknownWaiverIdException(waiverId);}
         );
         throwIfUnknownAttendanceType(attendanceType);
-        waiverRepository.acceptWaiver(waiverDto.getId(), waiverDto.getWaiverDate(), attendanceType);
+        waiverRepository.acceptWaiver(waiverId, attendanceType);
         waiverRepository.deleteWaiver(waiverDto.getWaiverId());
     }
 

@@ -57,8 +57,10 @@ public final class MemoryWaiverRepository implements WaiverRepository{
     }
 
     @Override
-    public void acceptWaiver(int id, LocalDate changeDate, AttendanceType attendanceType){
-
+    public void acceptWaiver(int waiverId, AttendanceType attendanceType){
+        Waiver waiver = memoryWaiverStorage.readWaiverByWaiverId(waiverId);
+        memoryAttendanceStorage.changeAttendance(waiver.getWaiverUser().getId(), waiver.getWaiverDate(), attendanceType);
+        deleteWaiver(waiverId);
     }
 
     @Override

@@ -16,7 +16,7 @@ public interface WaiverRepository{
 
     Optional<WaiverDto> readWaiverByWaiverId(int waiverId);
 
-    void acceptWaiver(int id, LocalDate changeDate, AttendanceType attendanceType);
+    void acceptWaiver(int waiverId, AttendanceType attendanceType);
 
     void deleteWaiver(int waiverId);
 
