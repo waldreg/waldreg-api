@@ -67,12 +67,13 @@ public final class AttendanceManagementRepository implements AttendanceRepositor
 
     @Override
     public AttendanceUserDto readSpecificAttendanceStatusList(int id, LocalDate from, LocalDate to){
-        return null;
+        List<Attendance> attendanceList = memoryAttendanceStorage.readSpecificUsersAttendance(id, from, to);
+        return attendanceManagementMapper.attendanceListToAttendanceUserDto(attendanceList);
     }
 
     @Override
     public void createNewAttendanceCalendarIfAbsent(LocalDate current){
-
+        memoryAttendanceStorage.stageAttendanceUser();
     }
 
 }
