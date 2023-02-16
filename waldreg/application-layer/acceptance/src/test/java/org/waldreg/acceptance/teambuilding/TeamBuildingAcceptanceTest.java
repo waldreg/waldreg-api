@@ -20,7 +20,7 @@ import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import org.waldreg.acceptance.authentication.AuthenticationAcceptanceTestHelper;
 import org.waldreg.acceptance.user.UserAcceptanceTestHelper;
-import org.waldreg.controller.user.request.UserRequest;
+import org.waldreg.controller.joiningpool.request.UserRequest;
 import org.waldreg.controller.user.response.UserResponse;
 
 @SpringBootTest
