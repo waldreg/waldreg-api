@@ -17,6 +17,10 @@ public final class Waiver{
         this.waiverReason = builder.waiverReason;
     }
 
+    public static Builder builder(){
+        return new Builder();
+    }
+
     public void setWaiverId(int waiverId){
         this.waiverId = waiverId;
     }

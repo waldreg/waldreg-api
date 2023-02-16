@@ -9,7 +9,6 @@ import org.waldreg.attendance.management.dto.AttendanceDayDto.AttendanceUserInDa
 import org.waldreg.attendance.management.dto.AttendanceTargetDto;
 import org.waldreg.attendance.management.dto.AttendanceUserDto;
 import org.waldreg.attendance.management.dto.AttendanceUserDto.AttendanceUserStatus;
-import org.waldreg.attendance.schedule.dto.AttendanceUserStatusDto;
 import org.waldreg.attendance.type.AttendanceType;
 import org.waldreg.domain.attendance.Attendance;
 
