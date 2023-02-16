@@ -2,16 +2,20 @@ package org.waldreg.domain.attendance;
 
 import org.waldreg.domain.rewardtag.RewardTag;
 
-public final class AttendanceType{
+public final class AttendanceTypeReward{
 
     private final String name;
     private final RewardTag rewardTag;
 
-    private AttendanceType(){
-        throw new UnsupportedOperationException("Cannot invoke constructor \"AttendanceType()\"");
+    private AttendanceTypeReward(){
+        throw new UnsupportedOperationException("Cannot invoke constructor \"AttendanceTypeReward()\"");
     }
 
-    private AttendanceType(Builder builder){
+    public static Builder builder(){
+        return new Builder();
+    }
+
+    private AttendanceTypeReward(Builder builder){
         this.name = builder.name;
         this.rewardTag = builder.rewardTag;
     }
@@ -41,8 +45,8 @@ public final class AttendanceType{
             return this;
         }
 
-        public AttendanceType build(){
-            return new AttendanceType(this);
+        public AttendanceTypeReward build(){
+            return new AttendanceTypeReward(this);
         }
 
     }

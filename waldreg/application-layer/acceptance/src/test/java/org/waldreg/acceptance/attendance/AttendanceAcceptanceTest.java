@@ -26,7 +26,7 @@ import org.waldreg.acceptance.user.UserAcceptanceTestHelper;
 import org.waldreg.auth.request.AuthTokenRequest;
 import org.waldreg.controller.reward.tag.request.RewardTagRequest;
 import org.waldreg.controller.reward.tag.response.RewardTagResponse;
-import org.waldreg.controller.user.request.UserRequest;
+import org.waldreg.controller.joiningpool.request.UserRequest;
 import org.waldreg.controller.user.response.UserResponse;
 
 @SpringBootTest
@@ -1165,6 +1165,8 @@ class AttendanceAcceptanceTest{
     }
 
     private String createUserAndGetToken(String name, String userId, String userPassword) throws Exception{
+        String adminToken = AuthenticationAcceptanceTestHelper.getAdminToken(mvc, objectMapper);
+
         UserRequest userRequest = UserRequest.builder()
                 .name(name)
                 .userId(userId)
@@ -1172,6 +1174,7 @@ class AttendanceAcceptanceTest{
                 .phoneNumber("010-1234-1234")
                 .build();
         UserAcceptanceTestHelper.createUser(mvc, objectMapper.writeValueAsString(userRequest)).andDo(MockMvcResultHandlers.print());
+        UserAcceptanceTestHelper.approveJoinRequest(mvc,adminToken,userRequest.getUserId());
         userCreateRequestList.add(userRequest);
 
         return AuthenticationAcceptanceTestHelper.getToken(mvc, objectMapper, AuthTokenRequest.builder()

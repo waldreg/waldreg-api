@@ -3,7 +3,9 @@ package org.waldreg.repository.user;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
+import org.waldreg.domain.character.Character;
 import org.waldreg.domain.user.User;
+import org.waldreg.repository.MemoryCharacterStorage;
 import org.waldreg.repository.MemoryUserStorage;
 import org.waldreg.user.dto.UserDto;
 import org.waldreg.user.spi.UserRepository;
@@ -15,10 +17,24 @@ public class MemoryUserRepository implements UserRepository{
 
     private final MemoryUserStorage memoryUserStorage;
 
+    private final MemoryCharacterStorage memoryCharacterStorage;
+
     @Autowired
-    public MemoryUserRepository(UserMapper userMapper, MemoryUserStorage memoryUserStorage){
+    public MemoryUserRepository(UserMapper userMapper, MemoryUserStorage memoryUserStorage, MemoryCharacterStorage memoryCharacterStorage){
         this.userMapper = userMapper;
         this.memoryUserStorage = memoryUserStorage;
+        this.memoryCharacterStorage = memoryCharacterStorage;
+    }
+
+    @Override
+    public void createUser(UserDto userDto){
+        User user = userMapper.userDtoToUserDomain(userDto);
+        user.setCharacter(getCharacterByName(userDto.getCharacter()));
+        memoryUserStorage.createUser(user);
+    }
+
+    private Character getCharacterByName(String characterName){
+       return memoryCharacterStorage.readCharacterByName(characterName);
     }
 
     @Override
