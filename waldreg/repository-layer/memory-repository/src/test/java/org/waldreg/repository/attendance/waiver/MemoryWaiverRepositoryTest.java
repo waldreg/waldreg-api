@@ -102,6 +102,51 @@ class MemoryWaiverRepositoryTest{
         );
     }
 
+    @Test
+    @DisplayName("출석 면제 신청 삭제 및 조회 성공 테스트")
+    void WAIVER_DELETE_SUCCESS_TEST(){
+        // given
+        User user = addAndGetDefaultUser();
+        WaiverDto waiverDto = WaiverDto.builder()
+                .id(user.getId())
+                .waiverDate(LocalDate.now().minusDays(7))
+                .waiverReason("test waiver")
+                .build();
+
+        // when
+        memoryWaiverRepository.waive(waiverDto);
+        WaiverDto waiver = memoryWaiverRepository.readWaiverList().get(0);
+        memoryWaiverRepository.deleteWaiver(waiver.getWaiverId());
+        WaiverDto result = memoryWaiverRepository.readWaiverByWaiverId(waiver.getWaiverId()).orElse(null);
+
+        // then
+        Assertions.assertNull(result);
+    }
+
+    @Test
+    @DisplayName("단일 공결 신청 조회 성공 테스트")
+    void READ_WAIVER_BY_WAIVER_ID_SUCCESS_TEST(){
+        // given
+        User user = addAndGetDefaultUser();
+        WaiverDto waiverDto = WaiverDto.builder()
+                .id(user.getId())
+                .waiverDate(LocalDate.now().minusDays(7))
+                .waiverReason("test waiver")
+                .build();
+
+        // when
+        memoryWaiverRepository.waive(waiverDto);
+        WaiverDto waiver = memoryWaiverRepository.readWaiverList().get(0);
+        WaiverDto result = memoryWaiverRepository.readWaiverByWaiverId(waiver.getWaiverId()).orElseThrow(IllegalAccessError::new);
+
+        // then
+        Assertions.assertAll(
+                () -> Assertions.assertEquals(waiverDto.getId(), result.getId()),
+                () -> Assertions.assertEquals(waiverDto.getWaiverDate(), result.getWaiverDate()),
+                () -> Assertions.assertEquals(waiverDto.getWaiverReason(), result.getWaiverReason())
+        );
+    }
+
     private User addAndGetDefaultUser(){
         User user = User.builder()
                 .userId("Default")

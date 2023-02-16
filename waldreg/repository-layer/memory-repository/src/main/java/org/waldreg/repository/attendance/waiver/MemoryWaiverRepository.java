@@ -1,6 +1,5 @@
 package org.waldreg.repository.attendance.waiver;
 
-import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -53,7 +52,8 @@ public final class MemoryWaiverRepository implements WaiverRepository{
 
     @Override
     public Optional<WaiverDto> readWaiverByWaiverId(int waiverId){
-        return Optional.empty();
+        Waiver waiver = memoryWaiverStorage.readWaiverByWaiverId(waiverId);
+        return memoryWaiverMapper.waiverToOptionalWaiverDto(waiver);
     }
 
     @Override
@@ -65,7 +65,7 @@ public final class MemoryWaiverRepository implements WaiverRepository{
 
     @Override
     public void deleteWaiver(int waiverId){
-
+        memoryWaiverStorage.deleteWaiverByWaiverId(waiverId);
     }
 
 }
