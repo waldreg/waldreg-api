@@ -54,7 +54,9 @@ public final class AttendanceManagementRepository implements AttendanceRepositor
 
     @Override
     public void changeAttendanceStatus(AttendanceStatusChangeDto attendanceStatusChangeDto){
-
+        memoryAttendanceStorage.changeAttendance(attendanceStatusChangeDto.getId(),
+                                                    attendanceStatusChangeDto.getAttendanceDate(),
+                                                    attendanceStatusChangeDto.getAttendanceType());
     }
 
     @Override
@@ -65,6 +67,11 @@ public final class AttendanceManagementRepository implements AttendanceRepositor
     @Override
     public AttendanceUserDto readSpecificAttendanceStatusList(int id, LocalDate from, LocalDate to){
         return null;
+    }
+
+    @Override
+    public void createNewAttendanceCalendarIfAbsent(LocalDate current){
+
     }
 
 }

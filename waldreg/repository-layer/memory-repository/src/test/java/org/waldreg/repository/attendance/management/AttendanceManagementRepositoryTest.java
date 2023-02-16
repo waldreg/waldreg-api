@@ -1,5 +1,6 @@
 package org.waldreg.repository.attendance.management;
 
+import java.time.LocalDate;
 import java.util.List;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Assertions;
@@ -10,6 +11,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
+import org.waldreg.attendance.management.dto.AttendanceStatusChangeDto;
 import org.waldreg.attendance.management.dto.AttendanceTargetDto;
 import org.waldreg.attendance.type.AttendanceType;
 import org.waldreg.domain.user.User;
@@ -72,6 +74,25 @@ class AttendanceManagementRepositoryTest{
         // then
         Assertions.assertThrows(IllegalStateException.class,
                 () -> repository.readAttendanceTarget(user.getId()).orElseThrow(IllegalStateException::new));
+    }
+
+    @Test
+    @DisplayName("유저 출석대상 등록 및 수정 성공 테스트")
+    void REGISTER_USER_AND_CHANGE_SUCCESS_TEST(){
+        // given
+        User user = addAndGetDefaultUser();
+        AttendanceStatusChangeDto attendanceStatusChangeDto = AttendanceStatusChangeDto.builder()
+                .id(user.getId())
+                .attendanceDate(LocalDate.now().minusDays(1))
+                .attendanceType(AttendanceType.LATE_ATTENDANCE)
+                .build();
+
+        // when
+        repository.registerAttendanceTarget(user.getId());
+        repository.changeAttendanceStatus(attendanceStatusChangeDto);
+
+        // then
+
     }
 
     private User addAndGetDefaultUser(){
