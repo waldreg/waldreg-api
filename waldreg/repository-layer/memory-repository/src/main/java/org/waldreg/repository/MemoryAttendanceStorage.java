@@ -42,30 +42,34 @@ public class MemoryAttendanceStorage{
 
     public void stageAttendanceUser(){
         final LocalDate now = LocalDate.now();
+        stageAttendanceUser(now);
+    }
+
+    public void stageAttendanceUser(LocalDate localDate){
         attendanceTargetList
-                .forEach(a -> stageAttendanceUser(
+                .forEach(a -> stageIfDoesNotDuplicated(
                         Attendance.builder()
                                 .attendanceId(atomicInteger.getAndIncrement())
                                 .user(a)
                                 .attendanceType(attendanceTypeMap.get(AttendanceType.ABSENCE.toString()))
-                                .attendanceDate(now)
+                                .attendanceDate(localDate)
                                 .build()
                 ));
     }
 
     public void changeAttendance(int targetUsersId, LocalDate targetDate, AttendanceType changedType){
-        stageAttendanceUser(targetUsersId, targetDate);
+        stageAttendanceSpecificUser(targetUsersId, targetDate);
         attendanceList.stream()
                 .filter(a -> isMatched(a, targetUsersId, targetDate))
                 .findFirst()
                 .ifPresent(a -> a.setAttendanceType(attendanceTypeMap.get(changedType.toString())));
     }
 
-    private void stageAttendanceUser(int targetUserId, LocalDate targetDate){
+    private void stageAttendanceSpecificUser(int targetUserId, LocalDate targetDate){
         attendanceTargetList
                 .stream().filter(a -> a.getUser().getId() == targetUserId)
                 .findFirst().ifPresentOrElse(
-                        a -> stageAttendanceUser(
+                        a -> stageIfDoesNotDuplicated(
                                 Attendance.builder()
                                         .attendanceId(atomicInteger.getAndIncrement())
                                         .user(a)
@@ -76,7 +80,7 @@ public class MemoryAttendanceStorage{
                 );
     }
 
-    private void stageAttendanceUser(Attendance attendance){
+    private void stageIfDoesNotDuplicated(Attendance attendance){
         boolean isPresent = attendanceList.stream()
                 .anyMatch(s -> s.equals(attendance));
         if(isPresent){
@@ -134,6 +138,10 @@ public class MemoryAttendanceStorage{
 
     public void setRewardTagToAttendanceType(AttendanceType attendanceType, RewardTag rewardTag){
         attendanceTypeMap.get(attendanceType.toString()).setRewardTag(rewardTag);
+    }
+
+    public AttendanceTypeReward readAttendanceTypeReward(AttendanceType attendanceType){
+        return attendanceTypeMap.get(attendanceType.toString());
     }
 
     @PostConstruct
