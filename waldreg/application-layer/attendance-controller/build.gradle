@@ -1,0 +1,45 @@
+import org.springframework.boot.gradle.plugin.SpringBootPlugin
+
+plugins {
+    id 'org.springframework.boot' version '2.7.1' apply false
+    id 'io.spring.dependency-management' version '1.1.0'
+    id 'java'
+}
+
+group 'org.waldreg'
+version '1.0-SNAPSHOT'
+
+sourceCompatibility = '11'
+targetCompatibility = '11'
+
+repositories {
+    mavenCentral()
+}
+
+dependencyManagement {
+    imports {
+        mavenBom SpringBootPlugin.BOM_COORDINATES
+    }
+}
+
+dependencies {
+    implementation project(':core-layer:template')
+    implementation project(':repository-layer:memory-repository')
+    implementation project(':stable-service-layer:character')
+    implementation project(':service-layer:auth')
+    implementation project(':service-layer:attendance')
+
+    implementation 'org.springframework.boot:spring-boot-starter'
+    testImplementation 'org.springframework.boot:spring-boot-starter-test'
+
+    implementation 'org.springframework.boot:spring-boot-starter-web'
+
+    implementation 'org.springframework.boot:spring-boot-starter-validation'
+
+    testImplementation 'org.junit.jupiter:junit-jupiter-api:5.8.1'
+    testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.8.1'
+}
+
+test {
+    useJUnitPlatform()
+}
