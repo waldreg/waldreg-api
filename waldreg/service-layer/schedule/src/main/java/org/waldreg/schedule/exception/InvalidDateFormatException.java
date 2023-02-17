@@ -6,7 +6,7 @@ public final class InvalidDateFormatException extends RuntimeException{
 
     public InvalidDateFormatException(String code, String message){
         super(message);
-        this.code=code;
+        this.code = code;
     }
 
     public String getCode(){

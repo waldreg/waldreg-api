@@ -47,6 +47,22 @@ public class TeamBuildingDto{
         return teamDtoList;
     }
 
+    public void setTeamBuildingTitle(String teamBuildingTitle){
+        this.teamBuildingTitle = teamBuildingTitle;
+    }
+
+    public void setCreatedAt(LocalDateTime createdAt){
+        this.createdAt = createdAt;
+    }
+
+    public void setLastModifiedAt(LocalDateTime lastModifiedAt){
+        this.lastModifiedAt = lastModifiedAt;
+    }
+
+    public void setTeamDtoList(List<TeamDto> teamDtoList){
+        this.teamDtoList = teamDtoList;
+    }
+
     public static final class Builder{
 
         private int teamBuildingId;
@@ -74,7 +90,7 @@ public class TeamBuildingDto{
             return this;
         }
 
-        public Builder teamList(List<TeamDto> teamDtoListList){
+        public Builder teamDtoList(List<TeamDto> teamDtoList){
             this.teamDtoList = teamDtoList;
             return this;
         }

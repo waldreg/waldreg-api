@@ -10,6 +10,11 @@ import org.waldreg.teambuilding.dto.TeamBuildingRequestDto;
 import org.waldreg.teambuilding.dto.TeamDto;
 import org.waldreg.teambuilding.dto.UserDto;
 import org.waldreg.teambuilding.dto.UserRequestDto;
+import org.waldreg.teambuilding.exception.ContentOverflowException;
+import org.waldreg.teambuilding.exception.InvalidRangeException;
+import org.waldreg.teambuilding.exception.InvalidTeamCountException;
+import org.waldreg.teambuilding.exception.InvalidUserWeightException;
+import org.waldreg.teambuilding.exception.UnknownTeamBuildingIdException;
 import org.waldreg.teambuilding.management.teamcreator.TeamCreator;
 import org.waldreg.teambuilding.management.teamcreator.TeamCreator.Team;
 import org.waldreg.teambuilding.spi.TeamBuildingRepository;
@@ -34,9 +39,47 @@ public class DefaultTeamBuildingManager implements TeamBuildingManager{
 
     @Override
     public void createTeamBuilding(TeamBuildingRequestDto teamBuildingRequestDto){
-        List<TeamDto> teamDtoList = createTeamDtoList(teamBuildingRequestDto.getUserList(), teamBuildingRequestDto.getTeamCount());
-        TeamBuildingDto teamBuildingDto = buildTeamBuildingDto(teamBuildingRequestDto.getTeamBuildingTitle(), teamDtoList);
+        String teamBuildingTitle = teamBuildingRequestDto.getTeamBuildingTitle();
+        int teamCount = teamBuildingRequestDto.getTeamCount();
+        List<UserRequestDto> userRequestDtoList = teamBuildingRequestDto.getUserList();
+        throwIfTeamBuildingTitleIsOverflow(teamBuildingTitle);
+        throwIfTeamCountIsLessThanOrEqualToZero(teamCount);
+        throwIfTeamCountExceedMemberCount(teamCount, userRequestDtoList.size());
+        throwIfUserWeightIsOutOfRange(userRequestDtoList);
+        List<TeamDto> teamDtoList = createTeamDtoList(userRequestDtoList, teamCount);
+        TeamBuildingDto teamBuildingDto = buildTeamBuildingDto(teamBuildingTitle, teamDtoList);
         teamBuildingRepository.createTeamBuilding(teamBuildingDto);
+    }
+
+    private void throwIfTeamBuildingTitleIsOverflow(String teamBuildingTitle){
+        int length = teamBuildingTitle.length();
+        if (length > 1000){
+            throw new ContentOverflowException("TEAMBUILDING-401", "Teambuilding title cannot be more than 1000 current length \"" + length + "\"");
+        }
+    }
+
+    private void throwIfTeamCountIsLessThanOrEqualToZero(int teamCount){
+        if (teamCount <= 0){
+            throw new InvalidTeamCountException("TEAMBUILDING-402", "The number of team cannot be less than or equal to zero, current team count \"" + teamCount + "\"");
+        }
+    }
+
+    private void throwIfTeamCountExceedMemberCount(int teamCount, int memberCount){
+        if (teamCount > memberCount){
+            throw new InvalidTeamCountException("TEAMBUILDING-410", "Team count \"" + teamCount + "\" cannot exceed member count \"" + memberCount + "\"");
+        }
+    }
+
+    private void throwIfUserWeightIsOutOfRange(List<UserRequestDto> userRequestDtoList){
+        for (UserRequestDto userRequestDto : userRequestDtoList){
+            if (!isUserWeightInRange(userRequestDto.getWeight())){
+                throw new InvalidUserWeightException(userRequestDto.getWeight());
+            }
+        }
+    }
+
+    private boolean isUserWeightInRange(int weight){
+        return weight >= 1 && weight <= 10;
     }
 
     private List<TeamDto> createTeamDtoList(List<UserRequestDto> userRequestDtoList, int teamCount){
@@ -53,7 +96,7 @@ public class DefaultTeamBuildingManager implements TeamBuildingManager{
 
     private TeamDto buildTeamDto(List<String> memberList, int teamNumber){
         return TeamDto.builder()
-                .teamName(teamNumber + " 팀")
+                .teamName("Team " + teamNumber)
                 .userDtoList(buildUserDtoList(memberList))
                 .build();
     }
@@ -69,8 +112,66 @@ public class DefaultTeamBuildingManager implements TeamBuildingManager{
     private TeamBuildingDto buildTeamBuildingDto(String title, List<TeamDto> teamDtoList){
         return TeamBuildingDto.builder()
                 .teamBuildingTitle(title)
-                .teamList(teamDtoList)
+                .teamDtoList(teamDtoList)
                 .build();
+    }
+
+    @Override
+    public TeamBuildingDto readTeamBuildingById(int teamBuildingId){
+        throwIfUnknownTeamBuildingId(teamBuildingId);
+        return teamBuildingRepository.readTeamBuildingById(teamBuildingId);
+    }
+
+    private void throwIfUnknownTeamBuildingId(int teamBuildingId){
+        if (!teamBuildingRepository.isExistTeamBuilding(teamBuildingId)){
+            throw new UnknownTeamBuildingIdException(teamBuildingId);
+        }
+    }
+
+    @Override
+    public List<TeamBuildingDto> readAllTeamBuilding(int startIdx, int endIdx){
+        int maxIdx = teamBuildingRepository.readMaxIdx();
+        throwIfInvalidRangeDetected(startIdx, endIdx);
+        endIdx = adjustEndIdx(startIdx, endIdx, maxIdx);
+        return teamBuildingRepository.readAllTeamBuilding(startIdx, endIdx);
+    }
+
+    private void throwIfInvalidRangeDetected(int startIdx, int endIdx){
+        if (startIdx > endIdx || 1 > endIdx){
+            throw new InvalidRangeException(startIdx, endIdx);
+        }
+    }
+
+    private int adjustEndIdx(int startIdx, int endIdx, int maxIdx){
+        endIdx = adjustEndIdxToMaxIdx(endIdx, maxIdx);
+        endIdx = adjustEndIdxToPerPage(startIdx, endIdx);
+        return endIdx;
+    }
+
+    private int adjustEndIdxToMaxIdx(int endIdx, int maxIdx){
+        if (endIdx > maxIdx){
+            return maxIdx;
+        }
+        return endIdx;
+    }
+
+    private int adjustEndIdxToPerPage(int startIdx, int endIdx){
+        if (endIdx - startIdx + 1 > PerPage.PER_PAGE){
+            return startIdx + PerPage.PER_PAGE - 1;
+        }
+        return endIdx;
+    }
+
+    @Override
+    public void updateTeamBuildingTitleById(int teamBuildingId, String teamBuildingTitle){
+        TeamBuildingDto teamBuildingDto = teamBuildingRepository.readTeamBuildingById(teamBuildingId);
+        teamBuildingDto.setTeamBuildingTitle(teamBuildingTitle);
+        teamBuildingRepository.updateTeamBuildingTitleById(teamBuildingId, teamBuildingDto);
+    }
+
+    @Override
+    public void deleteTeamBuildingById(int teamBuildingId){
+        teamBuildingRepository.deleteTeamBuildingById(teamBuildingId);
     }
 
 }
