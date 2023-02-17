@@ -232,12 +232,12 @@ public class TeamBuildingServiceTest{
                 .teamBuildingTitle("modified Title")
                 .build();
         TeamBuildingDto teamBuildingDto2 = teamBuildingDto;
-        teamBuildingDto2.setTeamBuildingTitle(teamBuildingRequestDto.getTeamBuildingTitle());
 
         //when
         Mockito.when(teamBuildingRepository.isExistTeamBuilding(Mockito.anyInt())).thenReturn(true);
         Mockito.when(teamBuildingRepository.readTeamBuildingById(Mockito.anyInt())).thenReturn(teamBuildingDto2);
         teamBuildingManager.updateTeamBuildingTitleById(1, teamBuildingRequestDto.getTeamBuildingTitle());
+        teamBuildingDto2.setTeamBuildingTitle(teamBuildingRequestDto.getTeamBuildingTitle());
         TeamBuildingDto result = teamBuildingManager.readTeamBuildingById(1);
 
         //then
@@ -247,6 +247,45 @@ public class TeamBuildingServiceTest{
                 () -> Assertions.assertEquals(teamBuildingDto2.getTeamList().size(), result.getTeamList().size()),
                 () -> Assertions.assertEquals(teamBuildingDto2.getLastModifiedAt(), result.getLastModifiedAt())
         );
+
+    }
+
+    @Test
+    @DisplayName("팀빌딩 그룹 수정 실패 테스트 - teamBuildingTitle이 1000자 초과")
+    public void MODIFY_TEAM_BUILDING_FAIL_CAUSE_TEAM_BUILDING_TITLE_OVERFLOW_TEST(){
+        //given
+        int teamBuildingId = 1;
+        TeamBuildingDto teamBuildingDto = createTeamBuildingDto(teamBuildingId);
+        TeamBuildingRequestDto teamBuildingRequestDto = TeamBuildingRequestDto.builder()
+                .teamBuildingTitle(createOverflow())
+                .build();
+        TeamBuildingDto teamBuildingDto2 = teamBuildingDto;
+
+        //when
+        Mockito.when(teamBuildingRepository.isExistTeamBuilding(Mockito.anyInt())).thenReturn(true);
+        Mockito.when(teamBuildingRepository.readTeamBuildingById(Mockito.anyInt())).thenReturn(teamBuildingDto2);
+
+        //then
+        Assertions.assertThrows(ContentOverflowException.class, () ->  teamBuildingManager.updateTeamBuildingTitleById(1, teamBuildingRequestDto.getTeamBuildingTitle()));
+    }
+
+    @Test
+    @DisplayName("팀빌딩 그룹 수정 실패 테스트 - 없는 teamBuildingId")
+    public void MODIFY_TEAM_BUILDING_FAIL_CAUSE_UNKNOWN_TEAM_BUILDING_ID_TEST(){
+        //given
+        int teamBuildingId = 1;
+        TeamBuildingDto teamBuildingDto = createTeamBuildingDto(teamBuildingId);
+        TeamBuildingRequestDto teamBuildingRequestDto = TeamBuildingRequestDto.builder()
+                .teamBuildingTitle("modified Title")
+                .build();
+        TeamBuildingDto teamBuildingDto2 = teamBuildingDto;
+
+        //when
+        Mockito.when(teamBuildingRepository.isExistTeamBuilding(Mockito.anyInt())).thenReturn(false);
+        Mockito.when(teamBuildingRepository.readTeamBuildingById(Mockito.anyInt())).thenReturn(teamBuildingDto2);
+
+        //then
+        Assertions.assertThrows(UnknownTeamBuildingIdException.class, () -> teamBuildingManager.updateTeamBuildingTitleById(0,teamBuildingRequestDto.getTeamBuildingTitle()));
 
     }
 

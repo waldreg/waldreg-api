@@ -51,13 +51,6 @@ public class DefaultTeamBuildingManager implements TeamBuildingManager{
         teamBuildingRepository.createTeamBuilding(teamBuildingDto);
     }
 
-    private void throwIfTeamBuildingTitleIsOverflow(String teamBuildingTitle){
-        int length = teamBuildingTitle.length();
-        if (length > 1000){
-            throw new ContentOverflowException("TEAMBUILDING-401", "Teambuilding title cannot be more than 1000 current length \"" + length + "\"");
-        }
-    }
-
     private void throwIfTeamCountIsLessThanOrEqualToZero(int teamCount){
         if (teamCount <= 0){
             throw new InvalidTeamCountException("TEAMBUILDING-402", "The number of team cannot be less than or equal to zero, current team count \"" + teamCount + "\"");
@@ -122,12 +115,6 @@ public class DefaultTeamBuildingManager implements TeamBuildingManager{
         return teamBuildingRepository.readTeamBuildingById(teamBuildingId);
     }
 
-    private void throwIfUnknownTeamBuildingId(int teamBuildingId){
-        if (!teamBuildingRepository.isExistTeamBuilding(teamBuildingId)){
-            throw new UnknownTeamBuildingIdException(teamBuildingId);
-        }
-    }
-
     @Override
     public List<TeamBuildingDto> readAllTeamBuilding(int startIdx, int endIdx){
         int maxIdx = teamBuildingRepository.readMaxIdx();
@@ -164,9 +151,24 @@ public class DefaultTeamBuildingManager implements TeamBuildingManager{
 
     @Override
     public void updateTeamBuildingTitleById(int teamBuildingId, String teamBuildingTitle){
+        throwIfUnknownTeamBuildingId(teamBuildingId);
+        throwIfTeamBuildingTitleIsOverflow(teamBuildingTitle);
         TeamBuildingDto teamBuildingDto = teamBuildingRepository.readTeamBuildingById(teamBuildingId);
         teamBuildingDto.setTeamBuildingTitle(teamBuildingTitle);
         teamBuildingRepository.updateTeamBuildingTitleById(teamBuildingId, teamBuildingDto);
+    }
+
+    private void throwIfUnknownTeamBuildingId(int teamBuildingId){
+        if (!teamBuildingRepository.isExistTeamBuilding(teamBuildingId)){
+            throw new UnknownTeamBuildingIdException(teamBuildingId);
+        }
+    }
+
+    private void throwIfTeamBuildingTitleIsOverflow(String teamBuildingTitle){
+        int length = teamBuildingTitle.length();
+        if (length > 1000){
+            throw new ContentOverflowException("TEAMBUILDING-401", "Teambuilding title cannot be more than 1000 current length \"" + length + "\"");
+        }
     }
 
     @Override
