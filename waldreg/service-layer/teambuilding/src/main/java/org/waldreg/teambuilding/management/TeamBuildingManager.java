@@ -14,4 +14,6 @@ public interface TeamBuildingManager{
 
     void updateTeamBuildingTitleById(int teamBuildingId, String teamBuildingTitle);
 
+    void deleteTeamBuildingById(int teamBuildingId);
+
 }

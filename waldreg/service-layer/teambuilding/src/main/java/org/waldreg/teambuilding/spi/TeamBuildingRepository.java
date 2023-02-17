@@ -13,4 +13,6 @@ public interface TeamBuildingRepository{
 
     void updateTeamBuildingTitleById(int teamBuildingId, TeamBuildingDto teamBuildingDto);
 
+    void deleteTeamBuildingById(int teamBuildingId);
+
 }
