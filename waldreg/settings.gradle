@@ -48,4 +48,6 @@ include 'core-layer:encrypt'
 findProject(':core-layer:encrypt')?.name = 'encrypt'
 include 'service-layer:attendance'
 findProject(':service-layer:attendance')?.name = 'attendance'
+include 'service-layer:teambuilding'
+findProject(':service-layer:teambuilding')?.name = 'teambuilding'
 
