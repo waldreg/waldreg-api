@@ -101,9 +101,9 @@ public class TeamBuildingServiceTest{
                 () -> Assertions.assertEquals(teamBuildingDto.getTeamBuildingTitle(), result.get(0).getTeamBuildingTitle()),
                 () -> Assertions.assertEquals(teamBuildingDto.getTeamList().size(), result.get(0).getTeamList().size()),
                 () -> Assertions.assertEquals(teamBuildingDto.getLastModifiedAt(), result.get(0).getLastModifiedAt()),
-                () -> Assertions.assertEquals(teamBuildingDto.getTeamBuildingTitle(), result.get(1).getTeamBuildingTitle()),
-                () -> Assertions.assertEquals(teamBuildingDto.getTeamList().size(), result.get(1).getTeamList().size()),
-                () -> Assertions.assertEquals(teamBuildingDto.getLastModifiedAt(), result.get(1).getLastModifiedAt())
+                () -> Assertions.assertEquals(teamBuildingDto2.getTeamBuildingTitle(), result.get(1).getTeamBuildingTitle()),
+                () -> Assertions.assertEquals(teamBuildingDto2.getTeamList().size(), result.get(1).getTeamList().size()),
+                () -> Assertions.assertEquals(teamBuildingDto2.getLastModifiedAt(), result.get(1).getLastModifiedAt())
         );
 
     }
