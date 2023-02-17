@@ -68,7 +68,7 @@ public final class AttendancePerDayResponse{
         private final String userName;
 
         @JsonProperty("attendance_status")
-        private final AttendanceType attendanceStatus;
+        private final String attendanceStatus;
 
         private AttendanceUserInDayResponse(){
             throw new UnsupportedOperationException("Cannot invoke constructor \"AttendanceUserInDayDto()\"");
@@ -78,7 +78,7 @@ public final class AttendancePerDayResponse{
             this.id = builder.id;
             this.userId = builder.userId;
             this.userName = builder.userName;
-            this.attendanceStatus = builder.attendanceStatus;
+            this.attendanceStatus = builder.attendanceStatus.toString();
         }
 
         public static AttendanceUserInDayResponse.Builder builder(){
@@ -97,7 +97,7 @@ public final class AttendancePerDayResponse{
             return userName;
         }
 
-        public AttendanceType getAttendanceStatus(){
+        public String getAttendanceStatus(){
             return attendanceStatus;
         }
 

@@ -6,10 +6,12 @@ import org.springframework.stereotype.Service;
 import org.waldreg.attendance.management.dto.AttendanceDayDto;
 import org.waldreg.attendance.management.dto.AttendanceStatusChangeDto;
 import org.waldreg.attendance.management.dto.AttendanceTargetDto;
+import org.waldreg.attendance.management.dto.AttendanceUserDto;
 import org.waldreg.attendance.type.AttendanceType;
 import org.waldreg.controller.attendance.management.request.AttendanceModifyRequest;
 import org.waldreg.controller.attendance.management.response.AttendanceCheckResponse;
 import org.waldreg.controller.attendance.management.response.AttendancePerDayResponse;
+import org.waldreg.controller.attendance.management.response.AttendanceUserResponse;
 
 @Service
 public class AttendanceControllerMapper{
@@ -45,6 +47,20 @@ public class AttendanceControllerMapper{
                                         .build()
                         ).collect(Collectors.toList()))
                         .build()).collect(Collectors.toList());
+    }
+
+    public AttendanceUserResponse attendanceUserDtoToAttendanceUserResponse(AttendanceUserDto attendanceUserDto){
+        return AttendanceUserResponse.builder()
+                .id(attendanceUserDto.getId())
+                .userId(attendanceUserDto.getUserId())
+                .userName(attendanceUserDto.getUserName())
+                .attendanceUserStatusList(attendanceUserDto.getAttendanceUserStatusList().stream()
+                        .map(a -> AttendanceUserResponse.AttendanceUserStatus.builder()
+                                .attendanceDate(a.getAttendanceDate())
+                                .attendanceStatus(a.getAttendanceStatus())
+                                .build())
+                        .collect(Collectors.toList()))
+                .build();
     }
 
 }

@@ -16,11 +16,13 @@ import org.waldreg.attendance.management.AttendanceManager;
 import org.waldreg.attendance.management.dto.AttendanceDayDto;
 import org.waldreg.attendance.management.dto.AttendanceStatusChangeDto;
 import org.waldreg.attendance.management.dto.AttendanceTargetDto;
+import org.waldreg.attendance.management.dto.AttendanceUserDto;
 import org.waldreg.character.aop.annotation.PermissionVerifying;
 import org.waldreg.controller.attendance.management.mapper.AttendanceControllerMapper;
 import org.waldreg.controller.attendance.management.request.AttendanceModifyRequest;
 import org.waldreg.controller.attendance.management.response.AttendanceCheckResponse;
 import org.waldreg.controller.attendance.management.response.AttendancePerDayResponse;
+import org.waldreg.controller.attendance.management.response.AttendanceUserResponse;
 import org.waldreg.token.aop.annotation.Authenticating;
 import org.waldreg.util.token.DecryptedTokenContextGetter;
 
@@ -90,6 +92,14 @@ public class AttendanceController{
         List<AttendanceDayDto> attendanceDayDtoList = attendanceManager.readAttendanceStatusList(from, to);
         List<AttendancePerDayResponse> attendancePerDayResponseList = attendanceControllerMapper.attendanceDayDtoListToAttendancePerDayResponseList(attendanceDayDtoList);
         return Map.of("attendances", attendancePerDayResponseList);
+    }
+
+    @Authenticating
+    @GetMapping("/attendance/calendar/user")
+    public AttendanceUserResponse getAttendanceUserResponse(@RequestParam("from") LocalDate from, @RequestParam("to") LocalDate to){
+        int id = decryptedTokenContextGetter.get();
+        AttendanceUserDto attendanceUserDto = attendanceManager.readSpecificAttendanceStatusList(id, from, to);
+        return attendanceControllerMapper.attendanceUserDtoToAttendanceUserResponse(attendanceUserDto);
     }
 
 }
