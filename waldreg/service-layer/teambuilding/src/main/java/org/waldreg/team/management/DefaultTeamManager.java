@@ -2,6 +2,8 @@ package org.waldreg.team.management;
 
 import java.util.ArrayList;
 import java.util.List;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 import org.waldreg.exception.DuplicateUserSelectException;
 import org.waldreg.exception.DuplicatedTeamNameException;
 import org.waldreg.exception.UnknownTeamBuildingIdException;
@@ -13,6 +15,7 @@ import org.waldreg.team.spi.TeamInTeamBuildingRepository;
 import org.waldreg.team.spi.TeamRepository;
 import org.waldreg.team.spi.TeamUserRepository;
 
+@Service
 public class DefaultTeamManager implements TeamManager{
 
     private final TeamRepository teamRepository;
@@ -21,6 +24,7 @@ public class DefaultTeamManager implements TeamManager{
 
     private final TeamInTeamBuildingRepository teamInTeamBuildingRepository;
 
+    @Autowired
     public DefaultTeamManager(TeamRepository teamRepository, TeamUserRepository teamUserRepository, TeamInTeamBuildingRepository teamInTeamBuildingRepository){
         this.teamRepository = teamRepository;
         this.teamUserRepository = teamUserRepository;
