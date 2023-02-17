@@ -28,7 +28,6 @@ import org.waldreg.teambuilding.management.TeamBuildingManager;
 import org.waldreg.teambuilding.management.teamcreator.TeamCreator;
 import org.waldreg.teambuilding.spi.TeamBuildingRepository;
 import org.waldreg.teambuilding.spi.TeamBuildingUserRepository;
-import org.waldreg.teambuilding.spi.TeamRepository;
 
 @ExtendWith(SpringExtension.class)
 @ContextConfiguration(classes = {DefaultTeamBuildingManager.class, TeamCreator.class})
@@ -39,9 +38,6 @@ public class TeamBuildingServiceTest{
 
     @MockBean
     TeamBuildingRepository teamBuildingRepository;
-
-    @MockBean
-    TeamRepository teamRepository;
 
     @MockBean
     TeamBuildingUserRepository teamBuildingUserRepository;
