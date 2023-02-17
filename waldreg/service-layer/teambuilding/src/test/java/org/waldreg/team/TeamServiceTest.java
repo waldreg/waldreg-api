@@ -120,5 +120,15 @@ public class TeamServiceTest{
 
     }
 
+    @Test
+    @DisplayName("팀빌딩 그룹 내 팀 삭제 성공 테스트")
+    public void DELETE_TEAM_IN_TEAM_BUILDING_SUCCESS_TEST(){
+        //given
+        int teamId = 1;
+
+        //when&then
+        Assertions.assertDoesNotThrow(() -> teamManager.deleteTeamById(teamId));
+
+    }
 
 }

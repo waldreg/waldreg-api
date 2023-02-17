@@ -10,4 +10,6 @@ public interface TeamRepository{
 
     void updateTeamById(int teamId, TeamDto teamDto);
 
+    void deleteTeamById(int teamId);
+
 }

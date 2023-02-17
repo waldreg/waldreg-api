@@ -52,6 +52,11 @@ public class DefaultTeamManager implements TeamManager{
         teamRepository.updateTeamById(teamId, teamDto);
     }
 
+    @Override
+    public void deleteTeamById(int teamId){
+        teamRepository.deleteTeamById(teamId);
+    }
+
     private TeamDto updateTeamDto(TeamDto teamDto, TeamRequestDto teamRequestDto){
         teamDto.setTeamName(teamRequestDto.getTeamName());
         teamDto.setUserDtoList(buildUserDtoList(teamRequestDto.getMemberList()));
