@@ -33,6 +33,24 @@ public class DefaultTeamManager implements TeamManager{
                 .build();
     }
 
+    @Override
+    public void updateTeamById(int teamId, TeamRequestDto teamRequestDto){
+        TeamDto teamDto = teamRepository.readTeamById(teamId);
+        teamDto = updateTeamDto(teamDto, teamRequestDto);
+        teamRepository.updateTeamById(teamId,teamDto);
+    }
+
+    @Override
+    public TeamDto readTeamById(int teamId){
+        return teamRepository.readTeamById(teamId);
+    }
+
+    private TeamDto updateTeamDto(TeamDto teamDto, TeamRequestDto teamRequestDto){
+        teamDto.setTeamName(teamRequestDto.getTeamName());
+        teamDto.setUserDtoList(buildUserDtoList(teamRequestDto.getMemberList()));
+        return teamDto;
+    }
+
     private List<UserDto> buildUserDtoList(List<String> memberList){
         List<UserDto> userDtoList = new ArrayList<>();
         for (String member : memberList){
