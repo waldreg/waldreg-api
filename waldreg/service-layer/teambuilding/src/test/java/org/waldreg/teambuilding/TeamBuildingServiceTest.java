@@ -22,6 +22,7 @@ import org.waldreg.teambuilding.exception.InvalidRangeException;
 import org.waldreg.teambuilding.exception.InvalidTeamCountException;
 import org.waldreg.teambuilding.exception.InvalidUserWeightException;
 import org.waldreg.teambuilding.exception.UnknownTeamBuildingIdException;
+import org.waldreg.teambuilding.exception.UnknownUserIdException;
 import org.waldreg.teambuilding.management.DefaultTeamBuildingManager;
 import org.waldreg.teambuilding.management.TeamBuildingManager;
 import org.waldreg.teambuilding.management.teamcreator.TeamCreator;
@@ -58,7 +59,10 @@ public class TeamBuildingServiceTest{
                 .userRequestDtoList(userRequestDtoList)
                 .build();
 
-        //when&then
+        //when
+        Mockito.when(teamBuildingUserRepository.isExistUserByUserId(Mockito.anyString())).thenReturn(true);
+
+        //then
         Assertions.assertDoesNotThrow(() -> teamBuildingManager.createTeamBuilding(teamBuildingRequestDto));
 
     }
@@ -76,7 +80,10 @@ public class TeamBuildingServiceTest{
                 .userRequestDtoList(userRequestDtoList)
                 .build();
 
-        //when&then
+        //when
+        Mockito.when(teamBuildingUserRepository.isExistUserByUserId(Mockito.anyString())).thenReturn(true);
+
+        //then
         Assertions.assertThrows(ContentOverflowException.class, () -> teamBuildingManager.createTeamBuilding(teamBuildingRequestDto));
 
     }
@@ -94,7 +101,10 @@ public class TeamBuildingServiceTest{
                 .userRequestDtoList(userRequestDtoList)
                 .build();
 
-        //when&then
+        //when
+        Mockito.when(teamBuildingUserRepository.isExistUserByUserId(Mockito.anyString())).thenReturn(true);
+
+        //then
         Assertions.assertThrows(InvalidTeamCountException.class, () -> teamBuildingManager.createTeamBuilding(teamBuildingRequestDto));
 
     }
@@ -112,7 +122,10 @@ public class TeamBuildingServiceTest{
                 .userRequestDtoList(userRequestDtoList)
                 .build();
 
-        //when&then
+        //when
+        Mockito.when(teamBuildingUserRepository.isExistUserByUserId(Mockito.anyString())).thenReturn(true);
+
+        //then
         Assertions.assertThrows(InvalidUserWeightException.class, () -> teamBuildingManager.createTeamBuilding(teamBuildingRequestDto));
 
     }
@@ -130,8 +143,32 @@ public class TeamBuildingServiceTest{
                 .userRequestDtoList(userRequestDtoList)
                 .build();
 
-        //when&then
+        //when
+        Mockito.when(teamBuildingUserRepository.isExistUserByUserId(Mockito.anyString())).thenReturn(true);
+
+        //then
         Assertions.assertThrows(InvalidTeamCountException.class, () -> teamBuildingManager.createTeamBuilding(teamBuildingRequestDto));
+
+    }
+
+    @Test
+    @DisplayName("새로운 팀빌딩 그룹 생성 실패 테스트 - 없는 userId")
+    public void CREATE_NEW_TEAM_BUILDING_FAIL_CAUSE_UNKNOWN_USER_ID_TEST(){
+        //given
+        String title = "2nd Algorithm Contest Team";
+        int teamCount = 3;
+        List<UserRequestDto> userRequestDtoList = createUserRequestDtoList();
+        TeamBuildingRequestDto teamBuildingRequestDto = TeamBuildingRequestDto.builder()
+                .teamBuildingTitle(title)
+                .teamCount(teamCount)
+                .userRequestDtoList(userRequestDtoList)
+                .build();
+
+        //when
+        Mockito.when(teamBuildingUserRepository.isExistUserByUserId(Mockito.anyString())).thenReturn(false);
+
+        //then
+        Assertions.assertThrows(UnknownUserIdException.class, () -> teamBuildingManager.createTeamBuilding(teamBuildingRequestDto));
 
     }
 

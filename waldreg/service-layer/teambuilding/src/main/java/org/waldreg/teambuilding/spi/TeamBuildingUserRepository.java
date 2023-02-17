@@ -6,4 +6,6 @@ public interface TeamBuildingUserRepository{
 
     UserDto getUserInfoByUserId(String userId);
 
+    boolean isExistUserByUserId(String userId);
+
 }
