@@ -78,7 +78,7 @@ public class DefaultUserManager implements UserManager{
     @Override
     public List<UserDto> readUserList(int startIdx, int endIdx){
         int maxIdx = readMaxIdx();
-        throwIfInvalidRangeDetected(startIdx, endIdx, maxIdx);
+        throwIfInvalidRangeDetected(startIdx, endIdx);
         endIdx = adjustEndIdx(startIdx, endIdx, maxIdx);
         return userRepository.readUserList(startIdx, endIdx);
     }
@@ -88,7 +88,7 @@ public class DefaultUserManager implements UserManager{
         return userRepository.readMaxIdx();
     }
 
-    private void throwIfInvalidRangeDetected(int startIdx, int endIdx, int maxIdx){
+    private void throwIfInvalidRangeDetected(int startIdx, int endIdx){
         if (startIdx > endIdx || 1 > endIdx){
             throw new InvalidRangeException("Invalid range start-idx \"" + startIdx + "\", end-idx \"" + endIdx + "\"");
         }

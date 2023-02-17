@@ -17,4 +17,6 @@ public interface TeamBuildingRepository{
 
     boolean isExistTeamBuilding(int teamBuildingId);
 
+    int readMaxIdx();
+
 }
