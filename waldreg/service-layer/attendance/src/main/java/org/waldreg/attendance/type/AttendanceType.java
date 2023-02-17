@@ -1,6 +1,7 @@
 package org.waldreg.attendance.type;
 
 import java.util.Locale;
+import org.waldreg.attendance.exception.UnknownAttendanceTypeException;
 
 public enum AttendanceType{
 
@@ -27,7 +28,11 @@ public enum AttendanceType{
     }
 
     public static AttendanceType getAttendanceType(String name){
-        return AttendanceType.valueOf(name.toUpperCase(Locale.ROOT));
+        try{
+            return AttendanceType.getAttendanceType(name.toUpperCase(Locale.ROOT));
+        } catch (IllegalArgumentException iae){
+            throw new UnknownAttendanceTypeException(name);
+        }
     }
 
 }
