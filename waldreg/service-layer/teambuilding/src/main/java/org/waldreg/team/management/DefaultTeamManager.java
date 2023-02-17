@@ -20,14 +20,14 @@ public class DefaultTeamManager implements TeamManager{
     }
 
     @Override
-    public void createTeam(TeamRequestDto teamRequestDto){
-        TeamDto teamDto = buildTeamDto(teamRequestDto);
+    public void createTeam(int teamBuildingId, TeamRequestDto teamRequestDto){
+        TeamDto teamDto = buildTeamDto(teamBuildingId, teamRequestDto);
         teamRepository.createTeam(teamDto);
     }
 
-    private TeamDto buildTeamDto(TeamRequestDto teamRequestDto){
+    private TeamDto buildTeamDto(int teamBuildingId, TeamRequestDto teamRequestDto){
         return TeamDto.builder()
-                .teamBuildingId(teamRequestDto.getTeamBuildingId())
+                .teamBuildingId(teamBuildingId)
                 .teamName(teamRequestDto.getTeamName())
                 .userDtoList(buildUserDtoList(teamRequestDto.getMemberList()))
                 .build();

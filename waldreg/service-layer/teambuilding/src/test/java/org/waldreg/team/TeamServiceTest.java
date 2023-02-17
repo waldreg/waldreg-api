@@ -5,12 +5,10 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.Mock;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
-import org.waldreg.team.dto.TeamDto;
 import org.waldreg.team.dto.TeamRequestDto;
 import org.waldreg.team.management.DefaultTeamManager;
 import org.waldreg.team.management.TeamManager;
@@ -41,13 +39,12 @@ public class TeamServiceTest{
         int teamBuildingId = 1;
         String name = "new team";
         TeamRequestDto teamRequestDto = TeamRequestDto.builder()
-                .teamBuildingId(teamBuildingId)
                 .teamName(name)
                 .memberList(List.of())
                 .build();
 
         //when&then
-        Assertions.assertDoesNotThrow(() -> teamManager.createTeam(teamRequestDto));
+        Assertions.assertDoesNotThrow(() -> teamManager.createTeam(teamBuildingId, teamRequestDto));
 
     }
 
