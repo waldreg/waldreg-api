@@ -17,6 +17,9 @@ import org.waldreg.teambuilding.dto.TeamBuildingRequestDto;
 import org.waldreg.teambuilding.dto.TeamDto;
 import org.waldreg.teambuilding.dto.UserDto;
 import org.waldreg.teambuilding.dto.UserRequestDto;
+import org.waldreg.teambuilding.exception.ContentOverflowException;
+import org.waldreg.teambuilding.exception.InvalidTeamCountException;
+import org.waldreg.teambuilding.exception.InvalidUserWeightException;
 import org.waldreg.teambuilding.management.DefaultTeamBuildingManager;
 import org.waldreg.teambuilding.management.TeamBuildingManager;
 import org.waldreg.teambuilding.management.teamcreator.TeamCreator;
@@ -53,8 +56,80 @@ public class TeamBuildingServiceTest{
                 .userRequestDtoList(userRequestDtoList)
                 .build();
 
-        //then
+        //when&then
         Assertions.assertDoesNotThrow(() -> teamBuildingManager.createTeamBuilding(teamBuildingRequestDto));
+
+    }
+
+    @Test
+    @DisplayName("새로운 팀빌딩 그룹 생성 실패 테스트 - teamBuildingTitle 길이 1000 초과")
+    public void CREATE_NEW_TEAM_BUILDING_FAIL_CAUSE_TEAM_BUILDING_TITLE_OVERFLOW_TEST(){
+        //given
+        String title = createOverflow();
+        int teamCount = 3;
+        List<UserRequestDto> userRequestDtoList = createUserRequestDtoList();
+        TeamBuildingRequestDto teamBuildingRequestDto = TeamBuildingRequestDto.builder()
+                .teamBuildingTitle(title)
+                .teamCount(teamCount)
+                .userRequestDtoList(userRequestDtoList)
+                .build();
+
+        //when&then
+        Assertions.assertThrows(ContentOverflowException.class, () -> teamBuildingManager.createTeamBuilding(teamBuildingRequestDto));
+
+    }
+
+    @Test
+    @DisplayName("새로운 팀빌딩 그룹 생성 실패 테스트 - 팀 개수가 0보다 작거나 같음")
+    public void CREATE_NEW_TEAM_BUILDING_FAIL_CAUSE_TEAM_COUNT_LESS_THAN_OR_EQUAL_TO_ZERO_TEST(){
+        //given
+        String title = "2nd Algorithm Contest Team";
+        int teamCount = 0;
+        List<UserRequestDto> userRequestDtoList = createUserRequestDtoList();
+        TeamBuildingRequestDto teamBuildingRequestDto = TeamBuildingRequestDto.builder()
+                .teamBuildingTitle(title)
+                .teamCount(teamCount)
+                .userRequestDtoList(userRequestDtoList)
+                .build();
+
+        //when&then
+        Assertions.assertThrows(InvalidTeamCountException.class , () -> teamBuildingManager.createTeamBuilding(teamBuildingRequestDto));
+
+    }
+
+    @Test
+    @DisplayName("새로운 팀빌딩 그룹 생성 실패 테스트 - 잘못된 user weight")
+    public void CREATE_NEW_TEAM_BUILDING_FAIL_CAUSE_INVALID_USER_WEIGHT_TEST(){
+        //given
+        String title = "2nd Algorithm Contest Team";
+        int teamCount = 3;
+        List<UserRequestDto> userRequestDtoList = createWrongUserRequestDtoList();
+        TeamBuildingRequestDto teamBuildingRequestDto = TeamBuildingRequestDto.builder()
+                .teamBuildingTitle(title)
+                .teamCount(teamCount)
+                .userRequestDtoList(userRequestDtoList)
+                .build();
+
+        //when&then
+        Assertions.assertThrows(InvalidUserWeightException.class, () -> teamBuildingManager.createTeamBuilding(teamBuildingRequestDto));
+
+    }
+
+    @Test
+    @DisplayName("새로운 팀빌딩 그룹 생성 실패 테스트 - 잘못된 team_count(userCount : 6)")
+    public void CREATE_NEW_TEAM_BUILDING_FAIL_CAUSE_INVALID_TEAM_COUNT_TEST(){
+        //given
+        String title = "2nd Algorithm Contest Team";
+        int teamCount = 10;
+        List<UserRequestDto> userRequestDtoList = createUserRequestDtoList();
+        TeamBuildingRequestDto teamBuildingRequestDto = TeamBuildingRequestDto.builder()
+                .teamBuildingTitle(title)
+                .teamCount(teamCount)
+                .userRequestDtoList(userRequestDtoList)
+                .build();
+
+        //when&then
+        Assertions.assertThrows(InvalidTeamCountException.class, () -> teamBuildingManager.createTeamBuilding(teamBuildingRequestDto));
 
     }
 
@@ -92,8 +167,8 @@ public class TeamBuildingServiceTest{
         teamBuildingDtoList.add(teamBuildingDto2);
 
         //when
-        Mockito.when(teamBuildingRepository.readAllTeamBuilding(Mockito.anyInt(),Mockito.anyInt())).thenReturn(teamBuildingDtoList);
-        List<TeamBuildingDto> result = teamBuildingManager.readAllTeamBuilding(1,2);
+        Mockito.when(teamBuildingRepository.readAllTeamBuilding(Mockito.anyInt(), Mockito.anyInt())).thenReturn(teamBuildingDtoList);
+        List<TeamBuildingDto> result = teamBuildingManager.readAllTeamBuilding(1, 2);
 
         //then
         Assertions.assertAll(
@@ -158,9 +233,9 @@ public class TeamBuildingServiceTest{
     private List<TeamDto> createTeamDtoList(int teamBuildingId){
         List<TeamDto> teamDtoList = new ArrayList<>();
         List<UserDto> userDtoList = createUserDtoList();
-        teamDtoList.add(createTeamDto(teamBuildingId, "team 1",List.of(userDtoList.get(0),userDtoList.get(2))));
-        teamDtoList.add(createTeamDto(teamBuildingId,"team 2",List.of(userDtoList.get(3),userDtoList.get(4))));
-        teamDtoList.add(createTeamDto(teamBuildingId, "team 3",List.of(userDtoList.get(1),userDtoList.get(5))));
+        teamDtoList.add(createTeamDto(teamBuildingId, "team 1", List.of(userDtoList.get(0), userDtoList.get(2))));
+        teamDtoList.add(createTeamDto(teamBuildingId, "team 2", List.of(userDtoList.get(3), userDtoList.get(4))));
+        teamDtoList.add(createTeamDto(teamBuildingId, "team 3", List.of(userDtoList.get(1), userDtoList.get(5))));
         return teamDtoList;
     }
 
@@ -202,6 +277,17 @@ public class TeamBuildingServiceTest{
         return userRequestDtoList;
     }
 
+    private List<UserRequestDto> createWrongUserRequestDtoList(){
+        List<UserRequestDto> userRequestDtoList = new ArrayList<>();
+        userRequestDtoList.add(createUserRequestDto("alcuk_id", 2));
+        userRequestDtoList.add(createUserRequestDto("alcuk_id2", 1));
+        userRequestDtoList.add(createUserRequestDto("alcuk_id3", 3));
+        userRequestDtoList.add(createUserRequestDto("alcuk_id4", 4));
+        userRequestDtoList.add(createUserRequestDto("alcuk_id5", -1));
+        userRequestDtoList.add(createUserRequestDto("alcuk_id6", 10));
+        return userRequestDtoList;
+    }
+
     private UserRequestDto createUserRequestDto(String userId, int weight){
         return UserRequestDto.builder()
                 .userId(userId)
@@ -209,5 +295,12 @@ public class TeamBuildingServiceTest{
                 .build();
     }
 
+    private String createOverflow(){
+        String title = "";
+        for (int i = 0; i < 1005; i++){
+            title = title + "A";
+        }
+        return title;
+    }
 
 }
