@@ -74,7 +74,7 @@ public class TeamBuildingDto{
             return this;
         }
 
-        public Builder teamList(List<TeamDto> teamDtoListList){
+        public Builder teamDtoList(List<TeamDto> teamDtoList){
             this.teamDtoList = teamDtoList;
             return this;
         }
