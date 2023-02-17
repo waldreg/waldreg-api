@@ -6,4 +6,8 @@ public interface TeamRepository{
 
     void createTeam(TeamDto teamDto);
 
+    TeamDto readTeamById(int teamId);
+
+    void updateTeamById(int teamId, TeamDto teamDto);
+
 }
