@@ -15,4 +15,6 @@ public interface TeamBuildingRepository{
 
     void deleteTeamBuildingById(int teamBuildingId);
 
+    boolean isExistTeamBuilding(int teamBuildingId);
+
 }

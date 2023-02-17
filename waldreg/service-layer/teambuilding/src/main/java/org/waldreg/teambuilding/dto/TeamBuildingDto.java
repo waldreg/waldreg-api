@@ -47,10 +47,6 @@ public class TeamBuildingDto{
         return teamDtoList;
     }
 
-    public void setTeamBuildingId(int teamBuildingId){
-        this.teamBuildingId = teamBuildingId;
-    }
-
     public void setTeamBuildingTitle(String teamBuildingTitle){
         this.teamBuildingTitle = teamBuildingTitle;
     }
