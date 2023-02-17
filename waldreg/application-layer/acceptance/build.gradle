@@ -26,6 +26,7 @@ dependencies {
     implementation project(':application-layer:auth-controller')
     implementation project(':application-layer:schedule-controller')
     implementation project(':application-layer:reward-controller')
+    implementation project(':application-layer:attendance-controller')
     implementation project(':application-layer:application-configurer')
 
     implementation 'org.springframework.boot:spring-boot-starter'
