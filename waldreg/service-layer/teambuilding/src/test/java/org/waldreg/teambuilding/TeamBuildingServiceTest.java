@@ -303,6 +303,20 @@ public class TeamBuildingServiceTest{
 
     }
 
+    @Test
+    @DisplayName("팀빌딩 그룹 삭제 실패 테스트 - 없는 teamBuildingId")
+    public void DELETE_TEAM_BUILDING_FAIL_CAUSE_UNKNOWN_TEAM_BUILDING_ID_TEST(){
+        //given
+        int teamBuildingId = 0;
+
+        //when
+        Mockito.when(teamBuildingRepository.isExistTeamBuilding(Mockito.anyInt())).thenReturn(false);
+
+        //then
+        Assertions.assertThrows(UnknownTeamBuildingIdException.class, () -> teamBuildingManager.deleteTeamBuildingById(teamBuildingId));
+
+    }
+
     private TeamBuildingDto createTeamBuildingDto(int teamBuildingId){
         return TeamBuildingDto.builder()
                 .teamBuildingId(teamBuildingId)

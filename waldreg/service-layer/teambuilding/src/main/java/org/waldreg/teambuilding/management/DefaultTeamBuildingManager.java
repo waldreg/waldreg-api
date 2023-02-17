@@ -158,12 +158,6 @@ public class DefaultTeamBuildingManager implements TeamBuildingManager{
         teamBuildingRepository.updateTeamBuildingTitleById(teamBuildingId, teamBuildingDto);
     }
 
-    private void throwIfUnknownTeamBuildingId(int teamBuildingId){
-        if (!teamBuildingRepository.isExistTeamBuilding(teamBuildingId)){
-            throw new UnknownTeamBuildingIdException(teamBuildingId);
-        }
-    }
-
     private void throwIfTeamBuildingTitleIsOverflow(String teamBuildingTitle){
         int length = teamBuildingTitle.length();
         if (length > 1000){
@@ -173,7 +167,14 @@ public class DefaultTeamBuildingManager implements TeamBuildingManager{
 
     @Override
     public void deleteTeamBuildingById(int teamBuildingId){
+        throwIfUnknownTeamBuildingId(teamBuildingId);
         teamBuildingRepository.deleteTeamBuildingById(teamBuildingId);
+    }
+
+    private void throwIfUnknownTeamBuildingId(int teamBuildingId){
+        if (!teamBuildingRepository.isExistTeamBuilding(teamBuildingId)){
+            throw new UnknownTeamBuildingIdException(teamBuildingId);
+        }
     }
 
 }
