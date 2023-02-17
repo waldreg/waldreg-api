@@ -18,6 +18,7 @@ import org.waldreg.teambuilding.dto.TeamDto;
 import org.waldreg.teambuilding.dto.UserDto;
 import org.waldreg.teambuilding.dto.UserRequestDto;
 import org.waldreg.teambuilding.exception.ContentOverflowException;
+import org.waldreg.teambuilding.exception.InvalidRangeException;
 import org.waldreg.teambuilding.exception.InvalidTeamCountException;
 import org.waldreg.teambuilding.exception.InvalidUserWeightException;
 import org.waldreg.teambuilding.exception.UnknownTeamBuildingIdException;
@@ -186,7 +187,7 @@ public class TeamBuildingServiceTest{
 
         //when
         Mockito.when(teamBuildingRepository.readAllTeamBuilding(Mockito.anyInt(), Mockito.anyInt())).thenReturn(teamBuildingDtoList);
-        List<TeamBuildingDto> result = teamBuildingManager.readAllTeamBuilding(1, 2);
+        List<TeamBuildingDto> result = teamBuildingManager.readAllTeamBuilding(1, 3);
 
         //then
         Assertions.assertAll(
@@ -198,6 +199,26 @@ public class TeamBuildingServiceTest{
                 () -> Assertions.assertEquals(teamBuildingDto2.getTeamList().size(), result.get(1).getTeamList().size()),
                 () -> Assertions.assertEquals(teamBuildingDto2.getLastModifiedAt(), result.get(1).getLastModifiedAt())
         );
+
+    }
+
+    @Test
+    @DisplayName("팀빌딩 그룹 전체 조회 실패 테스트 - 잘못된 범위")
+    public void INQUIRY_ALL_TEAM_BUILDING_FAIL_CAUSE_INVALID_RANGE_TEST(){
+        //given
+        int teamBuildingId = 1;
+        int teamBuildingId2 = 2;
+        TeamBuildingDto teamBuildingDto = createTeamBuildingDto(teamBuildingId);
+        TeamBuildingDto teamBuildingDto2 = createTeamBuildingDto(teamBuildingId2);
+        List<TeamBuildingDto> teamBuildingDtoList = new ArrayList<>();
+        teamBuildingDtoList.add(teamBuildingDto);
+        teamBuildingDtoList.add(teamBuildingDto2);
+
+        //when
+        Mockito.when(teamBuildingRepository.readAllTeamBuilding(Mockito.anyInt(), Mockito.anyInt())).thenReturn(teamBuildingDtoList);
+
+        //then
+        Assertions.assertThrows(InvalidRangeException.class, () -> teamBuildingManager.readAllTeamBuilding(2, 1));
 
     }
 

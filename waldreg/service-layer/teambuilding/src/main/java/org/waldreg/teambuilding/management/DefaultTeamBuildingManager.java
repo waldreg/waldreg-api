@@ -11,6 +11,7 @@ import org.waldreg.teambuilding.dto.TeamDto;
 import org.waldreg.teambuilding.dto.UserDto;
 import org.waldreg.teambuilding.dto.UserRequestDto;
 import org.waldreg.teambuilding.exception.ContentOverflowException;
+import org.waldreg.teambuilding.exception.InvalidRangeException;
 import org.waldreg.teambuilding.exception.InvalidTeamCountException;
 import org.waldreg.teambuilding.exception.InvalidUserWeightException;
 import org.waldreg.teambuilding.exception.UnknownTeamBuildingIdException;
@@ -122,14 +123,43 @@ public class DefaultTeamBuildingManager implements TeamBuildingManager{
     }
 
     private void throwIfUnknownTeamBuildingId(int teamBuildingId){
-        if(!teamBuildingRepository.isExistTeamBuilding(teamBuildingId)){
+        if (!teamBuildingRepository.isExistTeamBuilding(teamBuildingId)){
             throw new UnknownTeamBuildingIdException(teamBuildingId);
         }
     }
 
     @Override
     public List<TeamBuildingDto> readAllTeamBuilding(int startIdx, int endIdx){
+        int maxIdx = teamBuildingRepository.readMaxIdx();
+        throwIfInvalidRangeDetected(startIdx, endIdx);
+        endIdx = adjustEndIdx(startIdx, endIdx, maxIdx);
         return teamBuildingRepository.readAllTeamBuilding(startIdx, endIdx);
+    }
+
+    private void throwIfInvalidRangeDetected(int startIdx, int endIdx){
+        if (startIdx > endIdx || 1 > endIdx){
+            throw new InvalidRangeException(startIdx, endIdx);
+        }
+    }
+
+    private int adjustEndIdx(int startIdx, int endIdx, int maxIdx){
+        endIdx = adjustEndIdxToMaxIdx(endIdx, maxIdx);
+        endIdx = adjustEndIdxToPerPage(startIdx, endIdx);
+        return endIdx;
+    }
+
+    private int adjustEndIdxToMaxIdx(int endIdx, int maxIdx){
+        if (endIdx > maxIdx){
+            return maxIdx;
+        }
+        return endIdx;
+    }
+
+    private int adjustEndIdxToPerPage(int startIdx, int endIdx){
+        if (endIdx - startIdx + 1 > PerPage.PER_PAGE){
+            return startIdx + PerPage.PER_PAGE - 1;
+        }
+        return endIdx;
     }
 
     @Override
