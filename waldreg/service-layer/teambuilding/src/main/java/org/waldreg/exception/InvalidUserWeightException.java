@@ -1,4 +1,4 @@
-package org.waldreg.teambuilding.exception;
+package org.waldreg.exception;
 
 public class InvalidUserWeightException extends RuntimeException{
 

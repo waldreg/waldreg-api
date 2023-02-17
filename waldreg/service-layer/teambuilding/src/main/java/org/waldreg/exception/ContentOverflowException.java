@@ -1,4 +1,4 @@
-package org.waldreg.teambuilding.exception;
+package org.waldreg.exception;
 
 public class ContentOverflowException extends RuntimeException{
 

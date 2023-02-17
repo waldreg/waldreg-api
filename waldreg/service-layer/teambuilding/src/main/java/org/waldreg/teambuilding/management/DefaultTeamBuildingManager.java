@@ -10,12 +10,12 @@ import org.waldreg.teambuilding.dto.TeamBuildingRequestDto;
 import org.waldreg.teambuilding.dto.TeamDto;
 import org.waldreg.teambuilding.dto.UserDto;
 import org.waldreg.teambuilding.dto.UserRequestDto;
-import org.waldreg.teambuilding.exception.ContentOverflowException;
-import org.waldreg.teambuilding.exception.InvalidRangeException;
-import org.waldreg.teambuilding.exception.InvalidTeamCountException;
-import org.waldreg.teambuilding.exception.UnknownUserIdException;
-import org.waldreg.teambuilding.exception.InvalidUserWeightException;
-import org.waldreg.teambuilding.exception.UnknownTeamBuildingIdException;
+import org.waldreg.exception.ContentOverflowException;
+import org.waldreg.exception.InvalidRangeException;
+import org.waldreg.exception.InvalidTeamCountException;
+import org.waldreg.exception.UnknownUserIdException;
+import org.waldreg.exception.InvalidUserWeightException;
+import org.waldreg.exception.UnknownTeamBuildingIdException;
 import org.waldreg.teambuilding.management.teamcreator.TeamCreator;
 import org.waldreg.teambuilding.management.teamcreator.TeamCreator.Team;
 import org.waldreg.teambuilding.spi.TeamBuildingRepository;
@@ -44,6 +44,7 @@ public class DefaultTeamBuildingManager implements TeamBuildingManager{
         throwIfTeamCountIsLessThanOrEqualToZero(teamCount);
         throwIfTeamCountExceedMemberCount(teamCount, userRequestDtoList.size());
         throwIfUserWeightIsOutOfRange(userRequestDtoList);
+        throwIfUnknownUserIdDetected(userRequestDtoList);
         List<TeamDto> teamDtoList = createTeamDtoList(userRequestDtoList, teamCount);
         TeamBuildingDto teamBuildingDto = buildTeamBuildingDto(teamBuildingTitle, teamDtoList);
         teamBuildingRepository.createTeamBuilding(teamBuildingDto);
@@ -66,14 +67,19 @@ public class DefaultTeamBuildingManager implements TeamBuildingManager{
             if (!isUserWeightInRange(userRequestDto.getWeight())){
                 throw new InvalidUserWeightException(userRequestDto.getWeight());
             }
-            if(!isExistUserId(userRequestDto.getUserId())){
-                throw new UnknownUserIdException(userRequestDto.getUserId());
-            }
         }
     }
 
     private boolean isUserWeightInRange(int weight){
         return weight >= 1 && weight <= 10;
+    }
+
+    private void throwIfUnknownUserIdDetected(List<UserRequestDto> userRequestDtoList){
+        for(UserRequestDto userRequestDto : userRequestDtoList){
+            if(!isExistUserId(userRequestDto.getUserId())){
+                throw new UnknownUserIdException(userRequestDto.getUserId());
+            }
+        }
     }
 
     private boolean isExistUserId(String userId){
