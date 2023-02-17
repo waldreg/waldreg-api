@@ -135,6 +135,17 @@ public class TeamBuildingServiceTest{
 
     }
 
+    @Test
+    @DisplayName("팀빌딩 그룹 삭제 성공 테스트")
+    public void DELETE_TEAM_BUILDING_SUCCESS_TEST(){
+        //given
+        int teamBuildingId = 1;
+
+        //when&then
+        Assertions.assertDoesNotThrow(() -> teamBuildingManager.deleteTeamBuildingById(teamBuildingId));
+
+    }
+
     private TeamBuildingDto createTeamBuildingDto(int teamBuildingId){
         return TeamBuildingDto.builder()
                 .teamBuildingId(teamBuildingId)

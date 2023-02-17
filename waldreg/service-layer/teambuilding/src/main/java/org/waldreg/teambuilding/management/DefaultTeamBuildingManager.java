@@ -56,6 +56,11 @@ public class DefaultTeamBuildingManager implements TeamBuildingManager{
         teamBuildingRepository.updateTeamBuildingTitleById(teamBuildingId, teamBuildingDto);
     }
 
+    @Override
+    public void deleteTeamBuildingById(int teamBuildingId){
+        teamBuildingRepository.deleteTeamBuildingById(teamBuildingId);
+    }
+
     private List<TeamDto> createTeamDtoList(List<UserRequestDto> userRequestDtoList, int teamCount){
         List<TeamDto> teamDtoList = new ArrayList<>();
         Collections.sort(userRequestDtoList);
