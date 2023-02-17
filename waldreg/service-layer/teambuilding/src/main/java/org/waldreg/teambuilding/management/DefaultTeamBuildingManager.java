@@ -13,6 +13,7 @@ import org.waldreg.teambuilding.dto.UserRequestDto;
 import org.waldreg.teambuilding.exception.ContentOverflowException;
 import org.waldreg.teambuilding.exception.InvalidRangeException;
 import org.waldreg.teambuilding.exception.InvalidTeamCountException;
+import org.waldreg.teambuilding.exception.UnknownUserIdException;
 import org.waldreg.teambuilding.exception.InvalidUserWeightException;
 import org.waldreg.teambuilding.exception.UnknownTeamBuildingIdException;
 import org.waldreg.teambuilding.management.teamcreator.TeamCreator;
@@ -68,11 +69,18 @@ public class DefaultTeamBuildingManager implements TeamBuildingManager{
             if (!isUserWeightInRange(userRequestDto.getWeight())){
                 throw new InvalidUserWeightException(userRequestDto.getWeight());
             }
+            if(!isExistUserId(userRequestDto.getUserId())){
+                throw new UnknownUserIdException(userRequestDto.getUserId());
+            }
         }
     }
 
     private boolean isUserWeightInRange(int weight){
         return weight >= 1 && weight <= 10;
+    }
+
+    private boolean isExistUserId(String userId){
+        return teamBuildingUserRepository.isExistUserByUserId(userId);
     }
 
     private List<TeamDto> createTeamDtoList(List<UserRequestDto> userRequestDtoList, int teamCount){
