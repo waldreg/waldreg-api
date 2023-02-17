@@ -44,6 +44,11 @@ public class DefaultTeamBuildingManager implements TeamBuildingManager{
         teamBuildingRepository.createTeamBuilding(teamBuildingDto);
     }
 
+    @Override
+    public List<TeamBuildingDto> readAllTeamBuilding(int startIdx, int endIdx){
+        return teamBuildingRepository.readAllTeamBuilding(startIdx, endIdx);
+    }
+
     private List<TeamDto> createTeamDtoList(List<UserRequestDto> userRequestDtoList, int teamCount){
         List<TeamDto> teamDtoList = new ArrayList<>();
         Collections.sort(userRequestDtoList);
@@ -58,7 +63,7 @@ public class DefaultTeamBuildingManager implements TeamBuildingManager{
 
     private TeamDto buildTeamDto(List<String> memberList, int teamNumber){
         return TeamDto.builder()
-                .teamName(teamNumber + " 팀")
+                .teamName("Team " + teamNumber)
                 .userDtoList(buildUserDtoList(memberList))
                 .build();
     }
@@ -74,7 +79,7 @@ public class DefaultTeamBuildingManager implements TeamBuildingManager{
     private TeamBuildingDto buildTeamBuildingDto(String title, List<TeamDto> teamDtoList){
         return TeamBuildingDto.builder()
                 .teamBuildingTitle(title)
-                .teamList(teamDtoList)
+                .teamDtoList(teamDtoList)
                 .build();
     }
 
