@@ -36,7 +36,7 @@ public class WaiverController{
     }
 
     @Authenticating
-    @PostMapping("/attendance/manager")
+    @PostMapping("/attendance/waiver")
     public void waiveAttendance(@RequestBody AttendanceWaiverRequest attendanceWaiverRequest){
         int id = decryptedTokenContextGetter.get();
         WaiverDto waiverDto = waiverControllerMapper.attendanceWaiverRequestToWavierDto(id, attendanceWaiverRequest);
@@ -45,7 +45,7 @@ public class WaiverController{
 
     @Authenticating
     @PermissionVerifying("Attendance manager")
-    @GetMapping("/attendance/manager")
+    @GetMapping("/attendance/waiver")
     public Map<String, List<AttendanceWaiverResponse>> readWaivedMap(){
         List<WaiverDto> waiverDtoList = waiverManager.readWaiverList();
         List<AttendanceWaiverResponse> attendanceWaiverResponseList = waiverControllerMapper.waiverDtoListToAttendanceWaiverResponseList(waiverDtoList);

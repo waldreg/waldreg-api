@@ -29,6 +29,8 @@ dependencies {
     implementation project(':application-layer:attendance-controller')
     implementation project(':application-layer:application-configurer')
 
+    implementation project(':service-layer:attendance')
+
     implementation 'org.springframework.boot:spring-boot-starter'
     implementation 'org.springframework.boot:spring-boot-starter-web'
 
