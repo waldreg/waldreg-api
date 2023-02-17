@@ -24,6 +24,7 @@ import org.waldreg.acceptance.authentication.AuthenticationAcceptanceTestHelper;
 import org.waldreg.acceptance.reward.RewardAcceptanceTestHelper;
 import org.waldreg.acceptance.user.UserAcceptanceTestHelper;
 import org.waldreg.auth.request.AuthTokenRequest;
+import org.waldreg.controller.attendance.management.request.AttendanceModifyRequest;
 import org.waldreg.controller.attendance.waiver.request.AttendanceWaiverRequest;
 import org.waldreg.controller.attendance.waiver.response.AttendanceWaiverResponse;
 import org.waldreg.controller.reward.tag.request.RewardTagRequest;
@@ -1205,69 +1206,6 @@ class AttendanceAcceptanceTest{
         String content = resultActions.andReturn().getResponse().getContentAsString();
         Map<String, List<RewardTagResponse>> ans = objectMapper.readValue(content, new TypeReference<>(){});
         return ans.get("reward_tags");
-    }
-
-    public static final class AttendanceModifyRequest{
-
-        private int id;
-        @JsonProperty("attendance_type")
-        private String attendanceType;
-        @JsonProperty("attendance_date")
-        private LocalDate attendanceDate;
-
-        public AttendanceModifyRequest(){}
-
-        private AttendanceModifyRequest(Builder builder){
-            this.id = builder.id;
-            this.attendanceType = builder.attendanceType;
-            this.attendanceDate = builder.attendanceDate;
-        }
-
-        public static Builder builder(){
-            return new Builder();
-        }
-
-        public int getId(){
-            return id;
-        }
-
-        public String getAttendanceType(){
-            return attendanceType;
-        }
-
-        public LocalDate getAttendanceDate(){
-            return attendanceDate;
-        }
-
-        public static final class Builder{
-
-            private int id;
-            private String attendanceType;
-            private LocalDate attendanceDate;
-
-            private Builder(){}
-
-            public Builder id(int id){
-                this.id = id;
-                return this;
-            }
-
-            public Builder attendanceType(String attendanceType){
-                this.attendanceType = attendanceType;
-                return this;
-            }
-
-            public Builder attendanceDate(LocalDate attendanceDate){
-                this.attendanceDate = attendanceDate;
-                return this;
-            }
-
-            public AttendanceModifyRequest build(){
-                return new AttendanceModifyRequest(this);
-            }
-
-        }
-
     }
 
     public enum AttendanceType{

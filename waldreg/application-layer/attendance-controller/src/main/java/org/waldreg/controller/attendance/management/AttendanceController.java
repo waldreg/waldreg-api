@@ -7,12 +7,16 @@ import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.waldreg.attendance.management.AttendanceManager;
+import org.waldreg.attendance.management.dto.AttendanceStatusChangeDto;
 import org.waldreg.attendance.management.dto.AttendanceTargetDto;
 import org.waldreg.character.aop.annotation.PermissionVerifying;
 import org.waldreg.controller.attendance.management.mapper.AttendanceControllerMapper;
+import org.waldreg.controller.attendance.management.request.AttendanceModifyRequest;
 import org.waldreg.controller.attendance.management.response.AttendanceCheckResponse;
 import org.waldreg.token.aop.annotation.Authenticating;
 import org.waldreg.util.token.DecryptedTokenContextGetter;
@@ -65,6 +69,15 @@ public class AttendanceController{
         int id = decryptedTokenContextGetter.get();
         AttendanceTargetDto attendanceTargetDto = attendanceManager.readAttendanceTarget(id);
         return attendanceControllerMapper.attendanceTargetDtoToAttendanceCheckResponse(attendanceTargetDto);
+    }
+
+    @Authenticating
+    @PermissionVerifying("Attendance mananger")
+    @PostMapping("/attendance/status")
+    public void modifyAttendanceStatus(@RequestBody AttendanceModifyRequest attendanceModifyRequest){
+        AttendanceStatusChangeDto attendanceStatusChangeDto = attendanceControllerMapper
+                .attendanceModifyRequestToAttendanceChangeDto(attendanceModifyRequest);
+        attendanceManager.changeAttendanceStatus(attendanceStatusChangeDto);
     }
 
 }
