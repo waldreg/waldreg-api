@@ -10,17 +10,27 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.waldreg.attendance.management.AttendanceManager;
+import org.waldreg.attendance.management.dto.AttendanceTargetDto;
 import org.waldreg.character.aop.annotation.PermissionVerifying;
+import org.waldreg.controller.attendance.management.mapper.AttendanceControllerMapper;
+import org.waldreg.controller.attendance.management.response.AttendanceCheckResponse;
 import org.waldreg.token.aop.annotation.Authenticating;
+import org.waldreg.util.token.DecryptedTokenContextGetter;
 
 @RestController
 public class AttendanceController{
 
     private final AttendanceManager attendanceManager;
+    private final DecryptedTokenContextGetter decryptedTokenContextGetter;
+    private final AttendanceControllerMapper attendanceControllerMapper;
 
     @Autowired
-    public AttendanceController(AttendanceManager attendanceManager){
+    public AttendanceController(AttendanceManager attendanceManager,
+                                DecryptedTokenContextGetter decryptedTokenContextGetter,
+                                AttendanceControllerMapper attendanceControllerMapper){
         this.attendanceManager = attendanceManager;
+        this.decryptedTokenContextGetter = decryptedTokenContextGetter;
+        this.attendanceControllerMapper = attendanceControllerMapper;
     }
 
     @Authenticating
@@ -47,6 +57,14 @@ public class AttendanceController{
         return Arrays.stream(ids.split(" "))
                 .map(i -> Integer.parseInt(i.strip()))
                 .collect(Collectors.toList());
+    }
+
+    @Authenticating
+    @GetMapping("/attendance")
+    public AttendanceCheckResponse checkAttendanceRequired(){
+        int id = decryptedTokenContextGetter.get();
+        AttendanceTargetDto attendanceTargetDto = attendanceManager.readAttendanceTarget(id);
+        return attendanceControllerMapper.attendanceTargetDtoToAttendanceCheckResponse(attendanceTargetDto);
     }
 
 }
