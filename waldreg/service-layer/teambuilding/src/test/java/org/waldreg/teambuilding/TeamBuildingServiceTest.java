@@ -108,6 +108,33 @@ public class TeamBuildingServiceTest{
 
     }
 
+    @Test
+    @DisplayName("팀빌딩 그룹 수정 성공 테스트")
+    public void MODIFY_TEAM_BUILDING_SUCCESS_TEST(){
+        //given
+        int teamBuildingId = 1;
+        TeamBuildingDto teamBuildingDto = createTeamBuildingDto(teamBuildingId);
+        TeamBuildingRequestDto teamBuildingRequestDto = TeamBuildingRequestDto.builder()
+                .teamBuildingTitle("modified Title")
+                .build();
+        TeamBuildingDto teamBuildingDto2 = teamBuildingDto;
+        teamBuildingDto2.setTeamBuildingTitle(teamBuildingRequestDto.getTeamBuildingTitle());
+
+        //when
+        Mockito.when(teamBuildingRepository.readTeamBuildingById(Mockito.anyInt())).thenReturn(teamBuildingDto2);
+        teamBuildingManager.updateTeamBuildingTitleById(1, teamBuildingRequestDto.getTeamBuildingTitle());
+        TeamBuildingDto result = teamBuildingManager.readTeamBuildingById(1);
+
+        //then
+        Assertions.assertAll(
+                () -> Assertions.assertEquals(teamBuildingDto2.getTeamBuildingId(), result.getTeamBuildingId()),
+                () -> Assertions.assertEquals(teamBuildingDto2.getTeamBuildingTitle(), result.getTeamBuildingTitle()),
+                () -> Assertions.assertEquals(teamBuildingDto2.getTeamList().size(), result.getTeamList().size()),
+                () -> Assertions.assertEquals(teamBuildingDto2.getLastModifiedAt(), result.getLastModifiedAt())
+        );
+
+    }
+
     private TeamBuildingDto createTeamBuildingDto(int teamBuildingId){
         return TeamBuildingDto.builder()
                 .teamBuildingId(teamBuildingId)

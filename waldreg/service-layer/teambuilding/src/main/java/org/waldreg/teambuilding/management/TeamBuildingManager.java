@@ -12,4 +12,6 @@ public interface TeamBuildingManager{
 
     List<TeamBuildingDto> readAllTeamBuilding(int startIdx, int endIdx);
 
+    void updateTeamBuildingTitleById(int teamBuildingId, String teamBuildingTitle);
+
 }
