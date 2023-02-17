@@ -29,7 +29,7 @@ public enum AttendanceType{
 
     public static AttendanceType getAttendanceType(String name){
         try{
-            return AttendanceType.getAttendanceType(name.toUpperCase(Locale.ROOT));
+            return AttendanceType.valueOf(name.toUpperCase(Locale.ROOT));
         } catch (IllegalArgumentException iae){
             throw new UnknownAttendanceTypeException(name);
         }

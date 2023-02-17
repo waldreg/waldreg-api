@@ -1,8 +1,9 @@
 package org.waldreg.controller.attendance.management;
 
-import java.util.ArrayList;
+import java.time.LocalDate;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -12,12 +13,14 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.waldreg.attendance.management.AttendanceManager;
+import org.waldreg.attendance.management.dto.AttendanceDayDto;
 import org.waldreg.attendance.management.dto.AttendanceStatusChangeDto;
 import org.waldreg.attendance.management.dto.AttendanceTargetDto;
 import org.waldreg.character.aop.annotation.PermissionVerifying;
 import org.waldreg.controller.attendance.management.mapper.AttendanceControllerMapper;
 import org.waldreg.controller.attendance.management.request.AttendanceModifyRequest;
 import org.waldreg.controller.attendance.management.response.AttendanceCheckResponse;
+import org.waldreg.controller.attendance.management.response.AttendancePerDayResponse;
 import org.waldreg.token.aop.annotation.Authenticating;
 import org.waldreg.util.token.DecryptedTokenContextGetter;
 
@@ -72,12 +75,21 @@ public class AttendanceController{
     }
 
     @Authenticating
-    @PermissionVerifying("Attendance mananger")
+    @PermissionVerifying("Attendance manager")
     @PostMapping("/attendance/status")
     public void modifyAttendanceStatus(@RequestBody AttendanceModifyRequest attendanceModifyRequest){
         AttendanceStatusChangeDto attendanceStatusChangeDto = attendanceControllerMapper
                 .attendanceModifyRequestToAttendanceChangeDto(attendanceModifyRequest);
         attendanceManager.changeAttendanceStatus(attendanceStatusChangeDto);
+    }
+
+    @Authenticating
+    @PermissionVerifying("Attendance manager")
+    @GetMapping("/attendance/calendar")
+    public Map<String, List<AttendancePerDayResponse>> getAttendanceUsersState(@RequestParam("from") LocalDate from, @RequestParam("to") LocalDate to){
+        List<AttendanceDayDto> attendanceDayDtoList = attendanceManager.readAttendanceStatusList(from, to);
+        List<AttendancePerDayResponse> attendancePerDayResponseList = attendanceControllerMapper.attendanceDayDtoListToAttendancePerDayResponseList(attendanceDayDtoList);
+        return Map.of("attendances", attendancePerDayResponseList);
     }
 
 }
