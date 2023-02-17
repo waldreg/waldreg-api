@@ -22,12 +22,12 @@ import org.waldreg.teambuilding.exception.InvalidRangeException;
 import org.waldreg.teambuilding.exception.InvalidTeamCountException;
 import org.waldreg.teambuilding.exception.InvalidUserWeightException;
 import org.waldreg.teambuilding.exception.UnknownTeamBuildingIdException;
+import org.waldreg.teambuilding.exception.UnknownUserIdException;
 import org.waldreg.teambuilding.management.DefaultTeamBuildingManager;
 import org.waldreg.teambuilding.management.TeamBuildingManager;
 import org.waldreg.teambuilding.management.teamcreator.TeamCreator;
 import org.waldreg.teambuilding.spi.TeamBuildingRepository;
 import org.waldreg.teambuilding.spi.TeamBuildingUserRepository;
-import org.waldreg.teambuilding.spi.TeamRepository;
 
 @ExtendWith(SpringExtension.class)
 @ContextConfiguration(classes = {DefaultTeamBuildingManager.class, TeamCreator.class})
@@ -38,9 +38,6 @@ public class TeamBuildingServiceTest{
 
     @MockBean
     TeamBuildingRepository teamBuildingRepository;
-
-    @MockBean
-    TeamRepository teamRepository;
 
     @MockBean
     TeamBuildingUserRepository teamBuildingUserRepository;
@@ -58,7 +55,10 @@ public class TeamBuildingServiceTest{
                 .userRequestDtoList(userRequestDtoList)
                 .build();
 
-        //when&then
+        //when
+        Mockito.when(teamBuildingUserRepository.isExistUserByUserId(Mockito.anyString())).thenReturn(true);
+
+        //then
         Assertions.assertDoesNotThrow(() -> teamBuildingManager.createTeamBuilding(teamBuildingRequestDto));
 
     }
@@ -76,7 +76,10 @@ public class TeamBuildingServiceTest{
                 .userRequestDtoList(userRequestDtoList)
                 .build();
 
-        //when&then
+        //when
+        Mockito.when(teamBuildingUserRepository.isExistUserByUserId(Mockito.anyString())).thenReturn(true);
+
+        //then
         Assertions.assertThrows(ContentOverflowException.class, () -> teamBuildingManager.createTeamBuilding(teamBuildingRequestDto));
 
     }
@@ -94,7 +97,10 @@ public class TeamBuildingServiceTest{
                 .userRequestDtoList(userRequestDtoList)
                 .build();
 
-        //when&then
+        //when
+        Mockito.when(teamBuildingUserRepository.isExistUserByUserId(Mockito.anyString())).thenReturn(true);
+
+        //then
         Assertions.assertThrows(InvalidTeamCountException.class, () -> teamBuildingManager.createTeamBuilding(teamBuildingRequestDto));
 
     }
@@ -112,7 +118,10 @@ public class TeamBuildingServiceTest{
                 .userRequestDtoList(userRequestDtoList)
                 .build();
 
-        //when&then
+        //when
+        Mockito.when(teamBuildingUserRepository.isExistUserByUserId(Mockito.anyString())).thenReturn(true);
+
+        //then
         Assertions.assertThrows(InvalidUserWeightException.class, () -> teamBuildingManager.createTeamBuilding(teamBuildingRequestDto));
 
     }
@@ -130,8 +139,32 @@ public class TeamBuildingServiceTest{
                 .userRequestDtoList(userRequestDtoList)
                 .build();
 
-        //when&then
+        //when
+        Mockito.when(teamBuildingUserRepository.isExistUserByUserId(Mockito.anyString())).thenReturn(true);
+
+        //then
         Assertions.assertThrows(InvalidTeamCountException.class, () -> teamBuildingManager.createTeamBuilding(teamBuildingRequestDto));
+
+    }
+
+    @Test
+    @DisplayName("새로운 팀빌딩 그룹 생성 실패 테스트 - 없는 userId")
+    public void CREATE_NEW_TEAM_BUILDING_FAIL_CAUSE_UNKNOWN_USER_ID_TEST(){
+        //given
+        String title = "2nd Algorithm Contest Team";
+        int teamCount = 3;
+        List<UserRequestDto> userRequestDtoList = createUserRequestDtoList();
+        TeamBuildingRequestDto teamBuildingRequestDto = TeamBuildingRequestDto.builder()
+                .teamBuildingTitle(title)
+                .teamCount(teamCount)
+                .userRequestDtoList(userRequestDtoList)
+                .build();
+
+        //when
+        Mockito.when(teamBuildingUserRepository.isExistUserByUserId(Mockito.anyString())).thenReturn(false);
+
+        //then
+        Assertions.assertThrows(UnknownUserIdException.class, () -> teamBuildingManager.createTeamBuilding(teamBuildingRequestDto));
 
     }
 
@@ -232,12 +265,12 @@ public class TeamBuildingServiceTest{
                 .teamBuildingTitle("modified Title")
                 .build();
         TeamBuildingDto teamBuildingDto2 = teamBuildingDto;
-        teamBuildingDto2.setTeamBuildingTitle(teamBuildingRequestDto.getTeamBuildingTitle());
 
         //when
         Mockito.when(teamBuildingRepository.isExistTeamBuilding(Mockito.anyInt())).thenReturn(true);
         Mockito.when(teamBuildingRepository.readTeamBuildingById(Mockito.anyInt())).thenReturn(teamBuildingDto2);
         teamBuildingManager.updateTeamBuildingTitleById(1, teamBuildingRequestDto.getTeamBuildingTitle());
+        teamBuildingDto2.setTeamBuildingTitle(teamBuildingRequestDto.getTeamBuildingTitle());
         TeamBuildingDto result = teamBuildingManager.readTeamBuildingById(1);
 
         //then
@@ -247,6 +280,45 @@ public class TeamBuildingServiceTest{
                 () -> Assertions.assertEquals(teamBuildingDto2.getTeamList().size(), result.getTeamList().size()),
                 () -> Assertions.assertEquals(teamBuildingDto2.getLastModifiedAt(), result.getLastModifiedAt())
         );
+
+    }
+
+    @Test
+    @DisplayName("팀빌딩 그룹 수정 실패 테스트 - teamBuildingTitle이 1000자 초과")
+    public void MODIFY_TEAM_BUILDING_FAIL_CAUSE_TEAM_BUILDING_TITLE_OVERFLOW_TEST(){
+        //given
+        int teamBuildingId = 1;
+        TeamBuildingDto teamBuildingDto = createTeamBuildingDto(teamBuildingId);
+        TeamBuildingRequestDto teamBuildingRequestDto = TeamBuildingRequestDto.builder()
+                .teamBuildingTitle(createOverflow())
+                .build();
+        TeamBuildingDto teamBuildingDto2 = teamBuildingDto;
+
+        //when
+        Mockito.when(teamBuildingRepository.isExistTeamBuilding(Mockito.anyInt())).thenReturn(true);
+        Mockito.when(teamBuildingRepository.readTeamBuildingById(Mockito.anyInt())).thenReturn(teamBuildingDto2);
+
+        //then
+        Assertions.assertThrows(ContentOverflowException.class, () ->  teamBuildingManager.updateTeamBuildingTitleById(1, teamBuildingRequestDto.getTeamBuildingTitle()));
+    }
+
+    @Test
+    @DisplayName("팀빌딩 그룹 수정 실패 테스트 - 없는 teamBuildingId")
+    public void MODIFY_TEAM_BUILDING_FAIL_CAUSE_UNKNOWN_TEAM_BUILDING_ID_TEST(){
+        //given
+        int teamBuildingId = 1;
+        TeamBuildingDto teamBuildingDto = createTeamBuildingDto(teamBuildingId);
+        TeamBuildingRequestDto teamBuildingRequestDto = TeamBuildingRequestDto.builder()
+                .teamBuildingTitle("modified Title")
+                .build();
+        TeamBuildingDto teamBuildingDto2 = teamBuildingDto;
+
+        //when
+        Mockito.when(teamBuildingRepository.isExistTeamBuilding(Mockito.anyInt())).thenReturn(false);
+        Mockito.when(teamBuildingRepository.readTeamBuildingById(Mockito.anyInt())).thenReturn(teamBuildingDto2);
+
+        //then
+        Assertions.assertThrows(UnknownTeamBuildingIdException.class, () -> teamBuildingManager.updateTeamBuildingTitleById(0,teamBuildingRequestDto.getTeamBuildingTitle()));
 
     }
 
@@ -261,6 +333,20 @@ public class TeamBuildingServiceTest{
 
         //then
         Assertions.assertDoesNotThrow(() -> teamBuildingManager.deleteTeamBuildingById(teamBuildingId));
+
+    }
+
+    @Test
+    @DisplayName("팀빌딩 그룹 삭제 실패 테스트 - 없는 teamBuildingId")
+    public void DELETE_TEAM_BUILDING_FAIL_CAUSE_UNKNOWN_TEAM_BUILDING_ID_TEST(){
+        //given
+        int teamBuildingId = 0;
+
+        //when
+        Mockito.when(teamBuildingRepository.isExistTeamBuilding(Mockito.anyInt())).thenReturn(false);
+
+        //then
+        Assertions.assertThrows(UnknownTeamBuildingIdException.class, () -> teamBuildingManager.deleteTeamBuildingById(teamBuildingId));
 
     }
 

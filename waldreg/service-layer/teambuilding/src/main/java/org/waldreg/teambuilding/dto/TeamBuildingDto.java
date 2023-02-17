@@ -12,7 +12,7 @@ public class TeamBuildingDto{
     private List<TeamDto> teamDtoList;
 
     private TeamBuildingDto(){
-        throw new UnsupportedOperationException("Cannot invoke constructor \"TeamBuilding()\"");
+        throw new UnsupportedOperationException("Cannot invoke constructor \"TeamBuildingDto()\"");
     }
 
     private TeamBuildingDto(Builder builder){

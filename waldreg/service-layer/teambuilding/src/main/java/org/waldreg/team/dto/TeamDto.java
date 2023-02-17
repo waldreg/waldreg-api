@@ -1,15 +1,16 @@
-package org.waldreg.teambuilding.dto;
+package org.waldreg.team.dto;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import org.waldreg.teambuilding.dto.UserDto;
 
 public class TeamDto{
 
     private final int teamId;
     private final int teamBuildingId;
-    private final String teamName;
+    private String teamName;
     private final LocalDateTime lastModifiedAt;
-    private final List<UserDto> userDtoList;
+    private List<UserDto> userDtoList;
 
     private TeamDto(){
         throw new UnsupportedOperationException("Cannot invoke constructor \"TeamDto()\"");
@@ -45,6 +46,14 @@ public class TeamDto{
 
     public int getTeamBuildingId(){
         return teamBuildingId;
+    }
+
+    public void setTeamName(String teamName){
+        this.teamName = teamName;
+    }
+
+    public void setUserDtoList(List<UserDto> userDtoList){
+        this.userDtoList = userDtoList;
     }
 
     public static final class Builder{

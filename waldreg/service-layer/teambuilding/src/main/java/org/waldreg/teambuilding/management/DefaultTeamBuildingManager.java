@@ -13,26 +13,24 @@ import org.waldreg.teambuilding.dto.UserRequestDto;
 import org.waldreg.teambuilding.exception.ContentOverflowException;
 import org.waldreg.teambuilding.exception.InvalidRangeException;
 import org.waldreg.teambuilding.exception.InvalidTeamCountException;
+import org.waldreg.teambuilding.exception.UnknownUserIdException;
 import org.waldreg.teambuilding.exception.InvalidUserWeightException;
 import org.waldreg.teambuilding.exception.UnknownTeamBuildingIdException;
 import org.waldreg.teambuilding.management.teamcreator.TeamCreator;
 import org.waldreg.teambuilding.management.teamcreator.TeamCreator.Team;
 import org.waldreg.teambuilding.spi.TeamBuildingRepository;
 import org.waldreg.teambuilding.spi.TeamBuildingUserRepository;
-import org.waldreg.teambuilding.spi.TeamRepository;
 
 @Service
 public class DefaultTeamBuildingManager implements TeamBuildingManager{
 
     private final TeamBuildingRepository teamBuildingRepository;
-    private final TeamRepository teamRepository;
     private final TeamBuildingUserRepository teamBuildingUserRepository;
     private final TeamCreator teamCreator;
 
     @Autowired
-    public DefaultTeamBuildingManager(TeamBuildingRepository teamBuildingRepository, TeamRepository teamRepository, TeamBuildingUserRepository teamBuildingUserRepository, TeamCreator teamCreator){
+    public DefaultTeamBuildingManager(TeamBuildingRepository teamBuildingRepository, TeamBuildingUserRepository teamBuildingUserRepository, TeamCreator teamCreator){
         this.teamBuildingRepository = teamBuildingRepository;
-        this.teamRepository = teamRepository;
         this.teamBuildingUserRepository = teamBuildingUserRepository;
         this.teamCreator = teamCreator;
     }
@@ -49,13 +47,6 @@ public class DefaultTeamBuildingManager implements TeamBuildingManager{
         List<TeamDto> teamDtoList = createTeamDtoList(userRequestDtoList, teamCount);
         TeamBuildingDto teamBuildingDto = buildTeamBuildingDto(teamBuildingTitle, teamDtoList);
         teamBuildingRepository.createTeamBuilding(teamBuildingDto);
-    }
-
-    private void throwIfTeamBuildingTitleIsOverflow(String teamBuildingTitle){
-        int length = teamBuildingTitle.length();
-        if (length > 1000){
-            throw new ContentOverflowException("TEAMBUILDING-401", "Teambuilding title cannot be more than 1000 current length \"" + length + "\"");
-        }
     }
 
     private void throwIfTeamCountIsLessThanOrEqualToZero(int teamCount){
@@ -75,11 +66,18 @@ public class DefaultTeamBuildingManager implements TeamBuildingManager{
             if (!isUserWeightInRange(userRequestDto.getWeight())){
                 throw new InvalidUserWeightException(userRequestDto.getWeight());
             }
+            if(!isExistUserId(userRequestDto.getUserId())){
+                throw new UnknownUserIdException(userRequestDto.getUserId());
+            }
         }
     }
 
     private boolean isUserWeightInRange(int weight){
         return weight >= 1 && weight <= 10;
+    }
+
+    private boolean isExistUserId(String userId){
+        return teamBuildingUserRepository.isExistUserByUserId(userId);
     }
 
     private List<TeamDto> createTeamDtoList(List<UserRequestDto> userRequestDtoList, int teamCount){
@@ -122,12 +120,6 @@ public class DefaultTeamBuildingManager implements TeamBuildingManager{
         return teamBuildingRepository.readTeamBuildingById(teamBuildingId);
     }
 
-    private void throwIfUnknownTeamBuildingId(int teamBuildingId){
-        if (!teamBuildingRepository.isExistTeamBuilding(teamBuildingId)){
-            throw new UnknownTeamBuildingIdException(teamBuildingId);
-        }
-    }
-
     @Override
     public List<TeamBuildingDto> readAllTeamBuilding(int startIdx, int endIdx){
         int maxIdx = teamBuildingRepository.readMaxIdx();
@@ -164,14 +156,30 @@ public class DefaultTeamBuildingManager implements TeamBuildingManager{
 
     @Override
     public void updateTeamBuildingTitleById(int teamBuildingId, String teamBuildingTitle){
+        throwIfUnknownTeamBuildingId(teamBuildingId);
+        throwIfTeamBuildingTitleIsOverflow(teamBuildingTitle);
         TeamBuildingDto teamBuildingDto = teamBuildingRepository.readTeamBuildingById(teamBuildingId);
         teamBuildingDto.setTeamBuildingTitle(teamBuildingTitle);
         teamBuildingRepository.updateTeamBuildingTitleById(teamBuildingId, teamBuildingDto);
     }
 
+    private void throwIfTeamBuildingTitleIsOverflow(String teamBuildingTitle){
+        int length = teamBuildingTitle.length();
+        if (length > 1000){
+            throw new ContentOverflowException("TEAMBUILDING-401", "Teambuilding title cannot be more than 1000 current length \"" + length + "\"");
+        }
+    }
+
     @Override
     public void deleteTeamBuildingById(int teamBuildingId){
+        throwIfUnknownTeamBuildingId(teamBuildingId);
         teamBuildingRepository.deleteTeamBuildingById(teamBuildingId);
+    }
+
+    private void throwIfUnknownTeamBuildingId(int teamBuildingId){
+        if (!teamBuildingRepository.isExistTeamBuilding(teamBuildingId)){
+            throw new UnknownTeamBuildingIdException(teamBuildingId);
+        }
     }
 
 }
