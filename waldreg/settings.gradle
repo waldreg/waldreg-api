@@ -50,4 +50,6 @@ include 'service-layer:attendance'
 findProject(':service-layer:attendance')?.name = 'attendance'
 include 'service-layer:teambuilding'
 findProject(':service-layer:teambuilding')?.name = 'teambuilding'
+include 'application-layer:attendance-controller'
+findProject(':application-layer:attendance-controller')?.name = 'attendance-controller'
 
