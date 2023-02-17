@@ -20,6 +20,7 @@ import org.waldreg.teambuilding.dto.UserRequestDto;
 import org.waldreg.teambuilding.exception.ContentOverflowException;
 import org.waldreg.teambuilding.exception.InvalidTeamCountException;
 import org.waldreg.teambuilding.exception.InvalidUserWeightException;
+import org.waldreg.teambuilding.exception.UnknownTeamBuildingIdException;
 import org.waldreg.teambuilding.management.DefaultTeamBuildingManager;
 import org.waldreg.teambuilding.management.TeamBuildingManager;
 import org.waldreg.teambuilding.management.teamcreator.TeamCreator;
@@ -93,7 +94,7 @@ public class TeamBuildingServiceTest{
                 .build();
 
         //when&then
-        Assertions.assertThrows(InvalidTeamCountException.class , () -> teamBuildingManager.createTeamBuilding(teamBuildingRequestDto));
+        Assertions.assertThrows(InvalidTeamCountException.class, () -> teamBuildingManager.createTeamBuilding(teamBuildingRequestDto));
 
     }
 
@@ -141,6 +142,7 @@ public class TeamBuildingServiceTest{
         TeamBuildingDto teamBuildingDto = createTeamBuildingDto(teamBuildingId);
 
         //when
+        Mockito.when(teamBuildingRepository.isExistTeamBuilding(Mockito.anyInt())).thenReturn(true);
         Mockito.when(teamBuildingRepository.readTeamBuildingById(Mockito.anyInt())).thenReturn(teamBuildingDto);
         TeamBuildingDto result = teamBuildingManager.readTeamBuildingById(1);
 
@@ -151,6 +153,22 @@ public class TeamBuildingServiceTest{
                 () -> Assertions.assertEquals(teamBuildingDto.getTeamList().size(), result.getTeamList().size()),
                 () -> Assertions.assertEquals(teamBuildingDto.getLastModifiedAt(), result.getLastModifiedAt())
         );
+
+    }
+
+    @Test
+    @DisplayName("특정 팀빌딩 그룹 조회 실패 테스트 - 없는 TeambuidlingId")
+    public void INQUIRY_SPECIFIC_TEAM_BUILDING_FAIL_CAUSE_UNKNOWN_TEAM_BUILDING_ID_TEST(){
+        //given
+        int teamBuildingId = 0;
+        TeamBuildingDto teamBuildingDto = createTeamBuildingDto(teamBuildingId);
+
+        //when
+        Mockito.when(teamBuildingRepository.isExistTeamBuilding(Mockito.anyInt())).thenReturn(false);
+        Mockito.when(teamBuildingRepository.readTeamBuildingById(Mockito.anyInt())).thenReturn(teamBuildingDto);
+
+        //then
+        Assertions.assertThrows(UnknownTeamBuildingIdException.class, () -> teamBuildingManager.readTeamBuildingById(1));
 
     }
 
@@ -196,6 +214,7 @@ public class TeamBuildingServiceTest{
         teamBuildingDto2.setTeamBuildingTitle(teamBuildingRequestDto.getTeamBuildingTitle());
 
         //when
+        Mockito.when(teamBuildingRepository.isExistTeamBuilding(Mockito.anyInt())).thenReturn(true);
         Mockito.when(teamBuildingRepository.readTeamBuildingById(Mockito.anyInt())).thenReturn(teamBuildingDto2);
         teamBuildingManager.updateTeamBuildingTitleById(1, teamBuildingRequestDto.getTeamBuildingTitle());
         TeamBuildingDto result = teamBuildingManager.readTeamBuildingById(1);
@@ -216,7 +235,10 @@ public class TeamBuildingServiceTest{
         //given
         int teamBuildingId = 1;
 
-        //when&then
+        //when
+        Mockito.when(teamBuildingRepository.isExistTeamBuilding(Mockito.anyInt())).thenReturn(true);
+
+        //then
         Assertions.assertDoesNotThrow(() -> teamBuildingManager.deleteTeamBuildingById(teamBuildingId));
 
     }

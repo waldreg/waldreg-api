@@ -13,6 +13,7 @@ import org.waldreg.teambuilding.dto.UserRequestDto;
 import org.waldreg.teambuilding.exception.ContentOverflowException;
 import org.waldreg.teambuilding.exception.InvalidTeamCountException;
 import org.waldreg.teambuilding.exception.InvalidUserWeightException;
+import org.waldreg.teambuilding.exception.UnknownTeamBuildingIdException;
 import org.waldreg.teambuilding.management.teamcreator.TeamCreator;
 import org.waldreg.teambuilding.management.teamcreator.TeamCreator.Team;
 import org.waldreg.teambuilding.spi.TeamBuildingRepository;
@@ -33,11 +34,6 @@ public class DefaultTeamBuildingManager implements TeamBuildingManager{
         this.teamRepository = teamRepository;
         this.teamBuildingUserRepository = teamBuildingUserRepository;
         this.teamCreator = teamCreator;
-    }
-
-    @Override
-    public TeamBuildingDto readTeamBuildingById(int teamBuildingId){
-        return teamBuildingRepository.readTeamBuildingById(teamBuildingId);
     }
 
     @Override
@@ -117,6 +113,18 @@ public class DefaultTeamBuildingManager implements TeamBuildingManager{
                 .teamBuildingTitle(title)
                 .teamDtoList(teamDtoList)
                 .build();
+    }
+
+    @Override
+    public TeamBuildingDto readTeamBuildingById(int teamBuildingId){
+        throwIfUnknownTeamBuildingId(teamBuildingId);
+        return teamBuildingRepository.readTeamBuildingById(teamBuildingId);
+    }
+
+    private void throwIfUnknownTeamBuildingId(int teamBuildingId){
+        if(!teamBuildingRepository.isExistTeamBuilding(teamBuildingId)){
+            throw new UnknownTeamBuildingIdException(teamBuildingId);
+        }
     }
 
     @Override
