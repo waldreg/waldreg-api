@@ -11,4 +11,6 @@ public interface TeamManager{
 
     TeamDto readTeamById(int teamId);
 
+    void updateTeamNameById(int teamId, String teamName);
+
 }

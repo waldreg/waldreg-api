@@ -78,7 +78,7 @@ public class TeamServiceTest{
 
         //then
         Assertions.assertAll(
-                () -> Assertions.assertEquals(teamDto.getTeamBuildingId(),result.getTeamBuildingId()),
+                () -> Assertions.assertEquals(teamDto.getTeamBuildingId(), result.getTeamBuildingId()),
                 () -> Assertions.assertEquals(teamDto.getTeamId(), result.getTeamId()),
                 () -> Assertions.assertEquals(teamDto.getTeamName(), result.getTeamName()),
                 () -> Assertions.assertEquals(teamDto.getLastModifiedAt(), result.getLastModifiedAt()),
@@ -86,5 +86,39 @@ public class TeamServiceTest{
         );
 
     }
+
+    @Test
+    @DisplayName("팀빌딩 그룹 내 팀 이름 수정 성공 테스트")
+    public void MODIFY_TEAM_NAME_IN_TEAM_BUILDING_SUCCESS_TEST(){
+        //given
+        int teamBuildingId = 1;
+        int teamId = 1;
+        String name = "new team";
+        TeamDto teamDto = TeamDto.builder()
+                .teamBuildingId(teamBuildingId)
+                .teamId(teamId)
+                .teamName(name)
+                .userDtoList(List.of())
+                .lastModifiedAt(LocalDateTime.now())
+                .build();
+        String updateName = "modifiedName";
+
+        //when
+        Mockito.when(teamRepository.readTeamById(Mockito.anyInt())).thenReturn(teamDto);
+        teamManager.updateTeamNameById(teamId, updateName);
+        teamDto.setTeamName(updateName);
+        TeamDto result = teamManager.readTeamById(teamId);
+
+        //then
+        Assertions.assertAll(
+                () -> Assertions.assertEquals(teamDto.getTeamBuildingId(), result.getTeamBuildingId()),
+                () -> Assertions.assertEquals(teamDto.getTeamId(), result.getTeamId()),
+                () -> Assertions.assertEquals(teamDto.getTeamName(), result.getTeamName()),
+                () -> Assertions.assertEquals(teamDto.getLastModifiedAt(), result.getLastModifiedAt()),
+                () -> Assertions.assertEquals(teamDto.getUserList(), result.getUserList())
+        );
+
+    }
+
 
 }

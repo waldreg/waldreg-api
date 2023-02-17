@@ -37,12 +37,19 @@ public class DefaultTeamManager implements TeamManager{
     public void updateTeamById(int teamId, TeamRequestDto teamRequestDto){
         TeamDto teamDto = teamRepository.readTeamById(teamId);
         teamDto = updateTeamDto(teamDto, teamRequestDto);
-        teamRepository.updateTeamById(teamId,teamDto);
+        teamRepository.updateTeamById(teamId, teamDto);
     }
 
     @Override
     public TeamDto readTeamById(int teamId){
         return teamRepository.readTeamById(teamId);
+    }
+
+    @Override
+    public void updateTeamNameById(int teamId, String teamName){
+        TeamDto teamDto = teamRepository.readTeamById(teamId);
+        teamDto.setTeamName(teamName);
+        teamRepository.updateTeamById(teamId, teamDto);
     }
 
     private TeamDto updateTeamDto(TeamDto teamDto, TeamRequestDto teamRequestDto){
