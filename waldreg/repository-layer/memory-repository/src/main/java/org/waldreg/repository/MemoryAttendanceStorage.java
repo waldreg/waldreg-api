@@ -97,7 +97,7 @@ public class MemoryAttendanceStorage{
         return attendanceList.stream()
                 .filter(a -> a.getAttendanceUser().getUser().getId() == id)
                 .findFirst()
-                .orElseThrow(() -> {throw new IllegalStateException("Cannot read attendance users id \"" + id + "\"");});
+                .orElse(null);
     }
 
     public void deleteAttendanceTarget(int id){
