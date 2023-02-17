@@ -1,7 +1,8 @@
-package org.waldreg.teambuilding.dto;
+package org.waldreg.team.dto;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import org.waldreg.teambuilding.dto.UserDto;
 
 public class TeamDto{
 

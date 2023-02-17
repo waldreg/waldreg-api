@@ -20,20 +20,17 @@ import org.waldreg.teambuilding.management.teamcreator.TeamCreator;
 import org.waldreg.teambuilding.management.teamcreator.TeamCreator.Team;
 import org.waldreg.teambuilding.spi.TeamBuildingRepository;
 import org.waldreg.teambuilding.spi.TeamBuildingUserRepository;
-import org.waldreg.teambuilding.spi.TeamRepository;
 
 @Service
 public class DefaultTeamBuildingManager implements TeamBuildingManager{
 
     private final TeamBuildingRepository teamBuildingRepository;
-    private final TeamRepository teamRepository;
     private final TeamBuildingUserRepository teamBuildingUserRepository;
     private final TeamCreator teamCreator;
 
     @Autowired
-    public DefaultTeamBuildingManager(TeamBuildingRepository teamBuildingRepository, TeamRepository teamRepository, TeamBuildingUserRepository teamBuildingUserRepository, TeamCreator teamCreator){
+    public DefaultTeamBuildingManager(TeamBuildingRepository teamBuildingRepository, TeamBuildingUserRepository teamBuildingUserRepository, TeamCreator teamCreator){
         this.teamBuildingRepository = teamBuildingRepository;
-        this.teamRepository = teamRepository;
         this.teamBuildingUserRepository = teamBuildingUserRepository;
         this.teamCreator = teamCreator;
     }
