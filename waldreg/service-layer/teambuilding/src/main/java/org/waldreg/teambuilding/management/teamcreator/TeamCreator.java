@@ -3,8 +3,10 @@ package org.waldreg.teambuilding.management.teamcreator;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import org.springframework.stereotype.Service;
 import org.waldreg.teambuilding.dto.UserRequestDto;
 
+@Service
 public class TeamCreator{
 
     public List<Team> createRandomTeamList(List<UserRequestDto> userRequestDtoList, int teamCount){

@@ -1,6 +1,6 @@
 package org.waldreg.team.spi;
 
-import org.waldreg.teambuilding.dto.UserDto;
+import org.waldreg.team.dto.UserDto;
 
 public interface TeamUserRepository{
 
