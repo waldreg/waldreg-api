@@ -49,10 +49,9 @@ public class TeamBuildingAcceptanceTestHelper{
                 .content(content));
     }
 
-    public static ResultActions modifyTeamInTeamBuilding(MockMvc mvc, int teamBuildingId, int teamId, String content, String token) throws Exception{
+    public static ResultActions modifyTeamInTeamBuilding(MockMvc mvc, int teamId, String content, String token) throws Exception{
         return mvc.perform(MockMvcRequestBuilders
-                .patch("/teambuilding/{teambuilding-id}", teamBuildingId)
-                .queryParam("team-id", Integer.toString(teamId))
+                .patch("/teambuilding/{team-id}", teamId)
                 .accept(MediaType.APPLICATION_JSON)
                 .contentType(MediaType.APPLICATION_JSON)
                 .header("api-version", apiVersion)
@@ -62,7 +61,7 @@ public class TeamBuildingAcceptanceTestHelper{
 
     public static ResultActions modifyTeamBuilding(MockMvc mvc, int teamBuildingId, String content, String token) throws Exception{
         return mvc.perform(MockMvcRequestBuilders
-                .patch("/teambuilding/{teambuilding-id}", teamBuildingId)
+                .put("/teambuilding/{teambuilding-id}", teamBuildingId)
                 .accept(MediaType.APPLICATION_JSON)
                 .contentType(MediaType.APPLICATION_JSON)
                 .header("api-version", apiVersion)
@@ -70,11 +69,9 @@ public class TeamBuildingAcceptanceTestHelper{
                 .content(content));
     }
 
-    public static ResultActions modifyTeamNameInTeamBuilding(MockMvc mvc, int teamBuildingId, int teamId, String content, String token) throws Exception{
+    public static ResultActions modifyTeamNameInTeamBuilding(MockMvc mvc, int teamId, String content, String token) throws Exception{
         return mvc.perform(MockMvcRequestBuilders
-                .patch("/teambuilding")
-                .queryParam("teambuilding-id", Integer.toString(teamBuildingId))
-                .queryParam("team-id", Integer.toString(teamId))
+                .patch("/teambuilding/{team-id}", teamId)
                 .accept(MediaType.APPLICATION_JSON)
                 .contentType(MediaType.APPLICATION_JSON)
                 .header("api-version", apiVersion)
@@ -90,9 +87,9 @@ public class TeamBuildingAcceptanceTestHelper{
                 .header(HttpHeaders.AUTHORIZATION, token));
     }
 
-    public static ResultActions deleteTeamInTeamBuilding(MockMvc mvc, int teamBuildingId, int teamId, String token) throws Exception{
+    public static ResultActions deleteTeamInTeamBuilding(MockMvc mvc, int teamId, String token) throws Exception{
         return mvc.perform(MockMvcRequestBuilders
-                .patch("/teambuilding/{teambuilding-id}/{team_id}", teamBuildingId, teamId)
+                .patch("/teambuilding/{team_id}", teamId)
                 .accept(MediaType.APPLICATION_JSON)
                 .header("api-version", apiVersion)
                 .header(HttpHeaders.AUTHORIZATION, token));

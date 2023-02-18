@@ -750,54 +750,13 @@ public class TeamBuildingAcceptanceTest{
                 .andReturn()
                 .getResponse()
                 .getContentAsString(), TeamBuildingListResponse.class);
-        int teamBuildingId = teamBuildingList.getTeamBuildingList().get(0).getTeamBuildingId();
         int teamId = teamBuildingList.getTeamBuildingList().get(0).getTeamList().get(0).getTeamId();
-        result = TeamBuildingAcceptanceTestHelper.modifyTeamInTeamBuilding(mvc, teamBuildingId, teamId, objectMapper.writeValueAsString(teamModifyRequest), adminToken);
+        result = TeamBuildingAcceptanceTestHelper.modifyTeamInTeamBuilding(mvc, teamId, objectMapper.writeValueAsString(teamModifyRequest), adminToken);
 
         //then
         result.andExpectAll(
                 MockMvcResultMatchers.status().isOk(),
                 MockMvcResultMatchers.header().string("api-version", apiVersion)
-        ).andDo(MockMvcResultHandlers.print());
-    }
-
-    @Test
-    @DisplayName("팀빌딩 그룹 내 팀 수정 실패 테스트 - 없는 teambuilding_id")
-    public void MODIFY_TEAM_IN_TEAM_BUILDING_FAIL_CAUSE_UNKNOWN_TEAM_BUILDING_ID_TEST() throws Exception{
-        //given
-        String adminToken = AuthenticationAcceptanceTestHelper.getAdminToken(mvc, objectMapper);
-        String title = "2nd Algorithm Contest Team";
-        int teamCount = 2;
-        List<UserWeightRequest> userList = createUserWeightRequestList();
-        TeamBuildingRequest teamBuildingRequest = TeamBuildingRequest.builder()
-                .teamBuildingTitle(title)
-                .teamCount(teamCount)
-                .userList(userList)
-                .build();
-        TeamRequest teamModifyRequest = TeamRequest.builder()
-                .teamName("lalalala")
-                .members(List.of())
-                .build();
-
-        //when
-        ResultActions result = TeamBuildingAcceptanceTestHelper.inquiryAllTeamBuilding(mvc, 1, 2, adminToken);
-        TeamBuildingListResponse teamBuildingList = objectMapper.readValue(result
-                .andReturn()
-                .getResponse()
-                .getContentAsString(), TeamBuildingListResponse.class);
-        int unknownId = 0;
-        int teamId = teamBuildingList.getTeamBuildingList().get(0).getTeamList().get(0).getTeamId();
-        result = TeamBuildingAcceptanceTestHelper.modifyTeamInTeamBuilding(mvc, unknownId, teamId, objectMapper.writeValueAsString(teamModifyRequest), adminToken);
-
-        //then
-        result.andExpectAll(
-                MockMvcResultMatchers.status().isBadRequest(),
-                MockMvcResultMatchers.header().string(HttpHeaders.CONTENT_TYPE, "application/json"),
-                MockMvcResultMatchers.header().string("api-version", apiVersion),
-                MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON),
-                MockMvcResultMatchers.jsonPath("$.code").value("TEAMBUILDING-400"),
-                MockMvcResultMatchers.jsonPath("$.messages").value("Cannot find teambuilding id \"" + unknownId + "\""),
-                MockMvcResultMatchers.jsonPath("$.document_url").value("docs.waldreg.org")
         ).andDo(MockMvcResultHandlers.print());
     }
 
@@ -821,14 +780,13 @@ public class TeamBuildingAcceptanceTest{
                 .andReturn()
                 .getResponse()
                 .getContentAsString(), TeamBuildingListResponse.class);
-        int teamBuildingId = teamBuildingList.getTeamBuildingList().get(0).getTeamBuildingId();
         int teamId = teamBuildingList.getTeamBuildingList().get(0).getTeamList().get(0).getTeamId();
         String duplicatedTeamName = teamBuildingList.getTeamBuildingList().get(0).getTeamList().get(0).getTeamName();
         TeamRequest teamModifyRequest = TeamRequest.builder()
                 .teamName(duplicatedTeamName)
                 .members(List.of())
                 .build();
-        result = TeamBuildingAcceptanceTestHelper.modifyTeamInTeamBuilding(mvc, teamBuildingId, teamId, objectMapper.writeValueAsString(teamModifyRequest), adminToken);
+        result = TeamBuildingAcceptanceTestHelper.modifyTeamInTeamBuilding(mvc, teamId, objectMapper.writeValueAsString(teamModifyRequest), adminToken);
 
         //then
         result.andExpectAll(
@@ -862,14 +820,13 @@ public class TeamBuildingAcceptanceTest{
                 .andReturn()
                 .getResponse()
                 .getContentAsString(), TeamBuildingListResponse.class);
-        int teamBuildingId = teamBuildingList.getTeamBuildingList().get(0).getTeamBuildingId();
         int teamId = teamBuildingList.getTeamBuildingList().get(0).getTeamList().get(0).getTeamId();
         String teamName = "";
         TeamRequest teamModifyRequest = TeamRequest.builder()
                 .teamName(teamName)
                 .members(List.of())
                 .build();
-        result = TeamBuildingAcceptanceTestHelper.modifyTeamInTeamBuilding(mvc, teamBuildingId, teamId, objectMapper.writeValueAsString(teamModifyRequest), adminToken);
+        result = TeamBuildingAcceptanceTestHelper.modifyTeamInTeamBuilding(mvc, teamId, objectMapper.writeValueAsString(teamModifyRequest), adminToken);
 
         //then
         result.andExpectAll(
@@ -911,9 +868,8 @@ public class TeamBuildingAcceptanceTest{
                 .andReturn()
                 .getResponse()
                 .getContentAsString(), TeamBuildingListResponse.class);
-        int teamBuildingId = teamBuildingList.getTeamBuildingList().get(0).getTeamBuildingId();
         int teamId = teamBuildingList.getTeamBuildingList().get(0).getTeamList().get(0).getTeamId();
-        result = TeamBuildingAcceptanceTestHelper.modifyTeamInTeamBuilding(mvc, teamBuildingId, teamId, objectMapper.writeValueAsString(teamModifyRequest), adminToken);
+        result = TeamBuildingAcceptanceTestHelper.modifyTeamInTeamBuilding(mvc, teamId, objectMapper.writeValueAsString(teamModifyRequest), adminToken);
 
         //then
         result.andExpectAll(
@@ -951,9 +907,8 @@ public class TeamBuildingAcceptanceTest{
                 .andReturn()
                 .getResponse()
                 .getContentAsString(), TeamBuildingListResponse.class);
-        int teamBuildingId = teamBuildingList.getTeamBuildingList().get(0).getTeamBuildingId();
         int teamId = 0;
-        result = TeamBuildingAcceptanceTestHelper.modifyTeamInTeamBuilding(mvc, teamBuildingId, teamId, objectMapper.writeValueAsString(teamModifyRequest), adminToken);
+        result = TeamBuildingAcceptanceTestHelper.modifyTeamInTeamBuilding(mvc, teamId, objectMapper.writeValueAsString(teamModifyRequest), adminToken);
 
         //then
         result.andExpectAll(
@@ -993,9 +948,8 @@ public class TeamBuildingAcceptanceTest{
                 .andReturn()
                 .getResponse()
                 .getContentAsString(), TeamBuildingListResponse.class);
-        int teamBuildingId = teamBuildingList.getTeamBuildingList().get(0).getTeamBuildingId();
         int teamId = teamBuildingList.getTeamBuildingList().get(0).getTeamList().get(0).getTeamId();
-        result = TeamBuildingAcceptanceTestHelper.modifyTeamInTeamBuilding(mvc, teamBuildingId, teamId, objectMapper.writeValueAsString(teamModifyRequest), wrongToken);
+        result = TeamBuildingAcceptanceTestHelper.modifyTeamInTeamBuilding(mvc, teamId, objectMapper.writeValueAsString(teamModifyRequest), wrongToken);
 
         //then
         result.andExpectAll(
@@ -1209,53 +1163,13 @@ public class TeamBuildingAcceptanceTest{
                 .andReturn()
                 .getResponse()
                 .getContentAsString(), TeamBuildingListResponse.class);
-        int teamBuildingId = teamBuildingList.getTeamBuildingList().get(0).getTeamBuildingId();
         int teamId = teamBuildingList.getTeamBuildingList().get(0).getTeamList().get(0).getTeamId();
-        result = TeamBuildingAcceptanceTestHelper.modifyTeamNameInTeamBuilding(mvc, teamBuildingId, teamId, objectMapper.writeValueAsString(teamUpdateRequest), adminToken);
+        result = TeamBuildingAcceptanceTestHelper.modifyTeamNameInTeamBuilding(mvc, teamId, objectMapper.writeValueAsString(teamUpdateRequest), adminToken);
 
         //then
         result.andExpectAll(
                 MockMvcResultMatchers.status().isOk(),
                 MockMvcResultMatchers.header().string("api-version", apiVersion)
-        ).andDo(MockMvcResultHandlers.print());
-    }
-
-    @Test
-    @DisplayName("팀빌딩 그룹 내 팀이름 수정 실패 테스트 - 없는 teambuilding_id")
-    public void MODIFY_TEAM_NAME_IN_TEAM_BUILDING_FAIL_CAUSE_UNKNOWN_TEAM_BUILDING_ID_TEST() throws Exception{
-        //given
-        String adminToken = AuthenticationAcceptanceTestHelper.getAdminToken(mvc, objectMapper);
-        String title = "2nd Algorithm Contest Team";
-        int teamCount = 2;
-        List<UserWeightRequest> userList = createUserWeightRequestList();
-        TeamBuildingRequest teamBuildingRequest = TeamBuildingRequest.builder()
-                .teamBuildingTitle(title)
-                .teamCount(teamCount)
-                .userList(userList)
-                .build();
-        TeamUpdateRequest teamUpdateRequest = TeamUpdateRequest.builder()
-                .teamName("chisam!")
-                .build();
-
-        //when
-        ResultActions result = TeamBuildingAcceptanceTestHelper.inquiryAllTeamBuilding(mvc, 1, 2, adminToken);
-        TeamBuildingListResponse teamBuildingList = objectMapper.readValue(result
-                .andReturn()
-                .getResponse()
-                .getContentAsString(), TeamBuildingListResponse.class);
-        int wrongId = 0;
-        int teamId = teamBuildingList.getTeamBuildingList().get(0).getTeamList().get(0).getTeamId();
-        result = TeamBuildingAcceptanceTestHelper.modifyTeamNameInTeamBuilding(mvc, wrongId, teamId, objectMapper.writeValueAsString(teamUpdateRequest), adminToken);
-
-        //then
-        result.andExpectAll(
-                MockMvcResultMatchers.status().isBadRequest(),
-                MockMvcResultMatchers.header().string(HttpHeaders.CONTENT_TYPE, "application/json"),
-                MockMvcResultMatchers.header().string("api-version", apiVersion),
-                MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON),
-                MockMvcResultMatchers.jsonPath("$.code").value("TEAMBUILDING-400"),
-                MockMvcResultMatchers.jsonPath("$.messages").value("Cannot find teambuilding id \"" + wrongId + "\""),
-                MockMvcResultMatchers.jsonPath("$.document_url").value("docs.waldreg.org")
         ).andDo(MockMvcResultHandlers.print());
     }
 
@@ -1282,9 +1196,8 @@ public class TeamBuildingAcceptanceTest{
                 .andReturn()
                 .getResponse()
                 .getContentAsString(), TeamBuildingListResponse.class);
-        int teamBuildingId = teamBuildingList.getTeamBuildingList().get(0).getTeamBuildingId();
         int wrongId = 0;
-        result = TeamBuildingAcceptanceTestHelper.modifyTeamNameInTeamBuilding(mvc, teamBuildingId, wrongId, objectMapper.writeValueAsString(teamUpdateRequest), adminToken);
+        result = TeamBuildingAcceptanceTestHelper.modifyTeamNameInTeamBuilding(mvc, wrongId, objectMapper.writeValueAsString(teamUpdateRequest), adminToken);
 
         //then
         result.andExpectAll(
@@ -1324,10 +1237,9 @@ public class TeamBuildingAcceptanceTest{
                 .andReturn()
                 .getResponse()
                 .getContentAsString(), TeamBuildingListResponse.class);
-        int teamBuildingId = teamBuildingList.getTeamBuildingList().get(0).getTeamBuildingId();
         int teamId = teamBuildingList.getTeamBuildingList().get(0).getTeamList().get(0).getTeamId();
-        TeamBuildingAcceptanceTestHelper.modifyTeamNameInTeamBuilding(mvc, teamBuildingId, teamId, objectMapper.writeValueAsString(teamUpdateRequest), adminToken);
-        result = TeamBuildingAcceptanceTestHelper.modifyTeamNameInTeamBuilding(mvc, teamBuildingId, teamId, objectMapper.writeValueAsString(teamUpdateRequest2), adminToken);
+        TeamBuildingAcceptanceTestHelper.modifyTeamNameInTeamBuilding(mvc, teamId, objectMapper.writeValueAsString(teamUpdateRequest), adminToken);
+        result = TeamBuildingAcceptanceTestHelper.modifyTeamNameInTeamBuilding(mvc, teamId, objectMapper.writeValueAsString(teamUpdateRequest2), adminToken);
 
         //then
         result.andExpectAll(
@@ -1364,9 +1276,8 @@ public class TeamBuildingAcceptanceTest{
                 .andReturn()
                 .getResponse()
                 .getContentAsString(), TeamBuildingListResponse.class);
-        int teamBuildingId = teamBuildingList.getTeamBuildingList().get(0).getTeamBuildingId();
         int teamId = teamBuildingList.getTeamBuildingList().get(0).getTeamList().get(0).getTeamId();
-        result = TeamBuildingAcceptanceTestHelper.modifyTeamNameInTeamBuilding(mvc, teamBuildingId, teamId, objectMapper.writeValueAsString(teamUpdateRequest), adminToken);
+        result = TeamBuildingAcceptanceTestHelper.modifyTeamNameInTeamBuilding(mvc, teamId, objectMapper.writeValueAsString(teamUpdateRequest), adminToken);
 
         //then
         result.andExpectAll(
@@ -1404,9 +1315,8 @@ public class TeamBuildingAcceptanceTest{
                 .andReturn()
                 .getResponse()
                 .getContentAsString(), TeamBuildingListResponse.class);
-        int teamBuildingId = teamBuildingList.getTeamBuildingList().get(0).getTeamBuildingId();
         int teamId = teamBuildingList.getTeamBuildingList().get(0).getTeamList().get(0).getTeamId();
-        result = TeamBuildingAcceptanceTestHelper.modifyTeamNameInTeamBuilding(mvc, teamBuildingId, teamId, objectMapper.writeValueAsString(teamUpdateRequest), wrongToken);
+        result = TeamBuildingAcceptanceTestHelper.modifyTeamNameInTeamBuilding(mvc, teamId, objectMapper.writeValueAsString(teamUpdateRequest), wrongToken);
 
         //then
         result.andExpectAll(
@@ -1544,52 +1454,13 @@ public class TeamBuildingAcceptanceTest{
                 .andReturn()
                 .getResponse()
                 .getContentAsString(), TeamBuildingListResponse.class);
-        int teamBuildingId = teamBuildingList.getTeamBuildingList().get(0).getTeamBuildingId();
         int teamId = teamBuildingList.getTeamBuildingList().get(0).getTeamList().get(0).getTeamId();
-        result = TeamBuildingAcceptanceTestHelper.deleteTeamInTeamBuilding(mvc, teamBuildingId, teamId, adminToken);
+        result = TeamBuildingAcceptanceTestHelper.deleteTeamInTeamBuilding(mvc, teamId, adminToken);
 
         //then
         result.andExpectAll(
                 MockMvcResultMatchers.status().isOk(),
                 MockMvcResultMatchers.header().string("api-version", apiVersion)
-        ).andDo(MockMvcResultHandlers.print());
-
-    }
-
-    @Test
-    @DisplayName("팀빌딩 그룹 내 팀 삭제 실패 테스트 - 없는 teambuilding_id")
-    public void DELETE_SPECIFIC_TEAM_IN_TEAM_BUILDING_FAIL_CAUSE_UNKNOWN_TEAM_BUILDING_ID_TEST() throws Exception{
-        //given
-        String adminToken = AuthenticationAcceptanceTestHelper.getAdminToken(mvc, objectMapper);
-        String title = "2nd Algorithm Contest Team";
-        int teamCount = 2;
-        List<UserWeightRequest> userList = createUserWeightRequestList();
-        TeamBuildingRequest teamBuildingRequest = TeamBuildingRequest.builder()
-                .teamBuildingTitle(title)
-                .teamCount(teamCount)
-                .userList(userList)
-                .build();
-
-        //when
-        TeamBuildingAcceptanceTestHelper.createTeamBuilding(mvc, objectMapper.writeValueAsString(teamBuildingRequest), adminToken);
-        ResultActions result = TeamBuildingAcceptanceTestHelper.inquiryAllTeamBuilding(mvc, 1, 1, adminToken);
-        TeamBuildingListResponse teamBuildingList = objectMapper.readValue(result
-                .andReturn()
-                .getResponse()
-                .getContentAsString(), TeamBuildingListResponse.class);
-        int wrongId = 0;
-        int teamId = teamBuildingList.getTeamBuildingList().get(0).getTeamList().get(0).getTeamId();
-        result = TeamBuildingAcceptanceTestHelper.deleteTeamInTeamBuilding(mvc, wrongId, teamId, adminToken);
-
-        //then
-        result.andExpectAll(
-                MockMvcResultMatchers.status().isBadRequest(),
-                MockMvcResultMatchers.header().string(HttpHeaders.CONTENT_TYPE, "application/json"),
-                MockMvcResultMatchers.header().string("api-version", apiVersion),
-                MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON),
-                MockMvcResultMatchers.jsonPath("$.code").value("TEAMBUILDING-400"),
-                MockMvcResultMatchers.jsonPath("$.messages").value("Cannot find teambuilding id \"" + wrongId + "\""),
-                MockMvcResultMatchers.jsonPath("$.document_url").value("docs.waldreg.org")
         ).andDo(MockMvcResultHandlers.print());
 
     }
@@ -1615,9 +1486,8 @@ public class TeamBuildingAcceptanceTest{
                 .andReturn()
                 .getResponse()
                 .getContentAsString(), TeamBuildingListResponse.class);
-        int teamBuildingId = teamBuildingList.getTeamBuildingList().get(0).getTeamBuildingId();
         int wrongId = 0;
-        result = TeamBuildingAcceptanceTestHelper.deleteTeamInTeamBuilding(mvc, teamBuildingId, wrongId, adminToken);
+        result = TeamBuildingAcceptanceTestHelper.deleteTeamInTeamBuilding(mvc, wrongId, adminToken);
 
         //then
         result.andExpectAll(
@@ -1654,9 +1524,8 @@ public class TeamBuildingAcceptanceTest{
                 .andReturn()
                 .getResponse()
                 .getContentAsString(), TeamBuildingListResponse.class);
-        int teamBuildingId = teamBuildingList.getTeamBuildingList().get(0).getTeamBuildingId();
         int teamId = teamBuildingList.getTeamBuildingList().get(0).getTeamList().get(0).getTeamId();
-        result = TeamBuildingAcceptanceTestHelper.deleteTeamInTeamBuilding(mvc, teamBuildingId, teamId, wrongToken);
+        result = TeamBuildingAcceptanceTestHelper.deleteTeamInTeamBuilding(mvc, teamId, wrongToken);
 
         //then
         result.andExpectAll(

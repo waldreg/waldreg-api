@@ -1,8 +1,8 @@
-package org.waldreg.teambuilding.spi;
+package org.waldreg.team.spi;
 
 import org.waldreg.teambuilding.dto.UserDto;
 
-public interface TeamBuildingUserRepository{
+public interface TeamUserRepository{
 
     UserDto getUserInfoByUserId(String userId);
 
