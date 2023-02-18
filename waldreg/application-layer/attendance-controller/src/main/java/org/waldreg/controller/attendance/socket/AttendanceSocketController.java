@@ -46,14 +46,14 @@ public class AttendanceSocketController{
     @MessageMapping("/attendance/start")
     public void startAttendance(AttendanceManagingMessage attendanceManagingMessage, @Header("simpSessionId") String sessionId){
         permissionVerifying();
-        AttendanceStartEvent attendanceStartEvent = new AttendanceStartEvent(attendanceManagingMessage.getId(), sessionId);
+        AttendanceStartEvent attendanceStartEvent = new AttendanceStartEvent(socketContextGettable.getId(), sessionId);
         applicationEventPublisher.publishEvent(attendanceStartEvent);
     }
 
     @MessageMapping("/attendance/stop")
     public void stopAttendance(AttendanceManagingMessage attendanceManagingMessage){
         permissionVerifying();
-        AttendanceStopEvent attendanceStopEvent = new AttendanceStopEvent(attendanceManagingMessage.getId());
+        AttendanceStopEvent attendanceStopEvent = new AttendanceStopEvent(socketContextGettable.getId());
         applicationEventPublisher.publishEvent(attendanceStopEvent);
     }
 
