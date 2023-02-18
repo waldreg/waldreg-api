@@ -28,6 +28,7 @@ dependencies {
     implementation project(':application-layer:reward-controller')
     implementation project(':application-layer:attendance-controller')
     implementation project(':application-layer:application-configurer')
+    implementation project(':application-layer:socket-plugin')
 
     implementation project(':service-layer:attendance')
 
@@ -37,6 +38,8 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-websocket'
 
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
+
+    testImplementation 'org.awaitility:awaitility:4.2.0'
 
     testImplementation 'org.junit.jupiter:junit-jupiter-api:5.8.1'
     testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.8.1'

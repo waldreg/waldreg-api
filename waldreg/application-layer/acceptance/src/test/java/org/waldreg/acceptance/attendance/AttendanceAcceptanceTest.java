@@ -13,6 +13,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
@@ -32,7 +33,9 @@ import org.waldreg.controller.reward.tag.response.RewardTagResponse;
 import org.waldreg.controller.joiningpool.request.UserRequest;
 import org.waldreg.controller.user.response.UserResponse;
 
-@SpringBootTest
+import static org.waldreg.acceptance.attendance.AttendanceAcceptanceValidator.*;
+
+@SpringBootTest(webEnvironment = WebEnvironment.DEFINED_PORT)
 @AutoConfigureMockMvc
 class AttendanceAcceptanceTest{
 
@@ -48,7 +51,7 @@ class AttendanceAcceptanceTest{
 
     @BeforeEach
     @AfterEach
-    public void INITIATE_USER() throws Exception{
+    void INITIATE_USER() throws Exception{
         String adminToken = AuthenticationAcceptanceTestHelper.getAdminToken(mvc, objectMapper);
         for (UserRequest request : userCreateRequestList){
             UserResponse userResponse = objectMapper.readValue(UserAcceptanceTestHelper.inquiryUserWithoutToken(mvc, request.getUserId())
@@ -72,7 +75,7 @@ class AttendanceAcceptanceTest{
 
     @BeforeEach
     @AfterEach
-    public void INITIATE_REWARD_TAG() throws Exception{
+    void INITIATE_REWARD_TAG() throws Exception{
         String adminToken = AuthenticationAcceptanceTestHelper.getAdminToken(mvc, objectMapper);
         ArrayList<RewardTagResponse> rewardTagResponseList = new ArrayList<>(
                 getRewardTagResponseMap(RewardAcceptanceTestHelper.inquiryRewardTagList(mvc, adminToken)).get("reward_tags")
@@ -91,6 +94,14 @@ class AttendanceAcceptanceTest{
                     );
         }
         rewardTagResponseList.clear();
+    }
+
+    @BeforeEach
+    @AfterEach
+    void INIT_ATTENDANCE_TARGET() throws Exception{
+        int id = getUsersId("Admin");
+        String adminToken = AuthenticationAcceptanceTestHelper.getAdminToken(mvc, objectMapper);
+        AttendanceAcceptanceTestHelper.deleteSubscribedAttendance(mvc, adminToken, ""+id);
     }
 
     private Map<String, List<RewardTagResponse>> getRewardTagResponseMap(ResultActions resultActions) throws Exception{
@@ -806,98 +817,6 @@ class AttendanceAcceptanceTest{
     }
 
     @Test
-    @DisplayName("출석 체크 요청 성공 인수 테스트")
-    void CONFIRM_ATTENDANCE_SUCCESS_TEST() throws Exception{
-        // given
-        String adminToken = AuthenticationAcceptanceTestHelper.getAdminToken(mvc, objectMapper);
-        int id = getUsersId("Admin");
-        AttendanceStompClient stompClient = AttendanceStompClient.getClient();
-        stompClient.startAttendance();
-        String attendanceNumber = stompClient.getAttendanceNumber();
-        Map<String, String> request = Map.of("attendance_identify", attendanceNumber);
-
-        // when
-        AttendanceAcceptanceTestHelper.subscribeAttendance(mvc, adminToken, "" + id);
-        ResultActions resultActions = AttendanceAcceptanceTestHelper.confirmAttendance(mvc, adminToken, objectMapper.writeValueAsString(request));
-
-        // then
-        expectedIsOk(resultActions);
-        stompClient.stopAttendance();
-    }
-
-    @Test
-    @DisplayName("출석 체크 요청 실패 인수 테스트 - 출석 대상이 아닐경우")
-    void CONFIRM_ATTENDANCE_FAIL_NOT_SUBSCRIBED_ATTENDANCE_TEST() throws Exception{
-        // given
-        String adminToken = AuthenticationAcceptanceTestHelper.getAdminToken(mvc, objectMapper);
-        AttendanceStompClient stompClient = AttendanceStompClient.getClient();
-        stompClient.startAttendance();
-        String attendanceNumber = stompClient.getAttendanceNumber();
-        Map<String, String> request = Map.of("attendance_identify", attendanceNumber);
-
-        // when
-        ResultActions resultActions = AttendanceAcceptanceTestHelper.confirmAttendance(mvc, adminToken, objectMapper.writeValueAsString(request));
-
-        // then
-        expectedIsNotRegisteredOnAttendance(resultActions);
-        stompClient.stopAttendance();
-    }
-
-    @Test
-    @DisplayName("출석 체크 요청 실패 인수 테스트 - 이미 출석한 경우")
-    void CONFIRM_ATTENDANCE_FAIL_ALREADY_ATTENDANCED_TEST() throws Exception{
-        // given
-        String adminToken = AuthenticationAcceptanceTestHelper.getAdminToken(mvc, objectMapper);
-        int id = getUsersId("Admin");
-        AttendanceStompClient stompClient = AttendanceStompClient.getClient();
-        stompClient.startAttendance();
-        String attendanceNumber = stompClient.getAttendanceNumber();
-        Map<String, String> request = Map.of("attendance_identify", attendanceNumber);
-
-        // when
-        AttendanceAcceptanceTestHelper.subscribeAttendance(mvc, adminToken, "" + id);
-        AttendanceAcceptanceTestHelper.confirmAttendance(mvc, adminToken, objectMapper.writeValueAsString(request));
-        ResultActions resultActions = AttendanceAcceptanceTestHelper.confirmAttendance(mvc, adminToken, objectMapper.writeValueAsString(request));
-
-        // then
-        expectedIsAlreadyAttendanced(resultActions);
-    }
-
-    @Test
-    @DisplayName("출석 체크 요청 실패 인수 테스트 - 틀린 attendanceNumber")
-    void CONFIRM_ATTENDANCE_FAIL_WRONG_NUMBER_TEST() throws Exception{
-        // given
-        String adminToken = AuthenticationAcceptanceTestHelper.getAdminToken(mvc, objectMapper);
-        int id = getUsersId("Admin");
-        AttendanceStompClient stompClient = AttendanceStompClient.getClient();
-        stompClient.startAttendance();
-        Map<String, String> request = Map.of("attendance_identify", "hello world");
-
-        // when
-        AttendanceAcceptanceTestHelper.subscribeAttendance(mvc, adminToken, "" + id);
-        ResultActions resultActions = AttendanceAcceptanceTestHelper.confirmAttendance(mvc, adminToken, objectMapper.writeValueAsString(request));
-
-        // then
-        expectedIsWrongNumber(resultActions, "hello world");
-    }
-
-    @Test
-    @DisplayName("출석 체크 요청 실패 인수 테스트 - 출석을 시작하지 않음")
-    void CONFIRM_ATTENDANCE_FAIL_DOES_NOT_STARTED_TEST() throws Exception{
-        // given
-        String adminToken = AuthenticationAcceptanceTestHelper.getAdminToken(mvc, objectMapper);
-        int id = getUsersId("Admin");
-        AttendanceStompClient stompClient = AttendanceStompClient.getClient();
-        Map<String, String> request = Map.of("attendance_identify", "123");
-        // when
-        AttendanceAcceptanceTestHelper.subscribeAttendance(mvc, adminToken, "" + id);
-        ResultActions resultActions = AttendanceAcceptanceTestHelper.confirmAttendance(mvc, adminToken, objectMapper.writeValueAsString(request));
-
-        // then
-        expectedIsNotStartedAttendance(resultActions);
-    }
-
-    @Test
     @DisplayName("출석 상태별 상벌점 태그 설정 성공 인수 테스트")
     void SET_REWARD_TAG_ON_ATTENDANCE_TYPE_SUCCESS_TEST() throws Exception{
         // given
@@ -973,157 +892,6 @@ class AttendanceAcceptanceTest{
 
         // then
         expectedIsUnknownRewardTagId(resultActions, 999999);
-    }
-
-    private void expectedIsOk(ResultActions resultActions) throws Exception{
-        resultActions.andExpectAll(
-                MockMvcResultMatchers.status().isOk(),
-                MockMvcResultMatchers.header().string("Api-version", apiVersion)
-        );
-    }
-
-    private void expectedIsNoPermission(ResultActions resultActions) throws Exception{
-        resultActions.andExpectAll(
-                MockMvcResultMatchers.status().isForbidden(),
-                MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON),
-                MockMvcResultMatchers.header().string(HttpHeaders.CONTENT_TYPE, "application/json"),
-                MockMvcResultMatchers.header().string("api-version", apiVersion),
-                MockMvcResultMatchers.jsonPath("$.code").value("CHARACTER-403"),
-                MockMvcResultMatchers.jsonPath("$.messages").value("No permission"),
-                MockMvcResultMatchers.jsonPath("$.document_url").value("docs.waldreg.org")
-        );
-    }
-
-    private void expectedIsUnknownUserId(ResultActions resultActions, int id) throws Exception{
-        resultActions.andExpectAll(
-                MockMvcResultMatchers.status().isBadRequest(),
-                MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON),
-                MockMvcResultMatchers.header().string(HttpHeaders.CONTENT_TYPE, "application/json"),
-                MockMvcResultMatchers.header().string("api-version", apiVersion),
-                MockMvcResultMatchers.jsonPath("$.code").value("ATTENDANCE-413"),
-                MockMvcResultMatchers.jsonPath("$.messages").value("Unknown user id \"" + id + "\""),
-                MockMvcResultMatchers.jsonPath("$.document_url").value("docs.waldreg.org")
-        );
-    }
-
-    private void expectedIsNotRegisteredOnAttendance(ResultActions resultActions) throws Exception{
-        resultActions.andExpectAll(
-                MockMvcResultMatchers.status().isBadRequest(),
-                MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON),
-                MockMvcResultMatchers.header().string(HttpHeaders.CONTENT_TYPE, "application/json"),
-                MockMvcResultMatchers.header().string("api-version", apiVersion),
-                MockMvcResultMatchers.jsonPath("$.code").value("ATTENDANCE-410"),
-                MockMvcResultMatchers.jsonPath("$.messages").value("Not registered attendance list"),
-                MockMvcResultMatchers.jsonPath("$.document_url").value("docs.waldreg.org")
-        );
-    }
-
-    private void expectedIsInvalidWaiverDate(ResultActions resultActions) throws Exception{
-        resultActions.andExpectAll(
-                MockMvcResultMatchers.status().isBadRequest(),
-                MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON),
-                MockMvcResultMatchers.header().string(HttpHeaders.CONTENT_TYPE, "application/json"),
-                MockMvcResultMatchers.header().string("api-version", apiVersion),
-                MockMvcResultMatchers.jsonPath("$.code").value("ATTENDANCE-417"),
-                MockMvcResultMatchers.jsonPath("$.messages").value("Invalid waiver date"),
-                MockMvcResultMatchers.jsonPath("$.document_url").value("docs.waldreg.org")
-        );
-    }
-
-    private void expectedIsTooEarlyDate(ResultActions resultActions, LocalDate date) throws Exception{
-        resultActions.andExpectAll(
-                MockMvcResultMatchers.status().isBadRequest(),
-                MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON),
-                MockMvcResultMatchers.header().string(HttpHeaders.CONTENT_TYPE, "application/json"),
-                MockMvcResultMatchers.header().string("api-version", apiVersion),
-                MockMvcResultMatchers.jsonPath("$.code").value("ATTENDANCE-416"),
-                MockMvcResultMatchers.jsonPath("$.messages").value("Date is too early \"" + date.toString() + "\""),
-                MockMvcResultMatchers.jsonPath("$.document_url").value("docs.waldreg.org")
-        );
-    }
-
-    private void expectedIsTooFarDate(ResultActions resultActions, LocalDate date) throws Exception{
-        resultActions.andExpectAll(
-                MockMvcResultMatchers.status().isBadRequest(),
-                MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON),
-                MockMvcResultMatchers.header().string(HttpHeaders.CONTENT_TYPE, "application/json"),
-                MockMvcResultMatchers.header().string("api-version", apiVersion),
-                MockMvcResultMatchers.jsonPath("$.code").value("ATTENDANCE-415"),
-                MockMvcResultMatchers.jsonPath("$.messages").value("Date is too far \"" + date.toString() + "\""),
-                MockMvcResultMatchers.jsonPath("$.document_url").value("docs.waldreg.org")
-        );
-    }
-
-    private void expectedIsUnknownWaiverId(ResultActions resultActions, int waiverId) throws Exception{
-        resultActions.andExpectAll(
-                MockMvcResultMatchers.status().isBadRequest(),
-                MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON),
-                MockMvcResultMatchers.header().string(HttpHeaders.CONTENT_TYPE, "application/json"),
-                MockMvcResultMatchers.header().string("api-version", apiVersion),
-                MockMvcResultMatchers.jsonPath("$.code").value("ATTENDANCE-411"),
-                MockMvcResultMatchers.jsonPath("$.messages").value("Unknown waiver id \"" + waiverId + "\""),
-                MockMvcResultMatchers.jsonPath("$.document_url").value("docs.waldreg.org")
-        );
-    }
-
-    private void expectedIsUnknownAttendanceType(ResultActions resultActions, String attendanceType) throws Exception{
-        resultActions.andExpectAll(
-                MockMvcResultMatchers.status().isBadRequest(),
-                MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON),
-                MockMvcResultMatchers.header().string(HttpHeaders.CONTENT_TYPE, "application/json"),
-                MockMvcResultMatchers.header().string("api-version", apiVersion),
-                MockMvcResultMatchers.jsonPath("$.code").value("ATTENDANCE-412"),
-                MockMvcResultMatchers.jsonPath("$.messages").value("Unknown attendance type \"" + attendanceType + "\""),
-                MockMvcResultMatchers.jsonPath("$.document_url").value("docs.waldreg.org")
-        );
-    }
-
-    private void expectedIsInvalidDate(ResultActions resultActions) throws Exception{
-        resultActions.andExpectAll(
-                MockMvcResultMatchers.status().isBadRequest(),
-                MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON),
-                MockMvcResultMatchers.header().string(HttpHeaders.CONTENT_TYPE, "application/json"),
-                MockMvcResultMatchers.header().string("api-version", apiVersion),
-                MockMvcResultMatchers.jsonPath("$.code").value("ATTENDANCE-414"),
-                MockMvcResultMatchers.jsonPath("$.messages").value("Invalid date"),
-                MockMvcResultMatchers.jsonPath("$.document_url").value("docs.waldreg.org")
-        );
-    }
-
-    private void expectedIsAlreadyAttendanced(ResultActions resultActions) throws Exception{
-        resultActions.andExpectAll(
-                MockMvcResultMatchers.status().isBadRequest(),
-                MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON),
-                MockMvcResultMatchers.header().string(HttpHeaders.CONTENT_TYPE, "application/json"),
-                MockMvcResultMatchers.header().string("api-version", apiVersion),
-                MockMvcResultMatchers.jsonPath("$.code").value("ATTENDANCE-418"),
-                MockMvcResultMatchers.jsonPath("$.messages").value("Already attendanced"),
-                MockMvcResultMatchers.jsonPath("$.document_url").value("docs.waldreg.org")
-        );
-    }
-
-    private void expectedIsWrongNumber(ResultActions resultActions, String number) throws Exception{
-        resultActions.andExpectAll(
-                MockMvcResultMatchers.status().isBadRequest(),
-                MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON),
-                MockMvcResultMatchers.header().string(HttpHeaders.CONTENT_TYPE, "application/json"),
-                MockMvcResultMatchers.header().string("api-version", apiVersion),
-                MockMvcResultMatchers.jsonPath("$.code").value("ATTENDANCE-419"),
-                MockMvcResultMatchers.jsonPath("$.messages").value("Wrong attendance identify \"" + number + "\""),
-                MockMvcResultMatchers.jsonPath("$.document_url").value("docs.waldreg.org")
-        );
-    }
-
-    private void expectedIsNotStartedAttendance(ResultActions resultActions) throws Exception{
-        resultActions.andExpectAll(
-                MockMvcResultMatchers.status().isBadRequest(),
-                MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON),
-                MockMvcResultMatchers.header().string(HttpHeaders.CONTENT_TYPE, "application/json"),
-                MockMvcResultMatchers.header().string("api-version", apiVersion),
-                MockMvcResultMatchers.jsonPath("$.code").value("ATTENDANCE-421"),
-                MockMvcResultMatchers.jsonPath("$.messages").value("Does not started attendance"),
-                MockMvcResultMatchers.jsonPath("$.document_url").value("docs.waldreg.org")
-        );
     }
 
     private void expectedIsUnknownRewardTagId(ResultActions resultActions, int rewardTagId) throws Exception{

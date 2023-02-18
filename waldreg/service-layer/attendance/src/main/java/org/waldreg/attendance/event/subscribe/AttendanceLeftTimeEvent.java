@@ -1,10 +1,14 @@
 package org.waldreg.attendance.event.subscribe;
 
-public final class AttendanceLeftTimeEvent{
+public class AttendanceLeftTimeEvent{
 
-    private final int leftTime;
+    private int leftTime;
 
     public AttendanceLeftTimeEvent(int leftTime){
+        this.leftTime = leftTime;
+    }
+
+    public void setLeftTime(int leftTime){
         this.leftTime = leftTime;
     }
 
