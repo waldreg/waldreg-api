@@ -13,4 +13,6 @@ public interface TeamManager{
 
     void updateTeamNameById(int teamId, String teamName);
 
+    void deleteTeamById(int teamId);
+
 }
