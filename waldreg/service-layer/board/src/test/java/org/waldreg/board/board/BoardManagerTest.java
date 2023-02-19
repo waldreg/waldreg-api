@@ -17,6 +17,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
+import org.waldreg.board.board.spi.BoardInCommentRepository;
 import org.waldreg.board.exception.BoardDoesNotExistException;
 import org.waldreg.board.exception.CategoryDoesNotExistException;
 import org.waldreg.board.exception.InvalidRangeException;
@@ -46,6 +47,8 @@ public class BoardManagerTest{
     private BoardInCategoryRepository boardInCategoryRepository;
     @MockBean
     private BoardUserRepository boardUserRepository;
+    @MockBean
+    private BoardInCommentRepository boardInCommentRepository;
     @MockBean
     private FileInfoGettable fileInfoGettable;
 

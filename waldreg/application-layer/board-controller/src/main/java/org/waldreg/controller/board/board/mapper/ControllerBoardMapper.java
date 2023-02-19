@@ -46,6 +46,8 @@ public class ControllerBoardMapper{
                 .author(userDtoToAuthor(boardDto.getUserDto()))
                 .createdAt(boardDto.getCreatedAt())
                 .lastModifiedAt(boardDto.getLastModifiedAt())
+                .views(boardDto.getViews())
+                .commentCount(boardDto.getCommentCount())
                 .images(stringListToArray(boardDto.getImageUrls()))
                 .files(stringListToArray(boardDto.getFileUrls()))
                 .existFile(isExistFile(boardDto.getFileUrls()))

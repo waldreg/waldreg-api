@@ -7,6 +7,7 @@ import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.waldreg.board.board.spi.BoardInCommentRepository;
 import org.waldreg.board.exception.BoardDoesNotExistException;
 import org.waldreg.board.exception.CategoryDoesNotExistException;
 import org.waldreg.board.exception.FileDoesNotSavedException;
@@ -26,14 +27,16 @@ public class DefaultBoardManager implements BoardManager{
     private final BoardRepository boardRepository;
     private final BoardUserRepository boardUserRepository;
     private final BoardInCategoryRepository boardInCategoryRepository;
+    private final BoardInCommentRepository boardInCommentRepository;
     private final DecryptedTokenContextGetter decryptedTokenContextGetter;
     private final FileInfoGettable fileInfoGettable;
 
     @Autowired
-    public DefaultBoardManager(BoardRepository boardRepository, BoardInCategoryRepository boardInCategoryRepository, BoardUserRepository boardUserRepository, DecryptedTokenContextGetter decryptedTokenContextGetter, FileInfoGettable fileInfoGettable){
+    public DefaultBoardManager(BoardRepository boardRepository, BoardInCategoryRepository boardInCategoryRepository, BoardUserRepository boardUserRepository, BoardInCommentRepository boardInCommentRepository, DecryptedTokenContextGetter decryptedTokenContextGetter, FileInfoGettable fileInfoGettable){
         this.boardRepository = boardRepository;
         this.boardInCategoryRepository = boardInCategoryRepository;
         this.boardUserRepository = boardUserRepository;
+        this.boardInCommentRepository = boardInCommentRepository;
         this.decryptedTokenContextGetter = decryptedTokenContextGetter;
         this.fileInfoGettable = fileInfoGettable;
     }
@@ -66,6 +69,7 @@ public class DefaultBoardManager implements BoardManager{
         BoardDto boardDto = boardRepository.inquiryBoardById(id);
         CategoryDto categoryDto = boardInCategoryRepository.inquiryCategoryById(boardDto.getCategoryId());
         boardDto.setCategoryName(categoryDto.getCategoryName());
+        boardDto.setCommentCount(boardInCommentRepository.getCommentMaxIdxByBoardId(id));
         boardDto.setViews(boardDto.getViews() + 1);
         boardRepository.modifyBoard(boardDto);
         return boardDto;
@@ -77,7 +81,7 @@ public class DefaultBoardManager implements BoardManager{
         int maxIdx = boardRepository.getBoardMaxIdx();
         to = adjustEndIdx(from, to, maxIdx);
         List<BoardDto> boardDtoList = boardRepository.inquiryAllBoard(from, to);
-        return setCategoryName(boardDtoList);
+        return setCategoryNameAndCommentCount(boardDtoList);
     }
 
     @Override
@@ -88,7 +92,7 @@ public class DefaultBoardManager implements BoardManager{
 
         to = adjustEndIdx(from, to, maxIdx);
         List<BoardDto> boardDtoList = boardRepository.inquiryAllBoardByCategory(categoryId, from, to);
-        return setCategoryName(boardDtoList);
+        return setCategoryNameAndCommentCount(boardDtoList);
     }
 
     @Override
@@ -97,7 +101,7 @@ public class DefaultBoardManager implements BoardManager{
         int maxIdx = boardRepository.getBoardMaxIdxByTitle(keyword);
         to = adjustEndIdx(from, to, maxIdx);
         List<BoardDto> boardDtoList = boardRepository.searchByTitle(keyword, from, to);
-        return setCategoryName(boardDtoList);
+        return setCategoryNameAndCommentCount(boardDtoList);
     }
 
     @Override
@@ -106,7 +110,7 @@ public class DefaultBoardManager implements BoardManager{
         int maxIdx = boardRepository.getBoardMaxIdxByContent(keyword);
         to = adjustEndIdx(from, to, maxIdx);
         List<BoardDto> boardDtoList = boardRepository.searchByContent(keyword, from, to);
-        return setCategoryName(boardDtoList);
+        return setCategoryNameAndCommentCount(boardDtoList);
     }
 
     @Override
@@ -115,7 +119,7 @@ public class DefaultBoardManager implements BoardManager{
         int maxIdx = boardRepository.getBoardMaxIdxByAuthorUserId(keyword);
         to = adjustEndIdx(from, to, maxIdx);
         List<BoardDto> boardDtoList = boardRepository.searchByAuthorUserId(keyword, from, to);
-        return setCategoryName(boardDtoList);
+        return setCategoryNameAndCommentCount(boardDtoList);
     }
 
     private int adjustEndIdx(int from, int to, int maxIdx){
@@ -134,11 +138,13 @@ public class DefaultBoardManager implements BoardManager{
         }
     }
 
-    private List<BoardDto> setCategoryName(List<BoardDto> boardDtoList){
+    private List<BoardDto> setCategoryNameAndCommentCount(List<BoardDto> boardDtoList){
         List<BoardDto> updatedBoardDtoList = new ArrayList<>();
         for (BoardDto boardDto : boardDtoList){
             CategoryDto categoryDto = boardInCategoryRepository.inquiryCategoryById(boardDto.getCategoryId());
             boardDto.setCategoryName(categoryDto.getCategoryName());
+            int commentCount = boardInCommentRepository.getCommentMaxIdxByBoardId(boardDto.getId());
+            boardDto.setCommentCount(commentCount);
             updatedBoardDtoList.add(boardDto);
         }
         return updatedBoardDtoList;
