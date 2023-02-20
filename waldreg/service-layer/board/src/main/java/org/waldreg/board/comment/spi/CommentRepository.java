@@ -1,9 +1,10 @@
 package org.waldreg.board.comment.spi;
 
 import java.util.List;
+import org.waldreg.board.board.spi.BoardInCommentRepository;
 import org.waldreg.board.dto.CommentDto;
 
-public interface CommentRepository{
+public interface CommentRepository extends BoardInCommentRepository{
 
     CommentDto createComment(CommentDto commentDto);
 
