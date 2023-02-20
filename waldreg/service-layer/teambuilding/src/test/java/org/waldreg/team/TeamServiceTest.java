@@ -7,6 +7,7 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.mock.mockito.MockBean;
@@ -318,6 +319,7 @@ public class TeamServiceTest{
         String updateName = "modifiedName";
 
         //when
+        Mockito.when(teamRepository.isExistTeam(Mockito.anyInt())).thenReturn(true);
         Mockito.when(teamRepository.readTeamById(Mockito.anyInt())).thenReturn(teamDto);
         teamManager.updateTeamNameById(teamId, updateName);
         teamDto.setTeamName(updateName);
@@ -335,15 +337,96 @@ public class TeamServiceTest{
     }
 
     @Test
+    @DisplayName("팀빌딩 그룹 내 팀 이름 수정 실패 테스트 - 없는 team_id")
+    public void MODIFY_TEAM_NAME_IN_TEAM_BUILDING_FAIL_CAUSE_UNKNOWN_TEAM_ID_TEST(){
+        //given
+        int teamBuildingId = 1;
+        int teamId = 0;
+        String name = "new team";
+        TeamDto teamDto = TeamDto.builder()
+                .teamBuildingId(teamBuildingId)
+                .teamId(teamId)
+                .teamName(name)
+                .userDtoList(List.of())
+                .lastModifiedAt(LocalDateTime.now())
+                .build();
+        String updateName = "modifiedName";
+
+        //when
+        Mockito.when(teamRepository.isExistTeam(Mockito.anyInt())).thenReturn(false);
+        Mockito.when(teamRepository.readTeamById(Mockito.anyInt())).thenReturn(teamDto);
+
+        //then
+        Assertions.assertThrows(UnknownTeamIdException.class, () -> teamManager.updateTeamNameById(teamId, updateName));
+
+    }
+
+    @Test
+    @DisplayName("팀빌딩 그룹 내 팀 이름 수정 실패 테스트 - 중복된 team_name")
+    public void MODIFY_TEAM_NAME_IN_TEAM_BUILDING_FAIL_CAUSE_DUPLICATED_TEAM_NAME_TEST(){
+        //given
+        int teamBuildingId = 1;
+        int teamId = 1;
+        List<TeamDto> teamDtoList = createTeamDtoList(teamBuildingId);
+        String updateName = "team 1";
+
+        //when
+        Mockito.when(teamRepository.isExistTeam(Mockito.anyInt())).thenReturn(true);
+        Mockito.when(teamRepository.readTeamById(Mockito.anyInt())).thenReturn(teamDtoList.get(0));
+        Mockito.when(teamRepository.readAllTeamByTeamBuildingId(Mockito.anyInt())).thenReturn(teamDtoList);
+
+        //then
+        Assertions.assertThrows(DuplicatedTeamNameException.class, () -> teamManager.updateTeamNameById(teamId, updateName));
+
+    }
+
+    @Test
+    @DisplayName("팀빌딩 그룹 내 팀 이름 수정 실패 테스트 - team_name 1000자 초과")
+    public void MODIFY_TEAM_NAME_IN_TEAM_BUILDING_FAIL_CAUSE_TEAM_NAME_OVERFLOW_TEST(){
+        //given
+        int teamBuildingId = 1;
+        int teamId = 1;
+        List<TeamDto> teamDtoList = createTeamDtoList(teamBuildingId);
+        String updateName = createOverflow();
+
+        //when
+        Mockito.when(teamRepository.isExistTeam(Mockito.anyInt())).thenReturn(true);
+        Mockito.when(teamRepository.readTeamById(Mockito.anyInt())).thenReturn(teamDtoList.get(0));
+
+        //then
+        Assertions.assertThrows(ContentOverflowException.class, () -> teamManager.updateTeamNameById(teamId, updateName));
+
+    }
+
+    @Test
     @DisplayName("팀빌딩 그룹 내 팀 삭제 성공 테스트")
     public void DELETE_TEAM_IN_TEAM_BUILDING_SUCCESS_TEST(){
         //given
         int teamId = 1;
 
-        //when&then
+        //when
+        Mockito.when(teamRepository.isExistTeam(Mockito.anyInt())).thenReturn(true);
+
+        //then
         Assertions.assertDoesNotThrow(() -> teamManager.deleteTeamById(teamId));
 
     }
+
+    @Test
+    @DisplayName("팀빌딩 그룹 내 팀 삭제 실패 테스트 - 없는 team_id")
+    public void DELETE_TEAM_IN_TEAM_BUILDING_FAIL_CAUSE_UNKNOWN_TEAM_ID_TEST(){
+        //given
+        int teamId = 1;
+
+        //when
+        Mockito.when(teamRepository.isExistTeam(Mockito.anyInt())).thenReturn(false);
+
+        //then
+        Assertions.assertThrows(UnknownTeamIdException.class, () -> teamManager.deleteTeamById(teamId));
+
+    }
+
+
 
     private List<TeamDto> createTeamDtoList(int teamBuildingId){
         List<TeamDto> teamDtoList = new ArrayList<>();

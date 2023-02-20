@@ -72,31 +72,6 @@ public class DefaultTeamManager implements TeamManager{
         teamRepository.updateTeamById(teamId, teamDto);
     }
 
-    private void throwIfUnknownTeamId(int teamId){
-        if(!isExistTeam(teamId)){
-            throw new UnknownTeamIdException(teamId);
-        }
-    }
-
-    private boolean isExistTeam(int teamId){return teamRepository.isExistTeam(teamId);}
-
-    private void throwIfTeamNameIsOverflow(String teamName){
-        int length = teamName.length();
-        if(length > 1000){
-            throw new ContentOverflowException("TEAMBUILDING-411", "Team name cannot be more than 1000 current length \"" + length + "\"");
-        }
-    }
-
-
-    private void throwIfDuplicatedTeamName(int teamBuildingId, String teamName){
-        List<TeamDto> teamDtoList = teamRepository.readAllTeamByTeamBuildingId(teamBuildingId);
-        for (TeamDto teamDto : teamDtoList){
-            if (teamDto.getTeamName().equals(teamName)){
-                throw new DuplicatedTeamNameException(teamName);
-            }
-        }
-    }
-
     private void throwIfUnknownUserIdDetected(List<String> userIdList){
         for (String userId : userIdList){
             if (!isExistUserId(userId)){
@@ -133,14 +108,42 @@ public class DefaultTeamManager implements TeamManager{
 
     @Override
     public void updateTeamNameById(int teamId, String teamName){
+        throwIfUnknownTeamId(teamId);
+        throwIfTeamNameIsOverflow(teamName);
         TeamDto teamDto = teamRepository.readTeamById(teamId);
+        throwIfDuplicatedTeamName(teamDto.getTeamBuildingId(), teamName);
         teamDto.setTeamName(teamName);
         teamRepository.updateTeamById(teamId, teamDto);
     }
 
+    private void throwIfTeamNameIsOverflow(String teamName){
+        int length = teamName.length();
+        if(length > 1000){
+            throw new ContentOverflowException("TEAMBUILDING-411", "Team name cannot be more than 1000 current length \"" + length + "\"");
+        }
+    }
+
+    private void throwIfDuplicatedTeamName(int teamBuildingId, String teamName){
+        List<TeamDto> teamDtoList = teamRepository.readAllTeamByTeamBuildingId(teamBuildingId);
+        for (TeamDto teamDto : teamDtoList){
+            if (teamDto.getTeamName().equals(teamName)){
+                throw new DuplicatedTeamNameException(teamName);
+            }
+        }
+    }
+
     @Override
     public void deleteTeamById(int teamId){
+        throwIfUnknownTeamId(teamId);
         teamRepository.deleteTeamById(teamId);
     }
+
+    private void throwIfUnknownTeamId(int teamId){
+        if(!isExistTeam(teamId)){
+            throw new UnknownTeamIdException(teamId);
+        }
+    }
+
+    private boolean isExistTeam(int teamId){return teamRepository.isExistTeam(teamId);}
 
 }
