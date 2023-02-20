@@ -14,15 +14,14 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.waldreg.repository.MemoryCharacterStorage;
 import org.waldreg.repository.MemoryTeamBuildingStorage;
-import org.waldreg.repository.MemoryTeamStorage;
 import org.waldreg.repository.MemoryUserStorage;
 import org.waldreg.repository.character.CharacterMapper;
 import org.waldreg.repository.character.MemoryCharacterRepository;
 import org.waldreg.repository.user.MemoryUserRepository;
 import org.waldreg.repository.user.UserMapper;
+import org.waldreg.teambuilding.dto.TeamBuildingDto;
 import org.waldreg.teambuilding.dto.TeamDto;
 import org.waldreg.teambuilding.dto.UserDto;
-import org.waldreg.teambuilding.dto.TeamBuildingDto;
 import org.waldreg.teambuilding.spi.TeamBuildingRepository;
 import org.waldreg.user.spi.CharacterRepository;
 import org.waldreg.user.spi.UserRepository;
@@ -69,13 +68,13 @@ public class TeamBuildingRepositoryTest{
         TeamBuildingDto result = teamBuildingRepository.createTeamBuilding(title);
 
         //then
-       Assertions.assertAll(
-               () -> Assertions.assertTrue(result.getTeamBuildingId() != 0),
-               () -> Assertions.assertEquals(title, result.getTeamBuildingTitle()),
-               () -> Assertions.assertNull(result.getTeamList()),
-               () -> Assertions.assertNotNull(result.getCreatedAt()),
-               () -> Assertions.assertNotNull(result.getLastModifiedAt())
-       );
+        Assertions.assertAll(
+                () -> Assertions.assertTrue(result.getTeamBuildingId() != 0),
+                () -> Assertions.assertEquals(title, result.getTeamBuildingTitle()),
+                () -> Assertions.assertNull(result.getTeamList()),
+                () -> Assertions.assertNotNull(result.getCreatedAt()),
+                () -> Assertions.assertNotNull(result.getLastModifiedAt())
+        );
 
     }
 
@@ -110,29 +109,84 @@ public class TeamBuildingRepositoryTest{
 
         //then
         Assertions.assertAll(
-                () -> Assertions.assertEquals(teamBuildingDto.getTeamBuildingId(),result.getTeamBuildingId()),
-                () -> Assertions.assertEquals(teamBuildingDto.getTeamBuildingTitle(),result.getTeamBuildingTitle()),
+                () -> Assertions.assertEquals(teamBuildingDto.getTeamBuildingId(), result.getTeamBuildingId()),
+                () -> Assertions.assertEquals(teamBuildingDto.getTeamBuildingTitle(), result.getTeamBuildingTitle()),
                 () -> Assertions.assertEquals(teamBuildingDto.getLastModifiedAt(), result.getLastModifiedAt()),
-                () -> Assertions.assertEquals(teamBuildingDto.getCreatedAt(),result.getCreatedAt()),
+                () -> Assertions.assertEquals(teamBuildingDto.getCreatedAt(), result.getCreatedAt()),
                 () -> Assertions.assertEquals(teamBuildingDto.getTeamList().get(0).getTeamId(), result.getTeamList().get(0).getTeamId()),
-                () -> Assertions.assertEquals(teamBuildingDto.getTeamList().get(0).getTeamBuildingId(),result. getTeamList().get(0).getTeamBuildingId()),
+                () -> Assertions.assertEquals(teamBuildingDto.getTeamList().get(0).getTeamBuildingId(), result.getTeamList().get(0).getTeamBuildingId()),
                 () -> Assertions.assertEquals(teamBuildingDto.getTeamList().get(0).getLastModifiedAt(), result.getTeamList().get(0).getLastModifiedAt()),
-                () -> Assertions.assertEquals(teamBuildingDto.getTeamList().get(0).getTeamName(),result.getTeamList().get(0).getTeamName()),
+                () -> Assertions.assertEquals(teamBuildingDto.getTeamList().get(0).getTeamName(), result.getTeamList().get(0).getTeamName()),
                 () -> Assertions.assertEquals(teamBuildingDto.getTeamList().get(0).getUserList().get(0).getUserId(), result.getTeamList().get(0).getUserList().get(0).getUserId()),
                 () -> Assertions.assertEquals(teamBuildingDto.getTeamList().get(0).getUserList().size(), result.getTeamList().get(0).getUserList().size()),
                 () -> Assertions.assertEquals(teamBuildingDto.getTeamList().get(1).getTeamId(), result.getTeamList().get(1).getTeamId()),
-                () -> Assertions.assertEquals(teamBuildingDto.getTeamList().get(1).getTeamBuildingId(),result. getTeamList().get(1).getTeamBuildingId()),
+                () -> Assertions.assertEquals(teamBuildingDto.getTeamList().get(1).getTeamBuildingId(), result.getTeamList().get(1).getTeamBuildingId()),
                 () -> Assertions.assertEquals(teamBuildingDto.getTeamList().get(1).getLastModifiedAt(), result.getTeamList().get(1).getLastModifiedAt()),
-                () -> Assertions.assertEquals(teamBuildingDto.getTeamList().get(1).getTeamName(),result.getTeamList().get(1).getTeamName()),
+                () -> Assertions.assertEquals(teamBuildingDto.getTeamList().get(1).getTeamName(), result.getTeamList().get(1).getTeamName()),
                 () -> Assertions.assertEquals(teamBuildingDto.getTeamList().get(1).getUserList().get(0).getUserId(), result.getTeamList().get(1).getUserList().get(0).getUserId()),
                 () -> Assertions.assertEquals(teamBuildingDto.getTeamList().get(1).getUserList().size(), result.getTeamList().get(1).getUserList().size()),
                 () -> Assertions.assertEquals(teamBuildingDto.getTeamList().get(2).getTeamId(), result.getTeamList().get(2).getTeamId()),
-                () -> Assertions.assertEquals(teamBuildingDto.getTeamList().get(2).getTeamBuildingId(),result. getTeamList().get(2).getTeamBuildingId()),
+                () -> Assertions.assertEquals(teamBuildingDto.getTeamList().get(2).getTeamBuildingId(), result.getTeamList().get(2).getTeamBuildingId()),
                 () -> Assertions.assertEquals(teamBuildingDto.getTeamList().get(2).getLastModifiedAt(), result.getTeamList().get(2).getLastModifiedAt()),
-                () -> Assertions.assertEquals(teamBuildingDto.getTeamList().get(2).getTeamName(),result.getTeamList().get(2).getTeamName()),
+                () -> Assertions.assertEquals(teamBuildingDto.getTeamList().get(2).getTeamName(), result.getTeamList().get(2).getTeamName()),
                 () -> Assertions.assertEquals(teamBuildingDto.getTeamList().get(2).getUserList().get(0).getUserId(), result.getTeamList().get(2).getUserList().get(0).getUserId()),
                 () -> Assertions.assertEquals(teamBuildingDto.getTeamList().get(2).getUserList().size(), result.getTeamList().get(2).getUserList().size())
-                );
+        );
+
+    }
+
+    @Test
+    @DisplayName("팀 빌딩 전체 조회")
+    public void READ_ALL_TEAM_BUILDING_SUCCESS_TEST(){
+        //given
+        String title = "hirhrirhr";
+        String title2 = "fjfjfjfjff";
+        String title3 = "tydufcvn";
+
+        //when
+        TeamBuildingDto teamBuildingDto = teamBuildingRepository.createTeamBuilding(title);
+        List<TeamDto> teamDtoList = createTeamDtoList(teamBuildingDto.getTeamBuildingId());
+        teamBuildingDto.setTeamDtoList(teamDtoList);
+        teamBuildingRepository.updateTeamListInTeamBuilding(teamBuildingDto);
+        TeamBuildingDto teamBuildingDto2 = teamBuildingRepository.createTeamBuilding(title2);
+        teamBuildingDto2.setTeamDtoList(teamDtoList);
+        teamBuildingRepository.updateTeamListInTeamBuilding(teamBuildingDto2);
+        TeamBuildingDto teamBuildingDto3 = teamBuildingRepository.createTeamBuilding(title3);
+        teamBuildingDto3.setTeamDtoList(teamDtoList);
+        teamBuildingRepository.updateTeamListInTeamBuilding(teamBuildingDto3);
+        List<TeamBuildingDto> result = teamBuildingRepository.readAllTeamBuilding(1, 2);
+
+        //then
+        Assertions.assertAll(
+                () -> Assertions.assertEquals(2, result.size()),
+                () -> Assertions.assertEquals(teamBuildingDto.getTeamBuildingId(), result.get(0).getTeamBuildingId()),
+                () -> Assertions.assertEquals(teamBuildingDto.getTeamBuildingTitle(), result.get(0).getTeamBuildingTitle()),
+                () -> Assertions.assertEquals(teamBuildingDto.getLastModifiedAt(), result.get(0).getLastModifiedAt()),
+                () -> Assertions.assertEquals(teamBuildingDto.getCreatedAt(), result.get(0).getCreatedAt()),
+                () -> Assertions.assertEquals(teamBuildingDto.getTeamList().get(0).getTeamId(), result.get(0).getTeamList().get(0).getTeamId()),
+                () -> Assertions.assertEquals(teamBuildingDto.getTeamList().get(0).getTeamBuildingId(), result.get(0).getTeamList().get(0).getTeamBuildingId()),
+                () -> Assertions.assertEquals(teamBuildingDto.getTeamList().get(0).getLastModifiedAt(), result.get(0).getTeamList().get(0).getLastModifiedAt()),
+                () -> Assertions.assertEquals(teamBuildingDto.getTeamList().get(0).getTeamName(), result.get(0).getTeamList().get(0).getTeamName()),
+                () -> Assertions.assertEquals(teamBuildingDto.getTeamList().get(0).getUserList().get(0).getUserId(), result.get(0).getTeamList().get(0).getUserList().get(0).getUserId()),
+                () -> Assertions.assertEquals(teamBuildingDto.getTeamList().get(0).getUserList().size(), result.get(0).getTeamList().get(0).getUserList().size()),
+                () -> Assertions.assertEquals(teamBuildingDto.getTeamList().get(1).getTeamId(), result.get(0).getTeamList().get(1).getTeamId()),
+                () -> Assertions.assertEquals(teamBuildingDto.getTeamList().get(1).getTeamBuildingId(), result.get(0).getTeamList().get(1).getTeamBuildingId()),
+                () -> Assertions.assertEquals(teamBuildingDto.getTeamList().get(1).getLastModifiedAt(), result.get(0).getTeamList().get(1).getLastModifiedAt()),
+                () -> Assertions.assertEquals(teamBuildingDto.getTeamList().get(1).getTeamName(), result.get(0).getTeamList().get(1).getTeamName()),
+                () -> Assertions.assertEquals(teamBuildingDto.getTeamList().get(1).getUserList().get(0).getUserId(), result.get(0).getTeamList().get(1).getUserList().get(0).getUserId()),
+                () -> Assertions.assertEquals(teamBuildingDto.getTeamList().get(1).getUserList().size(), result.get(0).getTeamList().get(1).getUserList().size()),
+                () -> Assertions.assertEquals(teamBuildingDto.getTeamList().get(2).getTeamId(), result.get(0).getTeamList().get(2).getTeamId()),
+                () -> Assertions.assertEquals(teamBuildingDto.getTeamList().get(2).getTeamBuildingId(), result.get(0).getTeamList().get(2).getTeamBuildingId()),
+                () -> Assertions.assertEquals(teamBuildingDto.getTeamList().get(2).getLastModifiedAt(), result.get(0).getTeamList().get(2).getLastModifiedAt()),
+                () -> Assertions.assertEquals(teamBuildingDto.getTeamList().get(2).getTeamName(), result.get(0).getTeamList().get(2).getTeamName()),
+                () -> Assertions.assertEquals(teamBuildingDto.getTeamList().get(2).getUserList().get(0).getUserId(), result.get(0).getTeamList().get(2).getUserList().get(0).getUserId()),
+                () -> Assertions.assertEquals(teamBuildingDto.getTeamList().get(2).getUserList().size(), result.get(0).getTeamList().get(2).getUserList().size()),
+                () -> Assertions.assertEquals(teamBuildingDto2.getTeamBuildingId(), result.get(1).getTeamBuildingId()),
+                () -> Assertions.assertEquals(teamBuildingDto2.getTeamBuildingTitle(), result.get(1).getTeamBuildingTitle()),
+                () -> Assertions.assertEquals(teamBuildingDto2.getLastModifiedAt(), result.get(1).getLastModifiedAt()),
+                () -> Assertions.assertEquals(teamBuildingDto2.getCreatedAt(), result.get(1).getCreatedAt()),
+                () -> Assertions.assertEquals(teamBuildingDto2.getTeamList().size(), result.get(0).getTeamList().size())
+        );
 
     }
 
@@ -146,9 +200,9 @@ public class TeamBuildingRepositoryTest{
     private List<TeamDto> createTeamDtoList(int teambuildingId){
         List<TeamDto> teamDtoList = new ArrayList<>();
         List<UserDto> userDtoList = createUserDtoList();
-        teamDtoList.add(createTeamDto(teambuildingId, 1,"team 1", List.of(userDtoList.get(0), userDtoList.get(2))));
-        teamDtoList.add(createTeamDto(teambuildingId,2, "team 2", List.of(userDtoList.get(3), userDtoList.get(4))));
-        teamDtoList.add(createTeamDto(teambuildingId,3, "team 3", List.of(userDtoList.get(1), userDtoList.get(5))));
+        teamDtoList.add(createTeamDto(teambuildingId, 1, "team 1", List.of(userDtoList.get(0), userDtoList.get(2))));
+        teamDtoList.add(createTeamDto(teambuildingId, 2, "team 2", List.of(userDtoList.get(3), userDtoList.get(4))));
+        teamDtoList.add(createTeamDto(teambuildingId, 3, "team 3", List.of(userDtoList.get(1), userDtoList.get(5))));
         return teamDtoList;
     }
 
