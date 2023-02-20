@@ -28,4 +28,8 @@ public class MemoryTeamBuildingStorage{
         storage.replace(teamBuilding.getTeamBuildingId(), teamBuilding);
     }
 
+    public void deleteAllTeamBuilding(){
+        storage.clear();
+    }
+
 }
