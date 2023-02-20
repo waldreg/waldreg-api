@@ -5,11 +5,11 @@ import java.util.List;
 
 public final class TeamBuilding{
 
-    private final int teamBuildingId;
-    private final String teamBuildingTitle;
-    private final LocalDateTime createdAt;
-    private final LocalDateTime lastModifiedAt;
-    private final List<Team> teamList;
+    private int teamBuildingId;
+    private String teamBuildingTitle;
+    private LocalDateTime createdAt;
+    private LocalDateTime lastModifiedAt;
+    private List<Team> teamList;
 
     private TeamBuilding(){
         throw new UnsupportedOperationException("Cannot invoke constructor \"TeamBuilding()\"");
@@ -47,17 +47,37 @@ public final class TeamBuilding{
         return teamList;
     }
 
+    public void setTeamBuildingId(int teamBuildingId){
+        this.teamBuildingId = teamBuildingId;
+    }
+
+    public void setTeamBuildingTitle(String teamBuildingTitle){
+        this.teamBuildingTitle = teamBuildingTitle;
+    }
+
+    public void setCreatedAt(LocalDateTime createdAt){
+        this.createdAt = createdAt;
+    }
+
+    public void setLastModifiedAt(LocalDateTime lastModifiedAt){
+        this.lastModifiedAt = lastModifiedAt;
+    }
+
+    public void setTeamList(List<Team> teamList){
+        this.teamList = teamList;
+    }
+
     public static final class Builder{
 
         private int teamBuildingId;
         private String teamBuildingTitle;
-        private final LocalDateTime createdAt;
+        private LocalDateTime createdAt;
         private LocalDateTime lastModifiedAt;
         private List<Team> teamList;
 
         private Builder(){
             this.createdAt = LocalDateTime.now();
-            lastModifiedAt = createdAt;
+            this.lastModifiedAt = createdAt;
         }
 
         public Builder teamBuildingId(int teamBuildingId){
@@ -70,7 +90,13 @@ public final class TeamBuilding{
             return this;
         }
 
+        public Builder createdAt(LocalDateTime createdAt){
+            this.createdAt = createdAt;
+            return this;
+        }
+
         public Builder lastModifiedAt(LocalDateTime lastModifiedAt){
+            System.out.println("jnkhhjkhjkhj");
             this.lastModifiedAt = lastModifiedAt;
             return this;
         }

@@ -28,6 +28,7 @@ import org.waldreg.teambuilding.management.TeamBuildingManager;
 import org.waldreg.teambuilding.management.teamcreator.TeamCreator;
 import org.waldreg.teambuilding.spi.TeamBuildingRepository;
 import org.waldreg.teambuilding.spi.TeamBuildingUserRepository;
+import org.waldreg.teambuilding.spi.TeamBuildingsTeamRepository;
 
 @ExtendWith(SpringExtension.class)
 @ContextConfiguration(classes = {DefaultTeamBuildingManager.class, TeamCreator.class})
@@ -42,6 +43,9 @@ public class TeamBuildingServiceTest{
     @MockBean
     TeamBuildingUserRepository teamBuildingUserRepository;
 
+    @MockBean
+    TeamBuildingsTeamRepository teamBuildingsTeamRepository;
+
     @Test
     @DisplayName("새로운 팀빌딩 그룹 생성 성공 테스트")
     public void CREATE_NEW_TEAM_BUILDING_SUCCESS_TEST(){
@@ -54,9 +58,14 @@ public class TeamBuildingServiceTest{
                 .teamCount(teamCount)
                 .userRequestDtoList(userRequestDtoList)
                 .build();
+        TeamBuildingDto teamBuildingDto = TeamBuildingDto.builder()
+                .teamBuildingId(1)
+                .teamBuildingTitle(title)
+                .build();
 
         //when
         Mockito.when(teamBuildingUserRepository.isExistUserByUserId(Mockito.anyString())).thenReturn(true);
+        Mockito.when(teamBuildingRepository.createTeamBuilding(Mockito.any())).thenReturn(teamBuildingDto);
 
         //then
         Assertions.assertDoesNotThrow(() -> teamBuildingManager.createTeamBuilding(teamBuildingRequestDto));
@@ -383,7 +392,6 @@ public class TeamBuildingServiceTest{
         return TeamDto.builder()
                 .teamName(teamName)
                 .teamBuildingId(teamBuildingId)
-                .lastModifiedAt(LocalDateTime.now())
                 .userDtoList(userDtoList)
                 .build();
     }

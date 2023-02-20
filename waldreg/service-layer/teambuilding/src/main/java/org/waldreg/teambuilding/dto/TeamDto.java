@@ -6,7 +6,7 @@ import java.util.List;
 public class TeamDto{
 
     private final int teamId;
-    private final int teamBuildingId;
+    private int teamBuildingId;
     private final String teamName;
     private final LocalDateTime lastModifiedAt;
     private final List<UserDto> userDtoList;
@@ -45,6 +45,10 @@ public class TeamDto{
 
     public int getTeamBuildingId(){
         return teamBuildingId;
+    }
+
+    public void setTeamBuildingId(int teamBuildingId){
+        this.teamBuildingId = teamBuildingId;
     }
 
     public static final class Builder{
