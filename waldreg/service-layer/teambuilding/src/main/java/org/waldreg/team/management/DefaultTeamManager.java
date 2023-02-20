@@ -116,14 +116,6 @@ public class DefaultTeamManager implements TeamManager{
         teamRepository.updateTeamById(teamId, teamDto);
     }
 
-    private void throwIfUnknownTeamId(int teamId){
-        if(!isExistTeam(teamId)){
-            throw new UnknownTeamIdException(teamId);
-        }
-    }
-
-    private boolean isExistTeam(int teamId){return teamRepository.isExistTeam(teamId);}
-
     private void throwIfTeamNameIsOverflow(String teamName){
         int length = teamName.length();
         if(length > 1000){
@@ -142,7 +134,16 @@ public class DefaultTeamManager implements TeamManager{
 
     @Override
     public void deleteTeamById(int teamId){
+        throwIfUnknownTeamId(teamId);
         teamRepository.deleteTeamById(teamId);
     }
+
+    private void throwIfUnknownTeamId(int teamId){
+        if(!isExistTeam(teamId)){
+            throw new UnknownTeamIdException(teamId);
+        }
+    }
+
+    private boolean isExistTeam(int teamId){return teamRepository.isExistTeam(teamId);}
 
 }

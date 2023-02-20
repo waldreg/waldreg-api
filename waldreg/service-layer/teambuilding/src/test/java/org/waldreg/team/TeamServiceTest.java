@@ -7,6 +7,7 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.mock.mockito.MockBean;
@@ -403,10 +404,29 @@ public class TeamServiceTest{
         //given
         int teamId = 1;
 
-        //when&then
+        //when
+        Mockito.when(teamRepository.isExistTeam(Mockito.anyInt())).thenReturn(true);
+
+        //then
         Assertions.assertDoesNotThrow(() -> teamManager.deleteTeamById(teamId));
 
     }
+
+    @Test
+    @DisplayName("팀빌딩 그룹 내 팀 삭제 실패 테스트 - 없는 team_id")
+    public void DELETE_TEAM_IN_TEAM_BUILDING_FAIL_CAUSE_UNKNOWN_TEAM_ID_TEST(){
+        //given
+        int teamId = 1;
+
+        //when
+        Mockito.when(teamRepository.isExistTeam(Mockito.anyInt())).thenReturn(false);
+
+        //then
+        Assertions.assertThrows(UnknownTeamIdException.class, () -> teamManager.deleteTeamById(teamId));
+
+    }
+
+
 
     private List<TeamDto> createTeamDtoList(int teamBuildingId){
         List<TeamDto> teamDtoList = new ArrayList<>();
