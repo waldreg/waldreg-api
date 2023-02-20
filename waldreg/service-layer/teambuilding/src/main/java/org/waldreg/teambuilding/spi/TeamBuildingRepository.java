@@ -5,7 +5,9 @@ import org.waldreg.teambuilding.dto.TeamBuildingDto;
 
 public interface TeamBuildingRepository{
 
-    void createTeamBuilding(TeamBuildingDto teamBuildingDto);
+    TeamBuildingDto createTeamBuilding(String title);
+
+    void updateTeamListInTeamBuilding(TeamBuildingDto teamBuildingDto);
 
     TeamBuildingDto readTeamBuildingById(int teamBuildingId);
 

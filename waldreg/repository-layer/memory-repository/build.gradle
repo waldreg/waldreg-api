@@ -31,6 +31,7 @@ dependencies {
     implementation project(':service-layer:reward')
     implementation project(':service-layer:board')
     implementation project(':service-layer:attendance')
+    implementation project(':service-layer:teambuilding')
 
     implementation 'org.springframework.boot:spring-boot-starter'
     implementation 'org.springframework.boot:spring-boot-starter-web'

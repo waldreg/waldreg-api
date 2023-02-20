@@ -20,18 +20,21 @@ import org.waldreg.teambuilding.management.teamcreator.TeamCreator;
 import org.waldreg.teambuilding.management.teamcreator.TeamCreator.Team;
 import org.waldreg.teambuilding.spi.TeamBuildingRepository;
 import org.waldreg.teambuilding.spi.TeamBuildingUserRepository;
+import org.waldreg.teambuilding.spi.TeamBuildingsTeamRepository;
 
 @Service
 public class DefaultTeamBuildingManager implements TeamBuildingManager{
 
     private final TeamBuildingRepository teamBuildingRepository;
     private final TeamBuildingUserRepository teamBuildingUserRepository;
+    private final TeamBuildingsTeamRepository teamBuildingsTeamRepository;
     private final TeamCreator teamCreator;
 
     @Autowired
-    public DefaultTeamBuildingManager(TeamBuildingRepository teamBuildingRepository, TeamBuildingUserRepository teamBuildingUserRepository, TeamCreator teamCreator){
+    public DefaultTeamBuildingManager(TeamBuildingRepository teamBuildingRepository, TeamBuildingUserRepository teamBuildingUserRepository, TeamBuildingsTeamRepository teamBuildingsTeamRepository, TeamCreator teamCreator){
         this.teamBuildingRepository = teamBuildingRepository;
         this.teamBuildingUserRepository = teamBuildingUserRepository;
+        this.teamBuildingsTeamRepository = teamBuildingsTeamRepository;
         this.teamCreator = teamCreator;
     }
 
@@ -46,8 +49,29 @@ public class DefaultTeamBuildingManager implements TeamBuildingManager{
         throwIfUserWeightIsOutOfRange(userRequestDtoList);
         throwIfUnknownUserIdDetected(userRequestDtoList);
         List<TeamDto> teamDtoList = createTeamDtoList(userRequestDtoList, teamCount);
-        TeamBuildingDto teamBuildingDto = buildTeamBuildingDto(teamBuildingTitle, teamDtoList);
-        teamBuildingRepository.createTeamBuilding(teamBuildingDto);
+        TeamBuildingDto teamBuildingDto = teamBuildingRepository.createTeamBuilding(teamBuildingTitle);
+        teamDtoList = createTeamInTeamDtoList(setTeamBuildingIdOfTeamDtoList(teamBuildingDto.getTeamBuildingId(),teamDtoList));
+        teamBuildingRepository.updateTeamListInTeamBuilding(setTeamDtoListOfTeamBuilding(teamBuildingDto, teamDtoList));
+    }
+
+    private List<TeamDto> setTeamBuildingIdOfTeamDtoList(int teamBuildingId, List<TeamDto> teamDtoList){
+        for(TeamDto teamDto : teamDtoList){
+            teamDto.setTeamBuildingId(teamBuildingId);
+        }
+        return teamDtoList;
+    }
+
+    private List<TeamDto> createTeamInTeamDtoList(List<TeamDto> teamDtoList){
+        List<TeamDto> storedTeamDtoList = new ArrayList<>();
+        for(TeamDto teamDto : teamDtoList){
+            storedTeamDtoList.add(teamBuildingsTeamRepository.createTeam(teamDto));
+        }
+        return storedTeamDtoList;
+    }
+
+    private TeamBuildingDto setTeamDtoListOfTeamBuilding(TeamBuildingDto teamBuildingDto, List<TeamDto> teamDtoList){
+        teamBuildingDto.setTeamDtoList(teamDtoList);
+        return teamBuildingDto;
     }
 
     private void throwIfTeamCountIsLessThanOrEqualToZero(int teamCount){

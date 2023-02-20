@@ -67,7 +67,7 @@ public class TeamBuildingDto{
 
         private int teamBuildingId;
         private String teamBuildingTitle;
-        private final LocalDateTime createdAt;
+        private LocalDateTime createdAt;
         private LocalDateTime lastModifiedAt;
         private List<TeamDto> teamDtoList;
 
@@ -82,6 +82,11 @@ public class TeamBuildingDto{
 
         public Builder teamBuildingTitle(String teamBuildingTitle){
             this.teamBuildingTitle = teamBuildingTitle;
+            return this;
+        }
+
+        public Builder createdAt(LocalDateTime createdAt){
+            this.createdAt = createdAt;
             return this;
         }
 

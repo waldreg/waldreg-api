@@ -1,6 +1,7 @@
 package org.waldreg.team.spi;
 
 import java.util.List;
+import java.util.Optional;
 import org.waldreg.team.dto.TeamDto;
 import org.waldreg.team.dto.UserDto;
 
