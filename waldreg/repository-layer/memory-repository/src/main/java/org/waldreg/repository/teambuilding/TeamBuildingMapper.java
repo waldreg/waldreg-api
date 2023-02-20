@@ -65,6 +65,14 @@ public class TeamBuildingMapper{
                 .build();
     }
 
+    public List<TeamBuildingDto> teamBuildingDomainListToTeamBuildingDtoList(List<TeamBuilding> teamBuildingList){
+        List<TeamBuildingDto> teamBuildingDtoList = new ArrayList<>();
+        for (TeamBuilding teamBuilding : teamBuildingList){
+            teamBuildingDtoList.add(teamBuildingDomainToTeamBuildingDto(teamBuilding));
+        }
+        return teamBuildingDtoList;
+    }
+
     public TeamBuildingDto teamBuildingDomainToTeamBuildingDto(TeamBuilding teamBuilding){
         TeamBuildingDto.Builder builder = TeamBuildingDto.builder()
                 .teamBuildingId(teamBuilding.getTeamBuildingId())

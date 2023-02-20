@@ -1,5 +1,7 @@
 package org.waldreg.repository;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -10,6 +12,8 @@ import org.waldreg.domain.teambuilding.TeamBuilding;
 public class MemoryTeamBuildingStorage{
 
     private final AtomicInteger atomicInteger;
+
+    private final int startIndex = 0;
 
     private final Map<Integer, TeamBuilding> storage;
 
@@ -34,6 +38,22 @@ public class MemoryTeamBuildingStorage{
 
     public TeamBuilding readTeamBuildingById(int teamBuildingId){
         return storage.get(teamBuildingId);
+    }
+
+    public List<TeamBuilding> readAllTeamBuilding(int startIdx, int endIdx){
+        int index = startIndex;
+        List<TeamBuilding> teamBuildingList = new ArrayList<>();
+        for(Map.Entry<Integer, TeamBuilding> teamBuildingEntry : storage.entrySet()){
+            if(isInRange(index, startIndex, endIdx)){
+                teamBuildingList.add(teamBuildingEntry.getValue());
+            }
+            index++;
+        }
+        return teamBuildingList;
+    }
+
+    private boolean isInRange(int index, int startIdx, int endIdx){
+        return index >= startIdx && index <= endIdx;
     }
 
 }

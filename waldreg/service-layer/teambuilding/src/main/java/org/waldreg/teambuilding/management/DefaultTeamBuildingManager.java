@@ -5,17 +5,17 @@ import java.util.Collections;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.waldreg.exception.ContentOverflowException;
+import org.waldreg.exception.InvalidRangeException;
+import org.waldreg.exception.InvalidTeamCountException;
+import org.waldreg.exception.InvalidUserWeightException;
+import org.waldreg.exception.UnknownTeamBuildingIdException;
+import org.waldreg.exception.UnknownUserIdException;
 import org.waldreg.teambuilding.dto.TeamBuildingDto;
 import org.waldreg.teambuilding.dto.TeamBuildingRequestDto;
 import org.waldreg.teambuilding.dto.TeamDto;
 import org.waldreg.teambuilding.dto.UserDto;
 import org.waldreg.teambuilding.dto.UserRequestDto;
-import org.waldreg.exception.ContentOverflowException;
-import org.waldreg.exception.InvalidRangeException;
-import org.waldreg.exception.InvalidTeamCountException;
-import org.waldreg.exception.UnknownUserIdException;
-import org.waldreg.exception.InvalidUserWeightException;
-import org.waldreg.exception.UnknownTeamBuildingIdException;
 import org.waldreg.teambuilding.management.teamcreator.TeamCreator;
 import org.waldreg.teambuilding.management.teamcreator.TeamCreator.Team;
 import org.waldreg.teambuilding.spi.TeamBuildingRepository;
@@ -50,12 +50,12 @@ public class DefaultTeamBuildingManager implements TeamBuildingManager{
         throwIfUnknownUserIdDetected(userRequestDtoList);
         List<TeamDto> teamDtoList = createTeamDtoList(userRequestDtoList, teamCount);
         TeamBuildingDto teamBuildingDto = teamBuildingRepository.createTeamBuilding(teamBuildingTitle);
-        teamDtoList = createTeamInTeamDtoList(setTeamBuildingIdOfTeamDtoList(teamBuildingDto.getTeamBuildingId(),teamDtoList));
+        teamDtoList = createTeamInTeamDtoList(setTeamBuildingIdOfTeamDtoList(teamBuildingDto.getTeamBuildingId(), teamDtoList));
         teamBuildingRepository.updateTeamListInTeamBuilding(setTeamDtoListOfTeamBuilding(teamBuildingDto, teamDtoList));
     }
 
     private List<TeamDto> setTeamBuildingIdOfTeamDtoList(int teamBuildingId, List<TeamDto> teamDtoList){
-        for(TeamDto teamDto : teamDtoList){
+        for (TeamDto teamDto : teamDtoList){
             teamDto.setTeamBuildingId(teamBuildingId);
         }
         return teamDtoList;
@@ -63,7 +63,7 @@ public class DefaultTeamBuildingManager implements TeamBuildingManager{
 
     private List<TeamDto> createTeamInTeamDtoList(List<TeamDto> teamDtoList){
         List<TeamDto> storedTeamDtoList = new ArrayList<>();
-        for(TeamDto teamDto : teamDtoList){
+        for (TeamDto teamDto : teamDtoList){
             storedTeamDtoList.add(teamBuildingsTeamRepository.createTeam(teamDto));
         }
         return storedTeamDtoList;
@@ -99,8 +99,8 @@ public class DefaultTeamBuildingManager implements TeamBuildingManager{
     }
 
     private void throwIfUnknownUserIdDetected(List<UserRequestDto> userRequestDtoList){
-        for(UserRequestDto userRequestDto : userRequestDtoList){
-            if(!isExistUserId(userRequestDto.getUserId())){
+        for (UserRequestDto userRequestDto : userRequestDtoList){
+            if (!isExistUserId(userRequestDto.getUserId())){
                 throw new UnknownUserIdException(userRequestDto.getUserId());
             }
         }

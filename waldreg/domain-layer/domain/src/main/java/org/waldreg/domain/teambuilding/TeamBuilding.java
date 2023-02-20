@@ -96,7 +96,6 @@ public final class TeamBuilding{
         }
 
         public Builder lastModifiedAt(LocalDateTime lastModifiedAt){
-            System.out.println("jnkhhjkhjkhj");
             this.lastModifiedAt = lastModifiedAt;
             return this;
         }
