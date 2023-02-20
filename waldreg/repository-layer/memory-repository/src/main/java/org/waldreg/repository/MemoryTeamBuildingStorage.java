@@ -32,4 +32,8 @@ public class MemoryTeamBuildingStorage{
         storage.clear();
     }
 
+    public TeamBuilding readTeamBuildingById(int teamBuildingId){
+        return storage.get(teamBuildingId);
+    }
+
 }

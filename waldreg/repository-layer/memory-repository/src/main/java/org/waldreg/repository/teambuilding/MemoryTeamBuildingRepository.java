@@ -36,7 +36,8 @@ public class MemoryTeamBuildingRepository implements TeamBuildingRepository{
 
     @Override
     public TeamBuildingDto readTeamBuildingById(int teamBuildingId){
-        return null;
+        TeamBuilding teamBuilding = memoryTeamBuildingStorage.readTeamBuildingById(teamBuildingId);
+        return teamBuildingMapper.teamBuildingDomainToTeamBuildingDto(teamBuilding);
     }
 
     @Override
