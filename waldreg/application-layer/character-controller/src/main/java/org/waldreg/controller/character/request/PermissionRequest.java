@@ -10,6 +10,10 @@ public final class PermissionRequest{
     @JsonProperty("permission_id")
     private Integer id;
 
+    @NotBlank(message = "CHARACTER-421 permission_service cannot be blank")
+    @JsonProperty("permission_service")
+    private String permissionService;
+
     @NotBlank(message = "CHARACTER-416 permission_name cannot be blank")
     @JsonProperty("permission_name")
     private String name;
@@ -22,6 +26,7 @@ public final class PermissionRequest{
 
     private PermissionRequest(Builder builder){
         this.id = builder.id;
+        this.permissionService = builder.permissionService;
         this.name = builder.name;
         this.status = builder.status;
     }
@@ -34,29 +39,22 @@ public final class PermissionRequest{
         return name;
     }
 
-    public void setName(String name){
-        this.name = name;
-    }
-
     public String getStatus(){
         return status;
-    }
-
-    public void setStatus(String status){
-        this.status = status;
     }
 
     public Integer getId(){
         return id;
     }
 
-    public void setId(Integer id){
-        this.id = id;
+    public String getPermissionService(){
+        return permissionService;
     }
 
-    public final static class Builder{
+    public static final class Builder{
 
         private Integer id;
+        private String permissionService;
         private String name;
         private String status;
 
@@ -64,6 +62,11 @@ public final class PermissionRequest{
 
         public Builder id(Integer id){
             this.id = id;
+            return this;
+        }
+
+        public Builder permissionService(String permissionService){
+            this.permissionService = permissionService;
             return this;
         }
 
