@@ -9,6 +9,7 @@ import org.waldreg.repository.MemoryUserStorage;
 import org.waldreg.token.dto.TokenUserDto;
 import org.waldreg.token.exception.PasswordMissMatchException;
 import org.waldreg.token.spi.AuthRepository;
+import org.waldreg.token.exception.UnknownUserIdException;
 
 @Repository
 public class MemoryAuthRepository implements AuthRepository{
@@ -27,16 +28,21 @@ public class MemoryAuthRepository implements AuthRepository{
 
     @Override
     public TokenUserDto findUserByUserIdPassword(String userId, String userPassword){
+        throwIfUnknownUserIdException(userId);
         User user = memoryUserStorage.readUserByUserId(userId);
-        throwIfUserDoesNotExist(user, userPassword);
+        throwIfPasswordMissMatch(user, userPassword);
         return TokenUserDto.builder()
                 .id(user.getId())
                 .userId(user.getUserId())
                 .userPassword(user.getUserPassword())
                 .build();
     }
-
-    private void throwIfUserDoesNotExist(User user, String userPassword){
+    private void throwIfUnknownUserIdException(String userId){
+        if(!memoryUserStorage.isExistUserId(userId)){
+            throw new UnknownUserIdException(userId);
+        }
+    }
+    private void throwIfPasswordMissMatch(User user, String userPassword){
         if (!user.getUserPassword().equals(userPassword)){
             throw new PasswordMissMatchException(user.getUserId(),userPassword);
         }

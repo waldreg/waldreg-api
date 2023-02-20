@@ -6,20 +6,11 @@ import org.springframework.stereotype.Service;
 import org.waldreg.controller.user.request.UpdateUserRequest;
 import org.waldreg.controller.user.response.UserListResponse;
 import org.waldreg.user.dto.UserDto;
-import org.waldreg.controller.user.request.UserRequest;
+import org.waldreg.controller.joiningpool.request.UserRequest;
 import org.waldreg.controller.user.response.UserResponse;
 
 @Service
 public class ControllerUserMapper{
-
-    public UserDto userRequestToUserDto(UserRequest createRequest){
-        return UserDto.builder()
-                .userId(createRequest.getUserId())
-                .name(createRequest.getName())
-                .userPassword(createRequest.getUserPassword())
-                .phoneNumber(createRequest.getPhoneNumber())
-                .build();
-    }
 
     public UserDto updateUserRequestToUserDto(UpdateUserRequest updateUserRequest){
         return UserDto.builder()

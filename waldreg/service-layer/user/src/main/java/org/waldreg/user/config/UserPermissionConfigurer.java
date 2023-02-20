@@ -22,6 +22,7 @@ public class UserPermissionConfigurer{
         configFireOtherUserPermission();
         configUpdateUserCharacterPermission();
         configReadOtherUserPermission();
+        configJoinUserPermission();
     }
 
     private void configFireOtherUserPermission(){
@@ -52,6 +53,14 @@ public class UserPermissionConfigurer{
                 .permissionVerifiable((s) -> s.equals("true"))
                 .statusList(List.of("true", "false"))
                 .build());
+    }
+    private void configJoinUserPermission(){
+        permissionExtension.extend(DefaultPermissionUnit.builder()
+                                           .name("User join manager")
+                                           .info("If set true, can handle other user's join request")
+                                           .permissionVerifiable((s) -> s.equals("true"))
+                                           .statusList(List.of("true", "false"))
+                                           .build());
     }
 
 }
