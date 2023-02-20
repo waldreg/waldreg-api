@@ -12,10 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
-import org.waldreg.exception.DuplicateUserSelectException;
-import org.waldreg.exception.DuplicatedTeamNameException;
-import org.waldreg.exception.UnknownTeamBuildingIdException;
-import org.waldreg.exception.UnknownUserIdException;
+import org.waldreg.exception.*;
 import org.waldreg.team.dto.TeamDto;
 import org.waldreg.team.dto.TeamRequestDto;
 import org.waldreg.team.management.DefaultTeamManager;
@@ -140,8 +137,8 @@ public class TeamServiceTest{
 
         //when
         Mockito.when(teamInTeamBuildingRepository.isExistTeamBuilding(Mockito.anyInt())).thenReturn(true);
-        Mockito.when(teamRepository.readAllTeamByTeamBuildingId(Mockito.anyInt())).thenReturn(teamDtoList);
         Mockito.when(teamUserRepository.isExistUserByUserId(Mockito.anyString())).thenReturn(false);
+        Mockito.when(teamRepository.readAllTeamByTeamBuildingId(Mockito.anyInt())).thenReturn(teamDtoList);
 
         //then
         Assertions.assertThrows(UnknownUserIdException.class, () -> teamManager.createTeam(teamBuildingId, teamRequestDto));
@@ -169,6 +166,7 @@ public class TeamServiceTest{
                 .build();
 
         //when
+        Mockito.when(teamRepository.isExistTeam(Mockito.anyInt())).thenReturn(true);
         Mockito.when(teamRepository.readTeamById(Mockito.anyInt())).thenReturn(teamDto);
         teamManager.updateTeamById(teamId, teamRequestDto);
         teamDto.setTeamName("modifiedName");
@@ -182,6 +180,124 @@ public class TeamServiceTest{
                 () -> Assertions.assertEquals(teamDto.getLastModifiedAt(), result.getLastModifiedAt()),
                 () -> Assertions.assertEquals(teamDto.getUserList(), result.getUserList())
         );
+
+    }
+
+    @Test
+    @DisplayName("팀빌딩 그룹 내 팀 수정 실패 테스트 - 이미 다른 팀에 존재하는 user 추가 시도")
+    public void MODIFY_TEAM_IN_TEAM_BUILDING_FAIL_CAUSE_USER_ALREADY_IN_OTHER_TEAM_TEST(){
+        //given
+        int teamBuildingId = 1;
+        int teamId = 1;
+        String name = "new team";
+        List<TeamDto> teamDtoList = createTeamDtoList(teamBuildingId);
+        List<UserDto> userDtoList = createUserDtoList();
+        TeamRequestDto teamRequestDto = TeamRequestDto.builder()
+                .teamName(name)
+                .memberList(List.of("alcuk_id"))
+                .build();
+
+        //when
+        Mockito.when(teamRepository.isExistTeam(Mockito.anyInt())).thenReturn(true);
+        Mockito.when(teamRepository.readTeamById(Mockito.anyInt())).thenReturn(teamDtoList.get(0));
+        Mockito.when(teamRepository.readAllTeamByTeamBuildingId(Mockito.anyInt())).thenReturn(teamDtoList);
+        Mockito.when(teamUserRepository.isExistUserByUserId(Mockito.anyString())).thenReturn(true);
+        Mockito.when(teamRepository.readAllUserByTeamBuildingId(Mockito.anyInt())).thenReturn(userDtoList);
+
+        //then
+        Assertions.assertThrows(DuplicateUserSelectException.class, () -> teamManager.updateTeamById(teamId, teamRequestDto));
+
+    }
+
+    @Test
+    @DisplayName("팀빌딩 그룹 내 팀 수정 실패 테스트 - 중복된 team 이름")
+    public void MODIFY_TEAM_IN_TEAM_BUILDING_FAIL_CAUSE_DUPLICATED_TEAM_NAME_TEST(){
+        //given
+        int teamBuildingId = 1;
+        int teamId = 1;
+        String name = "team 1";
+        List<TeamDto> teamDtoList = createTeamDtoList(teamBuildingId);
+        TeamRequestDto teamRequestDto = TeamRequestDto.builder()
+                .teamName(name)
+                .memberList(List.of())
+                .build();
+
+        //when
+        Mockito.when(teamRepository.isExistTeam(Mockito.anyInt())).thenReturn(true);
+        Mockito.when(teamRepository.readTeamById(Mockito.anyInt())).thenReturn(teamDtoList.get(0));
+        Mockito.when(teamRepository.readAllTeamByTeamBuildingId(Mockito.anyInt())).thenReturn(teamDtoList);
+
+        //then
+        Assertions.assertThrows(DuplicatedTeamNameException.class, () -> teamManager.updateTeamById(teamId, teamRequestDto));
+
+    }
+
+    @Test
+    @DisplayName("팀빌딩 그룹 내 팀 수정 실패 테스트 - 없는 team_id")
+    public void MODIFY_TEAM_IN_TEAM_BUILDING_FAIL_CAUSE_UNKNOWN_TEAM_ID_TEST(){
+        //given
+        int teamBuildingId = 1;
+        int teamId = 0;
+        String name = "new team";
+        List<TeamDto> teamDtoList = createTeamDtoList(teamBuildingId);
+        TeamRequestDto teamRequestDto = TeamRequestDto.builder()
+                .teamName(name)
+                .memberList(List.of())
+                .build();
+
+        //when
+        Mockito.when(teamRepository.isExistTeam(Mockito.anyInt())).thenReturn(false);
+        Mockito.when(teamRepository.readTeamById(Mockito.anyInt())).thenReturn(teamDtoList.get(0));
+        Mockito.when(teamRepository.readAllTeamByTeamBuildingId(Mockito.anyInt())).thenReturn(teamDtoList);
+
+        //then
+        Assertions.assertThrows(UnknownTeamIdException.class, () -> teamManager.updateTeamById(teamId, teamRequestDto));
+
+    }
+
+    @Test
+    @DisplayName("팀빌딩 그룹 내 팀 수정 실패 테스트 - team_name이 1000자 초과")
+    public void MODIFY_TEAM_IN_TEAM_BUILDING_FAIL_CAUSE_TEAM_NAME_OVERFLOW_TEST(){
+        //given
+        int teamBuildingId = 1;
+        int teamId = 0;
+        String name = createOverflow();
+        List<TeamDto> teamDtoList = createTeamDtoList(teamBuildingId);
+        TeamRequestDto teamRequestDto = TeamRequestDto.builder()
+                .teamName(name)
+                .memberList(List.of())
+                .build();
+
+        //when
+        Mockito.when(teamRepository.isExistTeam(Mockito.anyInt())).thenReturn(true);
+        Mockito.when(teamRepository.readTeamById(Mockito.anyInt())).thenReturn(teamDtoList.get(0));
+        Mockito.when(teamRepository.readAllTeamByTeamBuildingId(Mockito.anyInt())).thenReturn(teamDtoList);
+
+        //then
+        Assertions.assertThrows(ContentOverflowException.class, () -> teamManager.updateTeamById(teamId, teamRequestDto));
+
+    }
+
+    @Test
+    @DisplayName("팀빌딩 그룹 내 팀 수정 실패 테스트 - 없는 user_id")
+    public void MODIFY_TEAM_IN_TEAM_BUILDING_FAIL_CAUSE_UNKNOWN_USER_ID_TEST(){
+        //given
+        int teamBuildingId = 1;
+        int teamId = 0;
+        String name = "new team";
+        List<TeamDto> teamDtoList = createTeamDtoList(teamBuildingId);
+        TeamRequestDto teamRequestDto = TeamRequestDto.builder()
+                .teamName(name)
+                .memberList(List.of())
+                .build();
+
+        //when
+        Mockito.when(teamRepository.isExistTeam(Mockito.anyInt())).thenReturn(false);
+        Mockito.when(teamRepository.readTeamById(Mockito.anyInt())).thenReturn(teamDtoList.get(0));
+        Mockito.when(teamRepository.readAllTeamByTeamBuildingId(Mockito.anyInt())).thenReturn(teamDtoList);
+
+        //then
+        Assertions.assertThrows(UnknownTeamIdException.class, () -> teamManager.updateTeamById(teamId, teamRequestDto));
 
     }
 
@@ -263,6 +379,14 @@ public class TeamServiceTest{
                 .userId(userId)
                 .name("name")
                 .build();
+    }
+
+    private String createOverflow(){
+        String title = "";
+        for (int i = 0; i < 1005; i++){
+            title = title + "A";
+        }
+        return title;
     }
 
 }
