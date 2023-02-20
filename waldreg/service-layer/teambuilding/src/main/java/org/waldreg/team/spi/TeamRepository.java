@@ -18,4 +18,5 @@ public interface TeamRepository{
 
     List<UserDto> readAllUserByTeamBuildingId(int teamBuildingId);
 
+    boolean isExistTeam(int teamId);
 }
