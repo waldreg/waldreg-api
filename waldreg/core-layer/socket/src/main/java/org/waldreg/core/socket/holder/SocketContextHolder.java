@@ -14,6 +14,7 @@ public class SocketContextHolder implements SocketContenxtCascadable, SocketCont
     private int id;
     private boolean isCascaded = false;
     private final SessionStageGettable sessionStageGettable;
+    private final Object lock = new Object();
 
     @Autowired
     public SocketContextHolder(SessionStageGettable sessionStageGettable){
@@ -22,11 +23,13 @@ public class SocketContextHolder implements SocketContenxtCascadable, SocketCont
 
     @Override
     public void cascade(String sessionId){
-        if(isCascaded){
-            return;
+        synchronized (lock){
+            if (isCascaded){
+                return;
+            }
+            id = sessionStageGettable.getIdAndDeprecate(sessionId);
+            isCascaded = true;
         }
-        id = sessionStageGettable.getIdAndDeprecate(sessionId);
-        isCascaded = true;
     }
 
     @Override

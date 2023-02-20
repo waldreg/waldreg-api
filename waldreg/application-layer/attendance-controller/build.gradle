@@ -28,6 +28,7 @@ dependencies {
     implementation project(':stable-service-layer:character')
     implementation project(':service-layer:auth')
     implementation project(':service-layer:attendance')
+    implementation project(':core-layer:socket')
     implementation project(':core-layer:util')
 
     implementation 'org.springframework.boot:spring-boot-starter'

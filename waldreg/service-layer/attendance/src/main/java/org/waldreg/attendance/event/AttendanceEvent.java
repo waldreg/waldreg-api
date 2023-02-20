@@ -29,6 +29,8 @@ public final class AttendanceEvent implements AttendanceIdentifyValidable{
 
     @SuppressWarnings("all")
     private volatile int attendanceStarter;
+    @SuppressWarnings("all")
+    private volatile String attendanceStartedSession;
     private volatile String attendanceIdentify;
     private final ExecutorService executorService;
     private final ApplicationEventPublisher applicationEventPublisher;
@@ -75,11 +77,13 @@ public final class AttendanceEvent implements AttendanceIdentifyValidable{
     @EventListener(AttendanceStartEvent.class)
     public void startAttendance(AttendanceStartEvent attendanceStartEvent){
         stopAttendance();
-        attendanceStarter = attendanceStartEvent.getAttendanceStarterId();
+        attendanceStarter = attendanceStartEvent.getId();
+        attendanceStartedSession = attendanceStartEvent.getSessionId();
         attendanceIdentify = String.valueOf(random.nextInt(8000) + 1000);
         futureMap.put(atomicInteger.getAndIncrement(), executorService.submit(attendanceRunner()));
         applicationEventPublisher.publishEvent(AttendanceStartedEvent.builder()
-                .attendanceStarterId(attendanceStartEvent.getAttendanceStarterId())
+                .attendanceStarterId(attendanceStarter)
+                .attendanceStarterSessionId(attendanceStartedSession)
                 .attendanceIdentify(attendanceIdentify)
                 .build());
     }
