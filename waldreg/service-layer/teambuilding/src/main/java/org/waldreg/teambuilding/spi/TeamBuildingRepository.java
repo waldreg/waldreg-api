@@ -13,7 +13,7 @@ public interface TeamBuildingRepository{
 
     List<TeamBuildingDto> readAllTeamBuilding(int startIdx, int endIdx);
 
-    void updateTeamBuildingTitleById(int teamBuildingId, TeamBuildingDto teamBuildingDto);
+    void updateTeamBuildingTitleById(int teamBuildingId, String teamBuildingTitle);
 
     void deleteTeamBuildingById(int teamBuildingId);
 

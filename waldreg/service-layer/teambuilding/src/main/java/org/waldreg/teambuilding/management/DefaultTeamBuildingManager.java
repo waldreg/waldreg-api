@@ -190,7 +190,7 @@ public class DefaultTeamBuildingManager implements TeamBuildingManager{
         throwIfTeamBuildingTitleIsOverflow(teamBuildingTitle);
         TeamBuildingDto teamBuildingDto = teamBuildingRepository.readTeamBuildingById(teamBuildingId);
         teamBuildingDto.setTeamBuildingTitle(teamBuildingTitle);
-        teamBuildingRepository.updateTeamBuildingTitleById(teamBuildingId, teamBuildingDto);
+        teamBuildingRepository.updateTeamBuildingTitleById(teamBuildingId, teamBuildingTitle);
     }
 
     private void throwIfTeamBuildingTitleIsOverflow(String teamBuildingTitle){
