@@ -6,6 +6,8 @@ public interface PermissionUnit{
 
     int getId();
 
+    String getService();
+
     String getName();
 
     String getInfo();

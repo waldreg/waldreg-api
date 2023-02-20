@@ -16,7 +16,7 @@ import org.waldreg.character.permission.management.PermissionUnitManager;
 
 @ExtendWith(SpringExtension.class)
 @ContextConfiguration(classes = {DefaultPermissionVerifier.class, DefaultPermissionExtension.class, PermissionUnitManager.class})
-public class PermissionVerifierTest{
+class PermissionVerifierTest{
 
     @Autowired
     private PermissionVerifier permissionVerifier;
@@ -26,12 +26,13 @@ public class PermissionVerifierTest{
 
     @Test
     @DisplayName("PermissionVerifier 검증 동작 테스트")
-    public void VERIFY_PERMISSION_SUCCESS_TEST(){
+    void VERIFY_PERMISSION_SUCCESS_TEST(){
         // given
         String name = "permission";
         List<String> statusList = List.of("success", "fail");
 
         PermissionUnit permissionUnit = DefaultPermissionUnit.builder()
+                .service("character")
                 .name(name)
                 .permissionVerifiable((s) -> s.equals("success"))
                 .statusList(statusList)

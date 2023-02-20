@@ -23,6 +23,7 @@ public class CharacterMapper{
         for (PermissionDto permissionDto : permissionDtoList){
             permissionList.add(Permission.builder()
                     .id(permissionDto.getId())
+                    .service(permissionDto.getService())
                     .name(permissionDto.getName())
                     .status(permissionDto.getStatus())
                     .build());
@@ -43,6 +44,7 @@ public class CharacterMapper{
         for (Permission permission : permissionList){
             permissionDtoList.add(PermissionDto.builder()
                     .id(permission.getId())
+                    .service(permission.getService())
                     .name(permission.getName())
                     .status(permission.getStatus())
                     .build());

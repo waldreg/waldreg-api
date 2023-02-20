@@ -17,7 +17,7 @@ import org.waldreg.character.exception.UnknownPermissionException;
 
 @ExtendWith(SpringExtension.class)
 @ContextConfiguration(classes = {PermissionUnitManager.class})
-public class PermissionUnitManagerTest{
+class PermissionUnitManagerTest{
 
     @Autowired
     private PermissionUnitManager permissionUnitManager;
@@ -30,15 +30,17 @@ public class PermissionUnitManagerTest{
 
     @Test
     @DisplayName("PermissionUnit 생성 성공 테스트")
-    public void ADD_DIFFERENT_TYPE_PERMISSION_UNIT_TEST(){
+    void ADD_DIFFERENT_TYPE_PERMISSION_UNIT_TEST(){
         // given
         PermissionUnit stringPermissionUnit = DefaultPermissionUnit.builder()
+                .service("character")
                 .name("permission 1")
                 .permissionVerifiable((s) -> s.equals("true"))
                 .statusList(List.of("true", "false"))
                 .build();
 
         PermissionUnit integerPermissionUnit = DefaultPermissionUnit.builder()
+                .service("character")
                 .name("permission 2")
                 .permissionVerifiable((s) -> s.equals("false"))
                 .statusList(List.of("true", "false"))
@@ -53,9 +55,10 @@ public class PermissionUnitManagerTest{
 
     @Test
     @DisplayName("중복 이름 PermissionUnit 등록 실패 테스트")
-    public void ADD_DUPLICATED_NAME_PERMISSION_UNIT_TEST(){
+    void ADD_DUPLICATED_NAME_PERMISSION_UNIT_TEST(){
         // given
         PermissionUnit stringPermissionUnit = DefaultPermissionUnit.builder()
+                .service("character")
                 .name("String permission")
                 .permissionVerifiable((s) -> s.equals("true"))
                 .statusList(List.of("true", "false"))
@@ -71,10 +74,11 @@ public class PermissionUnitManagerTest{
 
     @Test
     @DisplayName("PermissionUnit 이름 조회 성공 테스트")
-    public void GET_PERMISSION_UNIT_BY_NAME_TEST(){
+    void GET_PERMISSION_UNIT_BY_NAME_TEST(){
         // given
         String permissionName = "name";
         PermissionUnit stringPermissionUnit = DefaultPermissionUnit.builder()
+                .service("character")
                 .name(permissionName)
                 .permissionVerifiable((s) -> s.equals("true"))
                 .statusList(List.of("true", "false"))
@@ -94,7 +98,7 @@ public class PermissionUnitManagerTest{
 
     @Test
     @DisplayName("PermissionUnit 이름 조회 실패 테스트 - Permission을 찾을 수 없음")
-    public void GET_PERMISSION_UNIT_BY_NAME_FAIL_UNKNOWN_PERMISSION_TEST(){
+    void GET_PERMISSION_UNIT_BY_NAME_FAIL_UNKNOWN_PERMISSION_TEST(){
         // given
         String permissionName = "unknown name";
 
@@ -104,21 +108,24 @@ public class PermissionUnitManagerTest{
 
     @Test
     @DisplayName("PermissionUnitList 조회 성공 테스트")
-    public void GET_PERMISSION_UNIT_LIST_TEST(){
+    void GET_PERMISSION_UNIT_LIST_TEST(){
         // given
         PermissionUnit permissionUnit1 = DefaultPermissionUnit.builder()
+                .service("character")
                 .name("permission 1")
                 .permissionVerifiable((s) -> s.equals("true"))
                 .statusList(List.of("true", "false"))
                 .build();
 
         PermissionUnit permissionUnit2 = DefaultPermissionUnit.builder()
+                .service("character")
                 .name("permission 2")
                 .permissionVerifiable((s) -> s.equals("true"))
                 .statusList(List.of("true", "false"))
                 .build();
 
         PermissionUnit permissionUnit3 = DefaultPermissionUnit.builder()
+                .service("character")
                 .name("permission 3")
                 .permissionVerifiable((s) -> s.equals("true"))
                 .statusList(List.of("true", "false"))
