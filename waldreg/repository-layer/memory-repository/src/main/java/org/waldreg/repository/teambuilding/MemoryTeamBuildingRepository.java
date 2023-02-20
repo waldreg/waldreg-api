@@ -55,17 +55,17 @@ public class MemoryTeamBuildingRepository implements TeamBuildingRepository{
 
     @Override
     public void deleteTeamBuildingById(int teamBuildingId){
-
+        memoryTeamBuildingStorage.deleteTeamBuildingById(teamBuildingId);
     }
 
     @Override
     public boolean isExistTeamBuilding(int teamBuildingId){
-        return false;
+        return memoryTeamBuildingStorage.readTeamBuildingById(teamBuildingId) != null;
     }
 
     @Override
     public int readMaxIdx(){
-        return 0;
+        return memoryTeamBuildingStorage.getTeamBuildingMaxIdx();
     }
 
 }
