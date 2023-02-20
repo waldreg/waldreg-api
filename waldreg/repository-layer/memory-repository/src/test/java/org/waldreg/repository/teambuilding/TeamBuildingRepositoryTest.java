@@ -191,7 +191,7 @@ public class TeamBuildingRepositoryTest{
     }
 
     @Test
-    @DisplayName("teamBuildingId로 팀 빌딩 조회")
+    @DisplayName("팀 빌딩 제목 수정")
     public void UPDATE_TEAM_BUILDING_TITLE_BY_TEAM_BUILDING_ID_SUCCESS_TEST(){
         //given
         String title = "hirhrirhr";
@@ -231,6 +231,24 @@ public class TeamBuildingRepositoryTest{
                 () -> Assertions.assertEquals(teamBuildingDto.getTeamList().get(2).getUserList().get(0).getUserId(), result.getTeamList().get(2).getUserList().get(0).getUserId()),
                 () -> Assertions.assertEquals(teamBuildingDto.getTeamList().get(2).getUserList().size(), result.getTeamList().get(2).getUserList().size())
         );
+
+    }
+
+    @Test
+    @DisplayName("teamBuilding id로 팀빌딩 삭제")
+    public void DELETE_TEAM_LIST_IN_NEW_TEAM_BUILDING_SUCCESS_TEST(){
+        //given
+        String title = "hirhrirhr";
+
+        //when
+        TeamBuildingDto teamBuildingDto = teamBuildingRepository.createTeamBuilding(title);
+        List<TeamDto> teamDtoList = createTeamDtoList(teamBuildingDto.getTeamBuildingId());
+        teamBuildingDto.setTeamDtoList(teamDtoList);
+        teamBuildingRepository.updateTeamListInTeamBuilding(teamBuildingDto);
+        teamBuildingRepository.deleteTeamBuildingById(teamBuildingDto.getTeamBuildingId());
+
+        //then
+        Assertions.assertFalse(teamBuildingRepository.isExistTeamBuilding(teamBuildingDto.getTeamBuildingId()));
 
     }
 

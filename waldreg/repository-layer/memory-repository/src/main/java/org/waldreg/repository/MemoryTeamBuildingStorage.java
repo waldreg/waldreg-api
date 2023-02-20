@@ -43,8 +43,8 @@ public class MemoryTeamBuildingStorage{
     public List<TeamBuilding> readAllTeamBuilding(int startIdx, int endIdx){
         int index = startIndex;
         List<TeamBuilding> teamBuildingList = new ArrayList<>();
-        for(Map.Entry<Integer, TeamBuilding> teamBuildingEntry : storage.entrySet()){
-            if(isInRange(index, startIndex, endIdx)){
+        for (Map.Entry<Integer, TeamBuilding> teamBuildingEntry : storage.entrySet()){
+            if (isInRange(index, startIndex, endIdx)){
                 teamBuildingList.add(teamBuildingEntry.getValue());
             }
             index++;
@@ -54,6 +54,14 @@ public class MemoryTeamBuildingStorage{
 
     private boolean isInRange(int index, int startIdx, int endIdx){
         return index >= startIdx && index <= endIdx;
+    }
+
+    public void deleteTeamBuildingById(int teamBuildingId){
+        storage.remove(teamBuildingId);
+    }
+
+    public int getTeamBuildingMaxIdx(){
+        return storage.size();
     }
 
 }
