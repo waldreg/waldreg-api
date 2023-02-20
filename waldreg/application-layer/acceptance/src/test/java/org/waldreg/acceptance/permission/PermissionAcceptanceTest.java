@@ -368,6 +368,7 @@ public class PermissionAcceptanceTest{
                 MockMvcResultMatchers.jsonPath("$.id").isNumber(),
                 MockMvcResultMatchers.jsonPath("$.character_name").value(characterName),
                 MockMvcResultMatchers.jsonPath("$.permissions.[0].permission_id").isNumber(),
+                MockMvcResultMatchers.jsonPath("$.permissions.[0].permissions_service").isString(),
                 MockMvcResultMatchers.jsonPath("$.permissions.[0].permission_name").isString(),
                 MockMvcResultMatchers.jsonPath("$.permissions.[0].permission_status").isString()
         );
@@ -671,6 +672,7 @@ public class PermissionAcceptanceTest{
                 MockMvcResultMatchers.header().string("Api-version", apiVersion),
                 MockMvcResultMatchers.jsonPath("$.permissions").isArray(),
                 MockMvcResultMatchers.jsonPath("$.permissions.[0].permission_id").isNumber(),
+                MockMvcResultMatchers.jsonPath("$.permissions.[0].permissions_service").isString(),
                 MockMvcResultMatchers.jsonPath("$.permissions.[0].permission_name").isString(),
                 MockMvcResultMatchers.jsonPath("$.permissions.[0].permission_info").isString(),
                 MockMvcResultMatchers.jsonPath("$.permissions.[0].permission_status").isArray()

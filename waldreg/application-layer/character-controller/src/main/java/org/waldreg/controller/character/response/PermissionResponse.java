@@ -7,6 +7,8 @@ public final class PermissionResponse{
 
     @JsonProperty("permission_id")
     private int id;
+    @JsonProperty("permission_Service")
+    private String permissionService;
     @JsonProperty("permission_name")
     private String name;
     @JsonProperty("permission_info")
@@ -18,6 +20,7 @@ public final class PermissionResponse{
 
     private PermissionResponse(Builder builder){
         this.id = builder.id;
+        this.permissionService = builder.permissionService;
         this.name = builder.name;
         this.info = builder.info;
         this.statusList = builder.statusList;
@@ -39,29 +42,18 @@ public final class PermissionResponse{
         return statusList;
     }
 
-    public void setId(int id){
-        this.id = id;
-    }
-
-    public void setName(String name){
-        this.name = name;
-    }
-
-    public void setInfo(String info){
-        this.info = info;
-    }
-
-    public void setStatusList(List<String> statusList){
-        this.statusList = statusList;
-    }
-
     public int getId(){
         return id;
+    }
+
+    public String getPermissionService(){
+        return permissionService;
     }
 
     public static final class Builder{
 
         private int id;
+        private String permissionService;
         private String name;
         private String info;
         private List<String> statusList;
@@ -70,6 +62,11 @@ public final class PermissionResponse{
 
         public Builder id(int id){
             this.id = id;
+            return this;
+        }
+
+        public Builder permissionService(String permissionService){
+            this.permissionService = permissionService;
             return this;
         }
 
