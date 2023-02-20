@@ -47,8 +47,10 @@ public class MemoryTeamBuildingRepository implements TeamBuildingRepository{
     }
 
     @Override
-    public void updateTeamBuildingTitleById(int teamBuildingId, TeamBuildingDto teamBuildingDto){
-
+    public void updateTeamBuildingTitleById(int teamBuildingId, String teamBuildingTitle){
+        TeamBuilding teamBuilding = memoryTeamBuildingStorage.readTeamBuildingById(teamBuildingId);
+        teamBuilding.setTeamBuildingTitle(teamBuildingTitle);
+        memoryTeamBuildingStorage.updateTeamBuilding(teamBuilding);
     }
 
     @Override

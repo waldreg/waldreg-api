@@ -190,6 +190,50 @@ public class TeamBuildingRepositoryTest{
 
     }
 
+    @Test
+    @DisplayName("teamBuildingId로 팀 빌딩 조회")
+    public void UPDATE_TEAM_BUILDING_TITLE_BY_TEAM_BUILDING_ID_SUCCESS_TEST(){
+        //given
+        String title = "hirhrirhr";
+        String modifiedTitle = "merong";
+
+        //when
+        TeamBuildingDto teamBuildingDto = teamBuildingRepository.createTeamBuilding(title);
+        List<TeamDto> teamDtoList = createTeamDtoList(teamBuildingDto.getTeamBuildingId());
+        teamBuildingDto.setTeamDtoList(teamDtoList);
+        teamBuildingRepository.updateTeamListInTeamBuilding(teamBuildingDto);
+        teamBuildingRepository.updateTeamBuildingTitleById(teamBuildingDto.getTeamBuildingId(),modifiedTitle);
+        teamBuildingDto.setTeamBuildingTitle(modifiedTitle);
+        TeamBuildingDto result = teamBuildingRepository.readTeamBuildingById(teamBuildingDto.getTeamBuildingId());
+
+        //then
+        Assertions.assertAll(
+                () -> Assertions.assertEquals(teamBuildingDto.getTeamBuildingId(), result.getTeamBuildingId()),
+                () -> Assertions.assertEquals(modifiedTitle, result.getTeamBuildingTitle()),
+                () -> Assertions.assertEquals(teamBuildingDto.getLastModifiedAt(), result.getLastModifiedAt()),
+                () -> Assertions.assertEquals(teamBuildingDto.getCreatedAt(), result.getCreatedAt()),
+                () -> Assertions.assertEquals(teamBuildingDto.getTeamList().get(0).getTeamId(), result.getTeamList().get(0).getTeamId()),
+                () -> Assertions.assertEquals(teamBuildingDto.getTeamList().get(0).getTeamBuildingId(), result.getTeamList().get(0).getTeamBuildingId()),
+                () -> Assertions.assertEquals(teamBuildingDto.getTeamList().get(0).getLastModifiedAt(), result.getTeamList().get(0).getLastModifiedAt()),
+                () -> Assertions.assertEquals(teamBuildingDto.getTeamList().get(0).getTeamName(), result.getTeamList().get(0).getTeamName()),
+                () -> Assertions.assertEquals(teamBuildingDto.getTeamList().get(0).getUserList().get(0).getUserId(), result.getTeamList().get(0).getUserList().get(0).getUserId()),
+                () -> Assertions.assertEquals(teamBuildingDto.getTeamList().get(0).getUserList().size(), result.getTeamList().get(0).getUserList().size()),
+                () -> Assertions.assertEquals(teamBuildingDto.getTeamList().get(1).getTeamId(), result.getTeamList().get(1).getTeamId()),
+                () -> Assertions.assertEquals(teamBuildingDto.getTeamList().get(1).getTeamBuildingId(), result.getTeamList().get(1).getTeamBuildingId()),
+                () -> Assertions.assertEquals(teamBuildingDto.getTeamList().get(1).getLastModifiedAt(), result.getTeamList().get(1).getLastModifiedAt()),
+                () -> Assertions.assertEquals(teamBuildingDto.getTeamList().get(1).getTeamName(), result.getTeamList().get(1).getTeamName()),
+                () -> Assertions.assertEquals(teamBuildingDto.getTeamList().get(1).getUserList().get(0).getUserId(), result.getTeamList().get(1).getUserList().get(0).getUserId()),
+                () -> Assertions.assertEquals(teamBuildingDto.getTeamList().get(1).getUserList().size(), result.getTeamList().get(1).getUserList().size()),
+                () -> Assertions.assertEquals(teamBuildingDto.getTeamList().get(2).getTeamId(), result.getTeamList().get(2).getTeamId()),
+                () -> Assertions.assertEquals(teamBuildingDto.getTeamList().get(2).getTeamBuildingId(), result.getTeamList().get(2).getTeamBuildingId()),
+                () -> Assertions.assertEquals(teamBuildingDto.getTeamList().get(2).getLastModifiedAt(), result.getTeamList().get(2).getLastModifiedAt()),
+                () -> Assertions.assertEquals(teamBuildingDto.getTeamList().get(2).getTeamName(), result.getTeamList().get(2).getTeamName()),
+                () -> Assertions.assertEquals(teamBuildingDto.getTeamList().get(2).getUserList().get(0).getUserId(), result.getTeamList().get(2).getUserList().get(0).getUserId()),
+                () -> Assertions.assertEquals(teamBuildingDto.getTeamList().get(2).getUserList().size(), result.getTeamList().get(2).getUserList().size())
+        );
+
+    }
+
     private TeamBuildingDto createTeamBuildingDto(String title, List<TeamDto> teamDtoList){
         return TeamBuildingDto.builder()
                 .teamBuildingTitle(title)
