@@ -1,13 +1,14 @@
 package org.waldreg.character.spi;
 
 import java.util.List;
+import java.util.Optional;
 import org.waldreg.character.dto.CharacterDto;
 
 public interface CharacterRepository{
 
     void createCharacter(CharacterDto characterDto);
 
-    CharacterDto readCharacter(String characterName);
+    Optional<CharacterDto> readCharacter(String characterName);
 
     CharacterDto readCharacterByUserId(int id);
 
