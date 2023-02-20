@@ -7,7 +7,7 @@ public final class PermissionResponse{
 
     @JsonProperty("permission_id")
     private int id;
-    @JsonProperty("permission_Service")
+    @JsonProperty("permission_service")
     private String permissionService;
     @JsonProperty("permission_name")
     private String name;
