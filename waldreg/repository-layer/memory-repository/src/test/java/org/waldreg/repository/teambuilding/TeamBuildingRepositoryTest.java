@@ -14,6 +14,7 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.waldreg.repository.MemoryCharacterStorage;
 import org.waldreg.repository.MemoryTeamBuildingStorage;
+import org.waldreg.repository.MemoryTeamStorage;
 import org.waldreg.repository.MemoryUserStorage;
 import org.waldreg.repository.character.CharacterMapper;
 import org.waldreg.repository.character.MemoryCharacterRepository;
@@ -48,9 +49,15 @@ public class TeamBuildingRepositoryTest{
     @Autowired
     CharacterRepository characterRepository;
 
+
     @BeforeEach
     @AfterEach
-    private void DELETE_ALL(){memoryUserStorage.deleteAllUser();}
+    private void DELETE_ALL_USER(){memoryUserStorage.deleteAllUser();}
+
+    @BeforeEach
+    @AfterEach
+    private void DELETE_ALL_TEAM_BUILDING(){memoryTeamBuildingStorage.deleteAllTeamBuilding();}
+
 
     @Test
     @DisplayName("새로운 팀빌딩 그룹 생성")
@@ -72,6 +79,22 @@ public class TeamBuildingRepositoryTest{
 
     }
 
+    @Test
+    @DisplayName("새로 생성된 팀빌딩 그룹에 팀 목록 저장")
+    public void ADD_TEAM_LIST_IN_NEW_TEAM_BUILDING_SUCCESS_TEST(){
+        //given
+        String title = "hirhrirhr";
+
+        //when
+        TeamBuildingDto teamBuildingDto = teamBuildingRepository.createTeamBuilding(title);
+        List<TeamDto> teamDtoList = createTeamDtoList(teamBuildingDto.getTeamBuildingId());
+        TeamBuildingDto teamBuildingDto2 = createTeamBuildingDto(title,teamDtoList);
+
+        //then
+        Assertions.assertDoesNotThrow(() -> teamBuildingRepository.updateTeamListInTeamBuilding(teamBuildingDto2));
+
+    }
+
     private TeamBuildingDto createTeamBuildingDto(String title, List<TeamDto> teamDtoList){
         return TeamBuildingDto.builder()
                 .teamBuildingTitle(title)
@@ -79,17 +102,20 @@ public class TeamBuildingRepositoryTest{
                 .build();
     }
 
-    private List<TeamDto> createTeamDtoList(){
+    private List<TeamDto> createTeamDtoList(int teambuildingId){
         List<TeamDto> teamDtoList = new ArrayList<>();
         List<UserDto> userDtoList = createUserDtoList();
-        teamDtoList.add(createTeamDto("team 1", List.of(userDtoList.get(0), userDtoList.get(2))));
-        teamDtoList.add(createTeamDto("team 2", List.of(userDtoList.get(3), userDtoList.get(4))));
-        teamDtoList.add(createTeamDto("team 3", List.of(userDtoList.get(1), userDtoList.get(5))));
+        teamDtoList.add(createTeamDto(teambuildingId, 1,"team 1", List.of(userDtoList.get(0), userDtoList.get(2))));
+        teamDtoList.add(createTeamDto(teambuildingId,2, "team 2", List.of(userDtoList.get(3), userDtoList.get(4))));
+        teamDtoList.add(createTeamDto(teambuildingId,3, "team 3", List.of(userDtoList.get(1), userDtoList.get(5))));
         return teamDtoList;
     }
 
-    private TeamDto createTeamDto(String teamName, List<org.waldreg.teambuilding.dto.UserDto> userDtoList){
+    private TeamDto createTeamDto(int teamBuildingId, int teamId, String teamName, List<org.waldreg.teambuilding.dto.UserDto> userDtoList){
         return TeamDto.builder()
+                .teamBuildingId(teamBuildingId)
+                .teamId(teamId)
+                .lastModifiedAt(LocalDateTime.now())
                 .teamName(teamName)
                 .userDtoList(userDtoList)
                 .build();
