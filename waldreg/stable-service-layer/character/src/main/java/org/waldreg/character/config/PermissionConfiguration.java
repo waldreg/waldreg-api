@@ -21,9 +21,10 @@ public class PermissionConfiguration{
     @PostConstruct
     public void extendCharacterManagerPermission(){
         PermissionUnit characterManagerPermission = DefaultPermissionUnit.builder()
+                .service("Character")
                 .name("Character manager")
                 .info("If set true, Permission to edit, delete, or create new characters.")
-                .permissionVerifiable((s) -> s.equals("true"))
+                .permissionVerifiable(s -> s.equals("true"))
                 .statusList(List.of("true", "false"))
                 .build();
         permissionExtension.extend(characterManagerPermission);

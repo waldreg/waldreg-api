@@ -20,6 +20,7 @@ public class AttendanceConfig{
     @PostConstruct
     public void extendAttendancePermission(){
         permissionExtension.extend(DefaultPermissionUnit.builder()
+                .service("Attendance")
                 .name("Attendance manager")
                 .info("If set to true, you can start and manage attendance.")
                 .statusList(List.of("true", "false"))

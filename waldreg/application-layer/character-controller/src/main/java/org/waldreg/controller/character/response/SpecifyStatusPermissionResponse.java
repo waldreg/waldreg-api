@@ -6,6 +6,8 @@ public final class SpecifyStatusPermissionResponse{
 
     @JsonProperty("permission_id")
     private final int id;
+    @JsonProperty("permission_service")
+    private final String permissionService;
     @JsonProperty("permission_name")
     private final String name;
     @JsonProperty("permission_status")
@@ -17,6 +19,7 @@ public final class SpecifyStatusPermissionResponse{
 
     private SpecifyStatusPermissionResponse(Builder builder){
         this.id = builder.id;
+        this.permissionService = builder.permissionService;
         this.name = builder.name;
         this.status = builder.status;
     }
@@ -27,6 +30,11 @@ public final class SpecifyStatusPermissionResponse{
 
     public int getId(){
         return id;
+    }
+
+
+    public String getPermissionService(){
+        return permissionService;
     }
 
     public String getName(){
@@ -40,6 +48,7 @@ public final class SpecifyStatusPermissionResponse{
     public static final class Builder{
 
         private int id;
+        private String permissionService;
         private String name;
         private String status;
 
@@ -47,6 +56,11 @@ public final class SpecifyStatusPermissionResponse{
 
         public Builder id(int id){
             this.id = id;
+            return this;
+        }
+
+        public Builder permissionService(String permissionService){
+            this.permissionService = permissionService;
             return this;
         }
 

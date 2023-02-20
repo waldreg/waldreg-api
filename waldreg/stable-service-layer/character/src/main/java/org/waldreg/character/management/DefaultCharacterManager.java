@@ -90,6 +90,7 @@ public class DefaultCharacterManager implements CharacterManager{
             if(!permissionDtoMap.containsKey(permissionUnit.getName())){
                 PermissionDto permissionDto = PermissionDto.builder()
                         .id(permissionUnit.getId())
+                        .service(permissionUnit.getService())
                         .name(permissionUnit.getName())
                         .status(getStatusOfPermissionUnit(permissionUnit, false))
                         .build();
