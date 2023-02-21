@@ -29,7 +29,7 @@ import org.waldreg.controller.user.response.UserResponse;
 
 @SpringBootTest
 @AutoConfigureMockMvc
-public class PermissionAcceptanceTest{
+class PermissionAcceptanceTest{
 
     @Autowired
     private MockMvc mvc;
@@ -44,7 +44,7 @@ public class PermissionAcceptanceTest{
 
     @BeforeEach
     @AfterEach
-    public void INITIAL_PERMISSION() throws Exception{
+    void INITIAL_PERMISSION() throws Exception{
         String token = AuthenticationAcceptanceTestHelper.getAdminToken(mvc, objectMapper);
         for (String characterName : deleteWaitCharacterList){
             PermissionAcceptanceTestHelper.deleteSpecificCharacter(mvc, characterName, token);
@@ -75,7 +75,7 @@ public class PermissionAcceptanceTest{
 
     @BeforeEach
     @AfterEach
-    public void INITIATE_USER() throws Exception{
+    void INITIATE_USER() throws Exception{
         String url = "/user/{id}";
         String adminToken = AuthenticationAcceptanceTestHelper.getAdminToken(mvc, objectMapper);
         for (UserRequest request : userCreateRequestList){
@@ -100,7 +100,7 @@ public class PermissionAcceptanceTest{
 
     @Test
     @DisplayName("새로운 역할 추가 성공 인수 테스트")
-    public void CREATE_NEW_CHARACTER_SUCCESS_ACCEPTANCE_TEST() throws Exception{
+    void CREATE_NEW_CHARACTER_SUCCESS_ACCEPTANCE_TEST() throws Exception{
         // given
         List<PermissionResponse> permissionResponseList = getPermissionResponseList();
         String token = AuthenticationAcceptanceTestHelper.getAdminToken(mvc, objectMapper);
@@ -136,7 +136,7 @@ public class PermissionAcceptanceTest{
 
     @Test
     @DisplayName("새로운 역할 추가 실패 인수 테스트 - 최고 관리자가 아닐때")
-    public void CREATE_NEW_CHARACTER_FAIL_CAUSE_NOT_ADMIN_ACCEPTANCE_TEST() throws Exception{
+    void CREATE_NEW_CHARACTER_FAIL_CAUSE_NOT_ADMIN_ACCEPTANCE_TEST() throws Exception{
         // given
         List<PermissionResponse> permissionResponseList = getPermissionResponseList();
         String token = createUserAndGetToken("hong gil dong", "hello world", "abc1234!!!");
@@ -172,7 +172,7 @@ public class PermissionAcceptanceTest{
 
     @Test
     @DisplayName("새로운 역할 추가 실패 인수 테스트 - 잘못된 permission_name 에 대해 요청")
-    public void CREATE_NEW_CHARACTER_FAIL_INVALID_PERMISSION_NAME_ACCEPTANCE_TEST()
+    void CREATE_NEW_CHARACTER_FAIL_INVALID_PERMISSION_NAME_ACCEPTANCE_TEST()
             throws Exception{
         // given
         List<PermissionResponse> permissionResponseList = getPermissionResponseList();
@@ -214,7 +214,7 @@ public class PermissionAcceptanceTest{
 
     @Test
     @DisplayName("새로운 역할 추가 실패 인수 테스트 - 잘못된 permission_status 요청")
-    public void CREATE_NEW_CHARACTER_FAIL_INVALID_PERMISSION_STATUS_ACCEPTANCE_TEST()
+    void CREATE_NEW_CHARACTER_FAIL_INVALID_PERMISSION_STATUS_ACCEPTANCE_TEST()
             throws Exception{
         // given
         List<PermissionResponse> permissionResponseList = getPermissionResponseList();
@@ -257,7 +257,7 @@ public class PermissionAcceptanceTest{
 
     @Test
     @DisplayName("새로운 역할 추가 실패 인수 테스트 - 중복된 character_name 추가 요청")
-    public void CREATE_NEW_CHARACTER_FAIL_DUPLICATED_CHARACTER_NAME_ACCEPTANCE_TEST()
+    void CREATE_NEW_CHARACTER_FAIL_DUPLICATED_CHARACTER_NAME_ACCEPTANCE_TEST()
             throws Exception{
         // given
         String token = AuthenticationAcceptanceTestHelper.getAdminToken(mvc, objectMapper);
@@ -291,7 +291,7 @@ public class PermissionAcceptanceTest{
 
     @Test
     @DisplayName("역할 목록 조회 성공 인수 테스트")
-    public void INQUIRY_CHARACTER_LIST_SUCCESS_ACCEPTANCE_TEST() throws Exception{
+    void INQUIRY_CHARACTER_LIST_SUCCESS_ACCEPTANCE_TEST() throws Exception{
         // given
         String token = AuthenticationAcceptanceTestHelper.getAdminToken(mvc, objectMapper);
         String characterName = "mock acceptance";
@@ -323,7 +323,7 @@ public class PermissionAcceptanceTest{
 
     @Test
     @DisplayName("역할 목록 조회 실패 인수 테스트 - 최고 관리자가 아님")
-    public void INQUIRY_CHARACTER_LIST_FAIL_NOT_ADMIN_ACCEPTANCE_TEST() throws Exception{
+    void INQUIRY_CHARACTER_LIST_FAIL_NOT_ADMIN_ACCEPTANCE_TEST() throws Exception{
         // given
         String token = createUserAndGetToken("helloow", "hello world", "1234abcd!");
 
@@ -344,7 +344,7 @@ public class PermissionAcceptanceTest{
 
     @Test
     @DisplayName("특정 역할 조회 성공 인수 테스트")
-    public void INQUIRY_CHARACTER_BY_NAME_SUCCESS_ACCEPTANCE_TEST() throws Exception{
+    void INQUIRY_CHARACTER_BY_NAME_SUCCESS_ACCEPTANCE_TEST() throws Exception{
         // given
         String token = AuthenticationAcceptanceTestHelper.getAdminToken(mvc, objectMapper);
         String characterName = "something new";
@@ -368,6 +368,7 @@ public class PermissionAcceptanceTest{
                 MockMvcResultMatchers.jsonPath("$.id").isNumber(),
                 MockMvcResultMatchers.jsonPath("$.character_name").value(characterName),
                 MockMvcResultMatchers.jsonPath("$.permissions.[0].permission_id").isNumber(),
+                MockMvcResultMatchers.jsonPath("$.permissions.[0].permission_service").isString(),
                 MockMvcResultMatchers.jsonPath("$.permissions.[0].permission_name").isString(),
                 MockMvcResultMatchers.jsonPath("$.permissions.[0].permission_status").isString()
         );
@@ -375,7 +376,7 @@ public class PermissionAcceptanceTest{
 
     @Test
     @DisplayName("특정 역할 조회 실패 인수테스트 - 최고 관리자가 아님")
-    public void INQUIRY_CHARACTER_BY_NAME_FAIL_NOT_ADMIN_ACCEPTANCE_TEST() throws Exception{
+    void INQUIRY_CHARACTER_BY_NAME_FAIL_NOT_ADMIN_ACCEPTANCE_TEST() throws Exception{
         // given
         String token = createUserAndGetToken("helloow", "hello world", "1ABV234!");
         String characterName = "Character manager";
@@ -398,7 +399,7 @@ public class PermissionAcceptanceTest{
 
     @Test
     @DisplayName("특정 역할 조회 실패 인수테스트 - 잘못된 character-name 으로 조회")
-    public void INQUIRY_CHARACTER_BY_NAME_FAIL_WRONG_CHARACTER_NAME_ACCEPTANCE_TEST()
+    void INQUIRY_CHARACTER_BY_NAME_FAIL_WRONG_CHARACTER_NAME_ACCEPTANCE_TEST()
             throws Exception{
         // given
         String token = AuthenticationAcceptanceTestHelper.getAdminToken(mvc, objectMapper);
@@ -422,7 +423,7 @@ public class PermissionAcceptanceTest{
 
     @Test
     @DisplayName("특정 역할 수정 성공 인수테스트")
-    public void MODIFY_CHARACTER_BY_NAME_SUCCESS_ACCEPTANCE_TEST() throws Exception{
+    void MODIFY_CHARACTER_BY_NAME_SUCCESS_ACCEPTANCE_TEST() throws Exception{
         // given
         List<PermissionResponse> permissionResponseList = getPermissionResponseList();
         String token = AuthenticationAcceptanceTestHelper.getAdminToken(mvc, objectMapper);
@@ -465,7 +466,7 @@ public class PermissionAcceptanceTest{
 
     @Test
     @DisplayName("특정 역할 수정 실패 인수테스트 - 최고 관리자가 아님")
-    public void MODIFY_CHARACTER_BY_NAME_FAIL_NOT_ADMIN_ACCEPTANCE_TEST() throws Exception{
+    void MODIFY_CHARACTER_BY_NAME_FAIL_NOT_ADMIN_ACCEPTANCE_TEST() throws Exception{
         // given
         String token = createUserAndGetToken("hello", "hello world", "1234abc!");
         String characterName = "Character manager";
@@ -491,7 +492,7 @@ public class PermissionAcceptanceTest{
 
     @Test
     @DisplayName("특정 역할 수정 실패 인수테스트 - 수정할 이름 중복")
-    public void MODIFY_CHARACTER_BY_NAME_FAIL_DUPLICATED_NAME_ACCEPTANCE_TEST() throws Exception{
+    void MODIFY_CHARACTER_BY_NAME_FAIL_DUPLICATED_NAME_ACCEPTANCE_TEST() throws Exception{
         // given
         String token = AuthenticationAcceptanceTestHelper.getAdminToken(mvc, objectMapper);
         String beforeCharacterName = "name_before_duplicated";
@@ -532,7 +533,7 @@ public class PermissionAcceptanceTest{
 
     @Test
     @DisplayName("특정 역할 수정 실패 인수테스트 - path-parameter 에 잘못된 character-name 으로 수정 요청")
-    public void MODIFY_CHARACTER_BY_NAME_FAIL_INVALID_PATH_NAME_ACCEPTANCE_TEST() throws Exception{
+    void MODIFY_CHARACTER_BY_NAME_FAIL_INVALID_PATH_NAME_ACCEPTANCE_TEST() throws Exception{
         // given
         String characterName = "hello world character name";
         String token = AuthenticationAcceptanceTestHelper.getAdminToken(mvc, objectMapper);
@@ -558,7 +559,7 @@ public class PermissionAcceptanceTest{
 
     @Test
     @DisplayName("특정 역할 수정 실패 인수테스트 - 없는 permission_name 에 대해서 요청")
-    public void MODIFY_CHARACTER_BY_NAME_FAIL_INVALID_PERMISSION_NAME_ACCEPTANCE_TEST()
+    void MODIFY_CHARACTER_BY_NAME_FAIL_INVALID_PERMISSION_NAME_ACCEPTANCE_TEST()
             throws Exception{
         // given
         List<PermissionResponse> permissionResponseList = getPermissionResponseList();
@@ -606,7 +607,7 @@ public class PermissionAcceptanceTest{
 
     @Test
     @DisplayName("특정 역할 수정 실패 인수테스트 - 잘못된 permission_status 로 수정 요청")
-    public void MODIFY_CHARACTER_BY_NAME_FAIL_INVALID_PERMISSION_STATUS_ACCEPTANCE_TEST()
+    void MODIFY_CHARACTER_BY_NAME_FAIL_INVALID_PERMISSION_STATUS_ACCEPTANCE_TEST()
             throws Exception{
         // given
         List<PermissionResponse> permissionResponseList = getPermissionResponseList();
@@ -656,7 +657,7 @@ public class PermissionAcceptanceTest{
 
     @Test
     @DisplayName("선택가능한 permission 목록 조회 성공 인수 테스트")
-    public void INQUIRY_PERMISSION_LIST_SUCCESS_ACCEPTANCE_TEST() throws Exception{
+    void INQUIRY_PERMISSION_LIST_SUCCESS_ACCEPTANCE_TEST() throws Exception{
         // given
         String token = AuthenticationAcceptanceTestHelper.getAdminToken(mvc, objectMapper);
 
@@ -671,6 +672,7 @@ public class PermissionAcceptanceTest{
                 MockMvcResultMatchers.header().string("Api-version", apiVersion),
                 MockMvcResultMatchers.jsonPath("$.permissions").isArray(),
                 MockMvcResultMatchers.jsonPath("$.permissions.[0].permission_id").isNumber(),
+                MockMvcResultMatchers.jsonPath("$.permissions.[0].permission_service").isString(),
                 MockMvcResultMatchers.jsonPath("$.permissions.[0].permission_name").isString(),
                 MockMvcResultMatchers.jsonPath("$.permissions.[0].permission_info").isString(),
                 MockMvcResultMatchers.jsonPath("$.permissions.[0].permission_status").isArray()
@@ -679,7 +681,7 @@ public class PermissionAcceptanceTest{
 
     @Test
     @DisplayName("선택 가능한 permission 목록 조회 실패 인수 테스트 - 최고 관리자 아님")
-    public void INQUIRY_PERMISSION_LIST_FAIL_NOT_ADMIN_ACCEPTANCE_TEST() throws Exception{
+    void INQUIRY_PERMISSION_LIST_FAIL_NOT_ADMIN_ACCEPTANCE_TEST() throws Exception{
         // given
         String url = "/permission";
         String token = createUserAndGetToken("hello", "hello world", "abc1234!");
@@ -701,7 +703,7 @@ public class PermissionAcceptanceTest{
 
     @Test
     @DisplayName("역할 삭제 성공 인수 테스트")
-    public void DELETE_CHARACTER_SUCCESS_ACCEPTANCE_TEST() throws Exception{
+    void DELETE_CHARACTER_SUCCESS_ACCEPTANCE_TEST() throws Exception{
         // given
         String characterName = "mock_character";
         String token = AuthenticationAcceptanceTestHelper.getAdminToken(mvc, objectMapper);
@@ -725,7 +727,7 @@ public class PermissionAcceptanceTest{
 
     @Test
     @DisplayName("역할 삭제 실패 - 최고 관리자가 아님")
-    public void DELETE_CHARACTER_FAIL_NOT_ADMIN_TEST() throws Exception{
+    void DELETE_CHARACTER_FAIL_NOT_ADMIN_TEST() throws Exception{
         // given
         String characterName = "mock_character";
         String token = AuthenticationAcceptanceTestHelper.getAdminToken(mvc, objectMapper);
@@ -755,7 +757,7 @@ public class PermissionAcceptanceTest{
 
     @Test
     @DisplayName("역할 삭제 실패 인수 테스트 - 없는 역할에 대한 삭제 요청")
-    public void DELETE_CHARACTER_FAIL_INVALID_CHARACTER_ACCEPTANCE_TEST() throws Exception{
+    void DELETE_CHARACTER_FAIL_INVALID_CHARACTER_ACCEPTANCE_TEST() throws Exception{
         // given
         String characterName = "mock_character";
         String token = AuthenticationAcceptanceTestHelper.getAdminToken(mvc, objectMapper);
@@ -778,7 +780,7 @@ public class PermissionAcceptanceTest{
 
     @Test
     @DisplayName("역할 생성 실패 테스트 - 역할 이름에 공백이 들어옴")
-    public void CREATE_CHARACTER_FAIL_BLANK_CHARACTER_NAME_TEST() throws Exception{
+    void CREATE_CHARACTER_FAIL_BLANK_CHARACTER_NAME_TEST() throws Exception{
         // given
         String token = AuthenticationAcceptanceTestHelper.getAdminToken(mvc, objectMapper);
         CharacterRequest characterRequest = CharacterRequest.builder()
@@ -799,7 +801,7 @@ public class PermissionAcceptanceTest{
 
     @Test
     @DisplayName("새로운 역할 생성 및 조회 성공 테스트 - permission에 공백")
-    public void CREATE_CHARACTER_SUCCESS_TEST_BLANK_PERMISSION() throws Exception{
+    void CREATE_CHARACTER_SUCCESS_TEST_BLANK_PERMISSION() throws Exception{
         // given
         String token = AuthenticationAcceptanceTestHelper.getAdminToken(mvc, objectMapper);
         String characterName = "hello world";
@@ -823,7 +825,7 @@ public class PermissionAcceptanceTest{
 
     @Test
     @DisplayName("역할 수정 실패 테스트 - Guest 와 Admin 역할 수정 불가")
-    public void UPDATE_CHARACTER_FAIL_TEST_TRY_MODIFY_GUEST_AND_ADMIN_CHARACTER() throws Exception{
+    void UPDATE_CHARACTER_FAIL_TEST_TRY_MODIFY_GUEST_AND_ADMIN_CHARACTER() throws Exception{
         // given
         String token = AuthenticationAcceptanceTestHelper.getAdminToken(mvc, objectMapper);
         String characterName = "Guest";

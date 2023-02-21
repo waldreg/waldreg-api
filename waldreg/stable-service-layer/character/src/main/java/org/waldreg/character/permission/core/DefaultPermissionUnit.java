@@ -6,9 +6,10 @@ import org.waldreg.character.permission.spi.PermissionVerifiable;
 
 public final class DefaultPermissionUnit implements PermissionUnit{
 
-    private final static AtomicInteger PERMISSION_UNIT_ID_GENERATOR = new AtomicInteger(1);
+    private static final AtomicInteger PERMISSION_UNIT_ID_GENERATOR = new AtomicInteger(1);
 
     private final int id;
+    private final String service;
     private final String name;
     private final String info;
     private final PermissionVerifiable permissionVerifiable;
@@ -20,6 +21,7 @@ public final class DefaultPermissionUnit implements PermissionUnit{
 
     private DefaultPermissionUnit(Builder builder){
         this.id = PERMISSION_UNIT_ID_GENERATOR.getAndIncrement();
+        this.service = builder.service;
         this.name = builder.name;
         this.info = builder.info;
         this.permissionVerifiable = builder.permissionVerifiable;
@@ -33,6 +35,11 @@ public final class DefaultPermissionUnit implements PermissionUnit{
     @Override
     public int getId(){
         return this.id;
+    }
+
+    @Override
+    public String getService(){
+        return service;
     }
 
     @Override
@@ -63,11 +70,17 @@ public final class DefaultPermissionUnit implements PermissionUnit{
     public static final class Builder{
 
         private String name;
+        private String service;
         private String info;
         private PermissionVerifiable permissionVerifiable;
         private List<String> statusList;
 
         private Builder(){}
+
+        public Builder service(String service){
+            this.service = service;
+            return this;
+        }
 
         public Builder name(String name){
             this.name = name;

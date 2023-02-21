@@ -6,14 +6,14 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
-import org.waldreg.acceptance.attendance.AttendanceAcceptanceTest.AttendanceType;
+import org.waldreg.attendance.type.AttendanceType;
 
 public class AttendanceAcceptanceTestHelper{
 
     private final static String API_VERSION = "1.0";
 
     public static ResultActions subscribeAttendance(MockMvc mvc, String token, String userIdList) throws Exception{
-        return mvc.perform(MockMvcRequestBuilders.get("/attendance/subscribed?user-id={userIdList}", userIdList)
+        return mvc.perform(MockMvcRequestBuilders.get("/attendance/subscribed?id={userIdList}", userIdList)
                 .contentType(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON)
                 .header("api-version", API_VERSION)
@@ -21,7 +21,7 @@ public class AttendanceAcceptanceTestHelper{
     }
 
     public static ResultActions deleteSubscribedAttendance(MockMvc mvc, String token, String userIdList) throws Exception{
-        return mvc.perform(MockMvcRequestBuilders.delete("/attendance/subscribed?user-id={userIdList}", userIdList)
+        return mvc.perform(MockMvcRequestBuilders.delete("/attendance/subscribed?id={userIdList}", userIdList)
                 .contentType(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON)
                 .header("api-version", API_VERSION)
@@ -75,10 +75,6 @@ public class AttendanceAcceptanceTestHelper{
     }
 
     public static ResultActions readAttendanceUsers(MockMvc mvc, String token, LocalDate from, LocalDate to) throws Exception{
-        return readAttendanceUsers(mvc, token, from.toString(), to.toString());
-    }
-
-    public static ResultActions readAttendanceUsers(MockMvc mvc, String token, String from, String to) throws Exception{
         return mvc.perform(MockMvcRequestBuilders.get("/attendance/calendar?from={from}&to={to}", from, to)
                 .contentType(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON)
@@ -87,11 +83,7 @@ public class AttendanceAcceptanceTestHelper{
     }
 
     public static ResultActions readSelfAttendance(MockMvc mvc, String token, LocalDate from, LocalDate to) throws Exception{
-        return readSelfAttendance(mvc, token, from.toString(), to.toString());
-    }
-
-    public static ResultActions readSelfAttendance(MockMvc mvc, String token, String from, String to) throws Exception{
-        return mvc.perform(MockMvcRequestBuilders.get("/attendance/user?from={from}&to={to}", from, to)
+        return mvc.perform(MockMvcRequestBuilders.get("/attendance/calendar/user?from={from}&to={to}", from, to)
                 .contentType(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON)
                 .header("api-version", API_VERSION)
@@ -113,7 +105,7 @@ public class AttendanceAcceptanceTestHelper{
 
     public static ResultActions setAttendanceTagsReward(MockMvc mvc, String token, String attendanceType, int rewardTagId) throws Exception{
         return mvc.perform(MockMvcRequestBuilders
-                .post("/attendance/reward-tag?attendance-type={attendance-type}&reward-tag-id={reward-tag-id}", attendanceType, rewardTagId)
+                .get("/attendance/reward-tag?attendance-type={attendance-type}&reward-tag-id={reward-tag-id}", attendanceType, rewardTagId)
                 .contentType(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON)
                 .header("api-version", API_VERSION)

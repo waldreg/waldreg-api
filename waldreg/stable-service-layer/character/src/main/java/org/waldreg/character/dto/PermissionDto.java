@@ -3,6 +3,7 @@ package org.waldreg.character.dto;
 public final class PermissionDto{
 
     private final int id;
+    private final String service;
     private final String name;
     private final String status;
 
@@ -12,6 +13,7 @@ public final class PermissionDto{
 
     private PermissionDto(Builder builder){
         this.id = builder.id;
+        this.service = builder.service;
         this.name = builder.name;
         this.status = builder.status;
     }
@@ -24,6 +26,10 @@ public final class PermissionDto{
         return id;
     }
 
+    public String getService(){
+        return service;
+    }
+
     public String getName(){
         return this.name;
     }
@@ -32,9 +38,10 @@ public final class PermissionDto{
         return this.status;
     }
 
-    public final static class Builder{
+    public static final class Builder{
 
         private int id;
+        private String service;
         private String name;
         private String status;
 
@@ -42,6 +49,11 @@ public final class PermissionDto{
 
         public Builder id(int id){
             this.id = id;
+            return this;
+        }
+
+        public Builder service(String service){
+            this.service = service;
             return this;
         }
 
