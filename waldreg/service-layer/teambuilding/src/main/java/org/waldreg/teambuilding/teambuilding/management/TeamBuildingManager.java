@@ -16,4 +16,6 @@ public interface TeamBuildingManager{
 
     void deleteTeamBuildingById(int teamBuildingId);
 
+    int readMaxIdx();
+
 }

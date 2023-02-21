@@ -5,6 +5,7 @@ import java.util.List;
 import org.waldreg.controller.teambuilding.request.TeamBuildingRequest;
 import org.waldreg.controller.teambuilding.request.TeamRequest;
 import org.waldreg.controller.teambuilding.request.UserWeightRequest;
+import org.waldreg.controller.teambuilding.response.TeamBuildingListResponse;
 import org.waldreg.controller.teambuilding.response.TeamBuildingResponse;
 import org.waldreg.controller.teambuilding.response.TeamResponse;
 import org.waldreg.controller.teambuilding.response.UserResponse;
@@ -46,6 +47,12 @@ public class ControllerTeamBuildingMapper{
                 .build();
     }
 
+    public List<TeamBuildingResponse> teamBuildingDtoListToTeamBuildingResponseList(List<TeamBuildingDto> teamBuildingDtoList){
+        List<TeamBuildingResponse> teamBuildingResponseList = new ArrayList<>();
+        teamBuildingDtoList.stream().forEach(i -> teamBuildingResponseList.add(teamBuildingDtoToTeamBuildingResponse(i)));
+        return teamBuildingResponseList;
+    }
+
     public TeamBuildingResponse teamBuildingDtoToTeamBuildingResponse(TeamBuildingDto teamBuildingDto){
         return TeamBuildingResponse.builder()
                 .teamBuildingId(teamBuildingDto.getTeamBuildingId())
@@ -82,6 +89,13 @@ public class ControllerTeamBuildingMapper{
                 .id(userDto.getId())
                 .name(userDto.getName())
                 .userId(userDto.getUserId())
+                .build();
+    }
+
+    public TeamBuildingListResponse createTeamBuildingListResponse(int maxIdx, List<TeamBuildingResponse> teamBuildingResponseList){
+        return TeamBuildingListResponse.builder()
+                .maxIdx(maxIdx)
+                .teamBuildingList(teamBuildingResponseList)
                 .build();
     }
 

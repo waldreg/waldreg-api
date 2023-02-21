@@ -206,6 +206,11 @@ public class DefaultTeamBuildingManager implements TeamBuildingManager{
         teamBuildingRepository.deleteTeamBuildingById(teamBuildingId);
     }
 
+    @Override
+    public int readMaxIdx(){
+        return teamBuildingRepository.readMaxIdx();
+    }
+
     private void throwIfUnknownTeamBuildingId(int teamBuildingId){
         if (!teamBuildingRepository.isExistTeamBuilding(teamBuildingId)){
             throw new UnknownTeamBuildingIdException(teamBuildingId);
