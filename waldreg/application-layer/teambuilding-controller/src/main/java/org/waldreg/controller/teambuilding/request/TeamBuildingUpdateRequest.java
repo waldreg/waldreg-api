@@ -1,9 +1,11 @@
 package org.waldreg.controller.teambuilding.request;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import javax.validation.constraints.NotBlank;
 
 public class TeamBuildingUpdateRequest{
 
+    @NotBlank(message = "TEAMBUILDING-403 Teambuilding title cannot be blank")
     @JsonProperty("teambuilding_title")
     private String teamBuildingTitle;
 

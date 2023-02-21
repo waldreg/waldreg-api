@@ -25,7 +25,7 @@ public class TeamBuildingPermissionConfigurer{
     private void configCreateNewTeamBuildingPermission(){
         permissionExtension.extend(DefaultPermissionUnit.builder()
                 .service("Teambuilding")
-                .name("TeamBuilding create manager")
+                .name("Teambuilding create manager")
                 .info("If set true, can create new team building or team")
                 .permissionVerifiable((s) -> s.equals("true"))
                 .statusList(List.of("true", "false"))
@@ -35,7 +35,7 @@ public class TeamBuildingPermissionConfigurer{
     private void configUpdateTeamBuildingPermission(){
         permissionExtension.extend(DefaultPermissionUnit.builder()
                 .service("Teambuilding")
-                .name("TeamBuilding update manager")
+                .name("Teambuilding update manager")
                 .info("If set true, can update team building or team")
                 .permissionVerifiable((s) -> s.equals("true"))
                 .statusList(List.of("true", "false"))
@@ -45,7 +45,7 @@ public class TeamBuildingPermissionConfigurer{
     private void configDeleteTeamBuildingPermission(){
         permissionExtension.extend(DefaultPermissionUnit.builder()
                 .service("Teambuilding")
-                .name("TeamBuilding delete manager")
+                .name("Teambuilding delete manager")
                 .info("If set true, can delete team building or team")
                 .permissionVerifiable((s) -> s.equals("true"))
                 .statusList(List.of("true", "false"))
