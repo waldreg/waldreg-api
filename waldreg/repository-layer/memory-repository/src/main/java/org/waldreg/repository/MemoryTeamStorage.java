@@ -27,4 +27,8 @@ public class MemoryTeamStorage{
         return team;
     }
 
+    public Team readTeamById(int teamId){
+        return storage.get(teamId);
+    }
+
 }

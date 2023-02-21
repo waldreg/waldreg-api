@@ -28,7 +28,8 @@ public class MemoryTeamRepository implements TeamRepository, TeamBuildingsTeamRe
 
     @Override
     public TeamDto readTeamById(int teamId){
-        return null;
+        Team team = memoryTeamStorage.readTeamById(teamId);
+        return teamMapper.teamDomainToTeamDto(team);
     }
 
     @Override
