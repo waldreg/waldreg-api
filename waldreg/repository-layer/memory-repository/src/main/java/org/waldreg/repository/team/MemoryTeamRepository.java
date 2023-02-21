@@ -34,7 +34,8 @@ public class MemoryTeamRepository implements TeamRepository, TeamBuildingsTeamRe
 
     @Override
     public void updateTeamById(int teamId, TeamDto teamDto){
-
+        Team team = teamMapper.teamDtoToTeamDomain(teamDto);
+        memoryTeamStorage.updateTeam(team);
     }
 
     @Override
