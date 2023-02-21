@@ -3,7 +3,9 @@ package org.waldreg.controller.teambuilding.mapper;
 import java.util.ArrayList;
 import java.util.List;
 import org.waldreg.controller.teambuilding.request.TeamBuildingRequest;
+import org.waldreg.controller.teambuilding.request.TeamRequest;
 import org.waldreg.controller.teambuilding.request.UserWeightRequest;
+import org.waldreg.teambuilding.team.dto.TeamRequestDto;
 import org.waldreg.teambuilding.teambuilding.dto.TeamBuildingRequestDto;
 import org.waldreg.teambuilding.teambuilding.dto.UserRequestDto;
 
@@ -30,5 +32,12 @@ public class ControllerTeamBuildingMapper{
                 .build();
     }
 
+
+    public TeamRequestDto teamRequestToTeamRequestDto(TeamRequest teamRequest){
+        return TeamRequestDto.builder()
+                .teamName(teamRequest.getTeamName())
+                .memberList(teamRequest.getMembers())
+                .build();
+    }
 
 }
