@@ -6,7 +6,7 @@ import org.waldreg.repository.team.UserInTeamMapper;
 import org.waldreg.teambuilding.dto.UserDto;
 
 @Service
-public class UserInfoMapper implements UserInTeamMapper{
+public class TeamBuildingUserInfoMapper implements UserInTeamMapper{
 
     @Override
     public UserDto userDomainToUserDto(User user){

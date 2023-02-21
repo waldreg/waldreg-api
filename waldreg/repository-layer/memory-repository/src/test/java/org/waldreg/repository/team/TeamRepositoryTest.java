@@ -11,7 +11,6 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
-import org.waldreg.character.spi.CharacterRepository;
 import org.waldreg.repository.MemoryCharacterStorage;
 import org.waldreg.repository.MemoryTeamBuildingStorage;
 import org.waldreg.repository.MemoryTeamStorage;
@@ -20,7 +19,7 @@ import org.waldreg.repository.character.CharacterMapper;
 import org.waldreg.repository.character.MemoryCharacterRepository;
 import org.waldreg.repository.teambuilding.MemoryTeamBuildingRepository;
 import org.waldreg.repository.teambuilding.TeamBuildingMapper;
-import org.waldreg.repository.teambuildinguserinfo.UserInfoMapper;
+import org.waldreg.repository.teambuildinguserinfo.TeamBuildingUserInfoMapper;
 import org.waldreg.repository.user.MemoryUserRepository;
 import org.waldreg.repository.user.UserMapper;
 import org.waldreg.teambuilding.dto.TeamDto;
@@ -31,7 +30,7 @@ import org.waldreg.teambuilding.teambuilding.spi.TeamBuildingRepository;
 import org.waldreg.user.spi.UserRepository;
 
 @ExtendWith(SpringExtension.class)
-@ContextConfiguration(classes = {MemoryTeamRepository.class, MemoryTeamStorage.class, TeamMapper.class, MemoryUserRepository.class, MemoryUserStorage.class, UserMapper.class, MemoryCharacterStorage.class, MemoryCharacterRepository.class, CharacterMapper.class, MemoryTeamBuildingRepository.class, MemoryTeamBuildingStorage.class, TeamBuildingMapper.class, UserInfoMapper.class})
+@ContextConfiguration(classes = {MemoryTeamRepository.class, MemoryTeamStorage.class, TeamMapper.class, MemoryUserRepository.class, MemoryUserStorage.class, UserMapper.class, MemoryCharacterStorage.class, MemoryCharacterRepository.class, CharacterMapper.class, MemoryTeamBuildingRepository.class, MemoryTeamBuildingStorage.class, TeamBuildingMapper.class, TeamBuildingUserInfoMapper.class})
 public class TeamRepositoryTest{
 
     @Autowired
@@ -45,12 +44,6 @@ public class TeamRepositoryTest{
 
     @Autowired
     MemoryUserStorage memoryUserStorage;
-
-    @Autowired
-    MemoryCharacterStorage memoryCharacterStorage;
-
-    @Autowired
-    CharacterRepository characterRepository;
 
     @Autowired
     TeamBuildingRepository teamBuildingRepository;
