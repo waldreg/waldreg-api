@@ -17,17 +17,18 @@ import org.waldreg.repository.MemoryTeamBuildingStorage;
 import org.waldreg.repository.MemoryUserStorage;
 import org.waldreg.repository.character.CharacterMapper;
 import org.waldreg.repository.character.MemoryCharacterRepository;
+import org.waldreg.repository.team.TeamMapper;
 import org.waldreg.repository.user.MemoryUserRepository;
 import org.waldreg.repository.user.UserMapper;
-import org.waldreg.teambuilding.dto.TeamBuildingDto;
 import org.waldreg.teambuilding.dto.TeamDto;
 import org.waldreg.teambuilding.dto.UserDto;
-import org.waldreg.teambuilding.spi.TeamBuildingRepository;
+import org.waldreg.teambuilding.teambuilding.dto.TeamBuildingDto;
+import org.waldreg.teambuilding.teambuilding.spi.TeamBuildingRepository;
 import org.waldreg.user.spi.CharacterRepository;
 import org.waldreg.user.spi.UserRepository;
 
 @ExtendWith(SpringExtension.class)
-@ContextConfiguration(classes = {MemoryTeamBuildingRepository.class, MemoryTeamBuildingStorage.class, TeamBuildingMapper.class, MemoryUserRepository.class, MemoryUserStorage.class, UserMapper.class, MemoryCharacterStorage.class, MemoryCharacterRepository.class, CharacterMapper.class})
+@ContextConfiguration(classes = {MemoryTeamBuildingRepository.class, MemoryTeamBuildingStorage.class, TeamBuildingMapper.class, MemoryUserRepository.class, MemoryUserStorage.class, UserMapper.class, MemoryCharacterStorage.class, MemoryCharacterRepository.class, CharacterMapper.class, TeamMapper.class})
 public class TeamBuildingRepositoryTest{
 
     @Autowired
@@ -250,13 +251,6 @@ public class TeamBuildingRepositoryTest{
         //then
         Assertions.assertFalse(teamBuildingRepository.isExistTeamBuilding(teamBuildingDto.getTeamBuildingId()));
 
-    }
-
-    private TeamBuildingDto createTeamBuildingDto(String title, List<TeamDto> teamDtoList){
-        return TeamBuildingDto.builder()
-                .teamBuildingTitle(title)
-                .teamDtoList(teamDtoList)
-                .build();
     }
 
     private List<TeamDto> createTeamDtoList(int teambuildingId){

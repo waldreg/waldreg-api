@@ -12,23 +12,23 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
-import org.waldreg.teambuilding.dto.TeamBuildingDto;
-import org.waldreg.teambuilding.dto.TeamBuildingRequestDto;
 import org.waldreg.teambuilding.dto.TeamDto;
 import org.waldreg.teambuilding.dto.UserDto;
-import org.waldreg.teambuilding.dto.UserRequestDto;
-import org.waldreg.exception.ContentOverflowException;
-import org.waldreg.exception.InvalidRangeException;
-import org.waldreg.exception.InvalidTeamCountException;
-import org.waldreg.exception.InvalidUserWeightException;
-import org.waldreg.exception.UnknownTeamBuildingIdException;
-import org.waldreg.exception.UnknownUserIdException;
-import org.waldreg.teambuilding.management.DefaultTeamBuildingManager;
-import org.waldreg.teambuilding.management.TeamBuildingManager;
-import org.waldreg.teambuilding.management.teamcreator.TeamCreator;
-import org.waldreg.teambuilding.spi.TeamBuildingRepository;
-import org.waldreg.teambuilding.spi.TeamBuildingUserRepository;
-import org.waldreg.teambuilding.spi.TeamBuildingsTeamRepository;
+import org.waldreg.teambuilding.teambuilding.dto.TeamBuildingDto;
+import org.waldreg.teambuilding.teambuilding.dto.TeamBuildingRequestDto;
+import org.waldreg.teambuilding.teambuilding.dto.UserRequestDto;
+import org.waldreg.teambuilding.exception.ContentOverflowException;
+import org.waldreg.teambuilding.exception.InvalidRangeException;
+import org.waldreg.teambuilding.exception.InvalidTeamCountException;
+import org.waldreg.teambuilding.exception.InvalidUserWeightException;
+import org.waldreg.teambuilding.exception.UnknownTeamBuildingIdException;
+import org.waldreg.teambuilding.exception.UnknownUserIdException;
+import org.waldreg.teambuilding.teambuilding.management.DefaultTeamBuildingManager;
+import org.waldreg.teambuilding.teambuilding.management.TeamBuildingManager;
+import org.waldreg.teambuilding.teambuilding.management.teamcreator.TeamCreator;
+import org.waldreg.teambuilding.teambuilding.spi.TeamBuildingRepository;
+import org.waldreg.teambuilding.teambuilding.spi.TeamBuildingUserRepository;
+import org.waldreg.teambuilding.teambuilding.spi.TeamBuildingsTeamRepository;
 
 @ExtendWith(SpringExtension.class)
 @ContextConfiguration(classes = {DefaultTeamBuildingManager.class, TeamCreator.class})

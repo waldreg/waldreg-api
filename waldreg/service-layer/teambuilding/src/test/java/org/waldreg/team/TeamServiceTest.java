@@ -7,21 +7,25 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
-import org.waldreg.exception.*;
-import org.waldreg.team.dto.TeamDto;
-import org.waldreg.team.dto.TeamRequestDto;
-import org.waldreg.team.management.DefaultTeamManager;
-import org.waldreg.team.management.TeamManager;
-import org.waldreg.team.spi.TeamInTeamBuildingRepository;
-import org.waldreg.team.spi.TeamRepository;
-import org.waldreg.team.spi.TeamUserRepository;
-import org.waldreg.team.dto.UserDto;
+import org.waldreg.teambuilding.dto.TeamDto;
+import org.waldreg.teambuilding.dto.UserDto;
+import org.waldreg.teambuilding.exception.ContentOverflowException;
+import org.waldreg.teambuilding.exception.DuplicateUserSelectException;
+import org.waldreg.teambuilding.exception.DuplicatedTeamNameException;
+import org.waldreg.teambuilding.exception.UnknownTeamBuildingIdException;
+import org.waldreg.teambuilding.exception.UnknownTeamIdException;
+import org.waldreg.teambuilding.exception.UnknownUserIdException;
+import org.waldreg.teambuilding.team.dto.TeamRequestDto;
+import org.waldreg.teambuilding.team.management.DefaultTeamManager;
+import org.waldreg.teambuilding.team.management.TeamManager;
+import org.waldreg.teambuilding.team.spi.TeamInTeamBuildingRepository;
+import org.waldreg.teambuilding.team.spi.TeamRepository;
+import org.waldreg.teambuilding.team.spi.TeamUserRepository;
 
 @ExtendWith(SpringExtension.class)
 @ContextConfiguration(classes = {DefaultTeamManager.class})
@@ -425,7 +429,6 @@ public class TeamServiceTest{
         Assertions.assertThrows(UnknownTeamIdException.class, () -> teamManager.deleteTeamById(teamId));
 
     }
-
 
 
     private List<TeamDto> createTeamDtoList(int teamBuildingId){

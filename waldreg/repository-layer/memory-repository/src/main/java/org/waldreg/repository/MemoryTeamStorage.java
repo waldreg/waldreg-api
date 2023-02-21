@@ -21,4 +21,10 @@ public class MemoryTeamStorage{
         storage.clear();
     }
 
+    public Team createTeam(Team team){
+        team.setTeamId(atomicInteger.getAndIncrement());
+        storage.put(team.getTeamId(),team);
+        return team;
+    }
+
 }

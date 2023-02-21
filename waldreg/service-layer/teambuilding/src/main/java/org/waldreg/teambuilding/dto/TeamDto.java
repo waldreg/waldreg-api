@@ -5,11 +5,11 @@ import java.util.List;
 
 public class TeamDto{
 
-    private final int teamId;
+    private int teamId;
     private int teamBuildingId;
-    private final String teamName;
-    private final LocalDateTime lastModifiedAt;
-    private final List<UserDto> userDtoList;
+    private String teamName;
+    private LocalDateTime lastModifiedAt;
+    private List<UserDto> userDtoList;
 
     private TeamDto(){
         throw new UnsupportedOperationException("Cannot invoke constructor \"TeamDto()\"");
@@ -47,8 +47,24 @@ public class TeamDto{
         return teamBuildingId;
     }
 
+    public void setTeamId(int teamId){
+        this.teamId = teamId;
+    }
+
     public void setTeamBuildingId(int teamBuildingId){
         this.teamBuildingId = teamBuildingId;
+    }
+
+    public void setLastModifiedAt(LocalDateTime lastModifiedAt){
+        this.lastModifiedAt = lastModifiedAt;
+    }
+
+    public void setTeamName(String teamName){
+        this.teamName = teamName;
+    }
+
+    public void setUserDtoList(List<UserDto> userDtoList){
+        this.userDtoList = userDtoList;
     }
 
     public static final class Builder{
@@ -59,7 +75,9 @@ public class TeamDto{
         private LocalDateTime lastModifiedAt;
         private List<UserDto> userDtoList;
 
-        private Builder(){}
+        private Builder(){
+            lastModifiedAt = LocalDateTime.now();
+        }
 
         public Builder teamId(int teamId){
             this.teamId = teamId;
