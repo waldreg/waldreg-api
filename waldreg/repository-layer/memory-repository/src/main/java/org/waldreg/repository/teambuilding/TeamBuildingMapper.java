@@ -3,9 +3,7 @@ package org.waldreg.repository.teambuilding;
 import java.util.ArrayList;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.waldreg.domain.teambuilding.Team;
 import org.waldreg.domain.teambuilding.TeamBuilding;
-import org.waldreg.teambuilding.dto.TeamDto;
 import org.waldreg.teambuilding.teambuilding.dto.TeamBuildingDto;
 
 public class TeamBuildingMapper{
@@ -25,18 +23,10 @@ public class TeamBuildingMapper{
         return TeamBuilding.builder()
                 .teamBuildingTitle(teamBuildingDto.getTeamBuildingTitle())
                 .teamBuildingId(teamBuildingDto.getTeamBuildingId())
-                .teamList(teamDtoListToTeamDomainList(teamBuildingDto.getTeamList()))
+                .teamList(teamInTeamBuildingMapper.teamDtoListToTeamDomainList(teamBuildingDto.getTeamList()))
                 .lastModifiedAt(teamBuildingDto.getLastModifiedAt())
                 .createdAt(teamBuildingDto.getCreatedAt())
                 .build();
-    }
-
-    private List<Team> teamDtoListToTeamDomainList(List<TeamDto> teamDtoList){
-        List<Team> teamList = new ArrayList<>();
-        for (TeamDto teamDto : teamDtoList){
-            teamList.add(teamInTeamBuildingMapper.teamDtoToTeamDomain(teamDto));
-        }
-        return teamList;
     }
 
     public List<TeamBuildingDto> teamBuildingDomainListToTeamBuildingDtoList(List<TeamBuilding> teamBuildingList){
@@ -64,7 +54,6 @@ public class TeamBuildingMapper{
     private boolean isTeamListEmpty(TeamBuilding teamBuilding){
         return teamBuilding.getTeamList() == null;
     }
-
 
 
 }

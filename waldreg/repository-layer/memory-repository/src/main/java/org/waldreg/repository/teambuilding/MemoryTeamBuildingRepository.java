@@ -6,6 +6,7 @@ import org.springframework.stereotype.Repository;
 import org.waldreg.domain.teambuilding.Team;
 import org.waldreg.domain.teambuilding.TeamBuilding;
 import org.waldreg.repository.MemoryTeamBuildingStorage;
+import org.waldreg.repository.MemoryTeamStorage;
 import org.waldreg.teambuilding.dto.TeamDto;
 import org.waldreg.teambuilding.team.spi.TeamInTeamBuildingRepository;
 import org.waldreg.teambuilding.teambuilding.dto.TeamBuildingDto;
@@ -20,11 +21,14 @@ public class MemoryTeamBuildingRepository implements TeamBuildingRepository, Tea
 
     private final MemoryTeamBuildingStorage memoryTeamBuildingStorage;
 
+    private final MemoryTeamStorage memoryTeamStorage;
+
     @Autowired
-    public MemoryTeamBuildingRepository(TeamBuildingMapper teamBuildingMapper, TeamInTeamBuildingMapper teamInTeamBuildingMapper, MemoryTeamBuildingStorage memoryTeamBuildingStorage){
+    public MemoryTeamBuildingRepository(TeamBuildingMapper teamBuildingMapper, TeamInTeamBuildingMapper teamInTeamBuildingMapper, MemoryTeamBuildingStorage memoryTeamBuildingStorage, MemoryTeamStorage memoryTeamStorage){
         this.teamBuildingMapper = teamBuildingMapper;
         this.teamInTeamBuildingMapper = teamInTeamBuildingMapper;
         this.memoryTeamBuildingStorage = memoryTeamBuildingStorage;
+        this.memoryTeamStorage = memoryTeamStorage;
     }
 
     @Override
@@ -61,7 +65,13 @@ public class MemoryTeamBuildingRepository implements TeamBuildingRepository, Tea
 
     @Override
     public void deleteTeamBuildingById(int teamBuildingId){
+        TeamBuildingDto teamBuildingDto = readTeamBuildingById(teamBuildingId);
+        deleteTeamDueToDeleteTeamBuilding(teamBuildingDto.getTeamList());
         memoryTeamBuildingStorage.deleteTeamBuildingById(teamBuildingId);
+    }
+
+    private void deleteTeamDueToDeleteTeamBuilding(List<TeamDto> teamDtoList){
+        teamDtoList.stream().forEach(i -> memoryTeamStorage.deleteTeamById(i.getTeamId()));
     }
 
     @Override

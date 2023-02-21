@@ -14,15 +14,15 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.waldreg.teambuilding.dto.TeamDto;
 import org.waldreg.teambuilding.dto.UserDto;
-import org.waldreg.teambuilding.teambuilding.dto.TeamBuildingDto;
-import org.waldreg.teambuilding.teambuilding.dto.TeamBuildingRequestDto;
-import org.waldreg.teambuilding.teambuilding.dto.UserRequestDto;
 import org.waldreg.teambuilding.exception.ContentOverflowException;
 import org.waldreg.teambuilding.exception.InvalidRangeException;
 import org.waldreg.teambuilding.exception.InvalidTeamCountException;
 import org.waldreg.teambuilding.exception.InvalidUserWeightException;
 import org.waldreg.teambuilding.exception.UnknownTeamBuildingIdException;
 import org.waldreg.teambuilding.exception.UnknownUserIdException;
+import org.waldreg.teambuilding.teambuilding.dto.TeamBuildingDto;
+import org.waldreg.teambuilding.teambuilding.dto.TeamBuildingRequestDto;
+import org.waldreg.teambuilding.teambuilding.dto.UserRequestDto;
 import org.waldreg.teambuilding.teambuilding.management.DefaultTeamBuildingManager;
 import org.waldreg.teambuilding.teambuilding.management.TeamBuildingManager;
 import org.waldreg.teambuilding.teambuilding.management.teamcreator.TeamCreator;
@@ -308,7 +308,7 @@ public class TeamBuildingServiceTest{
         Mockito.when(teamBuildingRepository.readTeamBuildingById(Mockito.anyInt())).thenReturn(teamBuildingDto2);
 
         //then
-        Assertions.assertThrows(ContentOverflowException.class, () ->  teamBuildingManager.updateTeamBuildingTitleById(1, teamBuildingRequestDto.getTeamBuildingTitle()));
+        Assertions.assertThrows(ContentOverflowException.class, () -> teamBuildingManager.updateTeamBuildingTitleById(1, teamBuildingRequestDto.getTeamBuildingTitle()));
     }
 
     @Test
@@ -327,7 +327,7 @@ public class TeamBuildingServiceTest{
         Mockito.when(teamBuildingRepository.readTeamBuildingById(Mockito.anyInt())).thenReturn(teamBuildingDto2);
 
         //then
-        Assertions.assertThrows(UnknownTeamBuildingIdException.class, () -> teamBuildingManager.updateTeamBuildingTitleById(0,teamBuildingRequestDto.getTeamBuildingTitle()));
+        Assertions.assertThrows(UnknownTeamBuildingIdException.class, () -> teamBuildingManager.updateTeamBuildingTitleById(0, teamBuildingRequestDto.getTeamBuildingTitle()));
 
     }
 

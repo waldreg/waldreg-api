@@ -1,9 +1,10 @@
 package org.waldreg.repository.team;
 
-import java.util.ArrayList;
 import java.util.List;
 import org.waldreg.domain.teambuilding.Team;
+import org.waldreg.domain.teambuilding.TeamBuilding;
 import org.waldreg.domain.user.User;
+import org.waldreg.repository.MemoryTeamBuildingStorage;
 import org.waldreg.repository.MemoryTeamStorage;
 import org.waldreg.teambuilding.dto.TeamDto;
 import org.waldreg.teambuilding.dto.UserDto;
@@ -16,9 +17,12 @@ public class MemoryTeamRepository implements TeamRepository, TeamBuildingsTeamRe
 
     private final MemoryTeamStorage memoryTeamStorage;
 
-    public MemoryTeamRepository(TeamMapper teamMapper, MemoryTeamStorage memoryTeamStorage){
+    private final MemoryTeamBuildingStorage memoryTeamBuildingStorage;
+
+    public MemoryTeamRepository(TeamMapper teamMapper, MemoryTeamStorage memoryTeamStorage, MemoryTeamBuildingStorage memoryTeamBuildingStorage){
         this.teamMapper = teamMapper;
         this.memoryTeamStorage = memoryTeamStorage;
+        this.memoryTeamBuildingStorage = memoryTeamBuildingStorage;
     }
 
     @Override
@@ -38,11 +42,21 @@ public class MemoryTeamRepository implements TeamRepository, TeamBuildingsTeamRe
     public void updateTeamById(int teamId, TeamDto teamDto){
         Team team = teamMapper.teamDtoToTeamDomain(teamDto);
         memoryTeamStorage.updateTeam(team);
+        modifyTeamBuildingTeamList(teamDto.getTeamBuildingId());
     }
 
     @Override
     public void deleteTeamById(int teamId){
+        TeamDto teamDto = readTeamById(teamId);
+        modifyTeamBuildingTeamList(teamDto.getTeamBuildingId());
         memoryTeamStorage.deleteTeamById(teamId);
+    }
+
+    private void modifyTeamBuildingTeamList(int teamBuildingId){
+        List<TeamDto> teamDtoList = readAllTeamByTeamBuildingId(teamBuildingId);
+        TeamBuilding teamBuilding = memoryTeamBuildingStorage.readTeamBuildingById(teamBuildingId);
+        teamBuilding.setTeamList(teamMapper.teamDtoListToTeamDomainList(teamDtoList));
+
     }
 
     @Override
@@ -59,7 +73,7 @@ public class MemoryTeamRepository implements TeamRepository, TeamBuildingsTeamRe
 
     @Override
     public boolean isExistTeam(int teamId){
-        return memoryTeamStorage.readTeamById(teamId) !=null;
+        return memoryTeamStorage.readTeamById(teamId) != null;
     }
 
 }

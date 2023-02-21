@@ -64,11 +64,11 @@ public class MemoryBoardStorage{
         List<Board> boardList = new ArrayList<>();
         for (Map.Entry<Integer, Board> boardEntry : storage.entrySet()){
             if (isCategoryIdEqual(boardEntry.getValue().getCategoryId(), categoryId)){
-                if(isInRange(matchedIdx,from,to)){
+                if (isInRange(matchedIdx, from, to)){
                     boardList.add(boardEntry.getValue());
                 }
                 matchedIdx++;
-                if(matchedIdx > to){
+                if (matchedIdx > to){
                     return boardList;
                 }
             }
@@ -95,11 +95,11 @@ public class MemoryBoardStorage{
         List<Board> boardList = new ArrayList<>();
         for (Map.Entry<Integer, Board> boardEntry : storage.entrySet()){
             if (isKeywordContained(boardEntry.getValue().getTitle(), keyword)){
-                if(isInRange(matchedIdx,from,to)){
+                if (isInRange(matchedIdx, from, to)){
                     boardList.add(boardEntry.getValue());
                 }
                 matchedIdx++;
-                if(matchedIdx > to){
+                if (matchedIdx > to){
                     return boardList;
                 }
             }
@@ -112,11 +112,11 @@ public class MemoryBoardStorage{
         List<Board> boardList = new ArrayList<>();
         for (Map.Entry<Integer, Board> boardEntry : storage.entrySet()){
             if (isKeywordContained(boardEntry.getValue().getContent(), keyword)){
-                if(isInRange(matchedIdx,from,to)){
+                if (isInRange(matchedIdx, from, to)){
                     boardList.add(boardEntry.getValue());
                 }
                 matchedIdx++;
-                if(matchedIdx > to){
+                if (matchedIdx > to){
                     return boardList;
                 }
             }
@@ -129,18 +129,17 @@ public class MemoryBoardStorage{
         List<Board> boardList = new ArrayList<>();
         for (Map.Entry<Integer, Board> boardEntry : storage.entrySet()){
             if (isKeywordContained(boardEntry.getValue().getUser().getUserId(), keyword)){
-                if(isInRange(matchedIdx,from,to)){
+                if (isInRange(matchedIdx, from, to)){
                     boardList.add(boardEntry.getValue());
                 }
                 matchedIdx++;
-                if(matchedIdx > to){
+                if (matchedIdx > to){
                     return boardList;
                 }
             }
         }
         return boardList;
     }
-
 
 
     private boolean isInRange(int index, int from, int to){
