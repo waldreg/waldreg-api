@@ -67,6 +67,10 @@ public final class TeamBuilding{
         this.teamList = teamList;
     }
 
+    public void addTeam(Team team){
+        this.teamList.add(team);
+    }
+
     public static final class Builder{
 
         private int teamBuildingId;

@@ -6,6 +6,7 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicInteger;
 import org.springframework.stereotype.Repository;
+import org.waldreg.domain.teambuilding.Team;
 import org.waldreg.domain.teambuilding.TeamBuilding;
 
 @Repository
@@ -62,6 +63,11 @@ public class MemoryTeamBuildingStorage{
 
     public int getTeamBuildingMaxIdx(){
         return storage.size();
+    }
+
+    public void addTeamInTeamBuildingTeamList(Team team){
+        int teamBuildingId = team.getTeamBuildingId();
+        storage.get(teamBuildingId).addTeam(team);
     }
 
 }

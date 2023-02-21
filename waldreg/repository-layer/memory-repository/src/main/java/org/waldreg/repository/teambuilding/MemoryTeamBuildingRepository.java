@@ -3,21 +3,27 @@ package org.waldreg.repository.teambuilding;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
+import org.waldreg.domain.teambuilding.Team;
 import org.waldreg.domain.teambuilding.TeamBuilding;
 import org.waldreg.repository.MemoryTeamBuildingStorage;
-import org.waldreg.teambuilding.dto.TeamBuildingDto;
-import org.waldreg.teambuilding.spi.TeamBuildingRepository;
+import org.waldreg.teambuilding.dto.TeamDto;
+import org.waldreg.teambuilding.team.spi.TeamInTeamBuildingRepository;
+import org.waldreg.teambuilding.teambuilding.dto.TeamBuildingDto;
+import org.waldreg.teambuilding.teambuilding.spi.TeamBuildingRepository;
 
 @Repository
-public class MemoryTeamBuildingRepository implements TeamBuildingRepository{
+public class MemoryTeamBuildingRepository implements TeamBuildingRepository, TeamInTeamBuildingRepository{
 
     private final TeamBuildingMapper teamBuildingMapper;
+
+    private final TeamInTeamBuildingMapper teamInTeamBuildingMapper;
 
     private final MemoryTeamBuildingStorage memoryTeamBuildingStorage;
 
     @Autowired
-    public MemoryTeamBuildingRepository(TeamBuildingMapper teamBuildingMapper, MemoryTeamBuildingStorage memoryTeamBuildingStorage){
+    public MemoryTeamBuildingRepository(TeamBuildingMapper teamBuildingMapper, TeamInTeamBuildingMapper teamInTeamBuildingMapper, MemoryTeamBuildingStorage memoryTeamBuildingStorage){
         this.teamBuildingMapper = teamBuildingMapper;
+        this.teamInTeamBuildingMapper = teamInTeamBuildingMapper;
         this.memoryTeamBuildingStorage = memoryTeamBuildingStorage;
     }
 
@@ -56,6 +62,12 @@ public class MemoryTeamBuildingRepository implements TeamBuildingRepository{
     @Override
     public void deleteTeamBuildingById(int teamBuildingId){
         memoryTeamBuildingStorage.deleteTeamBuildingById(teamBuildingId);
+    }
+
+    @Override
+    public void addTeamInTeamBuildingTeamList(TeamDto teamDto){
+        Team team = teamInTeamBuildingMapper.teamDtoToTeamDomain(teamDto);
+        memoryTeamBuildingStorage.addTeamInTeamBuildingTeamList(team);
     }
 
     @Override

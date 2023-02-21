@@ -6,11 +6,11 @@ import org.waldreg.domain.user.User;
 
 public final class Team{
 
-    private final int teamId;
-    private final int teamBuildingId;
-    private final String teamName;
-    private final LocalDateTime lastModifiedAt;
-    private final List<User> userList;
+    private int teamId;
+    private int teamBuildingId;
+    private String teamName;
+    private LocalDateTime lastModifiedAt;
+    private List<User> userList;
 
     private Team(){
         throw new UnsupportedOperationException("Cannot invoke constructor \"Team()\"");
@@ -26,6 +26,10 @@ public final class Team{
 
     public static Builder builder(){
         return new Builder();
+    }
+
+    public void setTeamId(int teamId){
+        this.teamId = teamId;
     }
 
     public int getTeamId(){
