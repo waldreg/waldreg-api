@@ -2,13 +2,20 @@ package org.waldreg.repository.team;
 
 import java.util.ArrayList;
 import java.util.List;
+import org.springframework.stereotype.Repository;
+import org.springframework.stereotype.Service;
 import org.waldreg.domain.teambuilding.Team;
 import org.waldreg.domain.user.User;
 import org.waldreg.repository.teambuilding.TeamInTeamBuildingMapper;
 import org.waldreg.teambuilding.dto.TeamDto;
 import org.waldreg.teambuilding.dto.UserDto;
 
+@Service
 public class TeamMapper implements TeamInTeamBuildingMapper{
+
+    private final UserInTeamMapper userInTeamMapper;
+
+    public TeamMapper(UserInTeamMapper userInTeamMapper){this.userInTeamMapper = userInTeamMapper;}
 
     @Override
     public List<Team> teamDtoListToTeamDomainList(List<TeamDto> teamDtoList){
@@ -72,18 +79,9 @@ public class TeamMapper implements TeamInTeamBuildingMapper{
     public List<UserDto> userDomainListToUserDtoList(List<User> userList){
         List<UserDto> userDtoList = new ArrayList<>();
         for (User user : userList){
-            userDtoList.add(userDomainToUserDto(user));
+            userDtoList.add(userInTeamMapper.userDomainToUserDto(user));
         }
         return userDtoList;
-    }
-
-    @Override
-    public UserDto userDomainToUserDto(User user){
-        return UserDto.builder()
-                .id(user.getId())
-                .userId(user.getUserId())
-                .name(user.getName())
-                .build();
     }
 
 }

@@ -19,6 +19,7 @@ import org.waldreg.repository.character.CharacterMapper;
 import org.waldreg.repository.character.MemoryCharacterRepository;
 import org.waldreg.repository.teambuilding.MemoryTeamBuildingRepository;
 import org.waldreg.repository.teambuilding.TeamBuildingMapper;
+import org.waldreg.repository.teambuildinguserinfo.UserInfoMapper;
 import org.waldreg.repository.user.MemoryUserRepository;
 import org.waldreg.repository.user.UserMapper;
 import org.waldreg.teambuilding.dto.TeamDto;
@@ -30,7 +31,7 @@ import org.waldreg.user.spi.CharacterRepository;
 import org.waldreg.user.spi.UserRepository;
 
 @ExtendWith(SpringExtension.class)
-@ContextConfiguration(classes = {MemoryTeamRepository.class, MemoryTeamStorage.class, TeamMapper.class, MemoryUserRepository.class, MemoryUserStorage.class, UserMapper.class, MemoryCharacterStorage.class, MemoryCharacterRepository.class, CharacterMapper.class, MemoryTeamBuildingRepository.class, MemoryTeamBuildingStorage.class, TeamBuildingMapper.class})
+@ContextConfiguration(classes = {MemoryTeamRepository.class, MemoryTeamStorage.class, TeamMapper.class, MemoryUserRepository.class, MemoryUserStorage.class, UserMapper.class, MemoryCharacterStorage.class, MemoryCharacterRepository.class, CharacterMapper.class, MemoryTeamBuildingRepository.class, MemoryTeamBuildingStorage.class, TeamBuildingMapper.class, UserInfoMapper.class})
 public class TeamRepositoryTest{
 
     @Autowired
@@ -217,7 +218,7 @@ public class TeamRepositoryTest{
                 () -> Assertions.assertEquals(teamDto2.getUserList().get(3).getUserId(), result.get(3).getUserId()),
                 () -> Assertions.assertEquals(teamDto2.getUserList().get(4).getUserId(), result.get(4).getUserId()),
                 () -> Assertions.assertEquals(teamDto2.getUserList().get(5).getUserId(), result.get(5).getUserId())
-                );
+        );
 
     }
 

@@ -20,6 +20,7 @@ import org.waldreg.repository.character.CharacterMapper;
 import org.waldreg.repository.character.MemoryCharacterRepository;
 import org.waldreg.repository.team.MemoryTeamRepository;
 import org.waldreg.repository.team.TeamMapper;
+import org.waldreg.repository.teambuildinguserinfo.UserInfoMapper;
 import org.waldreg.repository.user.MemoryUserRepository;
 import org.waldreg.repository.user.UserMapper;
 import org.waldreg.teambuilding.dto.TeamDto;
@@ -31,7 +32,7 @@ import org.waldreg.user.spi.CharacterRepository;
 import org.waldreg.user.spi.UserRepository;
 
 @ExtendWith(SpringExtension.class)
-@ContextConfiguration(classes = {MemoryTeamRepository.class, MemoryTeamStorage.class, MemoryTeamBuildingRepository.class, MemoryTeamBuildingStorage.class, TeamBuildingMapper.class, MemoryUserRepository.class, MemoryUserStorage.class, UserMapper.class, MemoryCharacterStorage.class, MemoryCharacterRepository.class, CharacterMapper.class, TeamMapper.class})
+@ContextConfiguration(classes = {MemoryTeamRepository.class, MemoryTeamStorage.class, MemoryTeamBuildingRepository.class, MemoryTeamBuildingStorage.class, TeamBuildingMapper.class, MemoryUserRepository.class, MemoryUserStorage.class, UserMapper.class, MemoryCharacterStorage.class, MemoryCharacterRepository.class, CharacterMapper.class, TeamMapper.class, UserInfoMapper.class})
 public class TeamBuildingRepositoryTest{
 
     @Autowired
