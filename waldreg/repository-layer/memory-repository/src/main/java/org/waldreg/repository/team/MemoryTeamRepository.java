@@ -3,6 +3,7 @@ package org.waldreg.repository.team;
 import java.util.ArrayList;
 import java.util.List;
 import org.waldreg.domain.teambuilding.Team;
+import org.waldreg.domain.user.User;
 import org.waldreg.repository.MemoryTeamStorage;
 import org.waldreg.teambuilding.dto.TeamDto;
 import org.waldreg.teambuilding.dto.UserDto;
@@ -46,12 +47,14 @@ public class MemoryTeamRepository implements TeamRepository, TeamBuildingsTeamRe
 
     @Override
     public List<TeamDto> readAllTeamByTeamBuildingId(int teamBuildingId){
-        return null;
+        List<Team> teamList = memoryTeamStorage.readAllTeamByTeamBuildingId(teamBuildingId);
+        return teamMapper.teamDomainListToTeamDtoList(teamList);
     }
 
     @Override
     public List<UserDto> readAllUserByTeamBuildingId(int teamBuildingId){
-        return null;
+        List<User> userList = memoryTeamStorage.readAllUserByTeamBuildingId(teamBuildingId);
+        return teamMapper.userDomainListToUserDtoList(userList);
     }
 
     @Override

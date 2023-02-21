@@ -65,6 +65,10 @@ public class TeamRepositoryTest{
     @AfterEach
     private void DELETE_ALL_TEAM(){memoryTeamStorage.deleteAllTeam();}
 
+    @BeforeEach
+    @AfterEach
+    private void DELETE_ALL_TEAM_BUILDING(){memoryTeamBuildingStorage.deleteAllTeamBuilding();}
+
     @Test
     @DisplayName("새로운 team 생성")
     public void CREATE_NEW_TEAM_SUCCESS_TEST(){
@@ -123,9 +127,9 @@ public class TeamRepositoryTest{
         TeamBuildingDto teamBuildingDto = teamBuildingRepository.createTeamBuilding(title);
         TeamDto teamDto = createTeamDto(teamBuildingDto.getTeamBuildingId(), teamName, List.of());
         TeamDto teamDto2 = teamRepository.createTeam(teamDto);
-        TeamDto modifiedteamDto = createTeamDto(teamBuildingDto.getTeamBuildingId(), "changing~",createUserDtoList());
+        TeamDto modifiedteamDto = createTeamDto(teamBuildingDto.getTeamBuildingId(), "changing~", createUserDtoList());
         modifiedteamDto.setTeamId(teamDto2.getTeamId());
-        teamRepository.updateTeamById(teamDto2.getTeamId(),modifiedteamDto);
+        teamRepository.updateTeamById(teamDto2.getTeamId(), modifiedteamDto);
         TeamDto result = teamRepository.readTeamById(teamDto2.getTeamId());
 
         //then
@@ -153,7 +157,67 @@ public class TeamRepositoryTest{
         teamRepository.deleteTeamById(teamDto2.getTeamId());
 
         //then
-        Assertions.assertFalse(()-> teamRepository.isExistTeam(teamDto2.getTeamId()));
+        Assertions.assertFalse(() -> teamRepository.isExistTeam(teamDto2.getTeamId()));
+
+    }
+
+    @Test
+    @DisplayName("teambuilding_id로 전체 조회")
+    public void READ_ALL_TEAM_BY_TEAM_BUILDING_ID_SUCCESS_TEST(){
+        //given
+        String title = "teamBuilding";
+        String teamName2 = "team2";
+        String teamName = "team";
+
+        //when
+        TeamBuildingDto teamBuildingDto = teamBuildingRepository.createTeamBuilding(title);
+        TeamDto teamDto2 = createTeamDto(teamBuildingDto.getTeamBuildingId(), teamName2, createUserDtoList());
+        TeamDto teamDto = createTeamDto(teamBuildingDto.getTeamBuildingId(), teamName, List.of());
+        teamRepository.createTeam(teamDto);
+        teamRepository.createTeam(teamDto2);
+        List<TeamDto> result = teamRepository.readAllTeamByTeamBuildingId(teamBuildingDto.getTeamBuildingId());
+
+        //then
+        Assertions.assertAll(
+                () -> Assertions.assertEquals(2, result.size()),
+                () -> Assertions.assertEquals(teamDto.getTeamBuildingId(), result.get(0).getTeamBuildingId()),
+                () -> Assertions.assertEquals(teamDto2.getTeamBuildingId(), result.get(1).getTeamBuildingId()),
+                () -> Assertions.assertEquals(teamDto.getTeamName(), result.get(0).getTeamName()),
+                () -> Assertions.assertEquals(teamDto2.getTeamName(), result.get(1).getTeamName()),
+                () -> Assertions.assertEquals(teamDto.getUserList().size(), result.get(0).getUserList().size()),
+                () -> Assertions.assertEquals(teamDto2.getUserList().size(), result.get(1).getUserList().size()),
+                () -> Assertions.assertEquals(teamDto.getLastModifiedAt(), result.get(0).getLastModifiedAt()),
+                () -> Assertions.assertEquals(teamDto2.getLastModifiedAt(), result.get(1).getLastModifiedAt())
+        );
+
+    }
+
+    @Test
+    @DisplayName("teambuilding_id로 전체 유저 조회")
+    public void READ_ALL_USER_IN_TEAM_BY_TEAM_BUILDING_ID_SUCCESS_TEST(){
+        //given
+        String title = "teamBuilding";
+        String teamName2 = "team2";
+        String teamName = "team";
+
+        //when
+        TeamBuildingDto teamBuildingDto = teamBuildingRepository.createTeamBuilding(title);
+        TeamDto teamDto2 = createTeamDto(teamBuildingDto.getTeamBuildingId(), teamName2, createUserDtoList());
+        TeamDto teamDto = createTeamDto(teamBuildingDto.getTeamBuildingId(), teamName, List.of());
+        teamRepository.createTeam(teamDto);
+        teamRepository.createTeam(teamDto2);
+        List<UserDto> result = teamRepository.readAllUserByTeamBuildingId(teamBuildingDto.getTeamBuildingId());
+
+        //then
+        Assertions.assertAll(
+                () -> Assertions.assertEquals(6, result.size()),
+                () -> Assertions.assertEquals(teamDto2.getUserList().get(0).getUserId(), result.get(0).getUserId()),
+                () -> Assertions.assertEquals(teamDto2.getUserList().get(1).getUserId(), result.get(1).getUserId()),
+                () -> Assertions.assertEquals(teamDto2.getUserList().get(2).getUserId(), result.get(2).getUserId()),
+                () -> Assertions.assertEquals(teamDto2.getUserList().get(3).getUserId(), result.get(3).getUserId()),
+                () -> Assertions.assertEquals(teamDto2.getUserList().get(4).getUserId(), result.get(4).getUserId()),
+                () -> Assertions.assertEquals(teamDto2.getUserList().get(5).getUserId(), result.get(5).getUserId())
+                );
 
     }
 

@@ -36,6 +36,14 @@ public class TeamMapper implements TeamInTeamBuildingMapper{
                 .build();
     }
 
+    public List<TeamDto> teamDomainListToTeamDtoList(List<Team> teamList){
+        List<TeamDto> teamDtoList = new ArrayList<>();
+        for (Team team : teamList){
+            teamDtoList.add(teamDomainToTeamDto(team));
+        }
+        return teamDtoList;
+    }
+
     public TeamDto teamDomainToTeamDto(Team team){
         return TeamDto.builder()
                 .teamId(team.getTeamId())
