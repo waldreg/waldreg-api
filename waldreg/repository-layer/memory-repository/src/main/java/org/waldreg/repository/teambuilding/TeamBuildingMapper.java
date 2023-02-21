@@ -31,10 +31,6 @@ public class TeamBuildingMapper{
                 .build();
     }
 
-    private boolean isUpdateTeamBuilding(TeamBuildingDto teamBuildingDto){
-        return teamBuildingDto.getTeamList() != null;
-    }
-
     private List<Team> teamDtoListToTeamDomainList(List<TeamDto> teamDtoList){
         List<Team> teamList = new ArrayList<>();
         for (TeamDto teamDto : teamDtoList){
@@ -42,8 +38,6 @@ public class TeamBuildingMapper{
         }
         return teamList;
     }
-
-
 
     public List<TeamBuildingDto> teamBuildingDomainListToTeamBuildingDtoList(List<TeamBuilding> teamBuildingList){
         List<TeamBuildingDto> teamBuildingDtoList = new ArrayList<>();
@@ -61,7 +55,7 @@ public class TeamBuildingMapper{
                 .createdAt(teamBuilding.getCreatedAt());
         if (!isTeamListEmpty(teamBuilding)){
             return builder
-                    .teamDtoList(teamDomainListToTeamDtoList(teamBuilding.getTeamList()))
+                    .teamDtoList(teamInTeamBuildingMapper.teamDomainListToTeamDtoList(teamBuilding.getTeamList()))
                     .build();
         }
         return builder.build();
@@ -71,12 +65,6 @@ public class TeamBuildingMapper{
         return teamBuilding.getTeamList() == null;
     }
 
-    private List<TeamDto> teamDomainListToTeamDtoList(List<Team> teamList){
-        List<TeamDto> teamDtoList = new ArrayList<>();
-        for (Team team : teamList){
-            teamDtoList.add(teamInTeamBuildingMapper.teamDomainToTeamDto(team));
-        }
-        return teamDtoList;
-    }
+
 
 }
