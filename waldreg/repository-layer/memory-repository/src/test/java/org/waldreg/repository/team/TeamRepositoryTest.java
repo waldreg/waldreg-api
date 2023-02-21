@@ -139,6 +139,24 @@ public class TeamRepositoryTest{
 
     }
 
+    @Test
+    @DisplayName("team_id로 삭제")
+    public void DELETE_TEAM_BY_TEAM_ID_SUCCESS_TEST(){
+        //given
+        String title = "teamBuilding";
+        String teamName = "team";
+
+        //when
+        TeamBuildingDto teamBuildingDto = teamBuildingRepository.createTeamBuilding(title);
+        TeamDto teamDto = createTeamDto(teamBuildingDto.getTeamBuildingId(), teamName, List.of());
+        TeamDto teamDto2 = teamRepository.createTeam(teamDto);
+        teamRepository.deleteTeamById(teamDto2.getTeamId());
+
+        //then
+        Assertions.assertFalse(()-> teamRepository.isExistTeam(teamDto2.getTeamId()));
+
+    }
+
     private TeamBuildingDto createTeamBuildingDto(String title){
         return TeamBuildingDto.builder()
                 .teamBuildingTitle(title)
