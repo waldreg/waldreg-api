@@ -18,6 +18,7 @@ public class BoardDto{
     private ReactionDto reactions;
     private List<CommentDto> commentList;
     private int views;
+    private int commentCount;
 
     private BoardDto(){}
 
@@ -35,6 +36,7 @@ public class BoardDto{
         this.reactions = builder.reactions;
         this.commentList = builder.commentList;
         this.views = builder.views;
+        this.commentCount = builder.commentCount;
     }
 
     public static Builder builder(){
@@ -129,6 +131,14 @@ public class BoardDto{
         this.commentList = commentList;
     }
 
+    public int getCommentCount(){
+        return commentCount;
+    }
+
+    public void setCommentCount(int commentCount){
+        this.commentCount = commentCount;
+    }
+
     public static final class Builder{
 
         private int id;
@@ -144,6 +154,7 @@ public class BoardDto{
         private ReactionDto reactions;
         private List<CommentDto> commentList;
         private int views;
+        private int commentCount;
 
         private Builder(){}
 
@@ -208,6 +219,11 @@ public class BoardDto{
 
         public Builder commentList(List<CommentDto> commentList){
             this.commentList = commentList;
+            return this;
+        }
+
+        public Builder commentCount(int commentCount){
+            this.commentCount = commentCount;
             return this;
         }
 
