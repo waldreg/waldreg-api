@@ -1,6 +1,5 @@
 package org.waldreg.repository.team;
 
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import org.junit.jupiter.api.AfterEach;
@@ -12,7 +11,6 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
-import org.waldreg.domain.teambuilding.TeamBuilding;
 import org.waldreg.repository.MemoryCharacterStorage;
 import org.waldreg.repository.MemoryTeamBuildingStorage;
 import org.waldreg.repository.MemoryTeamStorage;
@@ -76,16 +74,40 @@ public class TeamRepositoryTest{
 
         //when
         TeamBuildingDto teamBuildingDto = teamBuildingRepository.createTeamBuilding(title);
-        TeamDto teamDto= createTeamDto(teamBuildingDto.getTeamBuildingId(),teamName,List.of());
+        TeamDto teamDto = createTeamDto(teamBuildingDto.getTeamBuildingId(), teamName, List.of());
         TeamDto result = teamRepository.createTeam(teamDto);
 
         //then
         Assertions.assertAll(
-                () -> Assertions.assertTrue(result.getTeamId()!=0),
-                () -> Assertions.assertEquals(teamDto.getTeamBuildingId(),result.getTeamBuildingId()),
+                () -> Assertions.assertTrue(result.getTeamId() != 0),
+                () -> Assertions.assertEquals(teamDto.getTeamBuildingId(), result.getTeamBuildingId()),
                 () -> Assertions.assertEquals(teamDto.getTeamName(), result.getTeamName()),
                 () -> Assertions.assertEquals(teamDto.getUserList(), result.getUserList()),
                 () -> Assertions.assertNotNull(result.getLastModifiedAt())
+        );
+
+    }
+
+    @Test
+    @DisplayName("team_id로 조회")
+    public void READ_TEAM_BY_TEAM_ID_SUCCESS_TEST(){
+        //given
+        String title = "teamBuilding";
+        String teamName = "team";
+
+        //when
+        TeamBuildingDto teamBuildingDto = teamBuildingRepository.createTeamBuilding(title);
+        TeamDto teamDto = createTeamDto(teamBuildingDto.getTeamBuildingId(), teamName, List.of());
+        TeamDto teamDto2 = teamRepository.createTeam(teamDto);
+        TeamDto result = teamRepository.readTeamById(teamDto2.getTeamId());
+
+        //then
+        Assertions.assertAll(
+                () -> Assertions.assertEquals(teamDto2.getTeamId(), result.getTeamId()),
+                () -> Assertions.assertEquals(teamDto2.getTeamBuildingId(), result.getTeamBuildingId()),
+                () -> Assertions.assertEquals(teamDto2.getTeamName(), result.getTeamName()),
+                () -> Assertions.assertEquals(teamDto2.getUserList(), result.getUserList()),
+                () -> Assertions.assertEquals(teamDto2.getLastModifiedAt(), result.getLastModifiedAt())
         );
 
     }
