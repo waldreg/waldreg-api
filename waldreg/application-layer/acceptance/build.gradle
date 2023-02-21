@@ -9,7 +9,7 @@ targetCompatibility = '11'
 
 group 'org.waldreg'
 
-version '0.3.2-SNAPSHOT'
+version '0.3.3-SNAPSHOT'
 
 jar {
     enabled = false;

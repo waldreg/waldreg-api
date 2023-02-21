@@ -45,6 +45,7 @@ public class MemoryBoardRepository implements BoardRepository, CommentInBoardRep
     @Override
     public BoardDto inquiryBoardById(int boardId){
         Board board = memoryBoardStorage.inquiryBoardById(boardId);
+        int commentCount = memoryCommentStorage.getCommentMaxIdxByBoardId(boardId);
         return boardMapper.boardDomainToBoardDto(board);
     }
 

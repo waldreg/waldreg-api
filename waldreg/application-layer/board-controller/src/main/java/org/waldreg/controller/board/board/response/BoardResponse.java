@@ -16,6 +16,10 @@ public class BoardResponse{
     @JsonProperty("last_modified_at")
     private LocalDateTime lastModifiedAt;
 
+    private int views;
+
+    @JsonProperty("comment_count")
+    private int commentCount;
     private String[] images;
 
     @JsonProperty("exist_file")
@@ -36,6 +40,8 @@ public class BoardResponse{
         this.author = builder.author;
         this.createdAt = builder.createdAt;
         this.lastModifiedAt = builder.lastModifiedAt;
+        this.views = builder.views;
+        this.commentCount = builder.commentCount;
         this.images = builder.images;
         this.existFile = builder.existFile;
         this.files = builder.files;
@@ -103,6 +109,14 @@ public class BoardResponse{
         this.lastModifiedAt = lastModifiedAt;
     }
 
+    public int getViews(){
+        return views;
+    }
+
+    public int getCommentCount(){
+        return commentCount;
+    }
+
     public String[] getImages(){
         return images;
     }
@@ -143,9 +157,9 @@ public class BoardResponse{
         private String content;
         private Author author;
         private LocalDateTime createdAt;
-
         private LocalDateTime lastModifiedAt;
-
+        private int views;
+        private int commentCount;
         private String[] images;
         private String existFile;
 
@@ -189,6 +203,16 @@ public class BoardResponse{
 
         public Builder lastModifiedAt(LocalDateTime lastModifiedAt){
             this.lastModifiedAt = lastModifiedAt;
+            return this;
+        }
+
+        public Builder views(int views){
+            this.views = views;
+            return this;
+        }
+
+        public Builder commentCount(int commentCount){
+            this.commentCount = commentCount;
             return this;
         }
 
