@@ -12,17 +12,17 @@ public class MemoryTeamBuildingUserInfoRepository implements TeamUserRepository,
 
     private final MemoryUserStorage memoryUserStorage;
 
-    private final UserInfoMapper userInfoMapper;
+    private final TeamBuildingUserInfoMapper teamBuildingUserInfoMapper;
 
-    public MemoryTeamBuildingUserInfoRepository(MemoryUserStorage memoryUserStorage, UserInfoMapper userInfoMapper){
+    public MemoryTeamBuildingUserInfoRepository(MemoryUserStorage memoryUserStorage, TeamBuildingUserInfoMapper teamBuildingUserInfoMapper){
         this.memoryUserStorage = memoryUserStorage;
-        this.userInfoMapper = userInfoMapper;
+        this.teamBuildingUserInfoMapper = teamBuildingUserInfoMapper;
     }
 
     @Override
     public UserDto getUserInfoByUserId(String userId){
         User user = memoryUserStorage.readUserByUserId(userId);
-        return userInfoMapper.userDomainToUserDto(user);
+        return teamBuildingUserInfoMapper.userDomainToUserDto(user);
     }
 
     @Override

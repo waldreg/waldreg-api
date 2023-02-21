@@ -115,10 +115,14 @@ public class TeamBuildingController{
     public void updateTeamNameByTeamId(@PathVariable("team-id") int teamId, @RequestBody TeamUpdateRequest teamUpdateRequest, @Nullable PermissionVerifyState permissionVerifyState){
         int id = decryptedTokenContextGetter.get();
         List<UserDto> userDtoList = teamManager.readTeamById(teamId).getUserList();
-        if (permissionVerifyState.isVerified() || userDtoList.stream().anyMatch(i -> i.getId() == id)){
-            teamManager.updateTeamNameById(teamId, teamUpdateRequest.getTeamName());
+        throwIfNoUpdatePermission(permissionVerifyState, id, userDtoList);
+        teamManager.updateTeamNameById(teamId, teamUpdateRequest.getTeamName());
+    }
+
+    private void throwIfNoUpdatePermission(PermissionVerifyState permissionVerifyState, int id, List<UserDto> userDtoList){
+        if (!permissionVerifyState.isVerified() || userDtoList.stream().noneMatch(i -> i.getId() == id)){
+            throw new NoPermissionException();
         }
-        throw new NoPermissionException();
     }
 
     @Authenticating

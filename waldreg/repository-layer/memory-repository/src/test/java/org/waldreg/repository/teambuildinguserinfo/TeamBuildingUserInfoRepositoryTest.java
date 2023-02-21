@@ -26,7 +26,7 @@ import org.waldreg.user.spi.JoiningPoolRepository;
 import org.waldreg.user.spi.UserRepository;
 
 @ExtendWith(SpringExtension.class)
-@ContextConfiguration(classes = {UserInfoMapper.class, MemoryUserRepository.class, MemoryUserStorage.class, MemoryCharacterRepository.class, MemoryCharacterStorage.class, UserMapper.class, CharacterMapper.class, MemoryTeamBuildingUserInfoRepository.class, MemoryJoiningPoolRepository.class, MemoryJoiningPoolStorage.class})
+@ContextConfiguration(classes = {TeamBuildingUserInfoMapper.class, MemoryUserRepository.class, MemoryUserStorage.class, MemoryCharacterRepository.class, MemoryCharacterStorage.class, UserMapper.class, CharacterMapper.class, MemoryTeamBuildingUserInfoRepository.class, MemoryJoiningPoolRepository.class, MemoryJoiningPoolStorage.class})
 public class TeamBuildingUserInfoRepositoryTest{
 
     @Autowired
