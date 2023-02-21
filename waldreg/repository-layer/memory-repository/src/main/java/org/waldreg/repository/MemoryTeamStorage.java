@@ -31,4 +31,8 @@ public class MemoryTeamStorage{
         return storage.get(teamId);
     }
 
+    public void updateTeam(Team team){
+        storage.replace(team.getTeamId(),team);
+    }
+
 }

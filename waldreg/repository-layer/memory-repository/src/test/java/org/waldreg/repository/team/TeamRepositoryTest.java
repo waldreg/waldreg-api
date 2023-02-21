@@ -112,6 +112,33 @@ public class TeamRepositoryTest{
 
     }
 
+    @Test
+    @DisplayName("team_id로 team 수정")
+    public void UPDATE_TEAM_BY_TEAM_ID_SUCCESS_TEST(){
+        //given
+        String title = "teamBuilding";
+        String teamName = "team";
+
+        //when
+        TeamBuildingDto teamBuildingDto = teamBuildingRepository.createTeamBuilding(title);
+        TeamDto teamDto = createTeamDto(teamBuildingDto.getTeamBuildingId(), teamName, List.of());
+        TeamDto teamDto2 = teamRepository.createTeam(teamDto);
+        TeamDto modifiedteamDto = createTeamDto(teamBuildingDto.getTeamBuildingId(), "changing~",createUserDtoList());
+        modifiedteamDto.setTeamId(teamDto2.getTeamId());
+        teamRepository.updateTeamById(teamDto2.getTeamId(),modifiedteamDto);
+        TeamDto result = teamRepository.readTeamById(teamDto2.getTeamId());
+
+        //then
+        Assertions.assertAll(
+                () -> Assertions.assertEquals(teamDto2.getTeamId(), result.getTeamId()),
+                () -> Assertions.assertEquals(modifiedteamDto.getTeamBuildingId(), result.getTeamBuildingId()),
+                () -> Assertions.assertEquals(modifiedteamDto.getTeamName(), result.getTeamName()),
+                () -> Assertions.assertEquals(modifiedteamDto.getUserList().size(), result.getUserList().size()),
+                () -> Assertions.assertEquals(modifiedteamDto.getLastModifiedAt(), result.getLastModifiedAt())
+        );
+
+    }
+
     private TeamBuildingDto createTeamBuildingDto(String title){
         return TeamBuildingDto.builder()
                 .teamBuildingTitle(title)
