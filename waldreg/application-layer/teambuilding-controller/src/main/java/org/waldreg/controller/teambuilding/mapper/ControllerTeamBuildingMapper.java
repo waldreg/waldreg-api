@@ -5,7 +5,13 @@ import java.util.List;
 import org.waldreg.controller.teambuilding.request.TeamBuildingRequest;
 import org.waldreg.controller.teambuilding.request.TeamRequest;
 import org.waldreg.controller.teambuilding.request.UserWeightRequest;
+import org.waldreg.controller.teambuilding.response.TeamBuildingResponse;
+import org.waldreg.controller.teambuilding.response.TeamResponse;
+import org.waldreg.controller.teambuilding.response.UserResponse;
+import org.waldreg.teambuilding.dto.TeamDto;
+import org.waldreg.teambuilding.dto.UserDto;
 import org.waldreg.teambuilding.team.dto.TeamRequestDto;
+import org.waldreg.teambuilding.teambuilding.dto.TeamBuildingDto;
 import org.waldreg.teambuilding.teambuilding.dto.TeamBuildingRequestDto;
 import org.waldreg.teambuilding.teambuilding.dto.UserRequestDto;
 
@@ -37,6 +43,45 @@ public class ControllerTeamBuildingMapper{
         return TeamRequestDto.builder()
                 .teamName(teamRequest.getTeamName())
                 .memberList(teamRequest.getMembers())
+                .build();
+    }
+
+    public TeamBuildingResponse teamBuildingDtoToTeamBuildingResponse(TeamBuildingDto teamBuildingDto){
+        return TeamBuildingResponse.builder()
+                .teamBuildingId(teamBuildingDto.getTeamBuildingId())
+                .teamBuildingTitle(teamBuildingDto.getTeamBuildingTitle())
+                .teamList(teamDtoListToTeamResponseList(teamBuildingDto.getTeamList()))
+                .createdAt(teamBuildingDto.getCreatedAt())
+                .lastModifiedAt(teamBuildingDto.getLastModifiedAt())
+                .build();
+    }
+
+    private List<TeamResponse> teamDtoListToTeamResponseList(List<TeamDto> teamDtoList){
+        List<TeamResponse> teamResponseList = new ArrayList<>();
+        teamDtoList.stream().forEach(i -> teamResponseList.add(teamDtoToTeamResponse(i)));
+        return teamResponseList;
+    }
+
+    private TeamResponse teamDtoToTeamResponse(TeamDto teamDto){
+        return TeamResponse.builder()
+                .teamId(teamDto.getTeamId())
+                .teamName(teamDto.getTeamName())
+                .lastModified(teamDto.getLastModifiedAt())
+                .memberList(userDtoListToUserResponseList(teamDto.getUserList()))
+                .build();
+    }
+
+    private List<UserResponse> userDtoListToUserResponseList(List<UserDto> userDtoList){
+        List<UserResponse> userResponseList = new ArrayList<>();
+        userDtoList.stream().forEach(i -> userResponseList.add(userDtoToUserResponse(i)));
+        return userResponseList;
+    }
+
+    private UserResponse userDtoToUserResponse(UserDto userDto){
+        return UserResponse.builder()
+                .id(userDto.getId())
+                .name(userDto.getName())
+                .userId(userDto.getUserId())
                 .build();
     }
 

@@ -2,7 +2,7 @@ package org.waldreg.controller.teambuilding.response;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-public class MemberResponse{
+public class UserResponse{
 
     @JsonProperty("id")
     private int id;
@@ -11,9 +11,9 @@ public class MemberResponse{
     @JsonProperty("name")
     private String name;
 
-    private MemberResponse(){}
+    private UserResponse(){}
 
-    private MemberResponse(Builder builder){
+    private UserResponse(Builder builder){
         this.id = builder.id;
         this.userId = builder.userId;
         this.name = builder.name;
@@ -54,7 +54,7 @@ public class MemberResponse{
             return this;
         }
 
-        public MemberResponse build(){return new MemberResponse(this);}
+        public UserResponse build(){return new UserResponse(this);}
 
     }
 
