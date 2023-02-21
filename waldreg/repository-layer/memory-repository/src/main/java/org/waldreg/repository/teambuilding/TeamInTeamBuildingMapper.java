@@ -23,6 +23,4 @@ public interface TeamInTeamBuildingMapper{
 
     List<UserDto> userDomainListToUserDtoList(List<User> userList);
 
-    UserDto userDomainToUserDto(User user);
-
 }

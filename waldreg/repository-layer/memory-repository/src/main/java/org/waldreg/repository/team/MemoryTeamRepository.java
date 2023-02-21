@@ -1,6 +1,7 @@
 package org.waldreg.repository.team;
 
 import java.util.List;
+import org.springframework.stereotype.Repository;
 import org.waldreg.domain.teambuilding.Team;
 import org.waldreg.domain.teambuilding.TeamBuilding;
 import org.waldreg.domain.user.User;
@@ -11,6 +12,7 @@ import org.waldreg.teambuilding.dto.UserDto;
 import org.waldreg.teambuilding.team.spi.TeamRepository;
 import org.waldreg.teambuilding.teambuilding.spi.TeamBuildingsTeamRepository;
 
+@Repository
 public class MemoryTeamRepository implements TeamRepository, TeamBuildingsTeamRepository{
 
     private final TeamMapper teamMapper;
