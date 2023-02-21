@@ -13,7 +13,7 @@ public class TeamResponse{
     @JsonProperty("last_modified_at")
     private LocalDateTime lastModifiedAt;
     @JsonProperty("team_members")
-    private List<MemberResponse> memberList;
+    private List<UserResponse> memberList;
 
     private TeamResponse(){}
 
@@ -38,7 +38,7 @@ public class TeamResponse{
         return lastModifiedAt;
     }
 
-    public List<MemberResponse> getMemberList(){
+    public List<UserResponse> getMemberList(){
         return memberList;
     }
 
@@ -47,7 +47,7 @@ public class TeamResponse{
         private int teamId;
         private String teamName;
         private LocalDateTime lastModifiedAt;
-        private List<MemberResponse> memberList;
+        private List<UserResponse> memberList;
 
         public Builder teamId(int teamId){
             this.teamId = teamId;
@@ -64,7 +64,7 @@ public class TeamResponse{
             return this;
         }
 
-        public Builder memberList(List<MemberResponse> memberList){
+        public Builder memberList(List<UserResponse> memberList){
             this.memberList = memberList;
             return this;
         }

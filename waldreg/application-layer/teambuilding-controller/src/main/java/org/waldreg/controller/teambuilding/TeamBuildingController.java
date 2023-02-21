@@ -1,6 +1,7 @@
 package org.waldreg.controller.teambuilding;
 
 import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -9,8 +10,10 @@ import org.waldreg.character.aop.annotation.PermissionVerifying;
 import org.waldreg.controller.teambuilding.mapper.ControllerTeamBuildingMapper;
 import org.waldreg.controller.teambuilding.request.TeamBuildingRequest;
 import org.waldreg.controller.teambuilding.request.TeamRequest;
+import org.waldreg.controller.teambuilding.response.TeamBuildingResponse;
 import org.waldreg.teambuilding.team.dto.TeamRequestDto;
 import org.waldreg.teambuilding.team.management.TeamManager;
+import org.waldreg.teambuilding.teambuilding.dto.TeamBuildingDto;
 import org.waldreg.teambuilding.teambuilding.dto.TeamBuildingRequestDto;
 import org.waldreg.teambuilding.teambuilding.management.TeamBuildingManager;
 import org.waldreg.token.aop.annotation.Authenticating;
@@ -45,6 +48,13 @@ public class TeamBuildingController{
     public void createTeam(@PathVariable("teambuilding-id") int teamBuildingId, @RequestBody @Validated TeamRequest teamRequest){
         TeamRequestDto teamRequestDto = controllerTeamBuildingMapper.teamRequestToTeamRequestDto(teamRequest);
         teamManager.createTeam(teamBuildingId, teamRequestDto);
+    }
+
+    @Authenticating
+    @GetMapping("/teambuilding/{teambuilding-id}")
+    public TeamBuildingResponse readTeamBuildingByTeamBuildingId(@PathVariable("teambuilding-id") int teamBuildingId){
+        TeamBuildingDto teamBuildingDto = teamBuildingManager.readTeamBuildingById(teamBuildingId);
+        return controllerTeamBuildingMapper.teamBuildingDtoToTeamBuildingResponse(teamBuildingDto);
     }
 
 
