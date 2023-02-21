@@ -3,6 +3,7 @@ package org.waldreg.domain.character;
 public final class Permission{
 
     private final int id;
+    private final String service;
     private final String name;
     private final String status;
 
@@ -12,6 +13,7 @@ public final class Permission{
 
     private Permission(Builder builder){
         this.id = builder.id;
+        this.service = builder.service;
         this.name = builder.name;
         this.status = builder.status;
     }
@@ -32,9 +34,14 @@ public final class Permission{
         return id;
     }
 
-    public final static class Builder{
+    public String getService(){
+        return service;
+    }
+
+    public static final class Builder{
 
         private int id;
+        private String service;
         private String name;
         private String status;
 
@@ -42,6 +49,11 @@ public final class Permission{
 
         public Builder id(int id){
             this.id = id;
+            return this;
+        }
+
+        public Builder service(String service){
+            this.service = service;
             return this;
         }
 

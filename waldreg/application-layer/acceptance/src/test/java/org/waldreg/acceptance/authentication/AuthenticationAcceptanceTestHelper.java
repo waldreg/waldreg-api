@@ -1,12 +1,14 @@
 package org.waldreg.acceptance.authentication;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.waldreg.auth.request.AuthTokenRequest;
 import org.waldreg.auth.response.AuthTokenResponse;
+import org.waldreg.auth.response.TemporaryTokenResponse;
 
 public class AuthenticationAcceptanceTestHelper{
 
@@ -33,7 +35,7 @@ public class AuthenticationAcceptanceTestHelper{
                 .andReturn()
                 .getResponse()
                 .getContentAsString();
-        
+
         AuthTokenResponse response = objectMapper.readValue(content, AuthTokenResponse.class);
         return response.getTokenType() + " " + response.getAccessToken();
     }
@@ -43,9 +45,18 @@ public class AuthenticationAcceptanceTestHelper{
                                    .post("/token")
                                    .accept(MediaType.APPLICATION_JSON)
                                    .contentType(MediaType.APPLICATION_JSON)
-                                   .header("api-version",apiVersion)
+                                   .header("api-version", apiVersion)
                                    .content(content)
-                );
+        );
+    }
+
+    public static ResultActions authenticateByToken(MockMvc mvc, String token) throws Exception{
+        return mvc.perform(MockMvcRequestBuilders
+                                   .get("/token")
+                                   .accept(MediaType.APPLICATION_JSON)
+                                   .header("api-version", apiVersion)
+                                   .header(HttpHeaders.AUTHORIZATION, token)
+        );
     }
 
 }

@@ -21,6 +21,7 @@ public class RewardPermissionConfigurer{
     public void setUpRewardPermissions(){
         permissionExtension.extend(
                 DefaultPermissionUnit.builder()
+                        .service("Reward")
                         .name("Reward manager")
                         .info("If set true, all permissions related to the reward are accessible.")
                         .statusList(List.of("true", "false"))

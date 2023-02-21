@@ -17,7 +17,7 @@ import org.waldreg.character.permission.management.PermissionUnitManager;
 
 @ExtendWith(SpringExtension.class)
 @ContextConfiguration(classes = {DefaultPermissionExtension.class, PermissionUnitManager.class})
-public class PermissionExtensionTest{
+class PermissionExtensionTest{
 
     @Autowired
     private PermissionExtension defaultPermissionExtension;
@@ -33,9 +33,10 @@ public class PermissionExtensionTest{
 
     @Test
     @DisplayName("새로운 역할 확장 테스트")
-    public void EXTEND_NEW_PERMISSION_TEST(){
+    void EXTEND_NEW_PERMISSION_TEST(){
         // given
         PermissionUnit permissionUnit = DefaultPermissionUnit.builder()
+                .service("character")
                 .name("new permission")
                 .permissionVerifiable((s) -> s.equals("success"))
                 .statusList(List.of("success", "fail", "something..."))
@@ -47,9 +48,10 @@ public class PermissionExtensionTest{
 
     @Test
     @DisplayName("새로운 역할 확장 실패 테스트 - 중복 이름")
-    public void EXTEND_NEW_PERMISSION_FAIL_DUPLICATED_NAME_TEST(){
+    void EXTEND_NEW_PERMISSION_FAIL_DUPLICATED_NAME_TEST(){
         // given
         PermissionUnit permissionUnit = DefaultPermissionUnit.builder()
+                .service("character")
                 .name("duplicated name")
                 .permissionVerifiable((s) -> s.equals("success"))
                 .statusList(List.of("success", "fail", "something..."))

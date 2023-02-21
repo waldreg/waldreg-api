@@ -13,6 +13,7 @@ import org.waldreg.attendance.exception.AlreadyAttendanceException;
 import org.waldreg.attendance.exception.DoesNotRegisteredAttendanceException;
 import org.waldreg.attendance.exception.DoesNotStartedAttendanceException;
 import org.waldreg.attendance.exception.WrongAttendanceIdentifyException;
+import org.waldreg.attendance.valid.spi.AttendanceValidatorRepository;
 
 @ExtendWith(SpringExtension.class)
 @ContextConfiguration(classes = {DefaultAttendanceValidator.class})
@@ -26,6 +27,9 @@ class DefaultAttendanceValidatorTest{
 
     @MockBean
     private AttendanceIdentifyValidable attendanceIdentifyValidable;
+
+    @MockBean
+    private AttendanceValidatorRepository attendanceValidatorRepository;
 
     @Test
     @DisplayName("출석 체크 성공 테스트")

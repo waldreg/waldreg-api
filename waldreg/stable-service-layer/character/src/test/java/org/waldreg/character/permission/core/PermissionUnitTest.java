@@ -5,17 +5,18 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
-public class PermissionUnitTest{
+class PermissionUnitTest{
 
     @Test
     @DisplayName("String status PermissionUnit 생성 성공 테스트")
-    public void CREATE_STRING_PERMISSION_UNIT_SUCCESS_TEST(){
+    void CREATE_STRING_PERMISSION_UNIT_SUCCESS_TEST(){
         // given
         String permissionName = "String permission";
         List<String> statusList = List.of("success", "fail", "unknown");
 
         // when
         PermissionUnit permissionUnit = DefaultPermissionUnit.builder()
+                .service("character")
                 .name(permissionName)
                 .permissionVerifiable((s) -> s.equals("success"))
                 .statusList(statusList)

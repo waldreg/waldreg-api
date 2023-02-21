@@ -1,6 +1,7 @@
 package org.waldreg.character.management;
 
 import java.util.List;
+import java.util.Optional;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
@@ -20,10 +21,11 @@ import org.waldreg.character.permission.core.DefaultPermissionUnit;
 import org.waldreg.character.permission.core.PermissionUnit;
 import org.waldreg.character.permission.management.PermissionUnitManager;
 import org.waldreg.character.spi.CharacterRepository;
+import org.waldreg.character.spi.UserExistChecker;
 
 @ExtendWith(SpringExtension.class)
 @ContextConfiguration(classes = {DefaultCharacterManager.class, PermissionUnitManager.class})
-public class DefaultCharacterManagerTest{
+class DefaultCharacterManagerTest{
 
     @Autowired
     private CharacterManager defaultCharacterManager;
@@ -34,11 +36,14 @@ public class DefaultCharacterManagerTest{
     @MockBean
     private CharacterRepository characterRepository;
 
+    @MockBean
+    private UserExistChecker userExistChecker;
+
     private final String permissionName = "mock permission";
 
     @BeforeEach
     @AfterEach
-    public void initPermission(){
+    void initPermission(){
         permissionUnitManager.deleteAllPermission();
         PermissionUnit permissionUnit = DefaultPermissionUnit.builder()
                 .name(permissionName)
@@ -50,13 +55,14 @@ public class DefaultCharacterManagerTest{
 
     @Test
     @DisplayName("새로운 Character 추가 성공 테스트")
-    public void CREATE_NEW_CHARACTER_SUCCESS_TEST(){
+    void CREATE_NEW_CHARACTER_SUCCESS_TEST(){
         // given
         PermissionUnit permissionUnit = permissionUnitManager.getPermission("mock permission");
         CharacterDto character = CharacterDto.builder()
                 .characterName("new character")
                 .permissionDtoList(List.of(
                         PermissionDto.builder()
+                                .service("character")
                                 .id(permissionUnit.getId())
                                 .name(permissionName)
                                 .status("true")
@@ -69,12 +75,13 @@ public class DefaultCharacterManagerTest{
 
     @Test
     @DisplayName("새로운 Character 추가 실패 테스트 - permission name 에 해당하는 permission 을 찾을 수 없음")
-    public void CREATE_NEW_CHARACTER_FAIL_DOES_NOT_FIND_PERMISSION_TEST(){
+    void CREATE_NEW_CHARACTER_FAIL_DOES_NOT_FIND_PERMISSION_TEST(){
         // given
         CharacterDto character = CharacterDto.builder()
                 .characterName("new character")
                 .permissionDtoList(List.of(
                         PermissionDto.builder()
+                                .service("service")
                                 .id(12)
                                 .name("Unknown Character")
                                 .status("fail")
@@ -87,13 +94,14 @@ public class DefaultCharacterManagerTest{
 
     @Test
     @DisplayName("새로운 Character 추가 실패 테스트 - permission name 이 갖고있는 permission status 가 아님")
-    public void CREATE_NEW_CHARACTER_FAIL_INVALID_STATUS_NAME_TEST(){
+    void CREATE_NEW_CHARACTER_FAIL_INVALID_STATUS_NAME_TEST(){
         // given
         PermissionUnit permissionUnit = permissionUnitManager.getPermission("mock permission");
         CharacterDto character = CharacterDto.builder()
                 .characterName("new character")
                 .permissionDtoList(List.of(
                         PermissionDto.builder()
+                                .service("service")
                                 .id(permissionUnit.getId())
                                 .name(permissionName)
                                 .status("invalid")
@@ -106,7 +114,7 @@ public class DefaultCharacterManagerTest{
 
     @Test
     @DisplayName("특정 Character 조회 성공 테스트")
-    public void READ_CHARACTER_SUCCESS_TEST(){
+    void READ_CHARACTER_SUCCESS_TEST(){
         // given
         PermissionUnit permissionUnit = permissionUnitManager.getPermission("mock permission");
         String characterName = "characterName";
@@ -114,6 +122,7 @@ public class DefaultCharacterManagerTest{
                 .characterName(characterName)
                 .permissionDtoList(List.of(
                         PermissionDto.builder()
+                                .service("service")
                                 .id(permissionUnit.getId())
                                 .name(permissionName)
                                 .status("fail")
@@ -122,7 +131,7 @@ public class DefaultCharacterManagerTest{
 
         // when
         defaultCharacterManager.createCharacter(characterDto);
-        Mockito.when(characterRepository.readCharacter(characterName)).thenReturn(characterDto);
+        Mockito.when(characterRepository.readCharacter(characterName)).thenReturn(Optional.of(characterDto));
         CharacterDto result = defaultCharacterManager.readCharacter(characterName);
 
         // then
@@ -134,7 +143,7 @@ public class DefaultCharacterManagerTest{
 
     @Test
     @DisplayName("유저 id에 속한 Character 조회 테스트")
-    public void READ_CHARACTER_BY_USER_ID_TEST(){
+    void READ_CHARACTER_BY_USER_ID_TEST(){
         // given
         PermissionUnit permissionUnit = permissionUnitManager.getPermission("mock permission");
         int id = 1;
@@ -143,6 +152,7 @@ public class DefaultCharacterManagerTest{
                 .characterName(characterName)
                 .permissionDtoList(List.of(
                         PermissionDto.builder()
+                                .service("service")
                                 .id(permissionUnit.getId())
                                 .name(permissionName)
                                 .status("fail")
@@ -150,6 +160,7 @@ public class DefaultCharacterManagerTest{
                 )).build();
 
         // when
+        Mockito.when(userExistChecker.isExistUser(Mockito.anyInt())).thenReturn(true);
         Mockito.when(defaultCharacterManager.readCharacterByUserId(id)).thenReturn(characterDto);
         CharacterDto result = defaultCharacterManager.readCharacterByUserId(id);
 
@@ -159,13 +170,14 @@ public class DefaultCharacterManagerTest{
 
     @Test
     @DisplayName("Character 목록 조회 성공 테스트")
-    public void READ_CHARACTER_LIST_SUCCESS_TEST(){
+    void READ_CHARACTER_LIST_SUCCESS_TEST(){
         // given
         PermissionUnit permissionUnit = permissionUnitManager.getPermission("mock permission");
         CharacterDto characterDto1 = CharacterDto.builder()
                 .characterName("1")
                 .permissionDtoList(List.of(
                         PermissionDto.builder()
+                                .service("service")
                                 .id(permissionUnit.getId())
                                 .name(permissionName)
                                 .status("fail")
@@ -175,6 +187,7 @@ public class DefaultCharacterManagerTest{
                 .characterName("2")
                 .permissionDtoList(List.of(
                         PermissionDto.builder()
+                                .service("service")
                                 .id(permissionUnit.getId())
                                 .name(permissionName)
                                 .status("fail")
@@ -197,7 +210,7 @@ public class DefaultCharacterManagerTest{
 
     @Test
     @DisplayName("Character 수정 성공 테스트")
-    public void UPDATE_CHARACTER_SUCCESS_TEST(){
+    void UPDATE_CHARACTER_SUCCESS_TEST(){
         // given
         PermissionUnit permissionUnit = permissionUnitManager.getPermission("mock permission");
         String beforeName = "mock character";
@@ -205,6 +218,7 @@ public class DefaultCharacterManagerTest{
                 .characterName(beforeName)
                 .permissionDtoList(List.of(
                         PermissionDto.builder()
+                                .service("service")
                                 .id(permissionUnit.getId())
                                 .name(permissionName)
                                 .status("fail")
@@ -215,6 +229,7 @@ public class DefaultCharacterManagerTest{
                 .characterName(afterName)
                 .permissionDtoList(List.of(
                         PermissionDto.builder()
+                                .service("service")
                                 .id(permissionUnit.getId())
                                 .name(permissionName)
                                 .status("fail")
@@ -222,9 +237,11 @@ public class DefaultCharacterManagerTest{
                 )).build();
 
         // when
-        Mockito.when(characterRepository.readCharacter(afterName)).thenReturn(afterCharacter);
         defaultCharacterManager.createCharacter(beforeCharacter);
+        Mockito.when(characterRepository.readCharacter(afterName)).thenReturn(Optional.empty());
+        Mockito.when(characterRepository.readCharacter(beforeName)).thenReturn(Optional.of(beforeCharacter));
         defaultCharacterManager.updateCharacter(beforeName, afterCharacter);
+        Mockito.when(characterRepository.readCharacter(afterName)).thenReturn(Optional.of(afterCharacter));
         CharacterDto result = defaultCharacterManager.readCharacter(afterName);
 
         // then
@@ -233,7 +250,7 @@ public class DefaultCharacterManagerTest{
 
     @Test
     @DisplayName("Character 수정 실패 테스트 - 존재하지 않는 권한을 수정하려고 할 경우")
-    public void UPDATE_CHARACTER_FAIL_UNKNOWN_PERMISSION_TEST(){
+    void UPDATE_CHARACTER_FAIL_UNKNOWN_PERMISSION_TEST(){
         // given
         PermissionUnit permissionUnit = permissionUnitManager.getPermission("mock permission");
         String beforeName = "mock character";
@@ -241,6 +258,7 @@ public class DefaultCharacterManagerTest{
                 .characterName(beforeName)
                 .permissionDtoList(List.of(
                         PermissionDto.builder()
+                                .service("service")
                                 .id(permissionUnit.getId())
                                 .name(permissionName)
                                 .status("fail")
@@ -251,6 +269,7 @@ public class DefaultCharacterManagerTest{
                 .characterName(afterName)
                 .permissionDtoList(List.of(
                         PermissionDto.builder()
+                                .service("service")
                                 .id(2)
                                 .name("unknown permission")
                                 .status("fail")
@@ -259,14 +278,16 @@ public class DefaultCharacterManagerTest{
 
         // when
         defaultCharacterManager.createCharacter(beforeCharacter);
+        Mockito.when(characterRepository.readCharacter(beforeName)).thenReturn(Optional.of(beforeCharacter));
+        Mockito.when(characterRepository.readCharacter(afterName)).thenReturn(Optional.empty());
 
         // then
-        Assertions.assertThrows(UnknownPermissionException.class, () -> defaultCharacterManager.updateCharacter(afterName, afterCharacter));
+        Assertions.assertThrows(UnknownPermissionException.class, () -> defaultCharacterManager.updateCharacter(beforeName, afterCharacter));
     }
 
     @Test
     @DisplayName("Character 수정 실패 테스트 - 해당 권한에 해당하지 않는 permission status 로 변경하려고 시도하는 경우")
-    public void UPDATE_CHARACTER_FAIL_UNKNOWN_PERMISSION_STATUS_TEST(){
+    void UPDATE_CHARACTER_FAIL_UNKNOWN_PERMISSION_STATUS_TEST(){
         // given
         PermissionUnit permissionUnit = permissionUnitManager.getPermission("mock permission");
         String beforeName = "mock character";
@@ -274,6 +295,7 @@ public class DefaultCharacterManagerTest{
                 .characterName(beforeName)
                 .permissionDtoList(List.of(
                         PermissionDto.builder()
+                                .service("service")
                                 .id(permissionUnit.getId())
                                 .name(permissionName)
                                 .status("fail")
@@ -284,6 +306,7 @@ public class DefaultCharacterManagerTest{
                 .characterName(afterName)
                 .permissionDtoList(List.of(
                         PermissionDto.builder()
+                                .service("service")
                                 .id(permissionUnit.getId())
                                 .name(permissionName)
                                 .status("never used")
@@ -292,18 +315,26 @@ public class DefaultCharacterManagerTest{
 
         // when
         defaultCharacterManager.createCharacter(beforeCharacter);
+        Mockito.when(characterRepository.readCharacter(beforeName)).thenReturn(Optional.of(beforeCharacter));
+        Mockito.when(characterRepository.readCharacter(afterName)).thenReturn(Optional.empty());
 
         // then
-        Assertions.assertThrows(UnknownPermissionStatusException.class, () -> defaultCharacterManager.updateCharacter(afterName, afterCharacter));
+        Assertions.assertThrows(UnknownPermissionStatusException.class, () -> defaultCharacterManager.updateCharacter(beforeName, afterCharacter));
     }
 
     @Test
     @DisplayName("Character 삭제 성공 테스트")
-    public void DELETE_CHARACTER_SUCCESS_TEST(){
+    void DELETE_CHARACTER_SUCCESS_TEST(){
         // given
         String characterName = "characterName";
+        CharacterDto characterDto = CharacterDto.builder()
+                .characterName(characterName)
+                .permissionDtoList(List.of()).build();
 
-        // when & then
+        // when
+        Mockito.when(characterRepository.readCharacter(characterName)).thenReturn(Optional.of(characterDto));
+
+        // then
         Assertions.assertDoesNotThrow(() -> defaultCharacterManager.deleteCharacter(characterName));
     }
 
