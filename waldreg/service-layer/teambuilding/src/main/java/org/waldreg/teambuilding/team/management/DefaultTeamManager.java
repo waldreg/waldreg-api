@@ -40,7 +40,8 @@ public class DefaultTeamManager implements TeamManager{
         throwIfUnknownUserIdDetected(teamRequestDto.getMemberList());
         throwIfAlreadyInTeamUser(teamBuildingId, teamRequestDto.getMemberList());
         TeamDto teamDto = buildTeamDto(teamBuildingId, teamRequestDto);
-        teamRepository.createTeam(teamDto);
+        teamDto = teamRepository.createTeam(teamDto);
+        teamInTeamBuildingRepository.addTeamInTeamBuildingTeamList(teamDto);
     }
 
     private void throwIfUnknownTeamBuildingId(int teamBuildingId){

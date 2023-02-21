@@ -9,18 +9,18 @@ import org.waldreg.teambuilding.dto.TeamDto;
 import org.waldreg.teambuilding.dto.UserDto;
 import org.waldreg.teambuilding.exception.ContentOverflowException;
 import org.waldreg.teambuilding.exception.InvalidRangeException;
-import org.waldreg.teambuilding.teambuilding.dto.TeamBuildingDto;
-import org.waldreg.teambuilding.teambuilding.spi.TeamBuildingsTeamRepository;
 import org.waldreg.teambuilding.exception.InvalidTeamCountException;
 import org.waldreg.teambuilding.exception.InvalidUserWeightException;
 import org.waldreg.teambuilding.exception.UnknownTeamBuildingIdException;
 import org.waldreg.teambuilding.exception.UnknownUserIdException;
+import org.waldreg.teambuilding.teambuilding.dto.TeamBuildingDto;
 import org.waldreg.teambuilding.teambuilding.dto.TeamBuildingRequestDto;
 import org.waldreg.teambuilding.teambuilding.dto.UserRequestDto;
 import org.waldreg.teambuilding.teambuilding.management.teamcreator.TeamCreator;
 import org.waldreg.teambuilding.teambuilding.management.teamcreator.TeamCreator.Team;
 import org.waldreg.teambuilding.teambuilding.spi.TeamBuildingRepository;
 import org.waldreg.teambuilding.teambuilding.spi.TeamBuildingUserRepository;
+import org.waldreg.teambuilding.teambuilding.spi.TeamBuildingsTeamRepository;
 
 @Service
 public class DefaultTeamBuildingManager implements TeamBuildingManager{

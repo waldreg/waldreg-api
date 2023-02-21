@@ -9,6 +9,8 @@ import org.waldreg.teambuilding.dto.UserDto;
 
 public interface TeamInTeamBuildingMapper{
 
+    List<Team> teamDtoListToTeamDomainList(List<TeamDto> teamDtoList);
+
     Team teamDtoToTeamDomain(TeamDto teamDto);
 
     List<User> userDtoListToUserDomainList(List<UserDto> userDtoList);

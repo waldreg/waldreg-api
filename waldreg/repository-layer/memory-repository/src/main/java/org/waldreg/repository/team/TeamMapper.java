@@ -10,6 +10,16 @@ import org.waldreg.teambuilding.dto.UserDto;
 
 public class TeamMapper implements TeamInTeamBuildingMapper{
 
+    @Override
+    public List<Team> teamDtoListToTeamDomainList(List<TeamDto> teamDtoList){
+        List<Team> teamList = new ArrayList<>();
+        for (TeamDto teamDto : teamDtoList){
+            teamList.add(teamDtoToTeamDomain(teamDto));
+        }
+        return teamList;
+    }
+
+    @Override
     public Team teamDtoToTeamDomain(TeamDto teamDto){
         return Team.builder()
                 .teamId(teamDto.getTeamId())
@@ -20,6 +30,7 @@ public class TeamMapper implements TeamInTeamBuildingMapper{
                 .build();
     }
 
+    @Override
     public List<User> userDtoListToUserDomainList(List<UserDto> userDtoList){
         List<User> userList = new ArrayList<>();
         for (UserDto userDto : userDtoList){
@@ -28,6 +39,7 @@ public class TeamMapper implements TeamInTeamBuildingMapper{
         return userList;
     }
 
+    @Override
     public User userDtoToUserDomain(UserDto userDto){
         return User.builder()
                 .id(userDto.getId())
@@ -36,6 +48,7 @@ public class TeamMapper implements TeamInTeamBuildingMapper{
                 .build();
     }
 
+    @Override
     public List<TeamDto> teamDomainListToTeamDtoList(List<Team> teamList){
         List<TeamDto> teamDtoList = new ArrayList<>();
         for (Team team : teamList){
@@ -44,6 +57,7 @@ public class TeamMapper implements TeamInTeamBuildingMapper{
         return teamDtoList;
     }
 
+    @Override
     public TeamDto teamDomainToTeamDto(Team team){
         return TeamDto.builder()
                 .teamId(team.getTeamId())
@@ -54,6 +68,7 @@ public class TeamMapper implements TeamInTeamBuildingMapper{
                 .build();
     }
 
+    @Override
     public List<UserDto> userDomainListToUserDtoList(List<User> userList){
         List<UserDto> userDtoList = new ArrayList<>();
         for (User user : userList){
@@ -62,6 +77,7 @@ public class TeamMapper implements TeamInTeamBuildingMapper{
         return userDtoList;
     }
 
+    @Override
     public UserDto userDomainToUserDto(User user){
         return UserDto.builder()
                 .id(user.getId())

@@ -3,15 +3,15 @@ package org.waldreg.board.comment.management;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.waldreg.board.comment.spi.CommentInBoardRepository;
+import org.waldreg.board.comment.spi.CommentRepository;
 import org.waldreg.board.comment.spi.CommentUserRepository;
+import org.waldreg.board.dto.CommentDto;
 import org.waldreg.board.dto.UserDto;
 import org.waldreg.board.exception.BoardDoesNotExistException;
 import org.waldreg.board.exception.CommentDoesNotExistException;
 import org.waldreg.board.exception.ContentOverFlowException;
 import org.waldreg.board.exception.InvalidRangeException;
-import org.waldreg.board.comment.spi.CommentInBoardRepository;
-import org.waldreg.board.comment.spi.CommentRepository;
-import org.waldreg.board.dto.CommentDto;
 import org.waldreg.util.token.DecryptedTokenContextGetter;
 
 @Service
