@@ -1,5 +1,6 @@
 package org.waldreg.repository.team;
 
+import java.util.ArrayList;
 import java.util.List;
 import org.waldreg.domain.teambuilding.Team;
 import org.waldreg.repository.MemoryTeamStorage;
@@ -40,7 +41,7 @@ public class MemoryTeamRepository implements TeamRepository, TeamBuildingsTeamRe
 
     @Override
     public void deleteTeamById(int teamId){
-
+        memoryTeamStorage.deleteTeamById(teamId);
     }
 
     @Override
@@ -55,7 +56,7 @@ public class MemoryTeamRepository implements TeamRepository, TeamBuildingsTeamRe
 
     @Override
     public boolean isExistTeam(int teamId){
-        return false;
+        return memoryTeamStorage.readTeamById(teamId) !=null;
     }
 
 }

@@ -35,4 +35,8 @@ public class MemoryTeamStorage{
         storage.replace(team.getTeamId(),team);
     }
 
+    public void deleteTeamById(int teamId){
+        storage.remove(teamId);
+    }
+
 }
