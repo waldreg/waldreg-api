@@ -27,6 +27,7 @@ dependencies {
     implementation project(':application-layer:schedule-controller')
     implementation project(':application-layer:reward-controller')
     implementation project(':application-layer:application-configurer')
+    implementation project(':application-layer:teambuilding-controller')
 
     implementation 'org.springframework.boot:spring-boot-starter'
     implementation 'org.springframework.boot:spring-boot-starter-web'
