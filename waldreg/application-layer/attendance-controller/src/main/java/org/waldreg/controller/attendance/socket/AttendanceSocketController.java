@@ -15,7 +15,6 @@ import org.waldreg.character.aop.CharacterInUserReadable;
 import org.waldreg.character.dto.CharacterDto;
 import org.waldreg.character.exception.NoPermissionException;
 import org.waldreg.character.permission.verification.PermissionVerifier;
-import org.waldreg.controller.attendance.socket.lock.Lock;
 import org.waldreg.controller.attendance.socket.request.AttendanceManagingMessage;
 import org.waldreg.controller.attendance.socket.response.AttendanceIdentifyMessage;
 import org.waldreg.controller.attendance.socket.response.AttendanceLeftTimeMessage;
@@ -29,20 +28,17 @@ public class AttendanceSocketController{
     private final CharacterInUserReadable characterInUserReadable;
     private final SocketContextGettable socketContextGettable;
     private final PermissionVerifier permissionVerifier;
-    private final Lock lock;
 
     public AttendanceSocketController(ApplicationEventPublisher applicationEventPublisher,
                                         @Lazy SimpMessagingTemplate simpMessagingTemplate,
                                         CharacterInUserReadable characterInUserReadable,
                                         SocketContextGettable socketContextGettable,
-                                        PermissionVerifier permissionVerifier,
-                                        Lock lock){
+                                        PermissionVerifier permissionVerifier){
         this.applicationEventPublisher = applicationEventPublisher;
         this.simpMessagingTemplate = simpMessagingTemplate;
         this.characterInUserReadable = characterInUserReadable;
         this.socketContextGettable = socketContextGettable;
         this.permissionVerifier = permissionVerifier;
-        this.lock = lock;
     }
 
     @MessageMapping("/attendance/start")
@@ -71,18 +67,14 @@ public class AttendanceSocketController{
 
     @EventListener(AttendanceLeftTimeEvent.class)
     public void listenAttendanceLeftTimeEvent(AttendanceLeftTimeEvent attendanceLeftTimeEvent){
-        synchronized (lock){
-            simpMessagingTemplate.convertAndSend("/topic/attendance-time",
-                    new AttendanceLeftTimeMessage(attendanceLeftTimeEvent.getLeftTime()));
-        }
+        simpMessagingTemplate.convertAndSend("/topic/attendance-time",
+                new AttendanceLeftTimeMessage(attendanceLeftTimeEvent.getLeftTime()));
     }
 
     @EventListener(AttendanceStartedEvent.class)
     public void listenAttendanceStartedEvent(AttendanceStartedEvent attendanceStartedEvent){
-        synchronized (lock){
-            simpMessagingTemplate.convertAndSend("/topic/attendance-key/" + attendanceStartedEvent.getAttendanceStartedSessionId(),
-                    new AttendanceIdentifyMessage(attendanceStartedEvent.getAttendanceStarterId(), attendanceStartedEvent.getAttendanceIdentify()));
-        }
+        simpMessagingTemplate.convertAndSend("/topic/attendance-key/" + attendanceStartedEvent.getAttendanceStartedSessionId(),
+                new AttendanceIdentifyMessage(attendanceStartedEvent.getAttendanceStarterId(), attendanceStartedEvent.getAttendanceIdentify()));
     }
 
 }
