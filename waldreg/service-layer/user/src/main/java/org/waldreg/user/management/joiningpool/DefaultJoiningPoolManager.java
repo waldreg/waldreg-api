@@ -9,22 +9,22 @@ import org.waldreg.user.exception.DuplicatedUserIdException;
 import org.waldreg.user.exception.InvalidRangeException;
 import org.waldreg.user.exception.UnknownUserIdException;
 import org.waldreg.user.management.PerPage;
-import org.waldreg.user.spi.CharacterRepository;
 import org.waldreg.user.spi.JoiningPoolRepository;
 import org.waldreg.user.spi.UserRepository;
+import org.waldreg.user.spi.UsersCharacterRepository;
 
 @Service
 public class DefaultJoiningPoolManager implements JoiningPoolManager{
 
     private final JoiningPoolRepository joiningPoolRepository;
     private final UserRepository userRepository;
-    private final CharacterRepository characterRepository;
+    private final UsersCharacterRepository usersCharacterRepository;
 
     @Autowired
-    public DefaultJoiningPoolManager(JoiningPoolRepository joiningPoolRepository, UserRepository userRepository, CharacterRepository characterRepository){
+    public DefaultJoiningPoolManager(JoiningPoolRepository joiningPoolRepository, UserRepository userRepository, UsersCharacterRepository usersCharacterRepository){
         this.joiningPoolRepository = joiningPoolRepository;
         this.userRepository = userRepository;
-        this.characterRepository = characterRepository;
+        this.usersCharacterRepository = usersCharacterRepository;
     }
 
     @Override
@@ -51,7 +51,7 @@ public class DefaultJoiningPoolManager implements JoiningPoolManager{
     }
 
     private void throwIfUnknownCharacter(String characterName){
-        if (!characterRepository.isExistCharacterName(characterName)){
+        if (!usersCharacterRepository.isExistCharacterName(characterName)){
             throw new UnknownCharacterException(characterName);
         }
     }

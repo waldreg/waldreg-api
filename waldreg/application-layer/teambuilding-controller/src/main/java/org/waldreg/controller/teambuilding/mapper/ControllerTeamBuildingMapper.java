@@ -2,6 +2,7 @@ package org.waldreg.controller.teambuilding.mapper;
 
 import java.util.ArrayList;
 import java.util.List;
+import org.springframework.stereotype.Service;
 import org.waldreg.controller.teambuilding.request.TeamBuildingRequest;
 import org.waldreg.controller.teambuilding.request.TeamRequest;
 import org.waldreg.controller.teambuilding.request.UserWeightRequest;
@@ -16,6 +17,7 @@ import org.waldreg.teambuilding.teambuilding.dto.TeamBuildingDto;
 import org.waldreg.teambuilding.teambuilding.dto.TeamBuildingRequestDto;
 import org.waldreg.teambuilding.teambuilding.dto.UserRequestDto;
 
+@Service
 public class ControllerTeamBuildingMapper{
 
     public TeamBuildingRequestDto teamBuildingRequestToTeamBuildingDto(TeamBuildingRequest teamBuildingRequest){

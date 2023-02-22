@@ -1,8 +1,6 @@
 package org.waldreg.acceptance.teambuilding;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import org.junit.jupiter.api.AfterEach;
@@ -20,6 +18,7 @@ import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import org.waldreg.acceptance.authentication.AuthenticationAcceptanceTestHelper;
 import org.waldreg.acceptance.user.UserAcceptanceTestHelper;
+import org.waldreg.auth.request.AuthTokenRequest;
 import org.waldreg.controller.joiningpool.request.UserRequest;
 import org.waldreg.controller.teambuilding.request.TeamBuildingRequest;
 import org.waldreg.controller.teambuilding.request.TeamBuildingUpdateRequest;
@@ -229,7 +228,7 @@ public class TeamBuildingAcceptanceTest{
                 MockMvcResultMatchers.header().string("api-version", apiVersion),
                 MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON),
                 MockMvcResultMatchers.jsonPath("$.code").value("TEAMBUILDING-404"),
-                MockMvcResultMatchers.jsonPath("$.messages").value("User's Weight value should be between 1 and 10, current weight \"" + userList.get(0).getWeight() + "\""),
+                MockMvcResultMatchers.jsonPath("$.messages").value("User's weight value should be between 1 and 10, current weight \"" + userList.get(0).getWeight() + "\""),
                 MockMvcResultMatchers.jsonPath("$.document_url").value("docs.waldreg.org")
         ).andDo(MockMvcResultHandlers.print());
     }
@@ -268,7 +267,7 @@ public class TeamBuildingAcceptanceTest{
     public void CREATE_NEW_TEAM_BUILDING_FAIL_CAUSE_NO_PERMISSION_TEST() throws Exception{
         //given
         String adminToken = AuthenticationAcceptanceTestHelper.getAdminToken(mvc, objectMapper);
-        String wrongToken = "";
+        String wrongToken = createUserAndGetToken("lin","linirini","2fhfhfhfh!");
         String title = "2nd Algorithm Contest Team";
         int teamCount = 2;
         List<UserWeightRequest> userList = createUserWeightRequestList();
@@ -283,7 +282,7 @@ public class TeamBuildingAcceptanceTest{
 
         //then
         result.andExpectAll(
-                MockMvcResultMatchers.status().isBadRequest(),
+                MockMvcResultMatchers.status().isForbidden(),
                 MockMvcResultMatchers.header().string(HttpHeaders.CONTENT_TYPE, "application/json"),
                 MockMvcResultMatchers.header().string("api-version", apiVersion),
                 MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON),
@@ -339,20 +338,20 @@ public class TeamBuildingAcceptanceTest{
                 MockMvcResultMatchers.jsonPath("$.teambuildings.[0].teams.[0].team_members.[0].name").isString(),
                 MockMvcResultMatchers.jsonPath("$.teambuildings.[0].teams.[1].team_id").isNumber(),
                 MockMvcResultMatchers.jsonPath("$.teambuildings.[0].teams.[1].team_members.[0]").isNotEmpty(),
-                MockMvcResultMatchers.jsonPath("$.teambuildings.[2].teambuilding_id").isNumber(),
-                MockMvcResultMatchers.jsonPath("$.teambuildings.[2].teambuilding_title").value(teamBuildingRequest2.getTeamBuildingTitle()),
-                MockMvcResultMatchers.jsonPath("$.teambuildings.[2].created_at").isNotEmpty(),
-                MockMvcResultMatchers.jsonPath("$.teambuildings.[2].last_modified_at").isNotEmpty(),
-                MockMvcResultMatchers.jsonPath("$.teambuildings.[2].teams.[0].team_id").isNumber(),
-                MockMvcResultMatchers.jsonPath("$.teambuildings.[2].teams.[0].team_name").isString(),
-                MockMvcResultMatchers.jsonPath("$.teambuildings.[2].teams.[0].last_modified_at").isString(),
-                MockMvcResultMatchers.jsonPath("$.teambuildings.[2].teams.[0].team_members.[0].id").isNumber(),
-                MockMvcResultMatchers.jsonPath("$.teambuildings.[2].teams.[0].team_members.[0].user_id").isString(),
-                MockMvcResultMatchers.jsonPath("$.teambuildings.[2].teams.[0].team_members.[0].name").isString(),
-                MockMvcResultMatchers.jsonPath("$.teambuildings.[2].teams.[1].team_id").isNumber(),
-                MockMvcResultMatchers.jsonPath("$.teambuildings.[2].teams.[1].team_members.[0]").isNotEmpty(),
-                MockMvcResultMatchers.jsonPath("$.teambuildings.[2].teams.[1].team_id").isNumber(),
-                MockMvcResultMatchers.jsonPath("$.teambuildings.[2].teams.[2].team_members.[0]").isNotEmpty()
+                MockMvcResultMatchers.jsonPath("$.teambuildings.[1].teambuilding_id").isNumber(),
+                MockMvcResultMatchers.jsonPath("$.teambuildings.[1].teambuilding_title").value(teamBuildingRequest2.getTeamBuildingTitle()),
+                MockMvcResultMatchers.jsonPath("$.teambuildings.[1].created_at").isNotEmpty(),
+                MockMvcResultMatchers.jsonPath("$.teambuildings.[1].last_modified_at").isNotEmpty(),
+                MockMvcResultMatchers.jsonPath("$.teambuildings.[1].teams.[0].team_id").isNumber(),
+                MockMvcResultMatchers.jsonPath("$.teambuildings.[1].teams.[0].team_name").isString(),
+                MockMvcResultMatchers.jsonPath("$.teambuildings.[1].teams.[0].last_modified_at").isString(),
+                MockMvcResultMatchers.jsonPath("$.teambuildings.[1].teams.[0].team_members.[0].id").isNumber(),
+                MockMvcResultMatchers.jsonPath("$.teambuildings.[1].teams.[0].team_members.[0].user_id").isString(),
+                MockMvcResultMatchers.jsonPath("$.teambuildings.[1].teams.[0].team_members.[0].name").isString(),
+                MockMvcResultMatchers.jsonPath("$.teambuildings.[1].teams.[1].team_id").isNumber(),
+                MockMvcResultMatchers.jsonPath("$.teambuildings.[1].teams.[1].team_members.[0]").isNotEmpty(),
+                MockMvcResultMatchers.jsonPath("$.teambuildings.[1].teams.[1].team_id").isNumber(),
+                MockMvcResultMatchers.jsonPath("$.teambuildings.[1].teams.[2].team_members.[0]").isNotEmpty()
         ).andDo(MockMvcResultHandlers.print());
 
     }
@@ -393,7 +392,7 @@ public class TeamBuildingAcceptanceTest{
                 MockMvcResultMatchers.header().string("api-version", apiVersion),
                 MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON),
                 MockMvcResultMatchers.jsonPath("$.code").value("TEAMBUILDING-405"),
-                MockMvcResultMatchers.jsonPath("$.messages").value("Invalid range start-idx \"" + startIdx + "\" end-idx \"" + endIdx + "\""),
+                MockMvcResultMatchers.jsonPath("$.messages").value("Invalid range start-idx \"" + startIdx + "\", end-idx \"" + endIdx + "\""),
                 MockMvcResultMatchers.jsonPath("$.document_url").value("docs.waldreg.org")
         ).andDo(MockMvcResultHandlers.print());
 
@@ -666,7 +665,7 @@ public class TeamBuildingAcceptanceTest{
         List<String> memberList = new ArrayList<>();
         memberList.add("alcuk_id");
         TeamRequest teamRequest = TeamRequest.builder()
-                .teamName("")
+                .teamName("frghnjmkl")
                 .members(memberList)
                 .build();
 
@@ -696,7 +695,7 @@ public class TeamBuildingAcceptanceTest{
     @DisplayName("팀빌딩 그룹 내 팀 추가 실패 테스트 - 권한 없음")
     public void ADD_NEW_TEAM_IN_TEAM_BUILDING_CAUSE_NO_PERMISSION_TEST() throws Exception{
         String adminToken = AuthenticationAcceptanceTestHelper.getAdminToken(mvc, objectMapper);
-        String wrongToken = "";
+        String wrongToken = createUserAndGetToken("lin","linirini","2fhfhfhfh!");
         String title = "2nd Algorithm Contest Team";
         int teamCount = 2;
         List<UserWeightRequest> userList = createUserWeightRequestList();
@@ -723,7 +722,7 @@ public class TeamBuildingAcceptanceTest{
 
         //then
         result.andExpectAll(
-                MockMvcResultMatchers.status().isBadRequest(),
+                MockMvcResultMatchers.status().isForbidden(),
                 MockMvcResultMatchers.header().string(HttpHeaders.CONTENT_TYPE, "application/json"),
                 MockMvcResultMatchers.header().string("api-version", apiVersion),
                 MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON),
@@ -752,6 +751,7 @@ public class TeamBuildingAcceptanceTest{
                 .build();
 
         //when
+        TeamBuildingAcceptanceTestHelper.createTeamBuilding(mvc, objectMapper.writeValueAsString(teamBuildingRequest), adminToken);
         ResultActions result = TeamBuildingAcceptanceTestHelper.inquiryAllTeamBuilding(mvc, 1, 2, adminToken);
         TeamBuildingListResponse teamBuildingList = objectMapper.readValue(result
                 .andReturn()
@@ -782,6 +782,7 @@ public class TeamBuildingAcceptanceTest{
                 .build();
 
         //when
+        TeamBuildingAcceptanceTestHelper.createTeamBuilding(mvc, objectMapper.writeValueAsString(teamBuildingRequest), adminToken);
         ResultActions result = TeamBuildingAcceptanceTestHelper.inquiryAllTeamBuilding(mvc, 1, 2, adminToken);
         TeamBuildingListResponse teamBuildingList = objectMapper.readValue(result
                 .andReturn()
@@ -822,6 +823,7 @@ public class TeamBuildingAcceptanceTest{
                 .build();
 
         //when
+        TeamBuildingAcceptanceTestHelper.createTeamBuilding(mvc, objectMapper.writeValueAsString(teamBuildingRequest), adminToken);
         ResultActions result = TeamBuildingAcceptanceTestHelper.inquiryAllTeamBuilding(mvc, 1, 2, adminToken);
         TeamBuildingListResponse teamBuildingList = objectMapper.readValue(result
                 .andReturn()
@@ -870,6 +872,7 @@ public class TeamBuildingAcceptanceTest{
                 .build();
 
         //when
+        TeamBuildingAcceptanceTestHelper.createTeamBuilding(mvc, objectMapper.writeValueAsString(teamBuildingRequest), adminToken);
         ResultActions result = TeamBuildingAcceptanceTestHelper.inquiryAllTeamBuilding(mvc, 1, 2, adminToken);
         TeamBuildingListResponse teamBuildingList = objectMapper.readValue(result
                 .andReturn()
@@ -885,7 +888,7 @@ public class TeamBuildingAcceptanceTest{
                 MockMvcResultMatchers.header().string("api-version", apiVersion),
                 MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON),
                 MockMvcResultMatchers.jsonPath("$.code").value("TEAMBUILDING-409"),
-                MockMvcResultMatchers.jsonPath("$.messages").value("\"" + "alcuk_id" + "\" already belongs to another team"),
+                MockMvcResultMatchers.jsonPath("$.messages").value("Cannot add user \"alcuk_id\" in team cause already in other team"),
                 MockMvcResultMatchers.jsonPath("$.document_url").value("docs.waldreg.org")
         ).andDo(MockMvcResultHandlers.print());
     }
@@ -935,7 +938,7 @@ public class TeamBuildingAcceptanceTest{
     public void MODIFY_TEAM_IN_TEAM_BUILDING_FAIL_CAUSE_NO_PERMISSION_TEST() throws Exception{
         //given
         String adminToken = AuthenticationAcceptanceTestHelper.getAdminToken(mvc, objectMapper);
-        String wrongToken = "";
+        String wrongToken = createUserAndGetToken("lin","linirini","2fhfhfhfh!");
         String title = "2nd Algorithm Contest Team";
         int teamCount = 2;
         List<UserWeightRequest> userList = createUserWeightRequestList();
@@ -950,6 +953,7 @@ public class TeamBuildingAcceptanceTest{
                 .build();
 
         //when
+        TeamBuildingAcceptanceTestHelper.createTeamBuilding(mvc, objectMapper.writeValueAsString(teamBuildingRequest), adminToken);
         ResultActions result = TeamBuildingAcceptanceTestHelper.inquiryAllTeamBuilding(mvc, 1, 2, adminToken);
         TeamBuildingListResponse teamBuildingList = objectMapper.readValue(result
                 .andReturn()
@@ -960,8 +964,13 @@ public class TeamBuildingAcceptanceTest{
 
         //then
         result.andExpectAll(
-                MockMvcResultMatchers.status().isOk(),
-                MockMvcResultMatchers.header().string("api-version", apiVersion)
+                MockMvcResultMatchers.status().isForbidden(),
+                MockMvcResultMatchers.header().string(HttpHeaders.CONTENT_TYPE, "application/json"),
+                MockMvcResultMatchers.header().string("api-version", apiVersion),
+                MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON),
+                MockMvcResultMatchers.jsonPath("$.code").value("CHARACTER-403"),
+                MockMvcResultMatchers.jsonPath("$.messages").value("No permission"),
+                MockMvcResultMatchers.jsonPath("$.document_url").value("docs.waldreg.org")
         ).andDo(MockMvcResultHandlers.print());
     }
 
@@ -984,6 +993,7 @@ public class TeamBuildingAcceptanceTest{
                 .build();
 
         //when
+        TeamBuildingAcceptanceTestHelper.createTeamBuilding(mvc, objectMapper.writeValueAsString(teamBuildingRequest), adminToken);
         ResultActions result = TeamBuildingAcceptanceTestHelper.inquiryAllTeamBuilding(mvc, 1, 2, adminToken);
         TeamBuildingListResponse teamBuildingList = objectMapper.readValue(result
                 .andReturn()
@@ -1018,6 +1028,7 @@ public class TeamBuildingAcceptanceTest{
                 .build();
 
         //when
+        TeamBuildingAcceptanceTestHelper.createTeamBuilding(mvc, objectMapper.writeValueAsString(teamBuildingRequest), adminToken);
         ResultActions result = TeamBuildingAcceptanceTestHelper.inquiryAllTeamBuilding(mvc, 1, 2, adminToken);
         TeamBuildingListResponse teamBuildingList = objectMapper.readValue(result
                 .andReturn()
@@ -1057,6 +1068,7 @@ public class TeamBuildingAcceptanceTest{
                 .build();
 
         //when
+        TeamBuildingAcceptanceTestHelper.createTeamBuilding(mvc, objectMapper.writeValueAsString(teamBuildingRequest), adminToken);
         ResultActions result = TeamBuildingAcceptanceTestHelper.inquiryAllTeamBuilding(mvc, 1, 2, adminToken);
         TeamBuildingListResponse teamBuildingList = objectMapper.readValue(result
                 .andReturn()
@@ -1117,7 +1129,7 @@ public class TeamBuildingAcceptanceTest{
     public void MODIFY_TEAM_BUILDING_FAIL_CAUSE_NO_PERMISSION_TEST() throws Exception{
         //given
         String adminToken = AuthenticationAcceptanceTestHelper.getAdminToken(mvc, objectMapper);
-        String wrongToken = "";
+        String wrongToken = createUserAndGetToken("lin","linirini","2fhfhfhfh!");
         String title = "2nd Algorithm Contest Team";
         int teamCount = 2;
         List<UserWeightRequest> userList = createUserWeightRequestList();
@@ -1132,6 +1144,7 @@ public class TeamBuildingAcceptanceTest{
                 .build();
 
         //when
+        TeamBuildingAcceptanceTestHelper.createTeamBuilding(mvc, objectMapper.writeValueAsString(teamBuildingRequest), adminToken);
         ResultActions result = TeamBuildingAcceptanceTestHelper.inquiryAllTeamBuilding(mvc, 1, 2, adminToken);
         TeamBuildingListResponse teamBuildingList = objectMapper.readValue(result
                 .andReturn()
@@ -1142,8 +1155,13 @@ public class TeamBuildingAcceptanceTest{
 
         //then
         result.andExpectAll(
-                MockMvcResultMatchers.status().isOk(),
-                MockMvcResultMatchers.header().string("api-version", apiVersion)
+                MockMvcResultMatchers.status().isForbidden(),
+                MockMvcResultMatchers.header().string(HttpHeaders.CONTENT_TYPE, "application/json"),
+                MockMvcResultMatchers.header().string("api-version", apiVersion),
+                MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON),
+                MockMvcResultMatchers.jsonPath("$.code").value("CHARACTER-403"),
+                MockMvcResultMatchers.jsonPath("$.messages").value("No permission"),
+                MockMvcResultMatchers.jsonPath("$.document_url").value("docs.waldreg.org")
         ).andDo(MockMvcResultHandlers.print());
     }
 
@@ -1165,6 +1183,7 @@ public class TeamBuildingAcceptanceTest{
                 .build();
 
         //when
+        TeamBuildingAcceptanceTestHelper.createTeamBuilding(mvc, objectMapper.writeValueAsString(teamBuildingRequest), adminToken);
         ResultActions result = TeamBuildingAcceptanceTestHelper.inquiryAllTeamBuilding(mvc, 1, 2, adminToken);
         TeamBuildingListResponse teamBuildingList = objectMapper.readValue(result
                 .andReturn()
@@ -1198,6 +1217,7 @@ public class TeamBuildingAcceptanceTest{
                 .build();
 
         //when
+        TeamBuildingAcceptanceTestHelper.createTeamBuilding(mvc, objectMapper.writeValueAsString(teamBuildingRequest), adminToken);
         ResultActions result = TeamBuildingAcceptanceTestHelper.inquiryAllTeamBuilding(mvc, 1, 2, adminToken);
         TeamBuildingListResponse teamBuildingList = objectMapper.readValue(result
                 .andReturn()
@@ -1212,7 +1232,7 @@ public class TeamBuildingAcceptanceTest{
                 MockMvcResultMatchers.header().string(HttpHeaders.CONTENT_TYPE, "application/json"),
                 MockMvcResultMatchers.header().string("api-version", apiVersion),
                 MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON),
-                MockMvcResultMatchers.jsonPath("$.code").value("TEAMBUILDING-400"),
+                MockMvcResultMatchers.jsonPath("$.code").value("TEAMBUILDING-407"),
                 MockMvcResultMatchers.jsonPath("$.messages").value("Cannot find team id \"" + wrongId + "\""),
                 MockMvcResultMatchers.jsonPath("$.document_url").value("docs.waldreg.org")
         ).andDo(MockMvcResultHandlers.print());
@@ -1239,6 +1259,7 @@ public class TeamBuildingAcceptanceTest{
                 .build();
 
         //when
+        TeamBuildingAcceptanceTestHelper.createTeamBuilding(mvc, objectMapper.writeValueAsString(teamBuildingRequest), adminToken);
         ResultActions result = TeamBuildingAcceptanceTestHelper.inquiryAllTeamBuilding(mvc, 1, 2, adminToken);
         TeamBuildingListResponse teamBuildingList = objectMapper.readValue(result
                 .andReturn()
@@ -1278,6 +1299,7 @@ public class TeamBuildingAcceptanceTest{
                 .build();
 
         //when
+        TeamBuildingAcceptanceTestHelper.createTeamBuilding(mvc, objectMapper.writeValueAsString(teamBuildingRequest), adminToken);
         ResultActions result = TeamBuildingAcceptanceTestHelper.inquiryAllTeamBuilding(mvc, 1, 2, adminToken);
         TeamBuildingListResponse teamBuildingList = objectMapper.readValue(result
                 .andReturn()
@@ -1292,7 +1314,7 @@ public class TeamBuildingAcceptanceTest{
                 MockMvcResultMatchers.header().string(HttpHeaders.CONTENT_TYPE, "application/json"),
                 MockMvcResultMatchers.header().string("api-version", apiVersion),
                 MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON),
-                MockMvcResultMatchers.jsonPath("$.code").value("TEAMBUILDING-406"),
+                MockMvcResultMatchers.jsonPath("$.code").value("TEAMBUILDING-408"),
                 MockMvcResultMatchers.jsonPath("$.messages").value("Team name cannot be blank"),
                 MockMvcResultMatchers.jsonPath("$.document_url").value("docs.waldreg.org")
         ).andDo(MockMvcResultHandlers.print());
@@ -1303,7 +1325,7 @@ public class TeamBuildingAcceptanceTest{
     public void MODIFY_TEAM_NAME_IN_TEAM_BUILDING_FAIL_CAUSE_NO_PERMISSION_TEST() throws Exception{
         //given
         String adminToken = AuthenticationAcceptanceTestHelper.getAdminToken(mvc, objectMapper);
-        String wrongToken = "";
+        String wrongToken = createUserAndGetToken("lin","linirini","2fhfhfhfh!");
         String title = "2nd Algorithm Contest Team";
         int teamCount = 2;
         List<UserWeightRequest> userList = createUserWeightRequestList();
@@ -1317,6 +1339,7 @@ public class TeamBuildingAcceptanceTest{
                 .build();
 
         //when
+        TeamBuildingAcceptanceTestHelper.createTeamBuilding(mvc, objectMapper.writeValueAsString(teamBuildingRequest), adminToken);
         ResultActions result = TeamBuildingAcceptanceTestHelper.inquiryAllTeamBuilding(mvc, 1, 1, adminToken);
         TeamBuildingListResponse teamBuildingList = objectMapper.readValue(result
                 .andReturn()
@@ -1327,7 +1350,7 @@ public class TeamBuildingAcceptanceTest{
 
         //then
         result.andExpectAll(
-                MockMvcResultMatchers.status().isBadRequest(),
+                MockMvcResultMatchers.status().isForbidden(),
                 MockMvcResultMatchers.header().string(HttpHeaders.CONTENT_TYPE, "application/json"),
                 MockMvcResultMatchers.header().string("api-version", apiVersion),
                 MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON),
@@ -1407,7 +1430,7 @@ public class TeamBuildingAcceptanceTest{
     public void DELETE_SPECIFIC_TEAM_BUILDING_FAIL_CAUSE_NO_PERMISSION_TEST() throws Exception{
         //given
         String adminToken = AuthenticationAcceptanceTestHelper.getAdminToken(mvc, objectMapper);
-        String wrongToken = "";
+        String wrongToken = createUserAndGetToken("lin","linirini","2fhfhfhfh!");
         String title = "2nd Algorithm Contest Team";
         int teamCount = 2;
         List<UserWeightRequest> userList = createUserWeightRequestList();
@@ -1429,7 +1452,7 @@ public class TeamBuildingAcceptanceTest{
 
         //then
         result.andExpectAll(
-                MockMvcResultMatchers.status().isBadRequest(),
+                MockMvcResultMatchers.status().isForbidden(),
                 MockMvcResultMatchers.header().string(HttpHeaders.CONTENT_TYPE, "application/json"),
                 MockMvcResultMatchers.header().string("api-version", apiVersion),
                 MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON),
@@ -1514,7 +1537,7 @@ public class TeamBuildingAcceptanceTest{
     public void DELETE_SPECIFIC_TEAM_IN_TEAM_BUILDING_FAIL_CAUSE_NO_PERMISSION_TEST() throws Exception{
         //given
         String adminToken = AuthenticationAcceptanceTestHelper.getAdminToken(mvc, objectMapper);
-        String wrongToken = "";
+        String wrongToken = createUserAndGetToken("lin","lini","linirini!!2");
         String title = "2nd Algorithm Contest Team";
         int teamCount = 2;
         List<UserWeightRequest> userList = createUserWeightRequestList();
@@ -1536,7 +1559,7 @@ public class TeamBuildingAcceptanceTest{
 
         //then
         result.andExpectAll(
-                MockMvcResultMatchers.status().isBadRequest(),
+                MockMvcResultMatchers.status().isForbidden(),
                 MockMvcResultMatchers.header().string(HttpHeaders.CONTENT_TYPE, "application/json"),
                 MockMvcResultMatchers.header().string("api-version", apiVersion),
                 MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON),
@@ -1576,13 +1599,15 @@ public class TeamBuildingAcceptanceTest{
     }
 
     private void createUser(String userId) throws Exception{
+        String adminToken = AuthenticationAcceptanceTestHelper.getAdminToken(mvc, objectMapper);
         UserRequest userRequest = UserRequest.builder()
-                .name("alcuk")
+                .name(userId)
                 .userId(userId)
                 .userPassword("2dfgsfvgdd!")
                 .phoneNumber("010-1234-1234")
                 .build();
         UserAcceptanceTestHelper.createUser(mvc, objectMapper.writeValueAsString(userRequest));
+        UserAcceptanceTestHelper.approveJoinRequest(mvc,adminToken,userRequest.getUserId());
         userRequestList.add(userRequest);
     }
 
@@ -1592,6 +1617,25 @@ public class TeamBuildingAcceptanceTest{
             title = title + "A";
         }
         return title;
+    }
+
+    private String createUserAndGetToken(String name, String userId, String userPassword) throws Exception{
+        String adminToken = AuthenticationAcceptanceTestHelper.getAdminToken(mvc, objectMapper);
+
+        UserRequest userRequest = UserRequest.builder()
+                .name(name)
+                .userId(userId)
+                .userPassword(userPassword)
+                .phoneNumber("010-1234-1234")
+                .build();
+        UserAcceptanceTestHelper.createUser(mvc, objectMapper.writeValueAsString(userRequest)).andDo(MockMvcResultHandlers.print());
+        UserAcceptanceTestHelper.approveJoinRequest(mvc,adminToken,userRequest.getUserId());
+        userRequestList.add(userRequest);
+
+        return AuthenticationAcceptanceTestHelper.getToken(mvc, objectMapper, AuthTokenRequest.builder()
+                .userId(userId)
+                .userPassword(userPassword)
+                .build());
     }
 
 }

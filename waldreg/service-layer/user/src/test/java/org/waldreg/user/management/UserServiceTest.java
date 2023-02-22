@@ -21,9 +21,9 @@ import org.waldreg.user.management.joiningpool.DefaultJoiningPoolManager;
 import org.waldreg.user.management.joiningpool.JoiningPoolManager;
 import org.waldreg.user.management.user.DefaultUserManager;
 import org.waldreg.user.management.user.UserManager;
-import org.waldreg.user.spi.CharacterRepository;
 import org.waldreg.user.spi.JoiningPoolRepository;
 import org.waldreg.user.spi.UserRepository;
+import org.waldreg.user.spi.UsersCharacterRepository;
 
 @ExtendWith(SpringExtension.class)
 @ContextConfiguration(classes = {DefaultUserManager.class, DefaultJoiningPoolManager.class})
@@ -44,7 +44,7 @@ public class UserServiceTest{
     @MockBean
     private JoiningPoolRepository joiningPoolRepository;
     @MockBean
-    private CharacterRepository characterRepository;
+    private UsersCharacterRepository userCharacterRepository;
 
     @Test
     @DisplayName("유저 생성 성공 테스트")
@@ -60,7 +60,7 @@ public class UserServiceTest{
                 .userPassword(userPassword)
                 .phoneNumber(phoneNumber)
                 .build();
-        Mockito.when(characterRepository.isExistCharacterName(Mockito.anyString())).thenReturn(true);
+        Mockito.when(userCharacterRepository.isExistCharacterName(Mockito.anyString())).thenReturn(true);
 
         // when & then
         Assertions.assertDoesNotThrow(() -> joiningPoolManager.createUser(createRequest));
@@ -152,7 +152,7 @@ public class UserServiceTest{
         int enIdx = 3;
 
         //when
-        Mockito.when(characterRepository.isExistCharacterName(Mockito.anyString())).thenReturn(true);
+        Mockito.when(userCharacterRepository.isExistCharacterName(Mockito.anyString())).thenReturn(true);
         joiningPoolManager.createUser(createRequest);
         userDtoList.add(createRequest);
         joiningPoolManager.createUser(createRequest2);
@@ -212,7 +212,7 @@ public class UserServiceTest{
         int enIdx = 1;
 
         //when
-        Mockito.when(characterRepository.isExistCharacterName(Mockito.anyString())).thenReturn(true);
+        Mockito.when(userCharacterRepository.isExistCharacterName(Mockito.anyString())).thenReturn(true);
         joiningPoolManager.createUser(createRequest);
         userDtoList.add(createRequest);
         joiningPoolManager.createUser(createRequest2);
@@ -341,7 +341,7 @@ public class UserServiceTest{
                 .build();
 
         //when
-        Mockito.when(characterRepository.isExistCharacterName(Mockito.anyString())).thenReturn(true);
+        Mockito.when(userCharacterRepository.isExistCharacterName(Mockito.anyString())).thenReturn(true);
         Mockito.when(userRepository.readUserById(Mockito.anyInt())).thenReturn(createRequest);
         Mockito.when(userRepository.isExistId(Mockito.anyInt())).thenReturn(true);
         UserDto result = userManager.readUserById(id);
@@ -558,7 +558,7 @@ public class UserServiceTest{
 
         //when
         Mockito.when(userRepository.isExistId(Mockito.anyInt())).thenReturn(true);
-        Mockito.when(characterRepository.isExistCharacterName(Mockito.anyString())).thenReturn(true);
+        Mockito.when(userCharacterRepository.isExistCharacterName(Mockito.anyString())).thenReturn(true);
         Mockito.when(userRepository.isExistUserId(Mockito.anyString())).thenReturn(true);
         Mockito.when(userRepository.readUserByUserId(Mockito.anyString())).thenReturn(createRequest);
         UserDto origin = userManager.readUserByUserId(createRequest.getUserId());
@@ -608,7 +608,7 @@ public class UserServiceTest{
                 .build();
 
         //when
-        Mockito.when(characterRepository.isExistCharacterName(Mockito.anyString())).thenReturn(true);
+        Mockito.when(userCharacterRepository.isExistCharacterName(Mockito.anyString())).thenReturn(true);
         joiningPoolManager.createUser(createRequest);
         Mockito.when(joiningPoolRepository.isExistUserId(Mockito.anyString())).thenReturn(true);
         joiningPoolManager.approveJoin(createRequest.getUserId());
@@ -636,7 +636,7 @@ public class UserServiceTest{
                 .build();
 
         //when
-        Mockito.when(characterRepository.isExistCharacterName(Mockito.anyString())).thenReturn(true);
+        Mockito.when(userCharacterRepository.isExistCharacterName(Mockito.anyString())).thenReturn(true);
         joiningPoolManager.createUser(createRequest);
         Mockito.when(joiningPoolRepository.isExistUserId(Mockito.anyString())).thenReturn(true);
         joiningPoolManager.approveJoin(createRequest.getUserId());

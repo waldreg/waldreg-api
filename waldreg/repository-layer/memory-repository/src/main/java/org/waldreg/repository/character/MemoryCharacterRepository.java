@@ -14,9 +14,10 @@ import org.waldreg.domain.character.Permission;
 import org.waldreg.domain.user.User;
 import org.waldreg.repository.MemoryCharacterStorage;
 import org.waldreg.repository.MemoryUserStorage;
+import org.waldreg.user.spi.UsersCharacterRepository;
 
 @Repository
-public class MemoryCharacterRepository implements CharacterRepository{
+public class MemoryCharacterRepository implements CharacterRepository, UsersCharacterRepository{
 
     private final MemoryCharacterStorage memoryCharacterStorage;
     private final MemoryUserStorage memoryUserStorage;
@@ -103,6 +104,11 @@ public class MemoryCharacterRepository implements CharacterRepository{
             characterDtoList.add(characterMapper.characterDomainToDto(characterEntry.getValue()));
         }
         return characterDtoList;
+    }
+
+    @Override
+    public boolean isExistCharacterName(String characterName){
+        return memoryCharacterStorage.isExistCharacterName(characterName);
     }
 
 }

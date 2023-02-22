@@ -6,6 +6,7 @@ import org.springframework.lang.Nullable;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.Mapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -64,7 +65,7 @@ public class TeamBuildingController{
 
     @Authenticating
     @PermissionVerifying(value = "Teambuilding create manager")
-    @PostMapping("/teambuilding/{teambuilding-id}")
+    @PostMapping("/teambuilding/team/{teambuilding-id}")
     public void createTeam(@PathVariable("teambuilding-id") int teamBuildingId, @RequestBody @Validated TeamRequest teamRequest){
         TeamRequestDto teamRequestDto = controllerTeamBuildingMapper.teamRequestToTeamRequestDto(teamRequest);
         teamManager.createTeam(teamBuildingId, teamRequestDto);
@@ -79,7 +80,7 @@ public class TeamBuildingController{
 
     @Authenticating
     @RequestMapping("/teambuilding")
-    public TeamBuildingListResponse readAllTeamBuilding(@RequestParam(value = "from", required = false) int startIdx, @RequestParam(value = "to", required = false) int endIdx){
+    public TeamBuildingListResponse readAllTeamBuilding(@RequestParam(value = "from", required = false) Integer startIdx, @RequestParam(value = "to", required = false) Integer endIdx){
         if (isInvalidRange(startIdx, endIdx)){
             startIdx = 1;
             endIdx = PerPage.PER_PAGE;
@@ -97,22 +98,22 @@ public class TeamBuildingController{
     @Authenticating
     @PermissionVerifying(value = "Teambuilding update manager")
     @PutMapping("/teambuilding/{team-id}")
-    public void updateTeamByTeamId(@PathVariable("team-id") int teamId, @RequestBody TeamRequest teamRequest){
+    public void updateTeamByTeamId(@PathVariable("team-id") int teamId, @RequestBody @Validated TeamRequest teamRequest){
         TeamRequestDto teamRequestDto = controllerTeamBuildingMapper.teamRequestToTeamRequestDto(teamRequest);
         teamManager.updateTeamById(teamId, teamRequestDto);
     }
 
     @Authenticating
     @PermissionVerifying(value = "Teambuilding update manager")
-    @PatchMapping("/teambuilding/{teambuilding-id}")
-    public void updateTeamBuildingByTeamBuildingId(@PathVariable("teambuilding-id") int teamBuildingId, @RequestBody TeamBuildingUpdateRequest teamBuildingUpdateRequest){
+    @PatchMapping("/teambuilding/group/{teambuilding-id}")
+    public void updateTeamBuildingByTeamBuildingId(@PathVariable("teambuilding-id") int teamBuildingId, @RequestBody @Validated TeamBuildingUpdateRequest teamBuildingUpdateRequest){
         teamBuildingManager.updateTeamBuildingTitleById(teamBuildingId, teamBuildingUpdateRequest.getTeamBuildingTitle());
     }
 
     @Authenticating
     @PermissionVerifying(value = "Teambuilding update manager", fail = VerifyingFailBehavior.PASS)
-    @PatchMapping("/teambuilding/{team-id}")
-    public void updateTeamNameByTeamId(@PathVariable("team-id") int teamId, @RequestBody TeamUpdateRequest teamUpdateRequest, @Nullable PermissionVerifyState permissionVerifyState){
+    @PatchMapping("/teambuilding/team/{team-id}")
+    public void updateTeamNameByTeamId(@PathVariable("team-id") int teamId, @RequestBody @Validated TeamUpdateRequest teamUpdateRequest, @Nullable PermissionVerifyState permissionVerifyState){
         int id = decryptedTokenContextGetter.get();
         List<UserDto> userDtoList = teamManager.readTeamById(teamId).getUserList();
         throwIfNoUpdatePermission(permissionVerifyState, id, userDtoList);
@@ -120,21 +121,21 @@ public class TeamBuildingController{
     }
 
     private void throwIfNoUpdatePermission(PermissionVerifyState permissionVerifyState, int id, List<UserDto> userDtoList){
-        if (!permissionVerifyState.isVerified() || userDtoList.stream().noneMatch(i -> i.getId() == id)){
+        if (!permissionVerifyState.isVerified() && userDtoList.stream().noneMatch(i -> i.getId() == id)){
             throw new NoPermissionException();
         }
     }
 
     @Authenticating
     @PermissionVerifying(value = "Teambuilding delete manager")
-    @DeleteMapping("/teambuilding/{teambuilding-id}")
+    @DeleteMapping("/teambuilding/group/{teambuilding-id}")
     public void deleteTeamBuildingByTeamBuildingId(@PathVariable("teambuilding-id") int teamBuildingId){
         teamBuildingManager.deleteTeamBuildingById(teamBuildingId);
     }
 
     @Authenticating
     @PermissionVerifying(value = "Teambuilding delete manager")
-    @DeleteMapping("/teambuilding/{team-id}")
+    @DeleteMapping("/teambuilding/team/{team-id}")
     public void deleteTeamByTeamId(@PathVariable("team-id") int teamId){
         teamManager.deleteTeamById(teamId);
     }

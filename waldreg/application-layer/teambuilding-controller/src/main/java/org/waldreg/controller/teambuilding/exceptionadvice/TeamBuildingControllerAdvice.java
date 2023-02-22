@@ -43,7 +43,7 @@ public class TeamBuildingControllerAdvice{
     @ExceptionHandler({InvalidRangeException.class})
     public ResponseEntity<ExceptionTemplate> catchInvalidRangeException(InvalidRangeException invalidRangeException){
         ExceptionTemplate exceptionTemplate = ExceptionTemplate.builder()
-                .code("TEAMBUILDING-409")
+                .code("TEAMBUILDING-405")
                 .message(invalidRangeException.getMessage())
                 .documentUrl(documentUrl)
                 .build();
@@ -53,7 +53,7 @@ public class TeamBuildingControllerAdvice{
     @ExceptionHandler({DuplicateUserSelectException.class})
     public ResponseEntity<ExceptionTemplate> catchDuplicateUserSelectException(DuplicateUserSelectException duplicateUserSelectException){
         ExceptionTemplate exceptionTemplate = ExceptionTemplate.builder()
-                .code("TEAMBUILDING-405")
+                .code("TEAMBUILDING-409")
                 .message(duplicateUserSelectException.getMessage())
                 .documentUrl(documentUrl)
                 .build();

@@ -12,20 +12,20 @@ import org.waldreg.user.exception.UnknownUserIdException;
 import org.waldreg.user.management.PerPage;
 import org.waldreg.user.spi.JoiningPoolRepository;
 import org.waldreg.user.spi.UserRepository;
-import org.waldreg.user.spi.CharacterRepository;
+import org.waldreg.user.spi.UsersCharacterRepository;
 
 @Service
 public class DefaultUserManager implements UserManager{
 
     private final UserRepository userRepository;
     private final JoiningPoolRepository joiningPoolRepository;
-    private final CharacterRepository characterRepository;
+    private final UsersCharacterRepository usersCharacterRepository;
 
     @Autowired
-    public DefaultUserManager(UserRepository userRepository, JoiningPoolRepository joiningPoolRepository, CharacterRepository characterRepository){
+    public DefaultUserManager(UserRepository userRepository, JoiningPoolRepository joiningPoolRepository, UsersCharacterRepository usersCharacterRepository){
         this.userRepository = userRepository;
         this.joiningPoolRepository = joiningPoolRepository;
-        this.characterRepository = characterRepository;
+        this.usersCharacterRepository = usersCharacterRepository;
     }
 
     @Override
@@ -52,7 +52,7 @@ public class DefaultUserManager implements UserManager{
     }
 
     private void throwIfUnknownCharacter(String characterName){
-        if (!characterRepository.isExistCharacterName(characterName)){
+        if (!usersCharacterRepository.isExistCharacterName(characterName)){
             throw new UnknownCharacterException(characterName);
         }
     }
@@ -134,7 +134,7 @@ public class DefaultUserManager implements UserManager{
     }
 
     public void throwIfCharacterDoesNotExist(String characterName){
-        if (!characterRepository.isExistCharacterName(characterName)){
+        if (!usersCharacterRepository.isExistCharacterName(characterName)){
             throw new UnknownCharacterException(characterName);
         }
     }
