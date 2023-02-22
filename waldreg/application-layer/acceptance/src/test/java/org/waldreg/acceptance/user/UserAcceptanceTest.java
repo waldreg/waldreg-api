@@ -83,22 +83,6 @@ public class UserAcceptanceTest{
     @AfterEach
     public void INITIATE() throws Exception{
         String adminToken = AuthenticationAcceptanceTestHelper.getAdminToken(mvc, objectMapper);
-//
-//        UserListResponse userListResponse = objectMapper.readValue(UserAcceptanceTestHelper.inquiryAllUserWithoutToken(mvc,2,20).andReturn().getResponse().getContentAsString(),UserListResponse.class);
-//        for(UserResponse userResponse: userListResponse.getUserList()){
-//            UserAcceptanceTestHelper.forcedDeleteUserWithToken(mvc,userResponse.getId(),adminToken);
-//            ResultActions resultActions = UserAcceptanceTestHelper.inquiryUserWithToken(mvc,userResponse.getUserId(),adminToken);
-//            resultActions.andExpectAll(
-//                    MockMvcResultMatchers.status().isBadRequest(),
-//                    MockMvcResultMatchers.header().string(HttpHeaders.CONTENT_TYPE, "application/json"),
-//                    MockMvcResultMatchers.header().string("api-version", apiVersion),
-//                    MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON),
-//                    MockMvcResultMatchers.jsonPath("$.code").value("USER-406"),
-//                    MockMvcResultMatchers.jsonPath("$.messages").value("Unknown user_id \"" + userResponse.getUserId() + "\""),
-//                    MockMvcResultMatchers.jsonPath("$.document_url").value("docs.waldreg.org")
-//            );
-//
-//        }
         for (UserRequest request : userCreateRequestList){
             UserResponse userResponse = objectMapper.readValue(UserAcceptanceTestHelper.inquiryUserWithoutToken(mvc, request.getUserId())
                                                                        .andReturn()

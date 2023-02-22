@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
+import org.waldreg.character.exception.NoPermissionException;
 import org.waldreg.character.management.CharacterManager;
 import org.waldreg.user.dto.UserDto;
 import org.waldreg.user.exception.DuplicatedUserIdException;
@@ -557,6 +558,7 @@ public class UserServiceTest{
                 .build();
 
         //when
+        Mockito.when(userRepository.readUserById(Mockito.anyInt())).thenReturn(createRequest);
         Mockito.when(userRepository.isExistId(Mockito.anyInt())).thenReturn(true);
         Mockito.when(userCharacterRepository.isExistCharacterName(Mockito.anyString())).thenReturn(true);
         Mockito.when(userRepository.isExistUserId(Mockito.anyString())).thenReturn(true);
@@ -568,6 +570,23 @@ public class UserServiceTest{
 
         //then
         Assertions.assertEquals(result.getCharacter(), updateCharacter);
+    }
+
+    @Test
+    @DisplayName("유저 역할 수정 실패 테스트 - Admin 역할 수정 불가")
+    public void UPDATE_USER_CHARACTER_FAIL_CAUSE_ADMIN_TEST(){
+        //given
+        String updateCharacter = "update_character";
+        UserDto userDto = UserDto.builder()
+                .userId("Admin")
+                .build();
+
+        //when
+        Mockito.when(userRepository.isExistId(Mockito.anyInt())).thenReturn(true);
+        Mockito.when(userRepository.readUserById(Mockito.anyInt())).thenReturn(userDto);
+
+        //then
+        Assertions.assertThrows(NoPermissionException.class,() -> userManager.updateCharacter(1,updateCharacter));
     }
 
     @Test
@@ -584,12 +603,28 @@ public class UserServiceTest{
         int id = 0;
 
         //when
+        Mockito.when(userRepository.readUserById(Mockito.anyInt())).thenReturn(userDto);
         Mockito.when(userRepository.isExistId(Mockito.anyInt())).thenReturn(false);
 
         //then
         Assertions.assertThrows(UnknownIdException.class, () -> userManager.updateCharacter(id, updateCharacter));
     }
 
+    @Test
+    @DisplayName("유저 삭제 실패 테스트 - Admin 삭제 불가")
+    public void DELETE_USER_CHARACTER_FAIL_CAUSE_ADMIN_TEST(){
+        //given
+        UserDto userDto = UserDto.builder()
+                .userId("Admin")
+                .build();
+
+        //when
+        Mockito.when(userRepository.isExistId(Mockito.anyInt())).thenReturn(true);
+        Mockito.when(userRepository.readUserById(Mockito.anyInt())).thenReturn(userDto);
+
+        //then
+        Assertions.assertThrows(NoPermissionException.class,() -> userManager.deleteById(1));
+    }
 
     @Test
     @DisplayName("유저 셀프 삭제 성공 테스트")

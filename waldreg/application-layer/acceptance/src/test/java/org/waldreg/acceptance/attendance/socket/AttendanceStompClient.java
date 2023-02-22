@@ -67,14 +67,14 @@ public class AttendanceStompClient{
         String attendanceStartDestination = "/attendance/start";
         session.send(attendanceStartDestination, new AttendanceManagingMessage(id));
         logger.info(() -> "Send message start attendance id \"" + id + "\"");
-        Thread.sleep(100);
+        Thread.sleep(1000);
     }
 
     public synchronized void stopAttendance() throws Exception{
         String attendanceStopDestination = "/attendance/stop";
         session.send(attendanceStopDestination, new AttendanceManagingMessage(id));
         logger.info(() -> "Stop message stop attendance id \"" + id + "\"");
-        Thread.sleep(100);
+        Thread.sleep(1000);
     }
 
     private final class CustomStompSessionHandler implements StompSessionHandler{
@@ -91,10 +91,10 @@ public class AttendanceStompClient{
         private void subscribeAttendance(StompSession session) throws Exception{
             session.subscribe("/topic/attendance-key", this);
             logger.info("Subscribe /topic/attendance-key");
-            Thread.sleep(100);
+            Thread.sleep(1000);
             session.subscribe("/topic/attendance-time", this);
             logger.info("Subscribe /topic/attendance-time");
-            Thread.sleep(100);
+            Thread.sleep(1000);
         }
 
         @Override
