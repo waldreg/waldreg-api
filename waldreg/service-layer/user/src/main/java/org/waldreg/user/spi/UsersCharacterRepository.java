@@ -1,6 +1,6 @@
 package org.waldreg.user.spi;
 
-public interface CharacterRepository{
+public interface UsersCharacterRepository{
 
     boolean isExistCharacterName(String characterName);
 

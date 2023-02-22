@@ -12,8 +12,6 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.waldreg.character.dto.CharacterDto;
 import org.waldreg.character.dto.PermissionDto;
-import org.waldreg.character.exception.DuplicatedCharacterException;
-import org.waldreg.character.exception.UnknownCharacterException;
 import org.waldreg.character.spi.CharacterRepository;
 import org.waldreg.domain.character.Character;
 import org.waldreg.domain.character.Permission;

@@ -109,6 +109,7 @@ public class DefaultTeamManager implements TeamManager{
 
     @Override
     public TeamDto readTeamById(int teamId){
+        throwIfUnknownTeamId(teamId);
         return teamRepository.readTeamById(teamId);
     }
 
