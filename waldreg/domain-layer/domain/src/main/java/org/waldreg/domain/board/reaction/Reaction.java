@@ -1,63 +1,72 @@
 package org.waldreg.domain.board.reaction;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
-import org.waldreg.domain.user.User;
+import javax.persistence.CascadeType;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
+import javax.persistence.Table;
+import org.waldreg.domain.board.Board;
 
+@Entity
+@Table(name = "REACTION")
 public final class Reaction{
 
-    private int boardId;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "REACTION_ID")
+    private Integer id;
 
-    private final Map<ReactionType, List<User>> reactionMap;
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name = "BOARD_ID", nullable = false)
+    private Board board;
 
-    private Reaction(){
-        throw new UnsupportedOperationException("Can not invoke constructor \"Reaction()\"");
-    }
+    @OneToMany(mappedBy = "reaction", fetch = FetchType.LAZY, orphanRemoval = true, cascade = CascadeType.ALL)
+    private List<ReactionUser> reactionUserList;
+
+    private Reaction(){}
 
     private Reaction(Builder builder){
-        this.boardId = builder.boardId;
-        this.reactionMap = builder.reactionMap;
+        this.board = builder.board;
+        this.reactionUserList = builder.reactionUserList;
     }
 
-    public int getBoardId(){
-        return boardId;
+    public Board getBoard(){
+        return board;
     }
 
-    public Map<ReactionType, List<User>> getReactionMap(){
-        return reactionMap;
+    public List<ReactionUser> getReactionUserList(){
+        return reactionUserList;
     }
 
     public static Builder builder(){
         return new Builder();
     }
 
-    public final static class Builder{
+    public static final class Builder{
 
-        private int boardId;
+        private Board board;
 
-        private Map<ReactionType, List<User>> reactionMap;
+        private List<ReactionUser> reactionUserList;
 
-        {
-            reactionMap = new HashMap<>();
-            reactionMap.put(ReactionType.HEART, new ArrayList<>());
-            reactionMap.put(ReactionType.BAD, new ArrayList<>());
-            reactionMap.put(ReactionType.SAD, new ArrayList<>());
-            reactionMap.put(ReactionType.SMILE, new ArrayList<>());
-            reactionMap.put(ReactionType.GOOD, new ArrayList<>());
-            reactionMap.put(ReactionType.CHECK, new ArrayList<>());
+        private Builder(){
+            reactionUserList = new ArrayList<>();
         }
 
-        private Builder(){}
-
-        public Builder boardId(int boardId){
-            this.boardId = boardId;
+        public Builder board(Board board){
+            this.board = board;
             return this;
         }
 
-        public Builder reactionMap(Map<ReactionType, List<User>> reactionMap){
-            this.reactionMap = reactionMap;
+        public Builder reactionUserList(List<ReactionUser> reactionUserList){
+            this.reactionUserList = reactionUserList;
             return this;
         }
 

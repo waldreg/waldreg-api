@@ -7,7 +7,7 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicInteger;
 import org.springframework.stereotype.Repository;
 import org.waldreg.domain.board.Board;
-import org.waldreg.domain.category.Category;
+import org.waldreg.domain.board.category.Category;
 
 @Repository
 public class MemoryCategoryStorage{

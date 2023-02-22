@@ -1,49 +1,45 @@
 package org.waldreg.domain.calendar;
 
 import java.time.LocalDateTime;
+import javax.persistence.Column;
+import javax.persistence.Embeddable;
 
+@Embeddable
 public final class ScheduleRepeat{
 
-    private int cycle;
+    @Column(name = "SCHEDULE_REPEAT_CYCLE")
+    private Integer cycle;
+
+    @Column(name = "SCHEDULE_REPEAT_REPEAT_FINISH_AT", columnDefinition = "TIMESTAMP")
     private LocalDateTime repeatFinishAt;
 
-    private ScheduleRepeat(){
-        throw new UnsupportedOperationException("Can not invoke constructor \"ScheduleRepeat()\"");
-    }
+    private ScheduleRepeat(){}
 
     private ScheduleRepeat(Builder builder){
         this.cycle = builder.cycle;
         this.repeatFinishAt = builder.repeatFinishAt;
     }
 
-    public int getCycle(){
+    public Integer getCycle(){
         return cycle;
-    }
-
-    public void setCycle(int cycle){
-        this.cycle = cycle;
     }
 
     public LocalDateTime getRepeatFinishAt(){
         return repeatFinishAt;
     }
 
-    public void setRepeatFinishAt(LocalDateTime repeatFinishAt){
-        this.repeatFinishAt = repeatFinishAt;
-    }
-
     public static Builder builder(){
         return new Builder();
     }
 
-    public final static class Builder{
+    public static final class Builder{
 
-        private int cycle;
+        private Integer cycle;
         private LocalDateTime repeatFinishAt;
 
         private Builder(){}
 
-        public Builder cycle(int cycle){
+        public Builder cycle(Integer cycle){
             this.cycle = cycle;
             return this;
         }

@@ -7,7 +7,7 @@ import org.waldreg.board.category.spi.CategoryRepository;
 import org.waldreg.board.dto.BoardDto;
 import org.waldreg.board.dto.CategoryDto;
 import org.waldreg.domain.board.Board;
-import org.waldreg.domain.category.Category;
+import org.waldreg.domain.board.category.Category;
 import org.waldreg.repository.MemoryBoardStorage;
 import org.waldreg.repository.MemoryCategoryStorage;
 

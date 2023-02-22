@@ -1,14 +1,39 @@
 package org.waldreg.domain.calendar;
 
 import java.time.LocalDateTime;
+import javax.persistence.Column;
+import javax.persistence.Embedded;
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.OneToOne;
+import javax.persistence.Table;
 
+@Entity
+@Table(name = "SCHEDULE")
 public final class Schedule{
 
-    private int id;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "SCHEDULE_ID")
+    private Integer id;
+
+    @Column(name = "SCHEDULE_TITLE", nullable = false, length = 1000)
     private String scheduleTitle;
+
+    @Column(name = "SCHEDULE_CONTENT", length = 1000)
     private String scheduleContent;
+
+    @Column(name = "SCHEDULE_STARTED_AT", columnDefinition = "TIMESTAMP", nullable = false)
     private LocalDateTime startedAt;
+
+    @Column(name = "SCHEDULE_FINISH_AT", columnDefinition = "TIMESTAMP", nullable = false)
     private LocalDateTime finishAt;
+
+    @Embedded
     private ScheduleRepeat scheduleRepeat;
 
     private Schedule(){

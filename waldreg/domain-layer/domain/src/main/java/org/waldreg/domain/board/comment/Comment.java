@@ -1,24 +1,49 @@
 package org.waldreg.domain.board.comment;
 
 import java.time.LocalDateTime;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.OneToOne;
+import javax.persistence.Table;
+import org.waldreg.domain.board.Board;
 import org.waldreg.domain.user.User;
 
+@Entity
+@Table(name = "COMMENT")
 public final class Comment{
 
-    private int id;
-    private final int boardId;
-    private final User user;
-    private final LocalDateTime createdAt;
-    private final LocalDateTime lastModifiedAt;
-    private final String content;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "COMMENT_ID")
+    private Integer id;
 
-    private Comment(){
-        throw new UnsupportedOperationException("Can not invoke constructor \"Comment()\"");
-    }
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name = "BOARD_ID", nullable = false)
+    private Board board;
+
+    @OneToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name = "USER_ID", nullable = false)
+    private User user;
+
+    @Column(name = "COMMENT_CREATED_AT", columnDefinition = "TIMESTAMP", nullable = false)
+    private LocalDateTime createdAt;
+
+    @Column(name = "COMMENT_LAST_MODIFIED_AT", columnDefinition = "TIMESTAMP", nullable = false)
+    private LocalDateTime lastModifiedAt;
+
+    @Column(name = "COMMENT_CONTENT", nullable = false, length = 1000)
+    private String content;
+
+    private Comment(){}
 
     private Comment(Builder builder){
-        this.id = builder.id;
-        this.boardId = builder.boardId;
+        this.board = builder.board;
         this.user = builder.user;
         this.createdAt = builder.createdAt;
         this.lastModifiedAt = builder.lastModifiedAt;
@@ -29,16 +54,12 @@ public final class Comment{
         return new Builder();
     }
 
-    public int getId(){
+    public Integer getId(){
         return id;
     }
 
-    public void setId(int id){
-        this.id = id;
-    }
-
-    public int getBoardId(){
-        return boardId;
+    public Board getBoard(){
+        return board;
     }
 
     public User getUser(){
@@ -57,30 +78,21 @@ public final class Comment{
         return content;
     }
 
-    public final static class Builder{
+    public static final class Builder{
 
-        private int id;
-
-        private int boardId;
+        private Board board;
         private User user;
         private LocalDateTime createdAt;
         private LocalDateTime lastModifiedAt;
         private String content;
 
-        {
+        private Builder(){
             createdAt = LocalDateTime.now();
             this.lastModifiedAt = createdAt;
         }
 
-        private Builder(){}
-
-        public Builder id(int id){
-            this.id = id;
-            return this;
-        }
-
-        public Builder boardId(int boardId){
-            this.boardId = boardId;
+        public Builder board(Board board){
+            this.board = board;
             return this;
         }
 

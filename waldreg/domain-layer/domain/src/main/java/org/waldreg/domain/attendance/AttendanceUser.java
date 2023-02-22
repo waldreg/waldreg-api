@@ -1,18 +1,32 @@
 package org.waldreg.domain.attendance;
 
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.OneToOne;
+import javax.persistence.Table;
 import org.waldreg.domain.user.User;
 
+@Entity
+@Table(name = "ATTENDANCE_USER")
 public final class AttendanceUser{
 
-    private int attendanceUserId;
-    private final User user;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "ATTENDANCE_USER_ATTENDANCE_USER_ID")
+    private Integer attendanceUserId;
 
-    private AttendanceUser(){
-        throw new UnsupportedOperationException("Cannot invoke constructor \"AttendanceUser()\"");
-    }
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "USER_ID", nullable = false, unique = true)
+    private User user;
+
+    private AttendanceUser(){}
 
     private AttendanceUser(Builder builder){
-        this.attendanceUserId = builder.attendanceUserId;
         this.user = builder.user;
     }
 
@@ -20,11 +34,7 @@ public final class AttendanceUser{
         return new Builder();
     }
 
-    public void setAttendanceUserId(int attendanceUserId){
-        this.attendanceUserId = attendanceUserId;
-    }
-
-    public int getAttendanceUserId(){
+    public Integer getAttendanceUserId(){
         return attendanceUserId;
     }
 
@@ -34,15 +44,9 @@ public final class AttendanceUser{
 
     public static final class Builder{
 
-        private int attendanceUserId;
         private User user;
 
         private Builder(){}
-
-        public Builder attendanceUserId(int attendanceUserId){
-            this.attendanceUserId = attendanceUserId;
-            return this;
-        }
 
         public Builder user(User user){
             this.user = user;
