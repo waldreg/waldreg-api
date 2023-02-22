@@ -18,15 +18,18 @@ import org.waldreg.character.dto.CharacterDto;
 import org.waldreg.character.spi.CharacterRepository;
 import org.waldreg.domain.board.Board;
 import org.waldreg.repository.MemoryCharacterStorage;
+import org.waldreg.repository.MemoryJoiningPoolStorage;
 import org.waldreg.repository.MemoryUserStorage;
 import org.waldreg.repository.character.CharacterMapper;
 import org.waldreg.repository.character.MemoryCharacterRepository;
+import org.waldreg.repository.user.MemoryJoiningPoolRepository;
 import org.waldreg.repository.user.MemoryUserRepository;
 import org.waldreg.repository.user.UserMapper;
+import org.waldreg.user.spi.JoiningPoolRepository;
 import org.waldreg.user.spi.UserRepository;
 
 @ExtendWith(SpringExtension.class)
-@ContextConfiguration(classes = {UserInfoMapper.class, MemoryUserRepository.class, MemoryUserStorage.class, MemoryCharacterRepository.class, MemoryCharacterStorage.class, UserMapper.class, CharacterMapper.class, MemoryBoardUserInfoRepository.class})
+@ContextConfiguration(classes = {UserInfoMapper.class, MemoryUserRepository.class, MemoryUserStorage.class, MemoryCharacterRepository.class, MemoryCharacterStorage.class, UserMapper.class, CharacterMapper.class, MemoryBoardUserInfoRepository.class, MemoryJoiningPoolRepository.class, MemoryJoiningPoolStorage.class})
 public class BoardUserInfoRepositoryTest{
 
     @Autowired
@@ -46,6 +49,11 @@ public class BoardUserInfoRepositoryTest{
 
     @Autowired
     private MemoryCharacterStorage memoryCharacterStorage;
+    @Autowired
+    private JoiningPoolRepository joiningPoolRepository;
+
+    @Autowired
+    MemoryJoiningPoolStorage memoryJoiningPoolStorage;
 
     @BeforeEach
     @AfterEach
@@ -66,6 +74,7 @@ public class BoardUserInfoRepositoryTest{
                 .name("alcuk")
                 .userPassword("alcuk123!")
                 .phoneNumber("010-1234-1234")
+                .character("Guest")
                 .build();
         CharacterDto characterDto = CharacterDto.builder()
                 .id(1)
@@ -73,7 +82,8 @@ public class BoardUserInfoRepositoryTest{
                 .permissionDtoList(List.of())
                 .build();
         characterRepository.createCharacter(characterDto);
-        userRepository.createUser(user);
+        joiningPoolRepository.createUser(user);
+        joiningPoolRepository.approveJoin(user.getUserId());
         org.waldreg.user.dto.UserDto userResponse = userRepository.readUserByUserId("alcuk_id");
 
         //when
@@ -87,7 +97,6 @@ public class BoardUserInfoRepositoryTest{
                 () -> Assertions.assertEquals(userResponse.getId(),result.getId())
         );
 
-
     }
 
     @Test
@@ -99,6 +108,7 @@ public class BoardUserInfoRepositoryTest{
                 .name("alcuk")
                 .userPassword("alcuk123!")
                 .phoneNumber("010-1234-1234")
+                .character("Guest")
                 .build();
         CharacterDto characterDto = CharacterDto.builder()
                 .id(1)
@@ -106,7 +116,8 @@ public class BoardUserInfoRepositoryTest{
                 .permissionDtoList(List.of())
                 .build();
         characterRepository.createCharacter(characterDto);
-        userRepository.createUser(user);
+        joiningPoolRepository.createUser(user);
+        joiningPoolRepository.approveJoin(user.getUserId());
         org.waldreg.user.dto.UserDto userResponse = userRepository.readUserByUserId("alcuk_id");
 
         //when

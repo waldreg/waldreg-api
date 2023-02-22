@@ -1,6 +1,7 @@
 package org.waldreg.character.management;
 
 import java.util.List;
+import java.util.Optional;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
@@ -20,6 +21,7 @@ import org.waldreg.character.permission.core.DefaultPermissionUnit;
 import org.waldreg.character.permission.core.PermissionUnit;
 import org.waldreg.character.permission.management.PermissionUnitManager;
 import org.waldreg.character.spi.CharacterRepository;
+import org.waldreg.character.spi.UserExistChecker;
 
 @ExtendWith(SpringExtension.class)
 @ContextConfiguration(classes = {DefaultCharacterManager.class, PermissionUnitManager.class})
@@ -33,6 +35,9 @@ class DefaultCharacterManagerTest{
 
     @MockBean
     private CharacterRepository characterRepository;
+
+    @MockBean
+    private UserExistChecker userExistChecker;
 
     private final String permissionName = "mock permission";
 
@@ -126,7 +131,7 @@ class DefaultCharacterManagerTest{
 
         // when
         defaultCharacterManager.createCharacter(characterDto);
-        Mockito.when(characterRepository.readCharacter(characterName)).thenReturn(characterDto);
+        Mockito.when(characterRepository.readCharacter(characterName)).thenReturn(Optional.of(characterDto));
         CharacterDto result = defaultCharacterManager.readCharacter(characterName);
 
         // then
@@ -155,6 +160,7 @@ class DefaultCharacterManagerTest{
                 )).build();
 
         // when
+        Mockito.when(userExistChecker.isExistUser(Mockito.anyInt())).thenReturn(true);
         Mockito.when(defaultCharacterManager.readCharacterByUserId(id)).thenReturn(characterDto);
         CharacterDto result = defaultCharacterManager.readCharacterByUserId(id);
 
@@ -231,9 +237,11 @@ class DefaultCharacterManagerTest{
                 )).build();
 
         // when
-        Mockito.when(characterRepository.readCharacter(afterName)).thenReturn(afterCharacter);
         defaultCharacterManager.createCharacter(beforeCharacter);
+        Mockito.when(characterRepository.readCharacter(afterName)).thenReturn(Optional.empty());
+        Mockito.when(characterRepository.readCharacter(beforeName)).thenReturn(Optional.of(beforeCharacter));
         defaultCharacterManager.updateCharacter(beforeName, afterCharacter);
+        Mockito.when(characterRepository.readCharacter(afterName)).thenReturn(Optional.of(afterCharacter));
         CharacterDto result = defaultCharacterManager.readCharacter(afterName);
 
         // then
@@ -270,9 +278,11 @@ class DefaultCharacterManagerTest{
 
         // when
         defaultCharacterManager.createCharacter(beforeCharacter);
+        Mockito.when(characterRepository.readCharacter(beforeName)).thenReturn(Optional.of(beforeCharacter));
+        Mockito.when(characterRepository.readCharacter(afterName)).thenReturn(Optional.empty());
 
         // then
-        Assertions.assertThrows(UnknownPermissionException.class, () -> defaultCharacterManager.updateCharacter(afterName, afterCharacter));
+        Assertions.assertThrows(UnknownPermissionException.class, () -> defaultCharacterManager.updateCharacter(beforeName, afterCharacter));
     }
 
     @Test
@@ -305,9 +315,11 @@ class DefaultCharacterManagerTest{
 
         // when
         defaultCharacterManager.createCharacter(beforeCharacter);
+        Mockito.when(characterRepository.readCharacter(beforeName)).thenReturn(Optional.of(beforeCharacter));
+        Mockito.when(characterRepository.readCharacter(afterName)).thenReturn(Optional.empty());
 
         // then
-        Assertions.assertThrows(UnknownPermissionStatusException.class, () -> defaultCharacterManager.updateCharacter(afterName, afterCharacter));
+        Assertions.assertThrows(UnknownPermissionStatusException.class, () -> defaultCharacterManager.updateCharacter(beforeName, afterCharacter));
     }
 
     @Test
@@ -315,8 +327,14 @@ class DefaultCharacterManagerTest{
     void DELETE_CHARACTER_SUCCESS_TEST(){
         // given
         String characterName = "characterName";
+        CharacterDto characterDto = CharacterDto.builder()
+                .characterName(characterName)
+                .permissionDtoList(List.of()).build();
 
-        // when & then
+        // when
+        Mockito.when(characterRepository.readCharacter(characterName)).thenReturn(Optional.of(characterDto));
+
+        // then
         Assertions.assertDoesNotThrow(() -> defaultCharacterManager.deleteCharacter(characterName));
     }
 

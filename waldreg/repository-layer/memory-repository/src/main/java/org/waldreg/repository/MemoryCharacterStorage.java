@@ -38,4 +38,11 @@ public class MemoryCharacterStorage{
         storage.remove(name);
     }
 
+    public boolean isExistCharacterName(String name){
+        if(storage.containsKey(name)){
+            return true;
+        }
+        return false;
+    }
+
 }

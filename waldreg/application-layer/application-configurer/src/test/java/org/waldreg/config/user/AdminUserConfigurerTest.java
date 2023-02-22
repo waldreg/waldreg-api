@@ -7,7 +7,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.waldreg.user.dto.UserDto;
-import org.waldreg.user.management.UserManager;
+import org.waldreg.user.management.user.UserManager;
 
 @SpringBootTest
 public class AdminUserConfigurerTest{
