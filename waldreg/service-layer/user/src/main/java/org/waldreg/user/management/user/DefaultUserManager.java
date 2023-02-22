@@ -3,6 +3,7 @@ package org.waldreg.user.management.user;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.waldreg.character.exception.NoPermissionException;
 import org.waldreg.character.exception.UnknownCharacterException;
 import org.waldreg.user.dto.UserDto;
 import org.waldreg.user.exception.DuplicatedUserIdException;
@@ -123,6 +124,7 @@ public class DefaultUserManager implements UserManager{
     @Override
     public void updateCharacter(int id, String character){
         throwIfUnknownId(id);
+        throwIfAdminId(id);
         throwIfCharacterDoesNotExist(character);
         userRepository.updateCharacter(id, character);
     }
@@ -142,7 +144,15 @@ public class DefaultUserManager implements UserManager{
     @Override
     public void deleteById(int id){
         throwIfUnknownId(id);
+        throwIfAdminId(id);
         userRepository.deleteById(id);
+    }
+
+    private void throwIfAdminId(int id){
+        UserDto userDto = userRepository.readUserById(id);
+        if(userDto.getUserId().equals("Admin")){
+            throw new NoPermissionException();
+        }
     }
 
 }
