@@ -30,7 +30,7 @@ public class UserPermissionConfigurer{
                 .service("User")
                 .name("User fire manager")
                 .info("If set true, can fire other user")
-                .permissionVerifiable((s) -> s.equals("true"))
+                .permissionVerifiable(s -> s.equals("true"))
                 .statusList(List.of("true", "false"))
                 .build());
     }
@@ -40,7 +40,7 @@ public class UserPermissionConfigurer{
                 .service("User")
                 .name("User's character update manager")
                 .info("If set true, can update user's character")
-                .permissionVerifiable((s) -> s.equals("true"))
+                .permissionVerifiable(s -> s.equals("true"))
                 .statusList(List.of("true", "false"))
                 .build());
     }
@@ -50,17 +50,18 @@ public class UserPermissionConfigurer{
                 .service("User")
                 .name("User info read manager")
                 .info("If set true, can read other user's information")
-                .permissionVerifiable((s) -> s.equals("true"))
+                .permissionVerifiable(s -> s.equals("true"))
                 .statusList(List.of("true", "false"))
                 .build());
     }
     private void configJoinUserPermission(){
         permissionExtension.extend(DefaultPermissionUnit.builder()
-                                           .name("User join manager")
-                                           .info("If set true, can handle other user's join request")
-                                           .permissionVerifiable((s) -> s.equals("true"))
-                                           .statusList(List.of("true", "false"))
-                                           .build());
+                .service("User")
+                .name("User join manager")
+                .info("If set true, can handle other user's join request")
+                .permissionVerifiable(s -> s.equals("true"))
+                .statusList(List.of("true", "false"))
+                .build());
     }
 
 }
