@@ -54,16 +54,6 @@ public final class Character{
         return id;
     }
 
-    public void updatePermission(int permissionUnitId, Permission permission){
-        permissionList.stream()
-                .filter(p -> p.getPermissionUnitId() == permissionUnitId)
-                .findFirst()
-                .ifPresentOrElse(
-                        p -> p.setPermission(permission),
-                        () -> {throw new IllegalStateException("Cannot find permission \"" + permissionUnitId + "\"");}
-                );
-    }
-
     public static final class Builder{
 
         private String characterName;
