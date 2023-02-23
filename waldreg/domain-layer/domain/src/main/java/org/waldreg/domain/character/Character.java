@@ -31,6 +31,7 @@ public final class Character{
     private Character(Builder builder){
         this.characterName = builder.characterName;
         this.permissionList = builder.permissionList;
+        permissionList.forEach(p -> p.setCharacter(this));
     }
 
     public static Builder builder(){

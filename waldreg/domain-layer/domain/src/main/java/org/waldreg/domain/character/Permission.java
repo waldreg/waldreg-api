@@ -52,12 +52,16 @@ public final class Permission{
         return this.status;
     }
 
-    public int getId(){
+    public Integer getId(){
         return id;
     }
 
     public String getService(){
         return service;
+    }
+
+    void setCharacter(Character character){
+        this.character = character;
     }
 
     public static final class Builder{

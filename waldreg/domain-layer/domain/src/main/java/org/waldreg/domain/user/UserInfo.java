@@ -31,7 +31,7 @@ public class UserInfo{
 
     private UserInfo(){}
 
-    private UserInfo(Builder<?> builder){
+    private UserInfo(Builder<?, ?> builder){
         this.name = builder.name;
         this.userId = builder.userId;
         this.userPassword = builder.userPassword;
@@ -65,7 +65,7 @@ public class UserInfo{
 
     public void setPhoneNumber(String phoneNumber){this.phoneNumber = phoneNumber;}
 
-    public abstract static class Builder<T>{
+    public abstract static class Builder<T, P extends Builder<T, ?>>{
 
         private String name;
         private String userId;
@@ -77,25 +77,27 @@ public class UserInfo{
             createdAt = LocalDate.now();
         }
 
-        public Builder<T> name(String name){
+        public P name(String name){
             this.name = name;
-            return this;
+            return builder();
         }
 
-        public Builder<T> userId(String userId){
+        public P userId(String userId){
             this.userId = userId;
-            return this;
+            return builder();
         }
 
-        public Builder<T> userPassword(String userPassword){
+        public P userPassword(String userPassword){
             this.userPassword = userPassword;
-            return this;
+            return builder();
         }
 
-        public Builder<T> phoneNumber(String phoneNumber){
+        public P phoneNumber(String phoneNumber){
             this.phoneNumber = phoneNumber;
-            return this;
+            return builder();
         }
+
+        protected abstract P builder();
 
         public T build(){
             UserInfo userInfo = createUserInfo();
@@ -106,7 +108,7 @@ public class UserInfo{
             return new UserInfo(this);
         }
 
-        public abstract T abstractBuild(UserInfo userInfo);
+        protected abstract T abstractBuild(UserInfo userInfo);
 
     }
 

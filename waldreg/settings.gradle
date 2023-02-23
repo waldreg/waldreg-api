@@ -58,4 +58,6 @@ include 'application-layer:socket-plugin'
 findProject(':application-layer:socket-plugin')?.name = 'socket-plugin'
 include 'core-layer:socket'
 findProject(':core-layer:socket')?.name = 'socket'
+include 'repository-layer:character-jpa'
+findProject(':repository-layer:character-jpa')?.name = 'character-jpa'
 
