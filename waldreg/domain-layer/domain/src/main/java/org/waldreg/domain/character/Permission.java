@@ -72,8 +72,8 @@ public final class Permission{
         this.character = character;
     }
 
-    public void setPermission(Permission permission){
-        this.status = permission.status;
+    public void setPermissionStatus(String status){
+        this.status = status;
     }
 
     public static final class Builder{

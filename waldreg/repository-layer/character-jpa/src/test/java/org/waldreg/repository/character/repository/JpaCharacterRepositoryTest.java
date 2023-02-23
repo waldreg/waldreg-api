@@ -1,6 +1,7 @@
 package org.waldreg.repository.character.repository;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 import javax.persistence.EntityManager;
 import org.junit.jupiter.api.DisplayName;
@@ -72,7 +73,7 @@ class JpaCharacterRepositoryTest{
         // when
         Character saved = repository.saveAndFlush(character);
         entityManager.clear();
-        Character result = repository.findById(saved.getId()).get();
+        Character result = repository.findByCharacterName(saved.getCharacterName()).get();
 
         // then
         isAllSaved(saved, result);
@@ -185,7 +186,7 @@ class JpaCharacterRepositoryTest{
         entityManager.flush();
         entityManager.clear();
 
-        Character result = repository.findById(expected.getId()).get();
+        Character result = repository.findByCharacterName(expected.getCharacterName()).get();
 
         // then
         isAllSaved(expected, result);
@@ -211,17 +212,18 @@ class JpaCharacterRepositoryTest{
 
         // when
         Character expected = repository.saveAndFlush(character);
-        expected.updatePermission(permissionUnitId, Permission.builder()
-                        .service("Test")
-                        .permissionUnitId(permissionUnitId)
-                        .name("Hello world")
-                        .status("false")
-                        .build());
+        expected.getPermissionList().forEach(
+                p -> character.getPermissionList().stream()
+                        .filter(cp -> Objects.equals(p.getPermissionUnitId(), cp.getPermissionUnitId()))
+                        .findFirst()
+                        .ifPresent(cp -> cp.setPermissionStatus("false"))
+        );
+
 
         entityManager.flush();
         entityManager.clear();
 
-        Character result = repository.findById(expected.getId()).get();
+        Character result = repository.findByCharacterName(expected.getCharacterName()).get();
 
         // then
         isAllSaved(expected, result);
@@ -267,7 +269,7 @@ class JpaCharacterRepositoryTest{
         entityManager.flush();
         entityManager.clear();
 
-        Optional<Character> result = repository.findById(expected.getId());
+        Optional<Character> result = repository.findByCharacterName(expected.getCharacterName());
 
         // then
         assertFalse(result.isPresent());
