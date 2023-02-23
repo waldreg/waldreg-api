@@ -5,6 +5,6 @@ import org.springframework.stereotype.Repository;
 import org.waldreg.domain.user.User;
 
 @Repository
-interface TestJpaUserRepository extends JpaRepository<User, Integer>{
+public interface JpaUserRepository extends JpaRepository<User, Integer>{
 
 }

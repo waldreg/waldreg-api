@@ -23,7 +23,7 @@ public final class Character{
     @Column(name = "CHARACTER_CHARACTER_NAME", nullable = false, unique = true, length = 25)
     private String characterName;
 
-    @OneToMany(mappedBy = "character", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "character", cascade = CascadeType.PERSIST, fetch = FetchType.LAZY)
     private List<Permission> permissionList;
 
     private Character(){}
@@ -42,12 +42,26 @@ public final class Character{
         return characterName;
     }
 
+    public void setCharacterName(String characterName){
+        this.characterName = characterName;
+    }
+
     public List<Permission> getPermissionList(){
         return permissionList;
     }
 
     public Integer getId(){
         return id;
+    }
+
+    public void updatePermission(int permissionUnitId, Permission permission){
+        permissionList.stream()
+                .filter(p -> p.getPermissionUnitId() == permissionUnitId)
+                .findFirst()
+                .ifPresentOrElse(
+                        p -> p.setPermission(permission),
+                        () -> {throw new IllegalStateException("Cannot find permission \"" + permissionUnitId + "\"");}
+                );
     }
 
     public static final class Builder{
