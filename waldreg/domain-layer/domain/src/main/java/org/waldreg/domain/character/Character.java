@@ -42,6 +42,10 @@ public final class Character{
         return characterName;
     }
 
+    public void setCharacterName(String characterName){
+        this.characterName = characterName;
+    }
+
     public List<Permission> getPermissionList(){
         return permissionList;
     }
