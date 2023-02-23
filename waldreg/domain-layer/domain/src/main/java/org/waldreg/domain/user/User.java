@@ -1,16 +1,8 @@
 package org.waldreg.domain.user;
 
 import java.time.LocalDate;
-import javax.persistence.Column;
-import javax.persistence.Embedded;
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.OneToOne;
-import javax.persistence.Table;
+import javax.persistence.*;
+
 import org.waldreg.domain.character.Character;
 
 @Entity
@@ -22,7 +14,7 @@ public final class User{
     @Column(name = "USER_ID")
     private Integer id;
 
-    @OneToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "CHARACTER_ID", nullable = false)
     private Character character;
 

@@ -23,7 +23,7 @@ public final class Character{
     @Column(name = "CHARACTER_CHARACTER_NAME", nullable = false, unique = true, length = 25)
     private String characterName;
 
-    @OneToMany(mappedBy = "character", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "character", cascade = CascadeType.PERSIST, fetch = FetchType.LAZY)
     private List<Permission> permissionList;
 
     private Character(){}

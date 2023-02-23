@@ -104,7 +104,7 @@ public class UserInfo{
             return abstractBuild(userInfo);
         }
 
-        public UserInfo createUserInfo(){
+        private UserInfo createUserInfo(){
             return new UserInfo(this);
         }
 
