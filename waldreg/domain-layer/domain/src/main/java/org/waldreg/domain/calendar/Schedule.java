@@ -4,12 +4,9 @@ import java.time.LocalDateTime;
 import javax.persistence.Column;
 import javax.persistence.Embedded;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
 @Entity
@@ -36,9 +33,7 @@ public final class Schedule{
     @Embedded
     private ScheduleRepeat scheduleRepeat;
 
-    private Schedule(){
-        throw new UnsupportedOperationException("Can not invoke constructor \"Schedule()\"");
-    }
+    private Schedule(){}
 
     private Schedule(Builder builder){
         this.id = builder.id;
