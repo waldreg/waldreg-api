@@ -14,21 +14,25 @@ import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.test.context.TestPropertySource;
 import org.waldreg.domain.board.Board;
 import org.waldreg.domain.board.category.Category;
+import org.waldreg.domain.board.comment.Comment;
 import org.waldreg.domain.character.Character;
 import org.waldreg.domain.user.User;
 
 @DataJpaTest
 @TestPropertySource("classpath:h2-application.properties")
-class BoardRepositoryTest{
+class JpaBoardRepositoryTest{
 
     @Autowired
     private TestJpaUserRepository testJpaUserRepository;
 
     @Autowired
-    private TestJpaCategoryRepository testJpaCategoryRepository;
+    private JpaCategoryRepository jpaCategoryRepository;
 
     @Autowired
     private TestJpaCharacterRepository testJpaCharacterRepository;
+
+    @Autowired
+    JpaCommentRepository jpaCommentRepository;
 
     @Autowired
     private JpaBoardRepository jpaBoardRepository;
@@ -39,9 +43,10 @@ class BoardRepositoryTest{
     @BeforeEach
     @AfterEach
     public void INIT_BOARD(){
+        jpaCommentRepository.deleteAll();
         jpaBoardRepository.deleteAll();
         testJpaUserRepository.deleteAll();
-        testJpaCategoryRepository.deleteAll();
+        jpaCategoryRepository.deleteAll();
         testJpaCharacterRepository.deleteAll();
     }
 
@@ -100,7 +105,7 @@ class BoardRepositoryTest{
         setDefaultBoardList();
         String title = "boardTitle";
         //when
-        List<Board> foundBoardList = jpaBoardRepository.findByTitle(title);
+        List<Board> foundBoardList = jpaBoardRepository.findByTitle(title, 0, 6);
         //then
         Assertions.assertAll(
                 () -> Assertions.assertTrue(foundBoardList.size() == 5),
@@ -121,7 +126,7 @@ class BoardRepositoryTest{
         setDefaultBoardList();
         String content = "boardContent";
         //when
-        List<Board> foundBoardList = jpaBoardRepository.findByContent(content);
+        List<Board> foundBoardList = jpaBoardRepository.findByContent(content, 0, 6);
         //then
         Assertions.assertAll(
                 () -> Assertions.assertTrue(foundBoardList.size() == 5),
@@ -141,7 +146,7 @@ class BoardRepositoryTest{
         setDefaultBoardList();
         String userId = "Fixtar";
         //when
-        List<Board> foundBoardList = jpaBoardRepository.findByUserId(userId);
+        List<Board> foundBoardList = jpaBoardRepository.findByUserId(userId, 0, 6);
         //then
         Assertions.assertAll(
                 () -> Assertions.assertTrue(foundBoardList.size() == 3),
@@ -159,7 +164,7 @@ class BoardRepositoryTest{
         setDefaultBoardList();
         Integer categoryId = jpaBoardRepository.findAll().get(0).getCategory().getId();
         //when
-        List<Board> foundBoardList = jpaBoardRepository.findByCategoryId(categoryId);
+        List<Board> foundBoardList = jpaBoardRepository.findByCategoryId(categoryId, 0, 6);
         //then
         Assertions.assertAll(
                 () -> Assertions.assertTrue(foundBoardList.size() == 3),
@@ -176,7 +181,7 @@ class BoardRepositoryTest{
         //given
         setDefaultBoardList();
         //when
-        List<Board> foundBoardList = jpaBoardRepository.findAll();
+        List<Board> foundBoardList = jpaBoardRepository.findAll(0,6);
         //then
         Assertions.assertAll(
                 () -> Assertions.assertTrue(foundBoardList.size() == 5),
@@ -195,12 +200,26 @@ class BoardRepositoryTest{
     void DELETE_BOARD_BY_ID_SUCCESS_TEST(){
         //given
         Board board = setDefaultBoard();
+        String content = "comment content";
+
+        Comment comment = Comment.builder()
+                .board(board)
+                .user(board.getUser())
+                .content(content)
+                .build();
+        jpaCommentRepository.save(comment);
+        Integer commentId = jpaCommentRepository.findAll().get(0).getId();
+        entityManager.flush();
+        entityManager.clear();
         //when
         jpaBoardRepository.deleteById(board.getId());
         entityManager.flush();
         entityManager.clear();
         //then
-        Assertions.assertFalse(jpaBoardRepository.existsById(board.getId()));
+        Assertions.assertAll(
+                () -> Assertions.assertFalse(jpaCommentRepository.existsById(commentId)),
+                () -> Assertions.assertFalse(jpaBoardRepository.existsById(board.getId()))
+        );
     }
 
     @Test
@@ -212,7 +231,7 @@ class BoardRepositoryTest{
         Category category = Category.builder()
                 .categoryName("modifiedCategory")
                 .build();
-        testJpaCategoryRepository.save(category);
+        jpaCategoryRepository.save(category);
         entityManager.flush();
 
         board.setContent("modifiedContent");
@@ -283,7 +302,7 @@ class BoardRepositoryTest{
 
         Integer categoryId = jpaBoardRepository.findAll().get(0).getCategory().getId();
 
-        Assertions.assertEquals(jpaBoardRepository.getBoardMaxIdxByCategoryId(categoryId),3);
+        Assertions.assertEquals(jpaBoardRepository.getBoardMaxIdxByCategoryId(categoryId), 3);
     }
 
     private Board setDefaultBoard(){
@@ -320,7 +339,7 @@ class BoardRepositoryTest{
 
         testJpaCharacterRepository.save(character);
         testJpaUserRepository.save(user);
-        testJpaCategoryRepository.save(category);
+        jpaCategoryRepository.save(category);
         jpaBoardRepository.save(board);
 
         entityManager.flush();
@@ -418,8 +437,8 @@ class BoardRepositoryTest{
         testJpaCharacterRepository.save(character);
         testJpaUserRepository.save(user);
         testJpaUserRepository.save(user2);
-        testJpaCategoryRepository.save(category);
-        testJpaCategoryRepository.save(category2);
+        jpaCategoryRepository.save(category);
+        jpaCategoryRepository.save(category2);
         jpaBoardRepository.saveAll(boardList);
 
         entityManager.flush();
