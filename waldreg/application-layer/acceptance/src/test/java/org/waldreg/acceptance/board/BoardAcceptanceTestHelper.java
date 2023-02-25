@@ -112,7 +112,7 @@ public class BoardAcceptanceTestHelper{
 
     public static ResultActions inquiryAllBoardWithCategory(MockMvc mvc, String token, int category) throws Exception{
         return mvc.perform(MockMvcRequestBuilders.get("/boards?from=1&to=4")
-                                   .param("category-id", Integer.toString(category))
+                                   .param("category", Integer.toString(category))
                                    .header(HttpHeaders.AUTHORIZATION, token)
                                    .accept(MediaType.APPLICATION_JSON)
                                    .header("api-version", apiVersion));
