@@ -1,4 +1,4 @@
-package org.waldreg.repository.reward.tag.repository;
+package org.waldreg.repository.reward.repository;
 
 import java.util.List;
 import java.util.Optional;
@@ -9,7 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.test.context.TestPropertySource;
 import org.waldreg.domain.rewardtag.RewardTag;
-import org.waldreg.repository.reward.tag.repository.JpaRewardTagRepository;
+import org.waldreg.repository.reward.repository.JpaRewardTagRepository;
 
 import static org.junit.jupiter.api.Assertions.*;
 
