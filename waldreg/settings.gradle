@@ -60,4 +60,6 @@ include 'core-layer:socket'
 findProject(':core-layer:socket')?.name = 'socket'
 include 'repository-layer:character-jpa'
 findProject(':repository-layer:character-jpa')?.name = 'character-jpa'
+include 'repository-layer:reward-jpa'
+findProject(':repository-layer:reward-jpa')?.name = 'reward-jpa'
 
