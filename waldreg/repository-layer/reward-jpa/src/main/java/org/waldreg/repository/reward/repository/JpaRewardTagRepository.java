@@ -6,5 +6,4 @@ import org.waldreg.domain.rewardtag.RewardTag;
 
 @Repository
 public interface JpaRewardTagRepository extends JpaRepository<RewardTag, Integer>{
-
 }
