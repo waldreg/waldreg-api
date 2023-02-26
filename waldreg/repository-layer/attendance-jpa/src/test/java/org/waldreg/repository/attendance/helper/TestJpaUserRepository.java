@@ -1,4 +1,4 @@
-package org.waldreg.repository.attendance.repository;
+package org.waldreg.repository.attendance.helper;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.waldreg.domain.user.User;

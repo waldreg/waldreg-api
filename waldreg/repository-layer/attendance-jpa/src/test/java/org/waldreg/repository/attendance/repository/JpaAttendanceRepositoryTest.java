@@ -17,6 +17,8 @@ import org.waldreg.domain.attendance.AttendanceUser;
 import org.waldreg.domain.character.Character;
 import org.waldreg.domain.rewardtag.RewardTag;
 import org.waldreg.domain.user.User;
+import org.waldreg.repository.attendance.helper.TestJpaCharacterRepository;
+import org.waldreg.repository.attendance.helper.TestJpaUserRepository;
 
 import static org.junit.jupiter.api.Assertions.*;
 
