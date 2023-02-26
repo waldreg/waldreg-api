@@ -27,7 +27,6 @@ import static org.junit.jupiter.api.Assertions.*;
         CharacterRepositoryMapper.class,
         JpaCharacterTestInitializer.class})
 @TestPropertySource("classpath:h2-application.properties")
-@Rollback
 class CharacterRepositoryTest{
 
     @Autowired
