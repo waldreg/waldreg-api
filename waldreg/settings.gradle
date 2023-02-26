@@ -62,4 +62,5 @@ include 'repository-layer:character-jpa'
 findProject(':repository-layer:character-jpa')?.name = 'character-jpa'
 include 'repository-layer:reward-jpa'
 findProject(':repository-layer:reward-jpa')?.name = 'reward-jpa'
-
+include 'repository-layer:user-jpa'
+findProject(':repository-layer:user-jpa')?.name = 'user-jpa'
