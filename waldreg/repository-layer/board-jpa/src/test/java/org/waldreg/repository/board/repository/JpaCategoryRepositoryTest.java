@@ -19,9 +19,9 @@ public class JpaCategoryRepositoryTest{
     @Autowired
     private JpaCategoryRepository jpaCategoryRepository;
     @Autowired
-    private TestJpaUserRepository testJpaUserRepository;
+    private JpaUserRepository jpaUserRepository;
     @Autowired
-    private TestJpaCharacterRepository testJpaCharacterRepository;
+    private JpaCharacterRepository jpaCharacterRepository;
 
     @Autowired
     JpaCommentRepository jpaCommentRepository;
@@ -37,9 +37,9 @@ public class JpaCategoryRepositoryTest{
     public void INIT_BOARD(){
         jpaCommentRepository.deleteAll();
         jpaBoardRepository.deleteAll();
-        testJpaUserRepository.deleteAll();
+        jpaUserRepository.deleteAll();
         jpaCategoryRepository.deleteAll();
-        testJpaCharacterRepository.deleteAll();
+        jpaCharacterRepository.deleteAll();
     }
 
     @Test

@@ -12,7 +12,6 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.test.context.TestPropertySource;
-import org.springframework.transaction.annotation.Transactional;
 import org.waldreg.domain.board.Board;
 import org.waldreg.domain.board.category.Category;
 import org.waldreg.domain.board.reaction.Reaction;
@@ -25,13 +24,13 @@ import org.waldreg.domain.user.User;
 public class JpaReactionRepositoryTest{
 
     @Autowired
-    private TestJpaUserRepository testJpaUserRepository;
+    private JpaUserRepository jpaUserRepository;
 
     @Autowired
     private JpaCategoryRepository jpaCategoryRepository;
 
     @Autowired
-    private TestJpaCharacterRepository testJpaCharacterRepository;
+    private JpaCharacterRepository jpaCharacterRepository;
 
     @Autowired
     JpaReactionRepository jpaReactionRepository;
@@ -51,9 +50,9 @@ public class JpaReactionRepositoryTest{
         jpaReactionUserRepository.deleteAll();
         jpaReactionRepository.deleteAll();
         jpaBoardRepository.deleteAll();
-        testJpaUserRepository.deleteAll();
+        jpaUserRepository.deleteAll();
         jpaCategoryRepository.deleteAll();
-        testJpaCharacterRepository.deleteAll();
+        jpaCharacterRepository.deleteAll();
     }
 
     @Test
@@ -62,7 +61,7 @@ public class JpaReactionRepositoryTest{
         //given
         Board board = setDefaultBoard();
         //when
-        Character character = testJpaCharacterRepository.findAll().get(0);
+        Character character = jpaCharacterRepository.findAll().get(0);
         User user = User.builder()
                 .userId("commentUser")
                 .name("aaaa")
@@ -90,7 +89,7 @@ public class JpaReactionRepositoryTest{
         //given
         Board board = setDefaultBoard();
         //when
-        Character character = testJpaCharacterRepository.findAll().get(0);
+        Character character = jpaCharacterRepository.findAll().get(0);
         User user = User.builder()
                 .userId("commentUser")
                 .name("aaaa")
@@ -105,7 +104,7 @@ public class JpaReactionRepositoryTest{
                 .reactionUserList(List.of())
                 .build();
 
-        testJpaUserRepository.save(user);
+        jpaUserRepository.save(user);
         jpaReactionRepository.save(reaction);
         entityManager.flush();
         entityManager.clear();
@@ -141,7 +140,7 @@ public class JpaReactionRepositoryTest{
         //given
         Board board = setDefaultBoard();
         //when
-        Character character = testJpaCharacterRepository.findAll().get(0);
+        Character character = jpaCharacterRepository.findAll().get(0);
         User user = User.builder()
                 .userId("commentUser")
                 .name("aaaa")
@@ -156,7 +155,7 @@ public class JpaReactionRepositoryTest{
                 .reactionUserList(List.of())
                 .build();
 
-        testJpaUserRepository.save(user);
+        jpaUserRepository.save(user);
         jpaReactionRepository.save(reaction);
         entityManager.flush();
         entityManager.clear();
@@ -227,8 +226,8 @@ public class JpaReactionRepositoryTest{
                 .filePathList(filePathList)
                 .build();
 
-        testJpaCharacterRepository.save(character);
-        testJpaUserRepository.save(user);
+        jpaCharacterRepository.save(character);
+        jpaUserRepository.save(user);
         jpaCategoryRepository.save(category);
         jpaBoardRepository.save(board);
 

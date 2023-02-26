@@ -5,5 +5,5 @@ import org.springframework.stereotype.Repository;
 import org.waldreg.domain.character.Character;
 
 @Repository
-interface TestJpaCharacterRepository extends JpaRepository<Character,Integer>{
+public interface JpaCharacterRepository extends JpaRepository<Character,Integer>{
 }

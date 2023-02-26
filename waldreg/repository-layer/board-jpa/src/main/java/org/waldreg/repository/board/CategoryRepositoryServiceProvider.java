@@ -24,16 +24,18 @@ public class CategoryRepositoryServiceProvider implements CategoryRepository{
     }
 
     @Override
-    @Transactional
+    @Transactional(readOnly = true)
     public boolean isExistCategory(int categoryId){
         return jpaCategoryRepository.existsById(categoryId);
     }
 
     @Override
-    @Transactional
+    @Transactional(readOnly = true)
     public CategoryDto inquiryCategoryById(int id){
-        Optional<Category> category = jpaCategoryRepository.findById(id);
-        return categoryRepositoryMapper.categoryDomainToCategoryDto(category.get());
+        Category category = jpaCategoryRepository.findById(id).orElseThrow(
+                () -> {throw new IllegalStateException("Cannot find category id \"" + id + "\"");}
+        );
+        return categoryRepositoryMapper.categoryDomainToCategoryDto(category);
     }
 
     @Override
@@ -44,7 +46,7 @@ public class CategoryRepositoryServiceProvider implements CategoryRepository{
     }
 
     @Override
-    @Transactional
+    @Transactional(readOnly = true)
     public List<CategoryDto> inquiryAllCategory(){
         List<Category> categoryList = jpaCategoryRepository.findAll();
         return categoryRepositoryMapper.categoryDomainListToCategoryDtoList(categoryList);
@@ -64,7 +66,7 @@ public class CategoryRepositoryServiceProvider implements CategoryRepository{
     }
 
     @Override
-    @Transactional
+    @Transactional(readOnly = true)
     public boolean isDuplicateCategoryName(String categoryName){
         return jpaCategoryRepository.isDuplicatedName(categoryName);
     }

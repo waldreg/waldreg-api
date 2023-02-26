@@ -24,13 +24,13 @@ import org.waldreg.domain.user.User;
 public class JpaCommentRepositoryTest{
 
     @Autowired
-    private TestJpaUserRepository testJpaUserRepository;
+    private JpaUserRepository jpaUserRepository;
 
     @Autowired
     private JpaCategoryRepository jpaCategoryRepository;
 
     @Autowired
-    private TestJpaCharacterRepository testJpaCharacterRepository;
+    private JpaCharacterRepository jpaCharacterRepository;
 
     @Autowired
     private JpaCommentRepository jpaCommentRepository;
@@ -46,9 +46,9 @@ public class JpaCommentRepositoryTest{
     public void INIT_BOARD(){
         jpaCommentRepository.deleteAll();
         jpaBoardRepository.deleteAll();
-        testJpaUserRepository.deleteAll();
+        jpaUserRepository.deleteAll();
         jpaCategoryRepository.deleteAll();
-        testJpaCharacterRepository.deleteAll();
+        jpaCharacterRepository.deleteAll();
     }
 
     @Test
@@ -58,7 +58,7 @@ public class JpaCommentRepositoryTest{
         Board board = setDefaultBoard();
         //when
 
-        Character character = testJpaCharacterRepository.findAll().get(0);
+        Character character = jpaCharacterRepository.findAll().get(0);
         User user = User.builder()
                 .userId("commentUser")
                 .name("aaaa")
@@ -74,8 +74,8 @@ public class JpaCommentRepositoryTest{
                 .createdAt(LocalDateTime.now())
                 .build();
 
-        testJpaCharacterRepository.save(character);
-        testJpaUserRepository.save(user);
+        jpaCharacterRepository.save(character);
+        jpaUserRepository.save(user);
         jpaCommentRepository.save(comment);
         entityManager.flush();
         entityManager.clear();
@@ -100,7 +100,7 @@ public class JpaCommentRepositoryTest{
         Board board = setDefaultBoard();
         //when
 
-        Character character = testJpaCharacterRepository.findAll().get(0);
+        Character character = jpaCharacterRepository.findAll().get(0);
         User user = User.builder()
                 .userId("commentUser")
                 .name("aaaa")
@@ -136,9 +136,9 @@ public class JpaCommentRepositoryTest{
                 .build();
 
 
-        testJpaCharacterRepository.save(character);
-        testJpaUserRepository.save(user);
-        testJpaUserRepository.save(user2);
+        jpaCharacterRepository.save(character);
+        jpaUserRepository.save(user);
+        jpaUserRepository.save(user2);
         jpaCommentRepository.save(comment);
         jpaCommentRepository.save(comment2);
         jpaCommentRepository.save(comment3);
@@ -166,7 +166,7 @@ public class JpaCommentRepositoryTest{
         //given
         Board board = setDefaultBoard();
         //when
-        Character character = testJpaCharacterRepository.findAll().get(0);
+        Character character = jpaCharacterRepository.findAll().get(0);
         User user = User.builder()
                 .userId("commentUser")
                 .name("aaaa")
@@ -181,8 +181,8 @@ public class JpaCommentRepositoryTest{
                 .board(board)
                 .createdAt(LocalDateTime.now())
                 .build();
-        testJpaCharacterRepository.save(character);
-        testJpaUserRepository.save(user);
+        jpaCharacterRepository.save(character);
+        jpaUserRepository.save(user);
         jpaCommentRepository.save(comment);
         entityManager.flush();
         entityManager.clear();
@@ -211,7 +211,7 @@ public class JpaCommentRepositoryTest{
         Board board = setDefaultBoard();
         //when
 
-        Character character = testJpaCharacterRepository.findAll().get(0);
+        Character character = jpaCharacterRepository.findAll().get(0);
         User user = User.builder()
                 .userId("commentUser")
                 .name("aaaa")
@@ -226,8 +226,8 @@ public class JpaCommentRepositoryTest{
                 .board(board)
                 .createdAt(LocalDateTime.now())
                 .build();
-        testJpaCharacterRepository.save(character);
-        testJpaUserRepository.save(user);
+        jpaCharacterRepository.save(character);
+        jpaUserRepository.save(user);
         jpaCommentRepository.save(comment);
         entityManager.flush();
         entityManager.clear();
@@ -273,8 +273,8 @@ public class JpaCommentRepositoryTest{
                 .filePathList(filePathList)
                 .build();
 
-        testJpaCharacterRepository.save(character);
-        testJpaUserRepository.save(user);
+        jpaCharacterRepository.save(character);
+        jpaUserRepository.save(user);
         jpaCategoryRepository.save(category);
         jpaBoardRepository.save(board);
 

@@ -23,13 +23,13 @@ import org.waldreg.domain.user.User;
 class JpaBoardRepositoryTest{
 
     @Autowired
-    private TestJpaUserRepository testJpaUserRepository;
+    private JpaUserRepository jpaUserRepository;
 
     @Autowired
     private JpaCategoryRepository jpaCategoryRepository;
 
     @Autowired
-    private TestJpaCharacterRepository testJpaCharacterRepository;
+    private JpaCharacterRepository jpaCharacterRepository;
 
     @Autowired
     JpaCommentRepository jpaCommentRepository;
@@ -45,9 +45,9 @@ class JpaBoardRepositoryTest{
     public void INIT_BOARD(){
         jpaCommentRepository.deleteAll();
         jpaBoardRepository.deleteAll();
-        testJpaUserRepository.deleteAll();
+        jpaUserRepository.deleteAll();
         jpaCategoryRepository.deleteAll();
-        testJpaCharacterRepository.deleteAll();
+        jpaCharacterRepository.deleteAll();
     }
 
     @Test
@@ -337,8 +337,8 @@ class JpaBoardRepositoryTest{
                 .filePathList(filePathList)
                 .build();
 
-        testJpaCharacterRepository.save(character);
-        testJpaUserRepository.save(user);
+        jpaCharacterRepository.save(character);
+        jpaUserRepository.save(user);
         jpaCategoryRepository.save(category);
         jpaBoardRepository.save(board);
 
@@ -434,9 +434,9 @@ class JpaBoardRepositoryTest{
                               .build()
         );
 
-        testJpaCharacterRepository.save(character);
-        testJpaUserRepository.save(user);
-        testJpaUserRepository.save(user2);
+        jpaCharacterRepository.save(character);
+        jpaUserRepository.save(user);
+        jpaUserRepository.save(user2);
         jpaCategoryRepository.save(category);
         jpaCategoryRepository.save(category2);
         jpaBoardRepository.saveAll(boardList);
