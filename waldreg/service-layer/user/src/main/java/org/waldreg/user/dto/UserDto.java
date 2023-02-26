@@ -15,11 +15,6 @@ public class UserDto{
     private final LocalDate createdAt;
     private final int rewardPoint;
     private String character;
-    private List<String> socialLogin;
-
-    {
-        socialLogin = new ArrayList<>();
-    }
 
     private UserDto(){
         throw new UnsupportedOperationException("Can not invoke constructor \"UserDto()\"");
@@ -36,7 +31,6 @@ public class UserDto{
         this.createdAt = builder.createdAt;
         this.rewardPoint = builder.rewardPoint;
         this.character = builder.character;
-        this.socialLogin = builder.socialLogin;
     }
 
     public int getId(){
@@ -75,8 +69,6 @@ public class UserDto{
         this.character = character;
     }
 
-    public List<String> getSocialLogin(){return socialLogin;}
-
 
     public final static class Builder{
 
@@ -88,12 +80,10 @@ public class UserDto{
         private LocalDate createdAt;
         private int rewardPoint;
         private String character;
-        private List<String> socialLogin;
 
         {
             createdAt = LocalDate.now();
             rewardPoint = 0;
-            socialLogin = new ArrayList<>();
         }
 
         private Builder(){}
@@ -135,11 +125,6 @@ public class UserDto{
 
         public Builder rewardPoint(int rewardPoint){
             this.rewardPoint = rewardPoint;
-            return this;
-        }
-
-        public Builder socialLogin(List<String> socialLogin){
-            this.socialLogin = socialLogin;
             return this;
         }
 

@@ -32,7 +32,6 @@ public class AdminUserConfigurerTest{
                 .userPassword(password)
                 .character(character)
                 .phoneNumber(phoneNumber)
-                .socialLogin(List.of())
                 .build();
 
         // when
@@ -44,8 +43,7 @@ public class AdminUserConfigurerTest{
                 ()-> Assertions.assertEquals(userId, userDto.getUserId()),
                 ()-> Assertions.assertEquals(password, userDto.getUserPassword()),
                 ()-> Assertions.assertEquals(character, userDto.getCharacter()),
-                ()-> Assertions.assertEquals(phoneNumber, userDto.getPhoneNumber()),
-                ()-> Assertions.assertEquals(0, userDto.getSocialLogin().size())
+                ()-> Assertions.assertEquals(phoneNumber, userDto.getPhoneNumber())
         );
     }
 
