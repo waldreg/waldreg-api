@@ -10,6 +10,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
+import org.waldreg.domain.user.User;
 
 @Entity
 @Table(name = "REWARD_TAG_WRAPPER")
@@ -28,15 +29,15 @@ public final class RewardTagWrapper{
     private RewardTag rewardTag;
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "REWARD_TAG_WRAPPER_USER_ID")
-    private RewardTagWrapperUser rewardTagWrapperUser;
+    @JoinColumn(name = "USER_ID", nullable = false)
+    private User user;
 
     private RewardTagWrapper(){}
 
     private RewardTagWrapper(Builder builder){
         this.rewardPresentedAt = builder.rewardPresentedAt;
         this.rewardTag = builder.rewardTag;
-        this.rewardTagWrapperUser = builder.rewardTagWrapperUser;
+        this.user = builder.user;
     }
 
     public static Builder builder(){
@@ -55,15 +56,15 @@ public final class RewardTagWrapper{
         return rewardTag;
     }
 
-    public RewardTagWrapperUser getRewardTagWrapperUser(){
-        return rewardTagWrapperUser;
+    public User getUser(){
+        return user;
     }
 
     public static final class Builder{
 
         private final LocalDateTime rewardPresentedAt;
         private RewardTag rewardTag;
-        private RewardTagWrapperUser rewardTagWrapperUser;
+        private User user;
 
         private Builder(){
             rewardPresentedAt = LocalDateTime.now();
@@ -74,8 +75,8 @@ public final class RewardTagWrapper{
             return this;
         }
 
-        public Builder rewardTagWrapperUser(RewardTagWrapperUser rewardTagWrapperUser){
-            this.rewardTagWrapperUser = rewardTagWrapperUser;
+        public Builder user(User user){
+            this.user = user;
             return this;
         }
 
