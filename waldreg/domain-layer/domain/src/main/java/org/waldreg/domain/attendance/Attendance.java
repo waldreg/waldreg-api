@@ -22,11 +22,11 @@ public final class Attendance{
     @Column(name = "ATTENDANCE_ATTENDANCE_ID")
     private Integer attendanceId;
 
-    @OneToOne(orphanRemoval = true, fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "ATTENDANCE_USER_ATTENDANCE_USER_ID", nullable = false)
     private AttendanceUser attendanceUser;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "ATTENDANCE_TYPE_REWARD_ID", nullable = false)
     private AttendanceTypeReward attendanceType;
 
