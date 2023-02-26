@@ -28,7 +28,7 @@ public final class Category{
     @OneToMany(mappedBy = "category", fetch = FetchType.LAZY, orphanRemoval = true, cascade = CascadeType.ALL)
     private List<Board> boardList;
 
-    private Category(){ }
+    private Category(){}
 
     private Category(Builder builder){
         this.id = builder.id;

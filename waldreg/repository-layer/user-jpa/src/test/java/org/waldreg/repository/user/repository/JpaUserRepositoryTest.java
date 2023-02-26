@@ -21,7 +21,7 @@ class JpaUserRepositoryTest{
     private JpaUserRepository jpaUserRepository;
 
     @Autowired
-    private TestJpaCharacterRepository testJpaCharacterRepository;
+    private JpaCharacterRepository jpaCharacterRepository;
 
     @Autowired
     private EntityManager entityManager;
@@ -49,7 +49,7 @@ class JpaUserRepositoryTest{
                 .build();
 
         //when
-        testJpaCharacterRepository.saveAndFlush(character);
+        jpaCharacterRepository.saveAndFlush(character);
         User result = jpaUserRepository.saveAndFlush(user);
 
         //then
@@ -82,7 +82,7 @@ class JpaUserRepositoryTest{
                 .build();
 
         //when
-        testJpaCharacterRepository.saveAndFlush(character);
+        jpaCharacterRepository.saveAndFlush(character);
         user = jpaUserRepository.saveAndFlush(user);
         entityManager.clear();
         User result = jpaUserRepository.findById(user.getId()).get();
@@ -109,7 +109,7 @@ class JpaUserRepositoryTest{
                 .build();
 
         //when
-        testJpaCharacterRepository.saveAndFlush(character);
+        jpaCharacterRepository.saveAndFlush(character);
         user = jpaUserRepository.saveAndFlush(user);
         entityManager.clear();
         User result = jpaUserRepository.findByUserId(user.getUserId()).get();
@@ -152,7 +152,7 @@ class JpaUserRepositoryTest{
         int end = 1;
 
         //when
-        testJpaCharacterRepository.saveAndFlush(character);
+        jpaCharacterRepository.saveAndFlush(character);
         user = jpaUserRepository.saveAndFlush(user);
         user2 = jpaUserRepository.saveAndFlush(user2);
         user3 = jpaUserRepository.saveAndFlush(user3);
@@ -183,7 +183,7 @@ class JpaUserRepositoryTest{
                 .build();
 
         //when
-        testJpaCharacterRepository.saveAndFlush(character);
+        jpaCharacterRepository.saveAndFlush(character);
         User user2 = jpaUserRepository.saveAndFlush(user);
         user2.setName("lini");
         user2.setUserPassword("2ghkdhkdhk!");
@@ -226,8 +226,8 @@ class JpaUserRepositoryTest{
                 .build();
 
         //when
-        testJpaCharacterRepository.saveAndFlush(character);
-        testJpaCharacterRepository.saveAndFlush(modifiedCharacter);
+        jpaCharacterRepository.saveAndFlush(character);
+        jpaCharacterRepository.saveAndFlush(modifiedCharacter);
         User user2 = jpaUserRepository.saveAndFlush(user);
         user2.setCharacter(modifiedCharacter);
         entityManager.flush();
@@ -265,7 +265,7 @@ class JpaUserRepositoryTest{
                 .build();
 
         //when
-        testJpaCharacterRepository.saveAndFlush(character);
+        jpaCharacterRepository.saveAndFlush(character);
         user = jpaUserRepository.saveAndFlush(user);
         jpaUserRepository.deleteById(user.getId());
 
@@ -305,7 +305,7 @@ class JpaUserRepositoryTest{
                 .build();
 
         //when
-        testJpaCharacterRepository.saveAndFlush(character);
+        jpaCharacterRepository.saveAndFlush(character);
         user = jpaUserRepository.saveAndFlush(user);
         entityManager.clear();
 
