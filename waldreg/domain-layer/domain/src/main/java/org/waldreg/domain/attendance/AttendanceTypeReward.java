@@ -7,6 +7,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import org.waldreg.domain.rewardtag.RewardTag;
@@ -23,7 +24,7 @@ public final class AttendanceTypeReward{
     @Column(name = "ATTENDANCE_TYPE_NAME", nullable = false, unique = true)
     private String name;
 
-    @OneToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "REWARD_TAG_REWARD_TAG_ID")
     private RewardTag rewardTag;
 
