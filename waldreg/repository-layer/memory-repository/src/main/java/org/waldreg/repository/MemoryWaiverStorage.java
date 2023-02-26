@@ -19,8 +19,6 @@ public class MemoryWaiverStorage{
     }
 
     public void addWaiver(Waiver waiver){
-        waiver.setWaiverId(atomicInteger.getAndIncrement());
-        waiverList.add(waiver);
     }
 
     public List<Waiver> readWaiverList(){

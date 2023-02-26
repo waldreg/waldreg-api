@@ -31,13 +31,6 @@ public class MemoryAttendanceStorage{
     }
 
     public void addAttendanceTarget(AttendanceUser attendanceUser){
-        attendanceUser.setAttendanceUserId(atomicInteger.getAndIncrement());
-        boolean isPresent = attendanceTargetList.stream().anyMatch(a -> a.getUser().getId() == attendanceUser.getUser().getId());
-        if(isPresent){
-            return;
-        }
-        attendanceTargetList.add(attendanceUser);
-        stageAttendanceUser();
     }
 
     public void stageAttendanceUser(){
@@ -46,15 +39,6 @@ public class MemoryAttendanceStorage{
     }
 
     public void stageAttendanceUser(LocalDate localDate){
-        attendanceTargetList
-                .forEach(a -> stageIfDoesNotDuplicated(
-                        Attendance.builder()
-                                .attendanceId(atomicInteger.getAndIncrement())
-                                .user(a)
-                                .attendanceType(attendanceTypeMap.get(AttendanceType.ABSENCE.toString()))
-                                .attendanceDate(localDate)
-                                .build()
-                ));
     }
 
     public void changeAttendance(int targetUsersId, LocalDate targetDate, AttendanceType changedType){
@@ -66,18 +50,7 @@ public class MemoryAttendanceStorage{
     }
 
     private void stageAttendanceSpecificUser(int targetUserId, LocalDate targetDate){
-        attendanceTargetList
-                .stream().filter(a -> a.getUser().getId() == targetUserId)
-                .findFirst().ifPresentOrElse(
-                        a -> stageIfDoesNotDuplicated(
-                                Attendance.builder()
-                                        .attendanceId(atomicInteger.getAndIncrement())
-                                        .user(a)
-                                        .attendanceType(attendanceTypeMap.get(AttendanceType.ABSENCE.toString()))
-                                        .attendanceDate(targetDate)
-                                        .build())
-                        , () -> {throw new IllegalStateException("Cannot find targetUsersId \"" + targetUserId + "\"");}
-                );
+
     }
 
     private void stageIfDoesNotDuplicated(Attendance attendance){

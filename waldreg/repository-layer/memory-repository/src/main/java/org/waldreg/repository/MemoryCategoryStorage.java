@@ -22,8 +22,6 @@ public class MemoryCategoryStorage{
     }
 
     public void createCategory(Category category){
-        category.setId(atomicInteger.getAndIncrement());
-        storage.put(category.getId(), category);
     }
 
     public List<Category> inquiryAllCategory(){
@@ -47,8 +45,6 @@ public class MemoryCategoryStorage{
     }
 
     public void addBoardInCategoryBoardList(Board board){
-        int categoryId = board.getCategoryId();
-        storage.get(categoryId).addBoard(board);
     }
 
     public void modifyCategory(Category category){

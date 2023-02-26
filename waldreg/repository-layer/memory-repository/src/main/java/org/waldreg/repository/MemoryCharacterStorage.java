@@ -18,8 +18,7 @@ public class MemoryCharacterStorage{
     }
 
     public void createCharacter(Character character){
-        character.setId(atomicInteger.getAndIncrement());
-        this.storage.put(character.getCharacterName(), character);
+        return;
     }
 
     public Character readCharacterByName(String name){

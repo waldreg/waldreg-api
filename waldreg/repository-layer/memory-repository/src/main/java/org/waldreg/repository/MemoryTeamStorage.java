@@ -27,9 +27,7 @@ public class MemoryTeamStorage{
     }
 
     public Team createTeam(Team team){
-        team.setTeamId(atomicInteger.getAndIncrement());
-        storage.put(team.getTeamId(),team);
-        return team;
+        return null;
     }
 
     public Team readTeamById(int teamId){
@@ -45,23 +43,11 @@ public class MemoryTeamStorage{
     }
 
     public List<Team> readAllTeamByTeamBuildingId(int teamBuildingId){
-        List<Team> teamList = new ArrayList<>();
-        for(Map.Entry<Integer, Team> teamEntry : storage.entrySet()){
-            if(teamEntry.getValue().getTeamBuildingId() == teamBuildingId){
-                teamList.add(teamEntry.getValue());
-            }
-        }
-        return teamList;
+        return null;
     }
 
     public List<User> readAllUserByTeamBuildingId(int teamBuildingId){
-        List<User> userList = new ArrayList<>();
-        for(Map.Entry<Integer, Team> teamEntry : storage.entrySet()){
-            if(teamEntry.getValue().getTeamBuildingId() == teamBuildingId){
-                teamEntry.getValue().getUserList().stream().forEach(i->userList.add(i));
-            }
-        }
-        return userList;
+        return null;
     }
 
 }

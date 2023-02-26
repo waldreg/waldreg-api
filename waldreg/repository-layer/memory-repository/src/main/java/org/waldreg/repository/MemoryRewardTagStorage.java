@@ -20,14 +20,11 @@ public class MemoryRewardTagStorage{
     }
 
     public void createRewardTag(RewardTag rewardTag){
-        int id = atomicInteger.getAndIncrement();
-        rewardTag.setRewardTagId(id);
-        storage.put(id, rewardTag);
+
     }
 
     public void updateRewardTag(int rewardTagId, RewardTag rewardTag){
-        rewardTag.setRewardTagId(rewardTagId);
-        storage.replace(rewardTagId, rewardTag);
+
     }
 
     public List<RewardTag> readRewardTagList(){

@@ -22,7 +22,6 @@ public class MemoryBoardStorage{
     }
 
     public Board createBoard(Board board){
-        board.setId(atomicInteger.getAndIncrement());
         storage.put(board.getId(), board);
         return board;
     }
@@ -63,7 +62,7 @@ public class MemoryBoardStorage{
         int matchedIdx = startIndex;
         List<Board> boardList = new ArrayList<>();
         for (Map.Entry<Integer, Board> boardEntry : storage.entrySet()){
-            if (isCategoryIdEqual(boardEntry.getValue().getCategoryId(), categoryId)){
+            if (isCategoryIdEqual(boardEntry.getValue().getId(), categoryId)){
                 if (isInRange(matchedIdx, from, to)){
                     boardList.add(boardEntry.getValue());
                 }
@@ -79,7 +78,7 @@ public class MemoryBoardStorage{
     public int getBoardMaxIdxByCategory(int categoryId){
         int count = 0;
         for (Map.Entry<Integer, Board> boardEntry : storage.entrySet()){
-            if (isCategoryIdEqual(boardEntry.getValue().getCategoryId(), categoryId)){
+            if (isCategoryIdEqual(boardEntry.getValue().getId(), categoryId)){
                 count++;
             }
         }
@@ -181,7 +180,7 @@ public class MemoryBoardStorage{
     }
 
     public void addCommentInBoardCommentList(Comment comment){
-        int boardId = comment.getBoardId();
+        int boardId = comment.getId();
         storage.get(boardId).addComment(comment);
     }
 

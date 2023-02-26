@@ -55,16 +55,21 @@ public final class UserJoiningPool{
         return userInfo.getCreatedAt();
     }
 
-    public static final class Builder extends UserInfo.Builder<UserJoiningPool>{
+    public static final class Builder extends UserInfo.Builder<UserJoiningPool, Builder>{
 
         private UserInfo userInfo;
 
         private Builder(){}
 
         @Override
-        public UserJoiningPool abstractBuild(UserInfo userInfo){
+        protected UserJoiningPool abstractBuild(UserInfo userInfo){
             this.userInfo = userInfo;
             return new UserJoiningPool(this);
+        }
+
+        @Override
+        protected Builder builder(){
+            return null;
         }
 
     }

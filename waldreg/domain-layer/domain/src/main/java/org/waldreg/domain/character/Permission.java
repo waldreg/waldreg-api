@@ -19,10 +19,13 @@ public final class Permission{
     @Column(name = "PERMISSION_ID")
     private Integer id;
 
+    @Column(name = "PERMISSION_PERMISSION_UNIT_ID", nullable = false)
+    private Integer permissionUnitId;
+
     @Column(name = "PERMISSION_SERVICE", nullable = false)
     private String service;
 
-    @Column(name = "PERMISSION_NAME", nullable = false, unique = true)
+    @Column(name = "PERMISSION_NAME", nullable = false)
     private String name;
 
     @Column(name = "PERMISSION_STATUS", nullable = false)
@@ -35,6 +38,7 @@ public final class Permission{
     private Permission(){}
 
     private Permission(Builder builder){
+        this.permissionUnitId = builder.permissionUnitId;
         this.service = builder.service;
         this.name = builder.name;
         this.status = builder.status;
@@ -52,21 +56,39 @@ public final class Permission{
         return this.status;
     }
 
-    public int getId(){
+    public Integer getId(){
         return id;
+    }
+
+    public Integer getPermissionUnitId(){
+        return permissionUnitId;
     }
 
     public String getService(){
         return service;
     }
 
+    void setCharacter(Character character){
+        this.character = character;
+    }
+
+    public void setPermissionStatus(String status){
+        this.status = status;
+    }
+
     public static final class Builder{
 
+        private Integer permissionUnitId;
         private String service;
         private String name;
         private String status;
 
         private Builder(){}
+
+        public Builder permissionUnitId(Integer permissionUnitId){
+            this.permissionUnitId = permissionUnitId;
+            return this;
+        }
 
         public Builder service(String service){
             this.service = service;

@@ -97,7 +97,7 @@ public final class User{
         this.character = character;
     }
 
-    public static final class Builder extends UserInfo.Builder<User>{
+    public static final class Builder extends UserInfo.Builder<User, Builder>{
 
         private Character character;
         private UserInfo userInfo;
@@ -118,9 +118,14 @@ public final class User{
         }
 
         @Override
-        public User abstractBuild(UserInfo userInfo){
+        protected User abstractBuild(UserInfo userInfo){
             this.userInfo = userInfo;
             return new User(this);
+        }
+
+        @Override
+        protected Builder builder(){
+            return this;
         }
 
     }

@@ -23,7 +23,7 @@ public final class Character{
     @Column(name = "CHARACTER_CHARACTER_NAME", nullable = false, unique = true, length = 25)
     private String characterName;
 
-    @OneToMany(mappedBy = "character", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "character", cascade = CascadeType.PERSIST, fetch = FetchType.LAZY)
     private List<Permission> permissionList;
 
     private Character(){}
@@ -31,6 +31,7 @@ public final class Character{
     private Character(Builder builder){
         this.characterName = builder.characterName;
         this.permissionList = builder.permissionList;
+        permissionList.forEach(p -> p.setCharacter(this));
     }
 
     public static Builder builder(){
@@ -39,6 +40,10 @@ public final class Character{
 
     public String getCharacterName(){
         return characterName;
+    }
+
+    public void setCharacterName(String characterName){
+        this.characterName = characterName;
     }
 
     public List<Permission> getPermissionList(){

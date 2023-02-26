@@ -24,9 +24,7 @@ public class MemoryTeamBuildingStorage{
     }
 
     public TeamBuilding createTeamBuilding(TeamBuilding teamBuilding){
-        teamBuilding.setTeamBuildingId(atomicInteger.getAndIncrement());
-        storage.put(teamBuilding.getTeamBuildingId(), teamBuilding);
-        return teamBuilding;
+        return null;
     }
 
     public void updateTeamBuilding(TeamBuilding teamBuilding){
@@ -66,8 +64,6 @@ public class MemoryTeamBuildingStorage{
     }
 
     public void addTeamInTeamBuildingTeamList(Team team){
-        int teamBuildingId = team.getTeamBuildingId();
-        storage.get(teamBuildingId).addTeam(team);
     }
 
 }

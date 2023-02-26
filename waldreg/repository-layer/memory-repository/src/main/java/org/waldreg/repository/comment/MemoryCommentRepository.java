@@ -14,68 +14,39 @@ import org.waldreg.repository.MemoryCommentStorage;
 @Repository
 public class MemoryCommentRepository implements CommentRepository{
 
-    private final MemoryBoardStorage memoryBoardStorage;
-    private final MemoryCommentStorage memoryCommentStorage;
-    private final CommentMapper commentMapper;
-
-    @Autowired
-    public MemoryCommentRepository(MemoryBoardStorage memoryBoardStorage, MemoryCommentStorage memoryCommentStorage, CommentMapper commentMapper){
-        this.memoryBoardStorage = memoryBoardStorage;
-        this.memoryCommentStorage = memoryCommentStorage;
-        this.commentMapper = commentMapper;
-    }
-
     @Override
     public CommentDto createComment(CommentDto commentDto){
-        Comment comment = commentMapper.commentDtoToCommentDomain(commentDto);
-        comment = memoryCommentStorage.createComment(comment);
-        return commentMapper.commentDomainToCommentDto(comment);
+        return null;
     }
 
     @Override
     public int getCommentMaxIdxByBoardId(int boardId){
-        return memoryCommentStorage.getCommentMaxIdxByBoardId(boardId);
+        return 0;
     }
 
     @Override
     public List<CommentDto> inquiryAllCommentByBoardId(int boardId, int startIdx, int endIdx){
-        List<Comment> commentList = memoryCommentStorage.inquiryAllCommentByBoardId(boardId, startIdx - 1, endIdx - 1);
-        return commentMapper.commentDomainListToCommentDtoList(commentList);
+        return null;
     }
 
     @Override
     public CommentDto inquiryCommentById(int commentId){
-        Comment comment = memoryCommentStorage.inquiryCommentById(commentId);
-        return commentMapper.commentDomainToCommentDto(comment);
+        return null;
     }
 
     @Override
     public void modifyComment(CommentDto commentDto){
-        int boardId = commentDto.getBoardId();
-        Comment comment = commentMapper.commentDtoToCommentDomain(commentDto);
-        memoryCommentStorage.modifyComment(comment);
-        updateBoardCommentList(boardId);
+
     }
 
     @Override
     public boolean isExistComment(int commentId){
-        return memoryCommentStorage.isExistComment(commentId);
+        return false;
     }
 
     @Override
     public void deleteComment(int id){
-        int boardId = memoryCommentStorage.getCommentBoardIdByCommentId(id);
-        memoryCommentStorage.deleteComment(id);
-        updateBoardCommentList(boardId);
-    }
 
-    private void updateBoardCommentList(int boardId){
-        int startIdx = 1;
-        int maxIdx = getCommentMaxIdxByBoardId(boardId);
-        Board board = memoryBoardStorage.inquiryBoardById(boardId);
-        List<CommentDto> commentDtoList = inquiryAllCommentByBoardId(boardId, startIdx, maxIdx);
-        board.setCommentList(commentMapper.commentDtoListToCommentDomainList(commentDtoList));
-        memoryBoardStorage.modifyBoard(board);
     }
 
 }

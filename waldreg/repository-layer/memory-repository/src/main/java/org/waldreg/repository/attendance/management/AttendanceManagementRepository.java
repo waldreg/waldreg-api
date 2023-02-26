@@ -17,7 +17,7 @@ import org.waldreg.repository.MemoryUserStorage;
 import org.waldreg.repository.attendance.management.mapper.AttendanceManagementMapper;
 
 @Repository
-public final class AttendanceManagementRepository implements AttendanceRepository{
+public class AttendanceManagementRepository implements AttendanceRepository{
 
     private final MemoryAttendanceStorage memoryAttendanceStorage;
     private final MemoryUserStorage memoryUserStorage;

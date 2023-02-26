@@ -57,8 +57,7 @@ public class MemoryUsersRewardRepository implements UsersRewardRepository, UserE
     }
 
     private boolean isUserHasRewardId(User user, int rewardId){
-        List<RewardTagWrapper> rewardTagWrapperList = user.getRewardTagWrapperList();
-        return rewardTagWrapperList.stream().anyMatch(rewardTagWrapper -> rewardTagWrapper.getRewardId() == rewardId);
+        return true;
     }
 
     @Override

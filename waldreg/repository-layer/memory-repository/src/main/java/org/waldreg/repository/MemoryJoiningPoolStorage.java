@@ -26,8 +26,6 @@ public class MemoryJoiningPoolStorage{
 
 
     public void createUser(User user){
-        user.setId(atomicInteger.getAndIncrement());
-        storage.put(user.getUserId(),user);
     }
 
     public void deleteAllUser(){

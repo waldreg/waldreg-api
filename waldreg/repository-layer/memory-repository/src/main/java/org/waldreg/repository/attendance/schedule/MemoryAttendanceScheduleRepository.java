@@ -11,7 +11,7 @@ import org.waldreg.repository.MemoryAttendanceStorage;
 import org.waldreg.repository.attendance.schedule.mapper.MemoryAttendanceScheduleMapper;
 
 @Repository
-public final class MemoryAttendanceScheduleRepository implements AttendanceScheduleRepository{
+public class MemoryAttendanceScheduleRepository implements AttendanceScheduleRepository{
 
     private final MemoryAttendanceStorage memoryAttendanceStorage;
     private final MemoryAttendanceScheduleMapper memoryAttendanceScheduleMapper;

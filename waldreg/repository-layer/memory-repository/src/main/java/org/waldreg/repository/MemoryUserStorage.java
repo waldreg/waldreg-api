@@ -30,8 +30,7 @@ public class MemoryUserStorage{
     public void deleteAllUser(){storage.clear();}
 
     public void createUser(User user){
-        user.setId(atomicInteger.getAndIncrement());
-        storage.put(user.getName(), user);
+
     }
 
     public void updateCharacterOfUser(int id, String characterName){
@@ -86,27 +85,12 @@ public class MemoryUserStorage{
     }
 
     public void updateUsersRewardTag(int id, RewardTagWrapper rewardTagWrapper){
-        for (Map.Entry<String, User> userEntry : storage.entrySet()){
-            if (userEntry.getValue().getId() == id){
-                rewardTagWrapper.setRewardId(atomicInteger.getAndIncrement());
-                userEntry.getValue().addRewardTagWrapper(rewardTagWrapper);
-            }
-        }
     }
 
     public void deleteRewardToUser(int id, int rewardId){
-        for (Map.Entry<String, User> userEntry : storage.entrySet()){
-            if (userEntry.getValue().getId() == id){
-                userEntry.getValue().getRewardTagWrapperList()
-                        .removeIf(rewardTagWrapper -> (rewardTagWrapper.getRewardId() == rewardId));
-            }
-        }
     }
 
     public void deleteAllUsersReward(){
-        for (Map.Entry<String, User> userEntry : storage.entrySet()){
-            userEntry.getValue().getRewardTagWrapperList().clear();
-        }
     }
 
     public void deleteById(int id){

@@ -15,7 +15,7 @@ import org.waldreg.repository.MemoryWaiverStorage;
 import org.waldreg.repository.attendance.waiver.mapper.MemoryWaiverMapper;
 
 @Repository
-public final class MemoryWaiverRepository implements WaiverRepository{
+public class MemoryWaiverRepository implements WaiverRepository{
 
     private final MemoryAttendanceStorage memoryAttendanceStorage;
     private final MemoryWaiverStorage memoryWaiverStorage;

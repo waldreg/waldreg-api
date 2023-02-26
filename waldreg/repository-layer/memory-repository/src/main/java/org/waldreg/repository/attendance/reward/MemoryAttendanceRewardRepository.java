@@ -9,7 +9,7 @@ import org.waldreg.repository.MemoryAttendanceStorage;
 import org.waldreg.repository.MemoryRewardTagStorage;
 
 @Repository
-public final class MemoryAttendanceRewardRepository implements AttendanceRewardRepository{
+public class MemoryAttendanceRewardRepository implements AttendanceRewardRepository{
 
     private final MemoryRewardTagStorage memoryRewardTagStorage;
     private final MemoryAttendanceStorage memoryAttendanceStorage;

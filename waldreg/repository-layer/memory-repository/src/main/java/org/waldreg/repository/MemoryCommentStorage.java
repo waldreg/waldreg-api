@@ -24,10 +24,7 @@ public class MemoryCommentStorage{
     }
 
     public Comment createComment(Comment comment){
-        comment.setId(atomicInteger.getAndIncrement());
-        storage.put(comment.getId(), comment);
-
-        return comment;
+        return null;
     }
 
     public void deleteAllComment(){
@@ -35,15 +32,7 @@ public class MemoryCommentStorage{
     }
 
     public List<Comment> inquiryAllCommentByBoardId(int boardId, int from, int to){
-        int index = startIndex;
-        List<Comment> commentList = new ArrayList<>();
-        for (Map.Entry<Integer, Comment> commentEntry : storage.entrySet()){
-            if (isBoardIdEqual(commentEntry.getValue().getBoardId(), boardId) && isInRange(index, from, to)){
-                commentList.add(commentEntry.getValue());
-                index++;
-            }
-        }
-        return commentList;
+        return null;
     }
 
     private boolean isBoardIdEqual(int commentBoardId, int boardId){return commentBoardId == boardId;}
@@ -63,17 +52,11 @@ public class MemoryCommentStorage{
     }
 
     public int getCommentMaxIdxByBoardId(int boardId){
-        int count = 0;
-        for (Map.Entry<Integer, Comment> commentEntry : storage.entrySet()){
-            if (isBoardIdEqual(commentEntry.getValue().getBoardId(), boardId)){
-                count++;
-            }
-        }
-        return count;
+        return 1;
     }
 
     public int getCommentBoardIdByCommentId(int id){
-        return storage.get(id).getBoardId();
+        return 1;
     }
 
     public Comment inquiryCommentById(int commentId){

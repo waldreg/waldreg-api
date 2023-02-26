@@ -13,80 +13,54 @@ import org.waldreg.user.spi.UserRepository;
 @Repository
 public class MemoryUserRepository implements UserRepository{
 
-    private final UserMapper userMapper;
-
-    private final MemoryUserStorage memoryUserStorage;
-
-    private final MemoryCharacterStorage memoryCharacterStorage;
-
-    @Autowired
-    public MemoryUserRepository(UserMapper userMapper, MemoryUserStorage memoryUserStorage, MemoryCharacterStorage memoryCharacterStorage){
-        this.userMapper = userMapper;
-        this.memoryUserStorage = memoryUserStorage;
-        this.memoryCharacterStorage = memoryCharacterStorage;
-    }
-
     @Override
     public void createUser(UserDto userDto){
-        User user = userMapper.userDtoToUserDomain(userDto);
-        user.setCharacter(getCharacterByName(userDto.getCharacter()));
-        memoryUserStorage.createUser(user);
-    }
 
-    private Character getCharacterByName(String characterName){
-       return memoryCharacterStorage.readCharacterByName(characterName);
     }
 
     @Override
     public UserDto readUserById(int id){
-        return userMapper.userDomainToUserDto(memoryUserStorage.readUserById(id));
+        return null;
     }
 
     @Override
     public UserDto readUserByUserId(String userId){
-        User user = memoryUserStorage.readUserByUserId(userId);
-        return userMapper.userDomainToUserDto(user);
+        return null;
     }
 
     @Override
     public List<UserDto> readUserList(int startIdx, int endIdx){
-        return userMapper.userDomainListToUserDtoList(memoryUserStorage.readUserList(startIdx, endIdx));
+        return null;
     }
 
     @Override
-    public void updateUser(int id, UserDto userDto){
-        User user = memoryUserStorage.readUserById(id);
-        user.setUserPassword(userDto.getUserPassword());
-        user.setPhoneNumber(userDto.getPhoneNumber());
-        user.setName(userDto.getName());
-        memoryUserStorage.updateUser(id, user);
+    public void updateUser(int idx, UserDto userDto){
+
+    }
+
+    @Override
+    public void updateCharacter(int id, String character){
+
     }
 
     @Override
     public int readMaxIdx(){
-        return memoryUserStorage.readMaxIdx();
+        return 0;
     }
 
     @Override
     public void deleteById(int id){
-        memoryUserStorage.deleteById(id);
+
     }
 
     @Override
     public boolean isExistUserId(String userId){
-        return memoryUserStorage.isExistUserId(userId);
+        return false;
     }
 
     @Override
     public boolean isExistId(int id){
-        return memoryUserStorage.isExistId(id);
+        return false;
     }
-
-    @Override
-    public void updateCharacter(int id, String characterName){
-        User user = memoryUserStorage.readUserById(id);
-        memoryUserStorage.updateCharacterOfUser(id, characterName);
-    }
-
 
 }

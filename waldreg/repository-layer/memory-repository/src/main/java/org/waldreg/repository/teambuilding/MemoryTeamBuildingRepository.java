@@ -15,79 +15,49 @@ import org.waldreg.teambuilding.teambuilding.spi.TeamBuildingRepository;
 @Repository
 public class MemoryTeamBuildingRepository implements TeamBuildingRepository, TeamInTeamBuildingRepository{
 
-    private final TeamBuildingMapper teamBuildingMapper;
+    @Override
+    public void addTeamInTeamBuildingTeamList(TeamDto teamDto){
 
-    private final TeamInTeamBuildingMapper teamInTeamBuildingMapper;
-
-    private final MemoryTeamBuildingStorage memoryTeamBuildingStorage;
-
-    private final MemoryTeamStorage memoryTeamStorage;
-
-    @Autowired
-    public MemoryTeamBuildingRepository(TeamBuildingMapper teamBuildingMapper, TeamInTeamBuildingMapper teamInTeamBuildingMapper, MemoryTeamBuildingStorage memoryTeamBuildingStorage, MemoryTeamStorage memoryTeamStorage){
-        this.teamBuildingMapper = teamBuildingMapper;
-        this.teamInTeamBuildingMapper = teamInTeamBuildingMapper;
-        this.memoryTeamBuildingStorage = memoryTeamBuildingStorage;
-        this.memoryTeamStorage = memoryTeamStorage;
     }
 
     @Override
-    public TeamBuildingDto createTeamBuilding(String teamBuildingTitle){
-        TeamBuilding teamBuilding = teamBuildingMapper.teamBuildingTitleToTeamBuildingDomain(teamBuildingTitle);
-        teamBuilding = memoryTeamBuildingStorage.createTeamBuilding(teamBuilding);
-        return teamBuildingMapper.teamBuildingDomainToTeamBuildingDto(teamBuilding);
+    public TeamBuildingDto createTeamBuilding(String title){
+        return null;
     }
 
     @Override
     public void updateTeamListInTeamBuilding(TeamBuildingDto teamBuildingDto){
-        TeamBuilding teamBuilding = teamBuildingMapper.teamBuildingDtoToTeamBuildingDomain(teamBuildingDto);
-        memoryTeamBuildingStorage.updateTeamBuilding(teamBuilding);
+
     }
 
     @Override
     public TeamBuildingDto readTeamBuildingById(int teamBuildingId){
-        TeamBuilding teamBuilding = memoryTeamBuildingStorage.readTeamBuildingById(teamBuildingId);
-        return teamBuildingMapper.teamBuildingDomainToTeamBuildingDto(teamBuilding);
+        return null;
     }
 
     @Override
     public List<TeamBuildingDto> readAllTeamBuilding(int startIdx, int endIdx){
-        List<TeamBuilding> teamBuildingList = memoryTeamBuildingStorage.readAllTeamBuilding(startIdx - 1, endIdx - 1);
-        return teamBuildingMapper.teamBuildingDomainListToTeamBuildingDtoList(teamBuildingList);
+        return null;
     }
 
     @Override
     public void updateTeamBuildingTitleById(int teamBuildingId, String teamBuildingTitle){
-        TeamBuilding teamBuilding = memoryTeamBuildingStorage.readTeamBuildingById(teamBuildingId);
-        teamBuilding.setTeamBuildingTitle(teamBuildingTitle);
-        memoryTeamBuildingStorage.updateTeamBuilding(teamBuilding);
+
     }
 
     @Override
     public void deleteTeamBuildingById(int teamBuildingId){
-        TeamBuildingDto teamBuildingDto = readTeamBuildingById(teamBuildingId);
-        deleteTeamDueToDeleteTeamBuilding(teamBuildingDto.getTeamList());
-        memoryTeamBuildingStorage.deleteTeamBuildingById(teamBuildingId);
-    }
 
-    private void deleteTeamDueToDeleteTeamBuilding(List<TeamDto> teamDtoList){
-        teamDtoList.stream().forEach(i -> memoryTeamStorage.deleteTeamById(i.getTeamId()));
-    }
-
-    @Override
-    public void addTeamInTeamBuildingTeamList(TeamDto teamDto){
-        Team team = teamInTeamBuildingMapper.teamDtoToTeamDomain(teamDto);
-        memoryTeamBuildingStorage.addTeamInTeamBuildingTeamList(team);
     }
 
     @Override
     public boolean isExistTeamBuilding(int teamBuildingId){
-        return memoryTeamBuildingStorage.readTeamBuildingById(teamBuildingId) != null;
+        return false;
     }
 
     @Override
     public int readMaxIdx(){
-        return memoryTeamBuildingStorage.getTeamBuildingMaxIdx();
+        return 0;
     }
 
 }

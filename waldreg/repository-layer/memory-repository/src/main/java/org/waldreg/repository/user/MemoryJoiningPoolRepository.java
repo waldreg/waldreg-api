@@ -13,55 +13,34 @@ import org.waldreg.user.spi.JoiningPoolRepository;
 @Repository
 public class MemoryJoiningPoolRepository implements JoiningPoolRepository{
 
-    private final UserMapper userMapper;
-    private final MemoryUserStorage memoryUserStorage;
-    private final MemoryJoiningPoolStorage memoryJoiningPoolStorage;
-    private final MemoryCharacterStorage memoryCharacterStorage;
-
-
-    public MemoryJoiningPoolRepository(UserMapper userMapper, MemoryUserStorage memoryUserStorage, MemoryJoiningPoolStorage memoryJoiningPoolStorage, MemoryCharacterStorage memoryCharacterStorage){
-        this.userMapper = userMapper;
-        this.memoryUserStorage = memoryUserStorage;
-        this.memoryJoiningPoolStorage = memoryJoiningPoolStorage;
-        this.memoryCharacterStorage = memoryCharacterStorage;
-    }
-
     @Override
     public void createUser(UserDto userDto){
-        User user = userMapper.userDtoToUserDomain(userDto);
-        user.setCharacter(getCharacterByName(userDto.getCharacter()));
-        memoryJoiningPoolStorage.createUser(user);
-    }
 
-    private Character getCharacterByName(String characterName){
-        return memoryCharacterStorage.readCharacterByName(characterName);
     }
 
     @Override
     public int readJoiningPoolMaxIdx(){
-        return memoryJoiningPoolStorage.readMaxIdx();
+        return 0;
     }
 
     @Override
     public List<UserDto> readUserJoiningPool(int startIdx, int endIdx){
-        return userMapper.userDomainListToUserDtoList(memoryJoiningPoolStorage.readJoiningPoolList(startIdx,endIdx));
+        return null;
     }
 
     @Override
     public void approveJoin(String userId){
-        User user = memoryJoiningPoolStorage.getUserByUserId(userId);
-        memoryUserStorage.createUser(user);
-        memoryJoiningPoolStorage.deleteUserByUserId(userId);
+
     }
 
     @Override
     public void rejectJoin(String userId){
-        memoryJoiningPoolStorage.deleteUserByUserId(userId);
+
     }
 
     @Override
     public boolean isExistUserId(String userId){
-        return memoryJoiningPoolStorage.isExistUserId(userId);
+        return false;
     }
 
 }

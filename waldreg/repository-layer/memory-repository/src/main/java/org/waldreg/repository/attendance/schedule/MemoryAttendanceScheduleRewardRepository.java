@@ -11,7 +11,7 @@ import org.waldreg.repository.MemoryAttendanceStorage;
 import org.waldreg.repository.MemoryUserStorage;
 
 @Repository
-public final class MemoryAttendanceScheduleRewardRepository implements AttendanceScheduleRewardRepository{
+public class MemoryAttendanceScheduleRewardRepository implements AttendanceScheduleRewardRepository{
 
     private final MemoryUserStorage memoryUserStorage;
     private final MemoryAttendanceStorage memoryAttendanceStorage;

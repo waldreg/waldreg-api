@@ -12,14 +12,7 @@ import org.waldreg.domain.user.User;
 public class UsersRewardMapper{
 
     public UsersRewardDto userToUsersRewardDto(User user){
-        return UsersRewardDto.builder()
-                .id(user.getId())
-                .userId(user.getUserId())
-                .name(user.getName())
-                .reward(getRewardPoint(user.getRewardTagWrapperList()))
-                .usersRewardTagDtoList(
-                        rewardTagWrapperListToUsersRewardTagDtoList(user.getRewardTagWrapperList())
-                ).build();
+        return null;
     }
 
     private int getRewardPoint(List<RewardTagWrapper> rewardTagWrapperList){
