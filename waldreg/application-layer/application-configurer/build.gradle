@@ -25,7 +25,6 @@ dependencyManagement {
 dependencies {
     implementation project(':core-layer:template')
     implementation project(':core-layer:util')
-    implementation project(':repository-layer:memory-repository')
     implementation project(':service-layer:user')
     implementation project(':stable-service-layer:character')
 

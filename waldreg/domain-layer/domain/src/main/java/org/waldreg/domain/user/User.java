@@ -1,6 +1,9 @@
 package org.waldreg.domain.user;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Embedded;
 import javax.persistence.Entity;
@@ -9,9 +12,11 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import org.waldreg.domain.character.Character;
+import org.waldreg.domain.rewardtag.RewardTagWrapper;
 
 @Entity
 @Table(name = "USER")
@@ -26,6 +31,9 @@ public final class User{
     @JoinColumn(name = "CHARACTER_ID", nullable = false)
     private Character character;
 
+    @OneToMany(mappedBy = "user", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    private List<RewardTagWrapper> rewardTagWrapperList;
+
     @Embedded
     private UserInfo userInfo;
 
@@ -33,6 +41,7 @@ public final class User{
 
     private User(Builder builder){
         this.userInfo = builder.userInfo;
+        this.rewardTagWrapperList = builder.rewardTagWrapperList;
         this.character = builder.character;
     }
 
@@ -68,6 +77,10 @@ public final class User{
         return character;
     }
 
+    public List<RewardTagWrapper> getRewardTagWrapperList(){
+        return rewardTagWrapperList;
+    }
+
     public void setName(String name){
         this.userInfo.setName(name);
     }
@@ -88,11 +101,19 @@ public final class User{
 
         private Character character;
         private UserInfo userInfo;
+        private List<RewardTagWrapper> rewardTagWrapperList;
 
-        private Builder(){}
+        private Builder(){
+            rewardTagWrapperList = new ArrayList<>();
+        }
 
         public Builder character(Character character){
             this.character = character;
+            return this;
+        }
+
+        public Builder rewardTagWrapperList(List<RewardTagWrapper> rewardTagWrapperList){
+            this.rewardTagWrapperList = rewardTagWrapperList;
             return this;
         }
 

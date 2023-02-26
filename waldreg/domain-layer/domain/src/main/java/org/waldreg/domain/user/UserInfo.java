@@ -3,13 +3,6 @@ package org.waldreg.domain.user;
 import java.time.LocalDate;
 import javax.persistence.Column;
 import javax.persistence.Embeddable;
-import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.OneToOne;
-import org.waldreg.domain.character.Character;
 
 @Embeddable
 public class UserInfo{
