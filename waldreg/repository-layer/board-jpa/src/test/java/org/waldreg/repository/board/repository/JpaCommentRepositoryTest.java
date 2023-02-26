@@ -33,7 +33,7 @@ public class JpaCommentRepositoryTest{
     private TestJpaCharacterRepository testJpaCharacterRepository;
 
     @Autowired
-    JpaCommentRepository jpaCommentRepository;
+    private JpaCommentRepository jpaCommentRepository;
 
     @Autowired
     private JpaBoardRepository jpaBoardRepository;
