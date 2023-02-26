@@ -13,7 +13,7 @@ public interface UserRepository{
 
     List<UserDto> readUserList(int startIdx, int endIdx);
 
-    void updateUser(int idx, UserDto userDto);
+    void updateUser(int id, UserDto userDto);
 
     void updateCharacter(int id, String character);
 
