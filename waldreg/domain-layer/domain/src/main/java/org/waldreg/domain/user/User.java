@@ -16,6 +16,7 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import org.waldreg.domain.character.Character;
+import org.waldreg.domain.rewardtag.RewardTag;
 import org.waldreg.domain.rewardtag.RewardTagWrapper;
 
 @Entity
@@ -31,7 +32,7 @@ public final class User{
     @JoinColumn(name = "CHARACTER_ID", nullable = false)
     private Character character;
 
-    @OneToMany(mappedBy = "user", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "user", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
     private List<RewardTagWrapper> rewardTagWrapperList;
 
     @Embedded
@@ -95,6 +96,21 @@ public final class User{
 
     public void setCharacter(Character character){
         this.character = character;
+    }
+
+    public void addRewardTag(RewardTag rewardTag){
+        RewardTagWrapper rewardTagWrapper = RewardTagWrapper.builder()
+                .user(this)
+                .rewardTag(rewardTag)
+                .build();
+        rewardTagWrapperList.add(rewardTagWrapper);
+    }
+
+    public void deleteRewardTag(int rewardId){
+        rewardTagWrapperList.stream().filter(rw -> rw.getRewardId() == rewardId).findFirst().ifPresentOrElse(
+                rw -> rewardTagWrapperList.remove(rw),
+                () -> {throw new IllegalStateException("Cannot find rewardTagWrapper rewardId \"" + rewardId + "\"");}
+        );
     }
 
     public static final class Builder extends UserInfo.Builder<User, Builder>{

@@ -45,6 +45,11 @@ public final class RewardTag{
         return rewardPoint;
     }
 
+    public void updateRewardTag(RewardTag rewardTag){
+        this.rewardTagTitle = rewardTag.getRewardTagTitle();
+        this.rewardPoint = rewardTag.getRewardPoint();
+    }
+
     public static final class Builder{
 
         private String rewardTagTitle;
