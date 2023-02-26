@@ -7,7 +7,6 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.params.shadow.com.univocity.parsers.common.processor.CustomMatcher;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.test.context.TestPropertySource;
@@ -159,10 +158,10 @@ class JpaUserRepositoryTest{
         user3 = jpaUserRepository.saveAndFlush(user3);
         entityManager.clear();
         long maxIdx = jpaUserRepository.count();
-        List<User> result = jpaUserRepository.findAll(start, end-start+1);
+        List<User> result = jpaUserRepository.findAll(start, end - start + 1);
 
-        assertAll(user,result.get(0));
-        assertAll(user2,result.get(1));
+        assertAll(user, result.get(0));
+        assertAll(user2, result.get(1));
         Assertions.assertEquals(3, maxIdx);
 
     }
@@ -307,11 +306,11 @@ class JpaUserRepositoryTest{
 
         //when
         testJpaCharacterRepository.saveAndFlush(character);
-        user=jpaUserRepository.saveAndFlush(user);
+        user = jpaUserRepository.saveAndFlush(user);
         entityManager.clear();
 
         //then
-       Assertions.assertTrue(jpaUserRepository.existsByUserId(user.getUserId()));
+        Assertions.assertTrue(jpaUserRepository.existsByUserId(user.getUserId()));
 
     }
 

@@ -6,7 +6,7 @@ plugins {
     id 'java'
 }
 
-group 'org.waldreg'
+group 'xb.note'
 version '1.0-SNAPSHOT'
 
 sourceCompatibility = '11'
@@ -23,17 +23,19 @@ dependencyManagement {
 }
 
 dependencies {
-    implementation project(':core-layer:template')
-    implementation project(':repository-layer:character-jpa')
-    implementation project(':stable-service-layer:character')
     implementation project(':service-layer:auth')
+    implementation project(':stable-service-layer:character')
+    implementation project(':service-layer:user')
+    implementation project(':service-layer:schedule')
+    implementation project(':domain-layer:domain')
+    implementation project(':service-layer:reward')
+    implementation project(':service-layer:board')
+    implementation project(':service-layer:attendance')
+    implementation project(':service-layer:teambuilding')
 
     implementation 'org.springframework.boot:spring-boot-starter'
-    testImplementation 'org.springframework.boot:spring-boot-starter-test'
-
     implementation 'org.springframework.boot:spring-boot-starter-web'
-
-    implementation 'org.springframework.boot:spring-boot-starter-validation'
+    testImplementation 'org.springframework.boot:spring-boot-starter-test'
 
     testImplementation 'org.junit.jupiter:junit-jupiter-api:5.8.1'
     testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.8.1'
