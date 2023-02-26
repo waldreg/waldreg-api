@@ -64,6 +64,8 @@ include 'repository-layer:reward-jpa'
 findProject(':repository-layer:reward-jpa')?.name = 'reward-jpa'
 include 'repository-layer:user-jpa'
 findProject(':repository-layer:user-jpa')?.name = 'user-jpa'
+include 'repository-layer:schedule-jpa'
+findProject(':repository-layer:schedule-jpa')?.name = 'schedule-jpa'
 include 'repository-layer:attendance-jpa'
 findProject(':repository-layer:attendance-jpa')?.name = 'attendance-jpa'
 
