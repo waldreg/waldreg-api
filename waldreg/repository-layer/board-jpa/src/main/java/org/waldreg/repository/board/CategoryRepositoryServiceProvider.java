@@ -1,0 +1,72 @@
+package org.waldreg.repository.board;
+
+import java.util.List;
+import java.util.Optional;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
+import org.waldreg.board.category.spi.CategoryRepository;
+import org.waldreg.board.dto.CategoryDto;
+import org.waldreg.domain.board.category.Category;
+import org.waldreg.repository.board.mapper.CategoryRepositoryMapper;
+import org.waldreg.repository.board.repository.JpaCategoryRepository;
+
+@Repository
+public class CategoryRepositoryServiceProvider implements CategoryRepository{
+
+    private final JpaCategoryRepository jpaCategoryRepository;
+    private final CategoryRepositoryMapper categoryRepositoryMapper;
+
+    @Autowired
+    public CategoryRepositoryServiceProvider(JpaCategoryRepository jpaCategoryRepository, CategoryRepositoryMapper categoryRepositoryMapper){
+        this.jpaCategoryRepository = jpaCategoryRepository;
+        this.categoryRepositoryMapper = categoryRepositoryMapper;
+    }
+
+    @Override
+    @Transactional
+    public boolean isExistCategory(int categoryId){
+        return jpaCategoryRepository.existsById(categoryId);
+    }
+
+    @Override
+    @Transactional
+    public CategoryDto inquiryCategoryById(int id){
+        Optional<Category> category = jpaCategoryRepository.findById(id);
+        return categoryRepositoryMapper.categoryDomainToCategoryDto(category.get());
+    }
+
+    @Override
+    @Transactional
+    public void createCategory(CategoryDto categoryDto){
+        Category category = categoryRepositoryMapper.categoryDtoToCategoryDomain(categoryDto);
+        jpaCategoryRepository.save(category);
+    }
+
+    @Override
+    @Transactional
+    public List<CategoryDto> inquiryAllCategory(){
+        List<Category> categoryList = jpaCategoryRepository.findAll();
+        return categoryRepositoryMapper.categoryDomainListToCategoryDtoList(categoryList);
+    }
+
+    @Override
+    @Transactional
+    public void modifyCategory(CategoryDto categoryDto){
+        Category category = categoryRepositoryMapper.categoryDtoToCategoryDomain(categoryDto);
+        jpaCategoryRepository.save(category);
+    }
+
+    @Override
+    @Transactional
+    public void deleteCategory(int id){
+        jpaCategoryRepository.deleteById(id);
+    }
+
+    @Override
+    @Transactional
+    public boolean isDuplicateCategoryName(String categoryName){
+        return jpaCategoryRepository.isDuplicatedName(categoryName);
+    }
+
+}
