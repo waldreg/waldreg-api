@@ -2,9 +2,7 @@ package org.waldreg.repository.user.repository;
 
 import java.util.List;
 import javax.persistence.EntityManager;
-import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,12 +23,6 @@ class JpaUserRepositoryTest{
 
     @Autowired
     private EntityManager entityManager;
-
-    @BeforeEach
-    @AfterEach
-    private void INITIATE_USER(){
-        jpaUserRepository.deleteAll();
-    }
 
     @Test
     @DisplayName("새로운 유저 생성 테스트")

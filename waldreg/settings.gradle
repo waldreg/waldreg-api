@@ -62,3 +62,6 @@ include 'repository-layer:character-jpa'
 findProject(':repository-layer:character-jpa')?.name = 'character-jpa'
 include 'repository-layer:user-jpa'
 findProject(':repository-layer:user-jpa')?.name = 'user-jpa'
+include 'repository-layer:schedule-jpa'
+findProject(':repository-layer:schedule-jpa')?.name = 'schedule-jpa'
+
