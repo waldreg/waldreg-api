@@ -37,7 +37,6 @@ public class AdminUserConfigurer{
                 .userPassword("0000")
                 .character("Admin")
                 .phoneNumber("000-0000-0000")
-                .socialLogin(List.of())
                 .build();
     }
 

@@ -811,8 +811,7 @@ public class UserAcceptanceTest{
                 MockMvcResultMatchers.jsonPath("$.phone_number").value(userCreateRequest.getPhoneNumber()),
                 MockMvcResultMatchers.jsonPath("$.character").isString(),
                 MockMvcResultMatchers.jsonPath("$.created_at").isNotEmpty(),
-                MockMvcResultMatchers.jsonPath("$.reward_point").isNumber(),
-                MockMvcResultMatchers.jsonPath("$.social_login").isArray()
+                MockMvcResultMatchers.jsonPath("$.reward_point").isNumber()
         ).andDo(MockMvcResultHandlers.print());
 
     }
@@ -899,8 +898,7 @@ public class UserAcceptanceTest{
                 MockMvcResultMatchers.jsonPath("$.phone_number").isString(),
                 MockMvcResultMatchers.jsonPath("$.character").isString(),
                 MockMvcResultMatchers.jsonPath("$.created_at").isNotEmpty(),
-                MockMvcResultMatchers.jsonPath("$.reward_point").isNumber(),
-                MockMvcResultMatchers.jsonPath("$.social_login").isArray()
+                MockMvcResultMatchers.jsonPath("$.reward_point").isNumber()
         ).andDo(MockMvcResultHandlers.print());
 
     }
@@ -1836,7 +1834,6 @@ public class UserAcceptanceTest{
                 MockMvcResultMatchers.jsonPath("$.users.[0].character").isString(),
                 MockMvcResultMatchers.jsonPath("$.users.[0].created_at").isNotEmpty(),
                 MockMvcResultMatchers.jsonPath("$.users.[0].reward_point").isNumber(),
-                MockMvcResultMatchers.jsonPath("$.users.[0].social_login").isArray(),
                 MockMvcResultMatchers.jsonPath("$.users.[1].id").isNumber(),
                 MockMvcResultMatchers.jsonPath("$.users.[1].name").value(userCreateRequest3.getName()),
                 MockMvcResultMatchers.jsonPath("$.users.[1].user_id").value(userCreateRequest3.getUserId()),
@@ -1844,14 +1841,12 @@ public class UserAcceptanceTest{
                 MockMvcResultMatchers.jsonPath("$.users.[1].character").isString(),
                 MockMvcResultMatchers.jsonPath("$.users.[1].created_at").isNotEmpty(),
                 MockMvcResultMatchers.jsonPath("$.users.[1].reward_point").isNumber(),
-                MockMvcResultMatchers.jsonPath("$.users.[1].social_login").isArray(),
                 MockMvcResultMatchers.jsonPath("$.users.[2].name").value(userCreateRequest1.getName()),
                 MockMvcResultMatchers.jsonPath("$.users.[2].user_id").value(userCreateRequest1.getUserId()),
                 MockMvcResultMatchers.jsonPath("$.users.[2].phone_number").value(userCreateRequest1.getPhoneNumber()),
                 MockMvcResultMatchers.jsonPath("$.users.[2].character").isString(),
                 MockMvcResultMatchers.jsonPath("$.users.[2].created_at").isNotEmpty(),
-                MockMvcResultMatchers.jsonPath("$.users.[2].reward_point").isNumber(),
-                MockMvcResultMatchers.jsonPath("$.users.[2].social_login").isArray()
+                MockMvcResultMatchers.jsonPath("$.users.[2].reward_point").isNumber()
         ).andDo(MockMvcResultHandlers.print());
 
     }
@@ -1928,7 +1923,6 @@ public class UserAcceptanceTest{
                 MockMvcResultMatchers.jsonPath("$.users.[0].character").isString(),
                 MockMvcResultMatchers.jsonPath("$.users.[0].created_at").isNotEmpty(),
                 MockMvcResultMatchers.jsonPath("$.users.[0].reward_point").isNumber(),
-                MockMvcResultMatchers.jsonPath("$.users.[0].social_login").isArray(),
                 MockMvcResultMatchers.jsonPath("$.users.[1].id").isNumber(),
                 MockMvcResultMatchers.jsonPath("$.users.[1].name").value(userCreateRequest3.getName()),
                 MockMvcResultMatchers.jsonPath("$.users.[1].user_id").value(userCreateRequest3.getUserId()),
@@ -1936,14 +1930,12 @@ public class UserAcceptanceTest{
                 MockMvcResultMatchers.jsonPath("$.users.[1].character").isString(),
                 MockMvcResultMatchers.jsonPath("$.users.[1].created_at").isNotEmpty(),
                 MockMvcResultMatchers.jsonPath("$.users.[1].reward_point").isNumber(),
-                MockMvcResultMatchers.jsonPath("$.users.[1].social_login").isArray(),
                 MockMvcResultMatchers.jsonPath("$.users.[2].name").value(userCreateRequest1.getName()),
                 MockMvcResultMatchers.jsonPath("$.users.[2].user_id").value(userCreateRequest1.getUserId()),
                 MockMvcResultMatchers.jsonPath("$.users.[2].phone_number").value(userCreateRequest1.getPhoneNumber()),
                 MockMvcResultMatchers.jsonPath("$.users.[2].character").isString(),
                 MockMvcResultMatchers.jsonPath("$.users.[2].created_at").isNotEmpty(),
-                MockMvcResultMatchers.jsonPath("$.users.[2].reward_point").isNumber(),
-                MockMvcResultMatchers.jsonPath("$.users.[2].social_login").isArray()
+                MockMvcResultMatchers.jsonPath("$.users.[2].reward_point").isNumber()
         ).andDo(MockMvcResultHandlers.print());
 
     }

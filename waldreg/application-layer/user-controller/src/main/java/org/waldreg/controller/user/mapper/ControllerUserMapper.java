@@ -29,7 +29,6 @@ public class ControllerUserMapper{
                 .character(userDto.getCharacter())
                 .createdAt(userDto.getCreatedAt())
                 .rewardPoint(userDto.getRewardPoint())
-                .socialLogin(userDto.getSocialLogin())
                 .build();
     }
 
@@ -54,7 +53,6 @@ public class ControllerUserMapper{
                     .character(userDto.getCharacter())
                     .createdAt(userDto.getCreatedAt())
                     .rewardPoint(userDto.getRewardPoint())
-                    .socialLogin(userDto.getSocialLogin())
                     .build());
         }
         return userResponseList;
