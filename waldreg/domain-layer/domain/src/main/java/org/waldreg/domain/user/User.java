@@ -12,8 +12,8 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
-import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import org.waldreg.domain.character.Character;
 import org.waldreg.domain.rewardtag.RewardTagWrapper;
@@ -27,7 +27,7 @@ public final class User{
     @Column(name = "USER_ID")
     private Integer id;
 
-    @OneToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "CHARACTER_ID", nullable = false)
     private Character character;
 
