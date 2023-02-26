@@ -6,5 +6,4 @@ import org.waldreg.domain.user.User;
 
 @Repository
 public interface JpaRewardUserRepository extends JpaRepository<User, Integer>{
-
 }
