@@ -13,7 +13,7 @@ public interface JpaAttendanceUserRepository extends JpaRepository<AttendanceUse
 
     @Modifying
     @Query("delete from AttendanceUser as au where au.user.id = :id")
-    void deleteByUsersId(@Param("id") int id);
+    void deleteByUserId(@Param("id") int id);
 
     boolean existsByUserId(int id);
 

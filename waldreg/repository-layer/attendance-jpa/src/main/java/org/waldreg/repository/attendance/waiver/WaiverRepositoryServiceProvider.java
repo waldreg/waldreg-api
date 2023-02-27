@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 import org.waldreg.attendance.type.AttendanceType;
@@ -15,15 +16,15 @@ import org.waldreg.domain.waiver.Waiver;
 import org.waldreg.repository.attendance.repository.JpaAttendanceRepository;
 import org.waldreg.repository.attendance.repository.JpaAttendanceTypeRewardRepository;
 import org.waldreg.repository.attendance.repository.JpaAttendanceUserRepository;
+import org.waldreg.repository.attendance.repository.JpaUserRepository;
 import org.waldreg.repository.attendance.waiver.mapper.WaiverMapper;
-import org.waldreg.repository.attendance.waiver.repository.JpaWaiverUserRepository;
 import org.waldreg.repository.attendance.waiver.repository.JpaWaiverRepository;
 
 @Repository
 public class WaiverRepositoryServiceProvider implements WaiverRepository{
 
     private final JpaWaiverRepository jpaWaiverRepository;
-    private final JpaWaiverUserRepository jpaUserRepository;
+    private final JpaUserRepository jpaUserRepository;
     private final JpaAttendanceUserRepository jpaAttendanceUserRepository;
     private final JpaAttendanceRepository jpaAttendanceRepository;
     private final JpaAttendanceTypeRewardRepository jpaAttendanceTypeRewardRepository;
@@ -31,7 +32,7 @@ public class WaiverRepositoryServiceProvider implements WaiverRepository{
 
     @Autowired
     WaiverRepositoryServiceProvider(JpaWaiverRepository jpaWaiverRepository,
-            JpaWaiverUserRepository jpaUserRepository,
+            @Qualifier("attendanceJpaUserRepository") JpaUserRepository jpaUserRepository,
             JpaAttendanceUserRepository jpaAttendanceUserRepository,
             JpaAttendanceRepository jpaAttendanceRepository,
             JpaAttendanceTypeRewardRepository jpaAttendanceTypeRewardRepository,

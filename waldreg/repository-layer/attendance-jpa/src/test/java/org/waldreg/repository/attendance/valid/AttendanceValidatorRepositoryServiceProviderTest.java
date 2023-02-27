@@ -10,6 +10,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.TestPropertySource;
@@ -21,10 +22,10 @@ import org.waldreg.domain.character.Character;
 import org.waldreg.domain.user.User;
 import org.waldreg.repository.attendance.JpaAttendanceTestInitializer;
 import org.waldreg.repository.attendance.helper.TestJpaCharacterRepository;
-import org.waldreg.repository.attendance.helper.TestJpaUserRepository;
 import org.waldreg.repository.attendance.repository.JpaAttendanceRepository;
 import org.waldreg.repository.attendance.repository.JpaAttendanceTypeRewardRepository;
 import org.waldreg.repository.attendance.repository.JpaAttendanceUserRepository;
+import org.waldreg.repository.attendance.repository.JpaUserRepository;
 
 @DataJpaTest
 @ContextConfiguration(classes = {JpaAttendanceTestInitializer.class, AttendanceValidatorRepositoryServiceProvider.class})
@@ -44,7 +45,8 @@ class AttendanceValidatorRepositoryServiceProviderTest{
     private JpaAttendanceTypeRewardRepository jpaAttendanceTypeRewardRepository;
 
     @Autowired
-    private TestJpaUserRepository jpaUserRepository;
+    @Qualifier("attendanceJpaUserRepository")
+    private JpaUserRepository jpaUserRepository;
 
     @Autowired
     private TestJpaCharacterRepository jpaCharacterRepository;

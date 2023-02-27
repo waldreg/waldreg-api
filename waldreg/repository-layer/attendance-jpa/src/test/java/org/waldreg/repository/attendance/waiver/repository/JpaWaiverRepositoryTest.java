@@ -8,12 +8,14 @@ import javax.persistence.EntityManager;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.test.context.TestPropertySource;
 import org.waldreg.domain.character.Character;
 import org.waldreg.domain.user.User;
 import org.waldreg.domain.waiver.Waiver;
 import org.waldreg.repository.attendance.helper.TestJpaCharacterRepository;
+import org.waldreg.repository.attendance.repository.JpaUserRepository;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -22,7 +24,8 @@ import static org.junit.jupiter.api.Assertions.*;
 class JpaWaiverRepositoryTest{
 
     @Autowired
-    private JpaWaiverUserRepository jpaUserRepository;
+    @Qualifier("attendanceJpaUserRepository")
+    private JpaUserRepository jpaUserRepository;
 
     @Autowired
     private JpaWaiverRepository jpaWaiverRepository;

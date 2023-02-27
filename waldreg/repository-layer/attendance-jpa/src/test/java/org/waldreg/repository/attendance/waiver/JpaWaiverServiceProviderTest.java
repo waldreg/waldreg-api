@@ -14,6 +14,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.TestPropertySource;
@@ -24,14 +25,13 @@ import org.waldreg.domain.attendance.AttendanceTypeReward;
 import org.waldreg.domain.attendance.AttendanceUser;
 import org.waldreg.domain.character.Character;
 import org.waldreg.domain.user.User;
-import org.waldreg.domain.waiver.Waiver;
 import org.waldreg.repository.attendance.JpaAttendanceTestInitializer;
 import org.waldreg.repository.attendance.helper.TestJpaCharacterRepository;
 import org.waldreg.repository.attendance.repository.JpaAttendanceRepository;
 import org.waldreg.repository.attendance.repository.JpaAttendanceTypeRewardRepository;
 import org.waldreg.repository.attendance.repository.JpaAttendanceUserRepository;
+import org.waldreg.repository.attendance.repository.JpaUserRepository;
 import org.waldreg.repository.attendance.waiver.mapper.WaiverMapper;
-import org.waldreg.repository.attendance.waiver.repository.JpaWaiverUserRepository;
 
 @DataJpaTest
 @ContextConfiguration(classes = {JpaAttendanceTestInitializer.class, WaiverRepositoryServiceProvider.class, WaiverMapper.class})
@@ -42,7 +42,8 @@ class JpaWaiverServiceProviderTest{
     private WaiverRepositoryServiceProvider serviceProvider;
 
     @Autowired
-    private JpaWaiverUserRepository jpaWaiverUserRepository;
+    @Qualifier("attendanceJpaUserRepository")
+    private JpaUserRepository jpaWaiverUserRepository;
 
     @Autowired
     private TestJpaCharacterRepository jpaCharacterRepository;
