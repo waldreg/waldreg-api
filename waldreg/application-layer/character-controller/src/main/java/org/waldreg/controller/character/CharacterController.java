@@ -79,7 +79,7 @@ public class CharacterController{
     @Authenticating
     @PermissionVerifying("Character manager")
     @PatchMapping("/character/{character-name}")
-    public void updateCharacter(@PathVariable("character-name") String characterName, @RequestBody CharacterRequest characterRequest){
+    public void updateCharacter(@PathVariable("character-name") String characterName, @RequestBody @Validated CharacterRequest characterRequest){
         characterManager.updateCharacter(characterName, controllerCharacterMapper.characterRequestToCharacterDto(characterRequest));
     }
 

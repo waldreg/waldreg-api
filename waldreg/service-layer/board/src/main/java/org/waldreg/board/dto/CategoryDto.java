@@ -1,20 +1,18 @@
 package org.waldreg.board.dto;
 
-import java.util.List;
-
 public class CategoryDto{
 
     private int id;
     private String categoryName;
 
-    private List<BoardDto> boardDtoList;
+    private Integer boardCount;
 
     private CategoryDto(){}
 
     private CategoryDto(Builder builder){
         this.id = builder.id;
         this.categoryName = builder.categoryName;
-        this.boardDtoList = builder.boardDtoList;
+        this.boardCount = builder.boardCount;
     }
 
     public static Builder builder(){
@@ -25,19 +23,23 @@ public class CategoryDto{
         return id;
     }
 
+    public void setCategoryName(String categoryName){
+        this.categoryName = categoryName;
+    }
+
     public String getCategoryName(){
         return categoryName;
     }
 
-    public List<BoardDto> getBoardDtoList(){
-        return boardDtoList;
+    public Integer getBoardCount(){
+        return boardCount;
     }
 
     public final static class Builder{
 
         private int id;
         private String categoryName;
-        private List<BoardDto> boardDtoList;
+        private Integer boardCount;
 
         private Builder(){}
 
@@ -51,8 +53,8 @@ public class CategoryDto{
             return this;
         }
 
-        public Builder boardDtoList(List<BoardDto> boardDtoList){
-            this.boardDtoList = boardDtoList;
+        public Builder boardCount(Integer boardCount){
+            this.boardCount = boardCount;
             return this;
         }
 

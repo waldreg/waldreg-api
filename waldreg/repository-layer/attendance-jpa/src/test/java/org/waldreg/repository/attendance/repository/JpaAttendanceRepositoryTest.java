@@ -1,5 +1,9 @@
 package org.waldreg.repository.attendance.repository;
 
+import static org.junit.jupiter.api.Assertions.assertAll;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
@@ -8,6 +12,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.test.context.TestPropertySource;
 import org.waldreg.attendance.type.AttendanceType;
@@ -17,8 +22,7 @@ import org.waldreg.domain.attendance.AttendanceUser;
 import org.waldreg.domain.character.Character;
 import org.waldreg.domain.rewardtag.RewardTag;
 import org.waldreg.domain.user.User;
-
-import static org.junit.jupiter.api.Assertions.*;
+import org.waldreg.repository.attendance.helper.TestJpaCharacterRepository;
 
 @DataJpaTest
 @TestPropertySource("classpath:h2-application.properties")
@@ -28,7 +32,8 @@ class JpaAttendanceRepositoryTest{
     private JpaAttendanceUserRepository jpaAttendanceUserRepository;
 
     @Autowired
-    private TestJpaUserRepository jpaUserRepository;
+    @Qualifier("attendanceJpaUserRepository")
+    private JpaUserRepository jpaUserRepository;
 
     @Autowired
     private JpaAttendanceRepository jpaAttendanceRepository;
@@ -87,7 +92,7 @@ class JpaAttendanceRepositoryTest{
         User saved = jpaUserRepository.save(user);
         AttendanceUser expected = jpaAttendanceUserRepository.saveAndFlush(attendanceUser);
 
-        jpaAttendanceUserRepository.deleteByUsersId(saved.getId());
+        jpaAttendanceUserRepository.deleteByUserId(saved.getId());
 
         entityManager.clear();
 
@@ -254,6 +259,48 @@ class JpaAttendanceRepositoryTest{
                 () -> assertEquals(saved.getRewardTagTitle(), result.getRewardTag().getRewardTagTitle()),
                 () -> assertEquals(saved.getRewardPoint(), result.getRewardTag().getRewardPoint())
         );
+    }
+
+    @Test
+    @DisplayName("유저의 id로 AttendanceUser 존재 확인 테스트")
+    void REGISTER_ATTENDANCE_USER_EXIST_CHECK_BY_USER_ID_TEST(){
+        // given
+        User user = getUser("hello");
+        AttendanceUser attendanceUser = AttendanceUser.builder()
+                .user(user)
+                .build();
+
+        // when
+        jpaUserRepository.save(user);
+        AttendanceUser expected = jpaAttendanceUserRepository.saveAndFlush(attendanceUser);
+
+        entityManager.clear();
+
+        boolean result = jpaAttendanceUserRepository.existsByUserId(expected.getAttendanceUserId());
+
+        // then
+        assertTrue(result);
+    }
+
+    @Test
+    @DisplayName("유저의 id로 AttendanceUser 조회 테스트")
+    void REGISTER_ATTENDANCE_USER_AND_FIND_BY_USER_ID_TEST(){
+        // given
+        User user = getUser("hello");
+        AttendanceUser attendanceUser = AttendanceUser.builder()
+                .user(user)
+                .build();
+
+        // when
+        jpaUserRepository.save(user);
+        AttendanceUser expected = jpaAttendanceUserRepository.saveAndFlush(attendanceUser);
+
+        entityManager.clear();
+
+        AttendanceUser result = jpaAttendanceUserRepository.findByUserId(user.getId()).get();
+
+        // then
+        assertAttendanceUser(expected, result);
     }
 
     private User getUser(String userId){

@@ -28,7 +28,10 @@ public final class Reaction{
     @JoinColumn(name = "BOARD_ID", nullable = false)
     private Board board;
 
-    @OneToMany(mappedBy = "reaction", fetch = FetchType.LAZY, orphanRemoval = true, cascade = CascadeType.ALL)
+    @Column(name = "REACTION_TYPE")
+    private String type;
+
+    @OneToMany(mappedBy = "reaction", fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
     private List<ReactionUser> reactionUserList;
 
     private Reaction(){}
@@ -38,12 +41,24 @@ public final class Reaction{
         this.reactionUserList = builder.reactionUserList;
     }
 
+    public Integer getId(){
+        return id;
+    }
+
     public Board getBoard(){
         return board;
     }
 
+    public String getType(){
+        return type;
+    }
+
     public List<ReactionUser> getReactionUserList(){
         return reactionUserList;
+    }
+
+    public void setReactionUserList(List<ReactionUser> reactionUserList){
+        this.reactionUserList = reactionUserList;
     }
 
     public static Builder builder(){
@@ -53,6 +68,7 @@ public final class Reaction{
     public static final class Builder{
 
         private Board board;
+        private String type;
 
         private List<ReactionUser> reactionUserList;
 
@@ -62,6 +78,11 @@ public final class Reaction{
 
         public Builder board(Board board){
             this.board = board;
+            return this;
+        }
+
+        public Builder type(String type){
+            this.type = type;
             return this;
         }
 

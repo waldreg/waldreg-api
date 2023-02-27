@@ -27,7 +27,7 @@ public final class Comment{
     @JoinColumn(name = "BOARD_ID", nullable = false)
     private Board board;
 
-    @OneToOne(fetch = FetchType.LAZY, optional = false)
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "USER_ID", nullable = false)
     private User user;
 
@@ -76,6 +76,22 @@ public final class Comment{
 
     public String getContent(){
         return content;
+    }
+
+    public void setContent(String content){
+        this.content = content;
+    }
+
+    public void setBoard(Board board){
+        this.board = board;
+    }
+
+    public void setUser(User user){
+        this.user = user;
+    }
+
+    public void setLastModifiedAt(LocalDateTime lastModifiedAt){
+        this.lastModifiedAt = lastModifiedAt;
     }
 
     public static final class Builder{
