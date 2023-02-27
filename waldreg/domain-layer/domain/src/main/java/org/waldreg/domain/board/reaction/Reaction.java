@@ -38,6 +38,7 @@ public final class Reaction{
 
     private Reaction(Builder builder){
         this.board = builder.board;
+        this.type = builder.type;
         this.reactionUserList = builder.reactionUserList;
     }
 
@@ -69,7 +70,6 @@ public final class Reaction{
 
         private Board board;
         private String type;
-
         private List<ReactionUser> reactionUserList;
 
         private Builder(){
