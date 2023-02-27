@@ -1,4 +1,7 @@
-package org.waldreg.repository.attendance.schedule;
+package org.waldreg.repository.attendance.valid;
+
+import static org.junit.jupiter.api.Assertions.assertAll;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -10,7 +13,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.TestPropertySource;
-import org.springframework.transaction.annotation.Transactional;
 import org.waldreg.attendance.type.AttendanceType;
 import org.waldreg.domain.attendance.Attendance;
 import org.waldreg.domain.attendance.AttendanceTypeReward;
@@ -24,15 +26,13 @@ import org.waldreg.repository.attendance.repository.JpaAttendanceRepository;
 import org.waldreg.repository.attendance.repository.JpaAttendanceTypeRewardRepository;
 import org.waldreg.repository.attendance.repository.JpaAttendanceUserRepository;
 
-import static org.junit.jupiter.api.Assertions.*;
-
 @DataJpaTest
-@ContextConfiguration(classes = {JpaAttendanceTestInitializer.class, AttendanceScheduleRewardRepositoryServiceProvider.class})
+@ContextConfiguration(classes = {JpaAttendanceTestInitializer.class, AttendanceValidatorRepositoryServiceProvider.class})
 @TestPropertySource("classpath:h2-application.properties")
-class AttendanceScheduleRewardRepositoryServiceProviderTest{
+class AttendanceValidatorRepositoryServiceProviderTest{
 
     @Autowired
-    private AttendanceScheduleRewardRepositoryServiceProvider serviceProvider;
+    private AttendanceValidatorRepositoryServiceProvider serviceProvider;
 
     @Autowired
     private JpaAttendanceRepository jpaAttendanceRepository;
@@ -61,8 +61,8 @@ class AttendanceScheduleRewardRepositoryServiceProviderTest{
     }
 
     @Test
-    @DisplayName("특정 유저에게 상, 벌점 부여 테스트")
-    void ASSIGN_REWARD_TO_SPECIFIC_USER_TEST(){
+    @DisplayName("출석 확정 테스트")
+    void CONFIRM_ATTENDANCE_TEST(){
         // given
         User user1 = getUser("hello");
         AttendanceUser attendanceUser1 = jpaAttendanceUserRepository.save(AttendanceUser.builder()
@@ -80,7 +80,7 @@ class AttendanceScheduleRewardRepositoryServiceProviderTest{
         entityManager.clear();
 
         // when
-        serviceProvider.assignRewardToUser(user1.getId(), AttendanceType.ATTENDANCED);
+        serviceProvider.confirm(user1.getId());
 
         Attendance result = jpaAttendanceRepository.findSpecificBetweenAttendanceDate(user1.getId(), LocalDate.now(), LocalDate.now()).get(0);
 

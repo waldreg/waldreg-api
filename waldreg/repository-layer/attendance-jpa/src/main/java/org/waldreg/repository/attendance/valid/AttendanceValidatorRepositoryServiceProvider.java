@@ -1,25 +1,25 @@
-package org.waldreg.repository.attendance.schedule;
+package org.waldreg.repository.attendance.valid;
 
 import java.time.LocalDate;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
-import org.waldreg.attendance.schedule.spi.AttendanceScheduleRewardRepository;
 import org.waldreg.attendance.type.AttendanceType;
+import org.waldreg.attendance.valid.spi.AttendanceValidatorRepository;
 import org.waldreg.domain.attendance.Attendance;
 import org.waldreg.domain.attendance.AttendanceTypeReward;
 import org.waldreg.repository.attendance.repository.JpaAttendanceRepository;
 import org.waldreg.repository.attendance.repository.JpaAttendanceTypeRewardRepository;
 
 @Repository
-public class AttendanceScheduleRewardRepositoryServiceProvider implements AttendanceScheduleRewardRepository{
+public class AttendanceValidatorRepositoryServiceProvider implements AttendanceValidatorRepository{
 
     private final JpaAttendanceRepository jpaAttendanceRepository;
     private final JpaAttendanceTypeRewardRepository jpaAttendanceTypeRewardRepository;
 
     @Autowired
-    AttendanceScheduleRewardRepositoryServiceProvider(JpaAttendanceRepository jpaAttendanceRepository,
+    AttendanceValidatorRepositoryServiceProvider(JpaAttendanceRepository jpaAttendanceRepository,
             JpaAttendanceTypeRewardRepository jpaAttendanceTypeRewardRepository){
         this.jpaAttendanceRepository = jpaAttendanceRepository;
         this.jpaAttendanceTypeRewardRepository = jpaAttendanceTypeRewardRepository;
@@ -27,9 +27,15 @@ public class AttendanceScheduleRewardRepositoryServiceProvider implements Attend
 
     @Override
     @Transactional
-    public void assignRewardToUser(int id, AttendanceType attendanceType){
+    public void confirm(int id){
+        AttendanceTypeReward attendancedTypeReward = getAttendancedAttendanceTypeReward();
         Attendance attendance = getAttendance(id);
-        attendance.setAttendanceType(getAttendanceTypeReward(attendanceType));
+        attendance.setAttendanceType(attendancedTypeReward);
+    }
+
+    private AttendanceTypeReward getAttendancedAttendanceTypeReward(){
+        return jpaAttendanceTypeRewardRepository.findByName(AttendanceType.ATTENDANCED.toString())
+                .orElseThrow(() -> {throw new IllegalStateException("Cannot find AttendanceTypeReward named \"" + AttendanceType.ATTENDANCED + "\"");});
     }
 
     private Attendance getAttendance(int id){
@@ -43,18 +49,6 @@ public class AttendanceScheduleRewardRepositoryServiceProvider implements Attend
         if(attendanceList.size() != 1){
             throw new IllegalStateException("Cannot find Attendance user.id \"" + id + "\"");
         }
-    }
-
-    @Override
-    @Transactional(readOnly = true)
-    public boolean isRewardTagPresent(AttendanceType attendanceType){
-        AttendanceTypeReward attendanceTypeReward = getAttendanceTypeReward(attendanceType);
-        return attendanceTypeReward.getRewardTag() != null;
-    }
-
-    private AttendanceTypeReward getAttendanceTypeReward(AttendanceType attendanceType){
-        return jpaAttendanceTypeRewardRepository.findByName(attendanceType.toString())
-                .orElseThrow(() -> {throw new IllegalStateException("Cannot find AttendanceTypeReward named \"" + attendanceType + "\"");});
     }
 
 }
