@@ -8,6 +8,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.test.context.TestPropertySource;
 import org.waldreg.attendance.type.AttendanceType;
@@ -18,7 +19,6 @@ import org.waldreg.domain.character.Character;
 import org.waldreg.domain.rewardtag.RewardTag;
 import org.waldreg.domain.user.User;
 import org.waldreg.repository.attendance.helper.TestJpaCharacterRepository;
-import org.waldreg.repository.attendance.helper.TestJpaUserRepository;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -30,7 +30,8 @@ class JpaAttendanceRepositoryTest{
     private JpaAttendanceUserRepository jpaAttendanceUserRepository;
 
     @Autowired
-    private TestJpaUserRepository jpaUserRepository;
+    @Qualifier("attendanceJpaUserRepository")
+    private JpaUserRepository jpaUserRepository;
 
     @Autowired
     private JpaAttendanceRepository jpaAttendanceRepository;
@@ -89,7 +90,7 @@ class JpaAttendanceRepositoryTest{
         User saved = jpaUserRepository.save(user);
         AttendanceUser expected = jpaAttendanceUserRepository.saveAndFlush(attendanceUser);
 
-        jpaAttendanceUserRepository.deleteByUsersId(saved.getId());
+        jpaAttendanceUserRepository.deleteByUserId(saved.getId());
 
         entityManager.clear();
 
