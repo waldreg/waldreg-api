@@ -1,9 +1,9 @@
-package org.waldreg.repository.reward;
+package org.waldreg.repository.teambuilding;
 
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.domain.EntityScan;
 
 @SpringBootApplication
 @EntityScan("org.waldreg.domain.*")
-public class JpaRewardTestInitializer{
+class JpaTeamBuildingTestInitializer{
 }

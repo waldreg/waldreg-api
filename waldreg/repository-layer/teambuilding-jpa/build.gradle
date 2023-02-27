@@ -23,12 +23,11 @@ dependencyManagement {
 }
 
 dependencies {
-    implementation project(':service-layer:attendance')
     implementation project(':domain-layer:domain')
+    implementation project(':service-layer:teambuilding')
 
     implementation 'org.springframework.boot:spring-boot-starter'
     implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
-
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
 
     testImplementation 'com.h2database:h2:1.4.200'

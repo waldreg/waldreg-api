@@ -68,4 +68,6 @@ include 'repository-layer:schedule-jpa'
 findProject(':repository-layer:schedule-jpa')?.name = 'schedule-jpa'
 include 'repository-layer:attendance-jpa'
 findProject(':repository-layer:attendance-jpa')?.name = 'attendance-jpa'
+include 'repository-layer:teambuilding-jpa'
+findProject(':repository-layer:teambuilding-jpa')?.name = 'teambuilding-jpa'
 
