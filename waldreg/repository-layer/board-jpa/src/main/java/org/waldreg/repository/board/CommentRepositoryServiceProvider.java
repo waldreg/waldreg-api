@@ -3,6 +3,7 @@ package org.waldreg.repository.board;
 import java.time.LocalDateTime;
 import java.util.List;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 import org.waldreg.board.comment.spi.CommentRepository;
 import org.waldreg.board.dto.CommentDto;
 import org.waldreg.domain.board.Board;
@@ -29,6 +30,7 @@ public class CommentRepositoryServiceProvider implements CommentRepository{
     }
 
     @Override
+    @Transactional
     public CommentDto createComment(CommentDto commentDto){
         Comment comment = commentRepositoryMapper.commentDtoToCommentDomain(commentDto);
         comment.setBoard(getBoardById(commentDto.getBoardId()));
@@ -50,23 +52,27 @@ public class CommentRepositoryServiceProvider implements CommentRepository{
     }
 
     @Override
+    @Transactional(readOnly = true)
     public int getCommentMaxIdxByBoardId(int boardId){
         return jpaCommentRepository.getBoardMaxIdxByBoardId(boardId);
     }
 
     @Override
+    @Transactional(readOnly = true)
     public List<CommentDto> inquiryAllCommentByBoardId(int boardId, int startIdx, int endIdx){
         List<Comment> commentList = jpaCommentRepository.findAllByBoardId(boardId, startIdx - 1, endIdx - startIdx + 1);
         return commentRepositoryMapper.commentDomainListToCommentDtoList(commentList);
     }
 
     @Override
+    @Transactional(readOnly = true)
     public CommentDto inquiryCommentById(int commentId){
         Comment comment = getCommentById(commentId);
         return commentRepositoryMapper.commentDomainToCommentDto(comment);
     }
 
     @Override
+    @Transactional
     public void modifyComment(CommentDto commentDto){
         Comment comment = getCommentById(commentDto.getId());
         comment.setContent(commentDto.getContent());
@@ -81,11 +87,13 @@ public class CommentRepositoryServiceProvider implements CommentRepository{
     }
 
     @Override
+    @Transactional(readOnly = true)
     public boolean isExistComment(int commentId){
         return jpaCommentRepository.existsById(commentId);
     }
 
     @Override
+    @Transactional
     public void deleteComment(int id){
         jpaCommentRepository.deleteById(id);
     }
