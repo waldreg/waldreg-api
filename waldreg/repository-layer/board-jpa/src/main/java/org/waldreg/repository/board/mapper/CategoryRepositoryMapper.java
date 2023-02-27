@@ -3,7 +3,6 @@ package org.waldreg.repository.board.mapper;
 import java.util.ArrayList;
 import java.util.List;
 import org.springframework.stereotype.Component;
-import org.waldreg.board.dto.BoardDto;
 import org.waldreg.board.dto.CategoryDto;
 import org.waldreg.domain.board.category.Category;
 

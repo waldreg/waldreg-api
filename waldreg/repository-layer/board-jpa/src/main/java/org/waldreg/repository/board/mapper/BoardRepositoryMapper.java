@@ -1,5 +1,7 @@
 package org.waldreg.repository.board.mapper;
 
+import java.util.ArrayList;
+import java.util.List;
 import org.springframework.stereotype.Component;
 import org.waldreg.board.dto.BoardDto;
 import org.waldreg.board.dto.UserDto;
@@ -18,6 +20,13 @@ public class BoardRepositoryMapper{
                 .build();
     }
 
+    public List<BoardDto> boardDomainListToBoardDtoList(List<Board> boardList){
+        List<BoardDto> boardDtoList = new ArrayList<>();
+        for (Board board : boardList){
+            boardDtoList.add(boardDomainToBoardDto(board));
+        }
+        return boardDtoList;
+    }
     public BoardDto boardDomainToBoardDto(Board board){
         return BoardDto.builder()
                 .id(board.getId())
@@ -34,6 +43,8 @@ public class BoardRepositoryMapper{
                 .views(board.getViews())
                 .build();
     }
+
+
 
     public UserDto userToUserDto(User user){
         return UserDto.builder()

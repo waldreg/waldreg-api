@@ -82,6 +82,18 @@ public final class Comment{
         this.content = content;
     }
 
+    public void setBoard(Board board){
+        this.board = board;
+    }
+
+    public void setUser(User user){
+        this.user = user;
+    }
+
+    public void setLastModifiedAt(LocalDateTime lastModifiedAt){
+        this.lastModifiedAt = lastModifiedAt;
+    }
+
     public static final class Builder{
 
         private Board board;
