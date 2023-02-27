@@ -8,15 +8,12 @@ import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.format.annotation.DateTimeFormat.ISO;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 import org.waldreg.attendance.management.AttendanceManager;
 import org.waldreg.attendance.management.dto.AttendanceDayDto;
 import org.waldreg.attendance.management.dto.AttendanceStatusChangeDto;
@@ -28,7 +25,6 @@ import org.waldreg.controller.attendance.management.request.AttendanceModifyRequ
 import org.waldreg.controller.attendance.management.response.AttendanceCheckResponse;
 import org.waldreg.controller.attendance.management.response.AttendancePerDayResponse;
 import org.waldreg.controller.attendance.management.response.AttendanceUserResponse;
-import org.waldreg.core.template.exception.ExceptionTemplate;
 import org.waldreg.token.aop.annotation.Authenticating;
 import org.waldreg.util.token.DecryptedTokenContextGetter;
 
