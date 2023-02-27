@@ -1,5 +1,9 @@
 package org.waldreg.repository.attendance.repository;
 
+import static org.junit.jupiter.api.Assertions.assertAll;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
@@ -19,8 +23,6 @@ import org.waldreg.domain.character.Character;
 import org.waldreg.domain.rewardtag.RewardTag;
 import org.waldreg.domain.user.User;
 import org.waldreg.repository.attendance.helper.TestJpaCharacterRepository;
-
-import static org.junit.jupiter.api.Assertions.*;
 
 @DataJpaTest
 @TestPropertySource("classpath:h2-application.properties")
