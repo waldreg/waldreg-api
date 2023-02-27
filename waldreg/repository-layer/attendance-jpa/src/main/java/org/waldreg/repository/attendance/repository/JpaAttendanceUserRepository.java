@@ -15,10 +15,8 @@ public interface JpaAttendanceUserRepository extends JpaRepository<AttendanceUse
     @Query("delete from AttendanceUser as au where au.user.id = :id")
     void deleteByUsersId(@Param("id") int id);
 
-    @Query("select case when count(u) > 0 then true else false end from AttendanceUser as u where u.user.id = :usersId")
-    boolean existsByUsersId(@Param("usersId") int usersId); // do test
+    boolean existsByUserId(int id);
 
-    @Query("select u from AttendanceUser as u where u.user.id = :usersId")
-    Optional<AttendanceUser> findByUsersId(@Param("usersId") int usersId); // do test
+    Optional<AttendanceUser> findByUserId(int id);
 
 }

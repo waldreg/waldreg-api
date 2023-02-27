@@ -10,7 +10,6 @@ import org.waldreg.attendance.type.AttendanceType;
 import org.waldreg.attendance.waiver.dto.WaiverDto;
 import org.waldreg.attendance.waiver.spi.WaiverRepository;
 import org.waldreg.domain.attendance.Attendance;
-import org.waldreg.domain.attendance.AttendanceTypeReward;
 import org.waldreg.domain.user.User;
 import org.waldreg.domain.waiver.Waiver;
 import org.waldreg.repository.attendance.repository.JpaAttendanceRepository;
@@ -58,7 +57,7 @@ public class WaiverRepositoryServiceProvider implements WaiverRepository{
     @Override
     @Transactional(readOnly = true)
     public boolean isAttendanceTarget(int id){
-        return jpaAttendanceUserRepository.existsByUsersId(id);
+        return jpaAttendanceUserRepository.existsByUserId(id);
     }
 
     @Override
@@ -86,7 +85,7 @@ public class WaiverRepositoryServiceProvider implements WaiverRepository{
         Waiver waiver = jpaWaiverRepository.findById(waiverId).orElseThrow(
                 () -> {throw new IllegalStateException("Cannot find waiver id \"" + waiverId + "\"");}
         );
-        createIfDoesNotAttendance(waiver);
+        createAttendanceUserIfDoesNotStaged(waiver);
         Attendance attendance = jpaAttendanceRepository.findSpecificBetweenAttendanceDate(waiver.getWaiverUser().getId(), waiver.getWaiverDate(), waiver.getWaiverDate()).get(0);
         attendance.setAttendanceType(jpaAttendanceTypeRewardRepository.findByName(attendanceType.toString())
                 .orElseThrow(
@@ -94,13 +93,13 @@ public class WaiverRepositoryServiceProvider implements WaiverRepository{
                 ));
     }
 
-    private void createIfDoesNotAttendance(Waiver waiver){
+    private void createAttendanceUserIfDoesNotStaged(Waiver waiver){
         List<Attendance> attendanceList = jpaAttendanceRepository.findSpecificBetweenAttendanceDate(waiver.getWaiverUser().getId(), waiver.getWaiverDate(), waiver.getWaiverDate());
         if(attendanceList.isEmpty()){
             jpaAttendanceRepository.save(
                     Attendance.builder()
                             .user(jpaAttendanceUserRepository
-                                    .findByUsersId(waiver.getWaiverUser().getId())
+                                    .findByUserId(waiver.getWaiverUser().getId())
                                     .orElseThrow(() -> {throw new IllegalStateException("Cannot find user id \"" + waiver.getWaiverUser().getId() + "\"");}))
                             .attendanceDate(waiver.getWaiverDate())
                             .attendanceType(jpaAttendanceTypeRewardRepository.findByName(AttendanceType.ABSENCE.toString())
