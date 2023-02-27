@@ -4,11 +4,13 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.List;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 
 public final class CharacterRequest{
 
     @NotBlank(message = "CHARACTER-413 character_name cannot be blank")
     @JsonProperty("character_name")
+    @Size(max = 25, message = "CHARACTER-418 character_name’s maximum size is 25")
     private String characterName;
 
     @NotNull(message = "CHARACTER-414 permissions cannot be null")
