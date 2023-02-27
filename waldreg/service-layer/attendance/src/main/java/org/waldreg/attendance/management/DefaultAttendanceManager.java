@@ -38,9 +38,9 @@ public class DefaultAttendanceManager implements AttendanceManager, AttendanceTa
 
     @Override
     public void registerAttendanceTarget(int id){
-        attendanceRepository.createNewAttendanceCalendarIfAbsent(LocalDate.now());
         throwIfCannotFindUser(id);
         attendanceRepository.registerAttendanceTarget(id);
+        attendanceRepository.createNewAttendanceCalendarIfAbsent(LocalDate.now());
     }
 
     @Override

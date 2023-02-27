@@ -6,7 +6,7 @@ import org.waldreg.domain.user.User;
 import org.waldreg.domain.waiver.Waiver;
 
 @Component
-public class WaiverMapper{
+public final class WaiverMapper{
 
     public Waiver waiverDtoToWaiver(WaiverDto waiverDto, User user){
         return Waiver.builder()
