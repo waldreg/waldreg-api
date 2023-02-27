@@ -679,6 +679,7 @@ public class UserServiceTest{
         Mockito.when(userRepository.readUserById(Mockito.anyInt())).thenReturn(createRequest);
         //then
         Assertions.assertDoesNotThrow(() -> userManager.deleteById(id));
+        Assertions.assertTrue(userCharacterRepository.isExistCharacterName("Guest"));
     }
 
 }

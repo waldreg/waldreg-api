@@ -60,7 +60,7 @@ public class JpaTeamBuildingRepositoryTest{
 
         //when
         TeamBuilding storedTeamBuilding = jpaTeamBuildingRepository.saveAndFlush(teamBuilding);
-        List<Team> teamList = createTeamList(userList,storedTeamBuilding);
+        List<Team> teamList = createTeamList(userList, storedTeamBuilding);
         storedTeamBuilding.setTeamList(teamList);
         entityManager.flush();
         entityManager.clear();
@@ -118,22 +118,21 @@ public class JpaTeamBuildingRepositoryTest{
         entityManager.clear();
         TeamBuilding teamBuilding2 = createTeamBuilding(title2);
         TeamBuilding storedTeamBuilding2 = jpaTeamBuildingRepository.saveAndFlush(teamBuilding2);
-        List<Team> teamList2 = createTeamList(userList,storedTeamBuilding2);
+        List<Team> teamList2 = createTeamList(userList, storedTeamBuilding2);
         storedTeamBuilding2.setTeamList(teamList2);
         entityManager.flush();
         entityManager.clear();
         TeamBuilding teamBuilding3 = createTeamBuilding(title3);
         TeamBuilding storedTeamBuilding3 = jpaTeamBuildingRepository.saveAndFlush(teamBuilding3);
-        List<Team> teamList3 = createTeamList(userList,storedTeamBuilding3);
+        List<Team> teamList3 = createTeamList(userList, storedTeamBuilding3);
         storedTeamBuilding3.setTeamList(teamList3);
         entityManager.flush();
         entityManager.clear();
-        List<TeamBuilding> result = jpaTeamBuildingRepository.findAll(startIdx-1,endIdx-startIdx+1);
-        System.out.println("!!!!!"+teamBuilding.getTeamList().get(0).getTeamUserList().get(0).getUser().getUserId());
+        List<TeamBuilding> result = jpaTeamBuildingRepository.findAll(startIdx - 1, endIdx - startIdx + 1);
 
         //then
         Assertions.assertAll(
-                () -> Assertions.assertEquals(2,result.size()),
+                () -> Assertions.assertEquals(2, result.size()),
                 () -> Assertions.assertEquals(storedTeamBuilding3.getTeamBuildingId(), result.get(0).getTeamBuildingId()),
                 () -> Assertions.assertEquals(storedTeamBuilding3.getTeamBuildingTitle(), result.get(0).getTeamBuildingTitle()),
                 () -> Assertions.assertEquals(storedTeamBuilding3.getLastModifiedAt().withNano(0), result.get(0).getLastModifiedAt().withNano(0)),
@@ -197,11 +196,12 @@ public class JpaTeamBuildingRepositoryTest{
         //when
         TeamBuilding teamBuilding = createTeamBuilding(title);
         TeamBuilding storedTeamBuilding = jpaTeamBuildingRepository.saveAndFlush(teamBuilding);
-        List<Team> teamList = createTeamList(userList,storedTeamBuilding);
+        List<Team> teamList = createTeamList(userList, storedTeamBuilding);
         storedTeamBuilding.setTeamList(teamList);
         entityManager.flush();
         entityManager.clear();
         storedTeamBuilding.setTeamBuildingTitle(modifiedTitle);
+        jpaTeamBuildingRepository.save(storedTeamBuilding);
         entityManager.flush();
         entityManager.clear();
         TeamBuilding result = jpaTeamBuildingRepository.findById(storedTeamBuilding.getTeamBuildingId()).get();
@@ -248,14 +248,18 @@ public class JpaTeamBuildingRepositoryTest{
 
         //when
         TeamBuilding storedTeamBuilding = jpaTeamBuildingRepository.saveAndFlush(teamBuilding);
-        List<Team> teamList = createTeamList(userList,storedTeamBuilding);
+        List<Team> teamList = createTeamList(userList, storedTeamBuilding);
         storedTeamBuilding.setTeamList(teamList);
         entityManager.flush();
         entityManager.clear();
         jpaTeamBuildingRepository.deleteById(storedTeamBuilding.getTeamBuildingId());
 
         //then
-        Assertions.assertFalse(() -> jpaTeamBuildingRepository.existsById(storedTeamBuilding.getTeamBuildingId()));
+        Assertions.assertAll(
+                () -> Assertions.assertFalse(() -> jpaTeamBuildingRepository.existsById(storedTeamBuilding.getTeamBuildingId())),
+                () -> Assertions.assertFalse(() -> jpaTeamRepository.existsById(teamList.get(0).getTeamId())),
+                () -> Assertions.assertTrue(() -> testJpaUserRepository.existsById(userList.get(0).getId()))
+        );
 
     }
 
