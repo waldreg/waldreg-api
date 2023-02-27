@@ -5,7 +5,7 @@ import org.springframework.boot.autoconfigure.domain.EntityScan;
 
 @SpringBootApplication
 @EntityScan("org.waldreg.domain.*")
-class JpaAttendanceTestInitializer{
+public class JpaAttendanceTestInitializer{
 
 
 

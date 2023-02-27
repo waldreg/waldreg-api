@@ -258,6 +258,48 @@ class JpaAttendanceRepositoryTest{
         );
     }
 
+    @Test
+    @DisplayName("유저의 id로 AttendanceUser 존재 확인 테스트")
+    void REGISTER_ATTENDANCE_USER_EXIST_CHECK_BY_USER_ID_TEST(){
+        // given
+        User user = getUser("hello");
+        AttendanceUser attendanceUser = AttendanceUser.builder()
+                .user(user)
+                .build();
+
+        // when
+        jpaUserRepository.save(user);
+        AttendanceUser expected = jpaAttendanceUserRepository.saveAndFlush(attendanceUser);
+
+        entityManager.clear();
+
+        boolean result = jpaAttendanceUserRepository.existsByUserId(expected.getAttendanceUserId());
+
+        // then
+        assertTrue(result);
+    }
+
+    @Test
+    @DisplayName("유저의 id로 AttendanceUser 조회 테스트")
+    void REGISTER_ATTENDANCE_USER_AND_FIND_BY_USER_ID_TEST(){
+        // given
+        User user = getUser("hello");
+        AttendanceUser attendanceUser = AttendanceUser.builder()
+                .user(user)
+                .build();
+
+        // when
+        jpaUserRepository.save(user);
+        AttendanceUser expected = jpaAttendanceUserRepository.saveAndFlush(attendanceUser);
+
+        entityManager.clear();
+
+        AttendanceUser result = jpaAttendanceUserRepository.findByUserId(user.getId()).get();
+
+        // then
+        assertAttendanceUser(expected, result);
+    }
+
     private User getUser(String userId){
         return User.builder()
                 .userId(userId)

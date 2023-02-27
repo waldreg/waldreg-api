@@ -1,4 +1,4 @@
-package org.waldreg.repository.attendance.waiver;
+package org.waldreg.repository.attendance.waiver.repository;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -14,8 +14,6 @@ import org.waldreg.domain.character.Character;
 import org.waldreg.domain.user.User;
 import org.waldreg.domain.waiver.Waiver;
 import org.waldreg.repository.attendance.helper.TestJpaCharacterRepository;
-import org.waldreg.repository.attendance.waiver.repository.JpaUserRepository;
-import org.waldreg.repository.attendance.waiver.repository.JpaWaiverRepository;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -24,7 +22,7 @@ import static org.junit.jupiter.api.Assertions.*;
 class JpaWaiverRepositoryTest{
 
     @Autowired
-    private JpaUserRepository jpaUserRepository;
+    private JpaWaiverUserRepository jpaUserRepository;
 
     @Autowired
     private JpaWaiverRepository jpaWaiverRepository;

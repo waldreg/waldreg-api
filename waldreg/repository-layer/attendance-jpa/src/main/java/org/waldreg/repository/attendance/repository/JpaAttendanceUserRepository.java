@@ -1,5 +1,6 @@
 package org.waldreg.repository.attendance.repository;
 
+import java.util.Optional;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
@@ -13,5 +14,9 @@ public interface JpaAttendanceUserRepository extends JpaRepository<AttendanceUse
     @Modifying
     @Query("delete from AttendanceUser as au where au.user.id = :id")
     void deleteByUsersId(@Param("id") int id);
+
+    boolean existsByUserId(int id);
+
+    Optional<AttendanceUser> findByUserId(int id);
 
 }
