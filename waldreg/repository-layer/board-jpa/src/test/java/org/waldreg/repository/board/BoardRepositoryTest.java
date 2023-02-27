@@ -52,8 +52,10 @@ class BoardRepositoryTest{
     @BeforeEach
     @AfterEach
     private void INIT(){
+        jpaBoardRepository.deleteAll();
+        jpaUserRepository.deleteAll();
         jpaCategoryRepository.deleteAll();
-    }
+        jpaCharacterRepository.deleteAll();    }
 
     @Test
     @DisplayName("새로운 게시글 생성 테스트")

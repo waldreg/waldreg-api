@@ -240,8 +240,64 @@ public class JpaCommentRepositoryTest{
         Assertions.assertFalse(jpaCommentRepository.existsById(foundComment.getId()));
     }
 
+    @Test
+    @DisplayName("게시글의 댓글 개수 조회")
+    void GET_COMMENT_MAX_IDX_SUCCESS_TEST(){
+        //given
+        Board board = setDefaultBoard();
+        //when
 
-    private Board setDefaultBoard(){
+        Character character = jpaCharacterRepository.findAll().get(0);
+        User user = User.builder()
+                .userId("commentUser")
+                .name("aaaa")
+                .userPassword("bocda")
+                .phoneNumber("010-1234-5678")
+                .character(character)
+                .build();
+        User user2 = User.builder()
+                .userId("commentUser2")
+                .name("aaaa2")
+                .userPassword("bocda2")
+                .phoneNumber("010-1234-5678")
+                .character(character)
+                .build();
+
+        Comment comment = Comment.builder()
+                .content("comment1")
+                .user(user)
+                .board(board)
+                .createdAt(LocalDateTime.now())
+                .build();
+        Comment comment2 = Comment.builder()
+                .content("comment2")
+                .user(user2)
+                .board(board)
+                .createdAt(LocalDateTime.now())
+                .build();
+        Comment comment3 = Comment.builder()
+                .content("comment3")
+                .user(user)
+                .board(board)
+                .createdAt(LocalDateTime.now())
+                .build();
+
+        jpaCharacterRepository.save(character);
+        jpaUserRepository.save(user);
+        jpaUserRepository.save(user2);
+        jpaCommentRepository.save(comment);
+        jpaCommentRepository.save(comment2);
+        jpaCommentRepository.save(comment3);
+        entityManager.flush();
+        entityManager.clear();
+        //when
+        int result = jpaCommentRepository.getBoardMaxIdxByBoardId(board.getId());
+        //then
+        Assertions.assertEquals(3,result);
+    }
+
+
+        private Board setDefaultBoard(){
         Character character = Character.builder()
                 .characterName("Guest")
                 .permissionList(List.of())

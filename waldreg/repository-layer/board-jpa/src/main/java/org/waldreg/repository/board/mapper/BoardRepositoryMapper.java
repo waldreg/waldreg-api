@@ -20,7 +20,6 @@ public class BoardRepositoryMapper{
                 .build();
     }
 
-
     public List<BoardDto> boardDomainListToBoardDtoList(List<Board> boardList){
         List<BoardDto> boardDtoList = new ArrayList<>();
         for (Board board : boardList){
