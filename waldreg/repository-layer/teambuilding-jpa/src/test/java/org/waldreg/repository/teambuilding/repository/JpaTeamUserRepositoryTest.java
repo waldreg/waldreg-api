@@ -10,6 +10,7 @@ import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.test.context.TestPropertySource;
 import org.waldreg.domain.character.Character;
 import org.waldreg.domain.user.User;
+import org.waldreg.repository.teambuilding.teamuser.repository.JpaTeamUserRepository;
 
 @DataJpaTest
 @TestPropertySource("classpath:h2-application.properties")

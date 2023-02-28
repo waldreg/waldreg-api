@@ -10,7 +10,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.waldreg.domain.teambuilding.Team;
 import org.waldreg.domain.teambuilding.TeamUser;
 import org.waldreg.domain.user.User;
-import org.waldreg.repository.teambuilding.repository.JpaTeamUserRepository;
+import org.waldreg.repository.teambuilding.teamuser.repository.JpaTeamUserRepository;
 import org.waldreg.repository.teambuilding.team.mapper.TeamRepositoryMapper;
 import org.waldreg.repository.teambuilding.team.repository.JpaTeamRepository;
 import org.waldreg.repository.teambuilding.teambuilding.repository.JpaTeamBuildingRepository;

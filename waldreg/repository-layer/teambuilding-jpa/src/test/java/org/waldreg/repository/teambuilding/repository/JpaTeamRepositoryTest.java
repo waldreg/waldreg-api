@@ -17,6 +17,7 @@ import org.waldreg.domain.teambuilding.TeamUser;
 import org.waldreg.domain.user.User;
 import org.waldreg.repository.teambuilding.team.repository.JpaTeamRepository;
 import org.waldreg.repository.teambuilding.teambuilding.repository.JpaTeamBuildingRepository;
+import org.waldreg.repository.teambuilding.teamuser.repository.JpaTeamUserRepository;
 
 @DataJpaTest
 @TestPropertySource("classpath:h2-application.properties")
