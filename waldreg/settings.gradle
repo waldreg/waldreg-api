@@ -72,3 +72,6 @@ include 'repository-layer:teambuilding-jpa'
 findProject(':repository-layer:teambuilding-jpa')?.name = 'teambuilding-jpa'
 include 'repository-layer:board-jpa'
 findProject(':repository-layer:board-jpa')?.name = 'board-jpa'
+include 'repository-layer:auth-jpa'
+findProject(':repository-layer:auth-jpa')?.name = 'auth-jpa'
+

@@ -51,7 +51,7 @@ public class BoardRepositoryServiceProvider implements BoardRepository{
 
     private User getUserById(int id){
         return jpaUserRepository.findById(id).orElseThrow(
-                () -> {throw new IllegalStateException("Cannot find category id \"" + id + "\"");}
+                () -> {throw new IllegalStateException("Cannot find user id \"" + id + "\"");}
         );
     }
 
