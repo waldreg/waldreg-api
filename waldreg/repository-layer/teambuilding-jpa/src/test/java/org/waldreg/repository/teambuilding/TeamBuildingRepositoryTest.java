@@ -222,7 +222,7 @@ public class TeamBuildingRepositoryTest{
         Assertions.assertAll(
                 () -> Assertions.assertEquals(teamBuildingDto.getTeamBuildingId(), result.getTeamBuildingId()),
                 () -> Assertions.assertEquals(modifiedTitle, result.getTeamBuildingTitle()),
-                () -> Assertions.assertEquals(teamBuildingDto.getLastModifiedAt(), result.getLastModifiedAt()),
+                () -> Assertions.assertNotEquals(teamBuildingDto.getLastModifiedAt(), result.getLastModifiedAt()),
                 () -> Assertions.assertEquals(teamBuildingDto.getCreatedAt(), result.getCreatedAt()),
                 () -> Assertions.assertEquals(teamBuildingDto.getTeamList().get(0).getTeamId(), result.getTeamList().get(0).getTeamId()),
                 () -> Assertions.assertEquals(teamBuildingDto.getTeamList().get(0).getTeamBuildingId(), result.getTeamList().get(0).getTeamBuildingId()),
