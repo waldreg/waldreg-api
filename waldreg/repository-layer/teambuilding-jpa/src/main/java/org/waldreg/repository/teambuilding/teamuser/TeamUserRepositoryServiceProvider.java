@@ -2,6 +2,7 @@ package org.waldreg.repository.teambuilding.teamuser;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 import org.waldreg.domain.user.User;
 import org.waldreg.repository.teambuilding.teamuser.mapper.TeamUserRepositoryMapper;
 import org.waldreg.repository.teambuilding.teamuser.repository.JpaTeamUserRepository;
@@ -22,6 +23,7 @@ public class TeamUserRepositoryServiceProvider implements TeamBuildingUserReposi
     }
 
     @Override
+    @Transactional(readOnly = true)
     public UserDto getUserInfoByUserId(String userId){
         User user = jpaTeamUserRepository.findByUserId(userId).orElseThrow(
                 () -> {throw new IllegalStateException("Cannot find user with id \"" + userId + "\"");}
@@ -30,6 +32,7 @@ public class TeamUserRepositoryServiceProvider implements TeamBuildingUserReposi
     }
 
     @Override
+    @Transactional(readOnly = true)
     public boolean isExistUserByUserId(String userId){
         return jpaTeamUserRepository.existsByUserId(userId);
     }
