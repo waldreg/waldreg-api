@@ -1,5 +1,6 @@
 package org.waldreg.repository.auth;
 
+import org.springframework.transaction.annotation.Transactional;
 import org.waldreg.domain.user.User;
 import org.waldreg.repository.auth.mapper.AuthRepositoryMapper;
 import org.waldreg.repository.auth.repository.JpaUserRepository;
@@ -18,6 +19,7 @@ public class AuthRepositoryServiceProvider implements AuthRepository{
     }
 
     @Override
+    @Transactional(readOnly = true)
     public TokenUserDto findUserById(int id){
         User user = getUserById(id);
         return authRepositoryMapper.userToTokenUserDto(user);
@@ -30,6 +32,7 @@ public class AuthRepositoryServiceProvider implements AuthRepository{
     }
 
     @Override
+    @Transactional(readOnly = true)
     public TokenUserDto findUserByBoardId(int boardId){
         User user = getUserByBoardId(boardId);
         return authRepositoryMapper.userToTokenUserDto(user);
@@ -42,6 +45,7 @@ public class AuthRepositoryServiceProvider implements AuthRepository{
     }
 
     @Override
+    @Transactional(readOnly = true)
     public TokenUserDto findUserByCommentId(int commentId){
         User user = getUserByCommentId(commentId);
         return authRepositoryMapper.userToTokenUserDto(user);
@@ -54,6 +58,7 @@ public class AuthRepositoryServiceProvider implements AuthRepository{
     }
 
     @Override
+    @Transactional(readOnly = true)
     public TokenUserDto findUserByUserId(String userId){
         throwIfUnknownUserIdException(userId);
         User user = getUserByUserId(userId);
@@ -61,6 +66,7 @@ public class AuthRepositoryServiceProvider implements AuthRepository{
     }
 
     @Override
+    @Transactional(readOnly = true)
     public boolean isExistUserId(String userId){
         return jpaUserRepository.isExistUserByUserId(userId);
     }
