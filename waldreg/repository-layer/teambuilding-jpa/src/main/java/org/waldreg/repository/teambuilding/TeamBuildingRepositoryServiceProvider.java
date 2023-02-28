@@ -1,5 +1,6 @@
 package org.waldreg.repository.teambuilding;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import org.springframework.stereotype.Repository;
@@ -11,11 +12,12 @@ import org.waldreg.repository.teambuilding.repository.JpaTeamBuildingRepository;
 import org.waldreg.repository.teambuilding.repository.JpaTeamRepository;
 import org.waldreg.repository.teambuilding.repository.JpaTeamUserRepository;
 import org.waldreg.teambuilding.dto.TeamDto;
+import org.waldreg.teambuilding.team.spi.TeamInTeamBuildingRepository;
 import org.waldreg.teambuilding.teambuilding.dto.TeamBuildingDto;
 import org.waldreg.teambuilding.teambuilding.spi.TeamBuildingRepository;
 
 @Repository
-public class TeamBuildingRepositoryServiceProvider implements TeamBuildingRepository{
+public class TeamBuildingRepositoryServiceProvider implements TeamBuildingRepository, TeamInTeamBuildingRepository{
 
     private final JpaTeamBuildingRepository jpaTeamBuildingRepository;
     private final JpaTeamRepository jpaTeamRepository;
@@ -76,12 +78,27 @@ public class TeamBuildingRepositoryServiceProvider implements TeamBuildingReposi
                 () -> {throw new IllegalStateException("Cannot find team building with id \"" + teamBuildingId + "\"");}
         );
         teamBuilding.setTeamBuildingTitle(teamBuildingTitle);
+        teamBuilding.setLastModifiedAt(LocalDateTime.now());
     }
 
     @Override
     @Transactional
     public void deleteTeamBuildingById(int teamBuildingId){
         jpaTeamBuildingRepository.deleteById(teamBuildingId);
+    }
+
+    @Override
+    @Transactional
+    public void addTeamInTeamBuildingTeamList(TeamDto teamDto){
+        TeamBuilding teamBuilding = jpaTeamBuildingRepository.findById(teamDto.getTeamBuildingId()).orElseThrow(
+                () -> {throw new IllegalStateException("Cannot find team building with id \"" + teamDto.getTeamBuildingId() + "\"");}
+        );
+        Team team = jpaTeamRepository.findById(teamDto.getTeamId()).orElseThrow(
+                () -> {throw new IllegalStateException("Cannot find team with id \"" + teamDto.getTeamId() + "\"");}
+        );
+        List<Team> teamList = teamBuilding.getTeamList();
+        teamList.add(team);
+        teamBuilding.setTeamList(teamList);
     }
 
     @Override
