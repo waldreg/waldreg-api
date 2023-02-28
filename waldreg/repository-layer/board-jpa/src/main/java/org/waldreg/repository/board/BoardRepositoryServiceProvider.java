@@ -1,17 +1,21 @@
 package org.waldreg.repository.board;
 
+import java.util.ArrayList;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 import org.waldreg.board.board.spi.BoardRepository;
 import org.waldreg.board.dto.BoardDto;
+import org.waldreg.board.dto.BoardServiceReactionType;
 import org.waldreg.domain.board.Board;
 import org.waldreg.domain.board.category.Category;
+import org.waldreg.domain.board.reaction.Reaction;
 import org.waldreg.domain.user.User;
 import org.waldreg.repository.board.mapper.BoardRepositoryMapper;
 import org.waldreg.repository.board.repository.JpaBoardRepository;
 import org.waldreg.repository.board.repository.JpaCategoryRepository;
+import org.waldreg.repository.board.repository.JpaReactionRepository;
 import org.waldreg.repository.board.repository.JpaUserRepository;
 
 @Repository
@@ -21,13 +25,15 @@ public class BoardRepositoryServiceProvider implements BoardRepository{
     private final JpaBoardRepository jpaBoardRepository;
     private final JpaUserRepository jpaUserRepository;
     private final JpaCategoryRepository jpaCategoryRepository;
+    private final JpaReactionRepository jpaReactionRepository;
 
     @Autowired
-    public BoardRepositoryServiceProvider(BoardRepositoryMapper boardRepositoryMapper, JpaBoardRepository jpaBoardRepository, JpaUserRepository jpaUserRepository, JpaCategoryRepository jpaCategoryRepository){
+    public BoardRepositoryServiceProvider(BoardRepositoryMapper boardRepositoryMapper, JpaBoardRepository jpaBoardRepository, JpaUserRepository jpaUserRepository, JpaCategoryRepository jpaCategoryRepository, JpaReactionRepository jpaReactionRepository){
         this.boardRepositoryMapper = boardRepositoryMapper;
         this.jpaBoardRepository = jpaBoardRepository;
         this.jpaUserRepository = jpaUserRepository;
         this.jpaCategoryRepository = jpaCategoryRepository;
+        this.jpaReactionRepository = jpaReactionRepository;
     }
 
     @Override
@@ -39,6 +45,7 @@ public class BoardRepositoryServiceProvider implements BoardRepository{
         board.setUser(user);
         board.setCategory(category);
         jpaBoardRepository.save(board);
+        board.setReactions(setDefaultReaction(board));
         return boardRepositoryMapper.boardDomainToBoardDto(board);
     }
 
@@ -46,6 +53,23 @@ public class BoardRepositoryServiceProvider implements BoardRepository{
         return jpaUserRepository.findById(id).orElseThrow(
                 () -> {throw new IllegalStateException("Cannot find category id \"" + id + "\"");}
         );
+    }
+
+    private List<Reaction> setDefaultReaction(Board board){
+        List<Reaction> reactionList = new ArrayList<>();
+        for (BoardServiceReactionType type : BoardServiceReactionType.values()){
+            reactionList.add(buildReaction(type, board));
+        }
+        jpaReactionRepository.saveAll(reactionList);
+        return reactionList;
+    }
+
+    private Reaction buildReaction(BoardServiceReactionType type, Board board){
+        return Reaction.builder()
+                .board(board)
+                .type(type.name())
+                .reactionUserList(new ArrayList<>())
+                .build();
     }
 
     @Override

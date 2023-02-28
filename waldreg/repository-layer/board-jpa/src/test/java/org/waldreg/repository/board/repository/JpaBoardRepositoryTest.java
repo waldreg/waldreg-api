@@ -181,7 +181,7 @@ class JpaBoardRepositoryTest{
         //given
         setDefaultBoardList();
         //when
-        List<Board> foundBoardList = jpaBoardRepository.findAll(0,6);
+        List<Board> foundBoardList = jpaBoardRepository.findAll(0, 6);
         //then
         Assertions.assertAll(
                 () -> Assertions.assertTrue(foundBoardList.size() == 5),

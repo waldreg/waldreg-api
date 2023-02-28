@@ -11,6 +11,14 @@ import org.waldreg.domain.user.User;
 @Component
 public class BoardRepositoryMapper{
 
+    private final CommentRepositoryMapper commentRepositoryMapper;
+    private final ReactionRepositoryMapper reactionRepositoryMapper;
+
+    public BoardRepositoryMapper(CommentRepositoryMapper commentRepositoryMapper, ReactionRepositoryMapper reactionRepositoryMapper){
+        this.commentRepositoryMapper = commentRepositoryMapper;
+        this.reactionRepositoryMapper = reactionRepositoryMapper;
+    }
+
     public Board boardDtoToBoardDomain(BoardDto boardDto){
         return Board.builder()
                 .title(boardDto.getTitle())
@@ -38,13 +46,11 @@ public class BoardRepositoryMapper{
                 .lastModifiedAt(board.getLastModifiedAt())
                 .fileUrls(board.getFilePathList())
                 .imageUrls(board.getImagePathList())
-//                .reactions(reactionDomainToReactionDto(board.getReactions()))
-//                .commentList(commentInBoardMapper.commentDomainListToCommentDtoList(board.getCommentList()))
+                .reactions(reactionRepositoryMapper.reactionDomainListToReactionDto(board.getReactionList(),board.getId()))
+                .commentList(commentRepositoryMapper.commentDomainListToCommentDtoList(board.getCommentList()))
                 .views(board.getViews())
                 .build();
     }
-
-
 
     public UserDto userToUserDto(User user){
         return UserDto.builder()

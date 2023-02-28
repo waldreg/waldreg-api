@@ -31,13 +31,14 @@ public final class Reaction{
     @Column(name = "REACTION_TYPE")
     private String type;
 
-    @OneToMany(mappedBy = "reaction", fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
+    @OneToMany(mappedBy = "reaction", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private List<ReactionUser> reactionUserList;
 
     private Reaction(){}
 
     private Reaction(Builder builder){
         this.board = builder.board;
+        this.type = builder.type;
         this.reactionUserList = builder.reactionUserList;
     }
 
@@ -69,7 +70,6 @@ public final class Reaction{
 
         private Board board;
         private String type;
-
         private List<ReactionUser> reactionUserList;
 
         private Builder(){
