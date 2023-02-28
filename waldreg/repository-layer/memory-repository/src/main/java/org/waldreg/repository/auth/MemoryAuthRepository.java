@@ -25,16 +25,6 @@ public class MemoryAuthRepository implements AuthRepository{
         this.memoryCommentStorage = memoryCommentStorage;
     }
 
-    @Override
-    public TokenUserDto findUserByUserIdPassword(String userId, String userPassword){
-        User user = memoryUserStorage.readUserByUserId(userId);
-        throwIfUserDoesNotExist(user, userPassword);
-        return TokenUserDto.builder()
-                .id(user.getId())
-                .userId(user.getUserId())
-                .userPassword(user.getUserPassword())
-                .build();
-    }
 
     private void throwIfUserDoesNotExist(User user, String userPassword){
         if (!user.getUserPassword().equals(userPassword)){
@@ -70,6 +60,16 @@ public class MemoryAuthRepository implements AuthRepository{
                 .userId(user.getUserId())
                 .userPassword(user.getUserPassword())
                 .build();
+    }
+
+    @Override
+    public boolean isExistUserId(String userId){
+        return false;
+    }
+
+    @Override
+    public TokenUserDto findUserByUserId(String userId){
+        return null;
     }
 
 }
