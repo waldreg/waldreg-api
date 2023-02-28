@@ -47,6 +47,10 @@ public final class TeamUser{
         return user;
     }
 
+    public static Builder builder(){
+        return new Builder();
+    }
+
     public static final class Builder{
 
         private Team team;

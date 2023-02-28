@@ -69,6 +69,18 @@ public final class Team{
         return teamBuilding;
     }
 
+    public void setTeamName(String teamName){
+        this.teamName = teamName;
+    }
+
+    public void setLastModifiedAt(LocalDateTime lastModifiedAt){
+        this.lastModifiedAt = lastModifiedAt;
+    }
+
+    public void setTeamUserList(List<TeamUser> teamUserList){
+        this.teamUserList = teamUserList;
+    }
+
     public static final class Builder{
 
         private TeamBuilding teamBuilding;
