@@ -5,12 +5,12 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
+import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 import org.waldreg.domain.teambuilding.Team;
 import org.waldreg.domain.teambuilding.TeamUser;
 import org.waldreg.domain.user.User;
 import org.waldreg.repository.teambuilding.repository.JpaTeamUserRepository;
-import org.waldreg.repository.teambuilding.repository.JpaTeamUserWrapperRepository;
 import org.waldreg.repository.teambuilding.team.mapper.TeamRepositoryMapper;
 import org.waldreg.repository.teambuilding.team.repository.JpaTeamRepository;
 import org.waldreg.repository.teambuilding.teambuilding.repository.JpaTeamBuildingRepository;
@@ -19,6 +19,7 @@ import org.waldreg.teambuilding.dto.UserDto;
 import org.waldreg.teambuilding.team.spi.TeamRepository;
 import org.waldreg.teambuilding.teambuilding.spi.TeamBuildingsTeamRepository;
 
+@Repository
 public class TeamRepositoryServiceProvider implements TeamRepository, TeamBuildingsTeamRepository{
 
     private final TeamRepositoryMapper teamRepositoryMapper;
@@ -27,15 +28,12 @@ public class TeamRepositoryServiceProvider implements TeamRepository, TeamBuildi
 
     private final JpaTeamBuildingRepository jpaTeamBuildingRepository;
 
-    private final JpaTeamUserWrapperRepository jpaTeamUserWrapperRepository;
-
     private final JpaTeamUserRepository jpaTeamUserRepository;
 
-    public TeamRepositoryServiceProvider(TeamRepositoryMapper teamRepositoryMapper, JpaTeamRepository jpaTeamRepository, JpaTeamBuildingRepository jpaTeamBuildingRepository, JpaTeamUserWrapperRepository jpaTeamUserWrapperRepository, JpaTeamUserRepository jpaTeamUserRepository){
+    public TeamRepositoryServiceProvider(TeamRepositoryMapper teamRepositoryMapper, JpaTeamRepository jpaTeamRepository, JpaTeamBuildingRepository jpaTeamBuildingRepository, JpaTeamUserRepository jpaTeamUserRepository){
         this.teamRepositoryMapper = teamRepositoryMapper;
         this.jpaTeamRepository = jpaTeamRepository;
         this.jpaTeamBuildingRepository = jpaTeamBuildingRepository;
-        this.jpaTeamUserWrapperRepository = jpaTeamUserWrapperRepository;
         this.jpaTeamUserRepository = jpaTeamUserRepository;
     }
 

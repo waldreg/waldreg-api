@@ -12,7 +12,6 @@ import org.springframework.test.context.TestPropertySource;
 import org.waldreg.domain.character.Character;
 import org.waldreg.domain.user.User;
 import org.waldreg.repository.teambuilding.repository.JpaTeamUserRepository;
-import org.waldreg.repository.teambuilding.repository.JpaTeamUserWrapperRepository;
 import org.waldreg.repository.teambuilding.repository.TestJpaCharacterRepository;
 import org.waldreg.repository.teambuilding.team.TeamRepositoryServiceProvider;
 import org.waldreg.repository.teambuilding.team.mapper.TeamRepositoryMapper;
@@ -41,8 +40,6 @@ public class TeamRepositoryTest{
     private JpaTeamBuildingRepository jpaTeamBuildingRepository;
     @Autowired
     private JpaTeamUserRepository jpaTeamUserRepository;
-    @Autowired
-    private JpaTeamUserWrapperRepository jpaTeamUserWrapperRepository;
     @Autowired
     private TestJpaCharacterRepository testJpaCharacterRepository;
 
