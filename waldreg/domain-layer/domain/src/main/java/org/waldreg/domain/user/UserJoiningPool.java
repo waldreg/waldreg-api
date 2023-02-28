@@ -69,7 +69,7 @@ public final class UserJoiningPool{
 
         @Override
         protected Builder builder(){
-            return null;
+            return this;
         }
 
     }
