@@ -14,8 +14,8 @@ import org.waldreg.domain.teambuilding.Team;
 import org.waldreg.domain.teambuilding.TeamUser;
 import org.waldreg.domain.user.User;
 import org.waldreg.repository.teambuilding.repository.JpaTeamUserRepository;
-import org.waldreg.repository.teambuilding.repository.JpaTeamUserWrapperRepository;
 import org.waldreg.repository.teambuilding.repository.TestJpaCharacterRepository;
+import org.waldreg.repository.teambuilding.repository.TestJpaTeamUserWrapperRepository;
 import org.waldreg.repository.teambuilding.team.repository.JpaTeamRepository;
 import org.waldreg.repository.teambuilding.teambuilding.TeamBuildingRepositoryServiceProvider;
 import org.waldreg.repository.teambuilding.teambuilding.mapper.TeamBuildingRepositoryMapper;
@@ -39,9 +39,9 @@ public class TeamBuildingRepositoryTest{
     @Autowired
     private JpaTeamUserRepository jpaTeamUserRepository;
     @Autowired
-    private JpaTeamUserWrapperRepository jpaTeamUserWrapperRepository;
-    @Autowired
     private TestJpaCharacterRepository testJpaCharacterRepository;
+    @Autowired
+    private TestJpaTeamUserWrapperRepository testJpaTeamUserWrapperRepository;
 
     @Test
     @DisplayName("새로운 팀빌딩 그룹 생성")
@@ -305,7 +305,7 @@ public class TeamBuildingRepositoryTest{
 
     private List<TeamUser> createTeamUserList(Team team, List<User> userList){
         List<TeamUser> teamUserList = new ArrayList<>();
-        userList.stream().forEach(u -> teamUserList.add(jpaTeamUserWrapperRepository.saveAndFlush(TeamUser.builder()
+        userList.stream().forEach(u -> teamUserList.add(testJpaTeamUserWrapperRepository.saveAndFlush(TeamUser.builder()
                 .team(team)
                 .user(u)
                 .build())));

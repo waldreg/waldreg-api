@@ -26,7 +26,7 @@ public class JpaTeamBuildingRepositoryTest{
     @Autowired
     private JpaTeamRepository jpaTeamRepository;
     @Autowired
-    private JpaTeamUserWrapperRepository jpaTeamUserWrapperRepository;
+    private TestJpaTeamUserWrapperRepository testJpaTeamUserWrapperRepository;
     @Autowired
     private TestJpaCharacterRepository testJpaCharacterRepository;
     @Autowired
@@ -317,7 +317,7 @@ public class JpaTeamBuildingRepositoryTest{
 
     private List<TeamUser> createTeamUserList(Team team, List<User> userList){
         List<TeamUser> teamUserList = new ArrayList<>();
-        userList.stream().forEach(u -> teamUserList.add(jpaTeamUserWrapperRepository.saveAndFlush(TeamUser.builder()
+        userList.stream().forEach(u -> teamUserList.add(testJpaTeamUserWrapperRepository.saveAndFlush(TeamUser.builder()
                 .team(team)
                 .user(u)
                 .build())));

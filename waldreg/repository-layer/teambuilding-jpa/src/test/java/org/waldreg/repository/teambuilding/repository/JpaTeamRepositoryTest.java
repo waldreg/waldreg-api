@@ -27,13 +27,13 @@ public class JpaTeamRepositoryTest{
     @Autowired
     private TestJpaCharacterRepository testJpaCharacterRepository;
     @Autowired
-    private JpaTeamUserWrapperRepository jpaTeamUserWrapperRepository;
-    @Autowired
     private JpaTeamUserRepository jpaTeamUserRepository;
     @Autowired
     private JpaTeamBuildingRepository jpaTeamBuildingRepository;
     @Autowired
     private EntityManager entityManager;
+    @Autowired
+    private TestJpaTeamUserWrapperRepository testJpaTeamUserWrapperRepository;
 
     @Test
     @DisplayName("새로운 team 생성 성공 테스트")
@@ -239,7 +239,7 @@ public class JpaTeamRepositoryTest{
 
     private List<TeamUser> createTeamUserList(Team team, List<User> userList){
         List<TeamUser> teamUserList = new ArrayList<>();
-        userList.stream().forEach(u -> teamUserList.add(jpaTeamUserWrapperRepository.saveAndFlush(TeamUser.builder()
+        userList.stream().forEach(u -> teamUserList.add(testJpaTeamUserWrapperRepository.saveAndFlush(TeamUser.builder()
                 .team(team)
                 .user(u)
                 .build())));

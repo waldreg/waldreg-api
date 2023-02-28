@@ -10,7 +10,6 @@ import org.waldreg.domain.teambuilding.TeamBuilding;
 import org.waldreg.repository.teambuilding.teambuilding.mapper.TeamBuildingRepositoryMapper;
 import org.waldreg.repository.teambuilding.teambuilding.repository.JpaTeamBuildingRepository;
 import org.waldreg.repository.teambuilding.team.repository.JpaTeamRepository;
-import org.waldreg.repository.teambuilding.repository.JpaTeamUserWrapperRepository;
 import org.waldreg.teambuilding.dto.TeamDto;
 import org.waldreg.teambuilding.team.spi.TeamInTeamBuildingRepository;
 import org.waldreg.teambuilding.teambuilding.dto.TeamBuildingDto;
@@ -21,13 +20,11 @@ public class TeamBuildingRepositoryServiceProvider implements TeamBuildingReposi
 
     private final JpaTeamBuildingRepository jpaTeamBuildingRepository;
     private final JpaTeamRepository jpaTeamRepository;
-    private final JpaTeamUserWrapperRepository jpaTeamUserWrapperRepository;
     private final TeamBuildingRepositoryMapper teamBuildingRepositoryMapper;
 
-    public TeamBuildingRepositoryServiceProvider(JpaTeamBuildingRepository jpaTeamBuildingRepository, JpaTeamRepository jpaTeamRepository, JpaTeamUserWrapperRepository jpaTeamUserWrapperRepository, TeamBuildingRepositoryMapper teamBuildingRepositoryMapper){
+    public TeamBuildingRepositoryServiceProvider(JpaTeamBuildingRepository jpaTeamBuildingRepository, JpaTeamRepository jpaTeamRepository, TeamBuildingRepositoryMapper teamBuildingRepositoryMapper){
         this.jpaTeamBuildingRepository = jpaTeamBuildingRepository;
         this.jpaTeamRepository = jpaTeamRepository;
-        this.jpaTeamUserWrapperRepository = jpaTeamUserWrapperRepository;
         this.teamBuildingRepositoryMapper = teamBuildingRepositoryMapper;
     }
 
