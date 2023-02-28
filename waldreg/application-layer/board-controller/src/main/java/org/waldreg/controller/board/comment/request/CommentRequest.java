@@ -1,10 +1,12 @@
 package org.waldreg.controller.board.comment.request;
 
+import javax.validation.constraints.NotBlank;
 import org.waldreg.controller.board.category.request.CategoryRequest;
 import org.waldreg.controller.board.category.request.CategoryRequest.Builder;
 
 public class CommentRequest{
 
+    @NotBlank(message = "BOARD-415 Blank comment")
     private String content;
 
     public CommentRequest(){}

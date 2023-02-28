@@ -3,6 +3,7 @@ package org.waldreg.board.category.management;
 import java.util.List;
 import org.springframework.stereotype.Service;
 import org.waldreg.board.exception.CategoryDoesNotExistException;
+import org.waldreg.board.exception.CategoryNameOverFlowException;
 import org.waldreg.board.exception.DuplicateCategoryNameException;
 import org.waldreg.board.category.spi.CategoryRepository;
 import org.waldreg.board.dto.CategoryDto;
@@ -18,6 +19,7 @@ public class DefaultCategoryManager implements CategoryManager{
 
     @Override
     public void createCategory(CategoryDto categoryDto){
+        throwIfCategoryNameOverFlow(categoryDto.getCategoryName());
         throwIfCategoryNameDuplicated(categoryDto.getCategoryName());
         categoryRepository.createCategory(categoryDto);
     }
@@ -30,8 +32,15 @@ public class DefaultCategoryManager implements CategoryManager{
     @Override
     public void modifyCategory(CategoryDto categoryDto){
         throwIfCategoryDoesNotExist(categoryDto.getId());
+        throwIfCategoryNameOverFlow(categoryDto.getCategoryName());
         throwIfCategoryNameDuplicated(categoryDto.getCategoryName());
         categoryRepository.modifyCategory(categoryDto);
+    }
+
+    private void throwIfCategoryNameOverFlow(String categoryName){
+        if (categoryName.length() > 50){
+            throw new CategoryNameOverFlowException("BOARD-416", "Overflow category name : " + categoryName);
+        }
     }
 
     private void throwIfCategoryNameDuplicated(String categoryName){
