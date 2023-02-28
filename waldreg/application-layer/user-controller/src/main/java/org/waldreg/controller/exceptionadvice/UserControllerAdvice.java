@@ -5,6 +5,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.waldreg.core.template.exception.ExceptionTemplate;
+import org.waldreg.user.exception.ContentOverflowException;
 import org.waldreg.user.exception.DuplicatedUserIdException;
 import org.waldreg.user.exception.InvalidRangeException;
 import org.waldreg.user.exception.UnknownIdException;
@@ -50,6 +51,16 @@ public class UserControllerAdvice{
         ExceptionTemplate exceptionTemplate = ExceptionTemplate.builder()
                 .code("USER-406")
                 .message(unknownUserIdException.getMessage())
+                .documentUrl(documentUrl)
+                .build();
+        return new ResponseEntity<>(exceptionTemplate, HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler({ContentOverflowException.class})
+    public ResponseEntity<ExceptionTemplate> catchContentOverflowException(ContentOverflowException contentOverflowException){
+        ExceptionTemplate exceptionTemplate = ExceptionTemplate.builder()
+                .code(contentOverflowException.getCode())
+                .message(contentOverflowException.getMessage())
                 .documentUrl(documentUrl)
                 .build();
         return new ResponseEntity<>(exceptionTemplate, HttpStatus.BAD_REQUEST);
