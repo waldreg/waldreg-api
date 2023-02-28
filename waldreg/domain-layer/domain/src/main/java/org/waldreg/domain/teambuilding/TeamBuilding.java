@@ -1,6 +1,7 @@
 package org.waldreg.domain.teambuilding;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -82,12 +83,19 @@ public final class TeamBuilding{
         this.teamList = teamList;
     }
 
+    public void deleteTeam(int teamId){
+        teamList.stream().filter(t -> t.getTeamId() == teamId).findFirst().ifPresentOrElse(
+                t -> teamList.remove(t),
+                () -> {throw new IllegalStateException("Cannot find team with id \"" + teamId + "\"");}
+        );
+    }
+
     public static final class Builder{
 
         private String teamBuildingTitle;
         private LocalDateTime createdAt;
         private LocalDateTime lastModifiedAt;
-        private List<Team> teamList;
+        private List<Team> teamList = new ArrayList<>();
 
         private Builder(){
             this.createdAt = LocalDateTime.now();

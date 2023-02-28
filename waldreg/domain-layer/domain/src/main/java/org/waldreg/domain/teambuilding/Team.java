@@ -1,6 +1,7 @@
 package org.waldreg.domain.teambuilding;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -13,6 +14,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
+import org.waldreg.domain.user.User;
 
 @Entity
 @Table(name = "TEAM")
@@ -35,6 +37,22 @@ public final class Team{
 
     @OneToMany(mappedBy = "team", fetch = FetchType.LAZY, orphanRemoval = true, cascade = CascadeType.ALL)
     private List<TeamUser> teamUserList;
+
+    public void addTeamUser(User user){
+        TeamUser teamUser = TeamUser.builder()
+                .team(this)
+                .user(user)
+                .build();
+        teamUser.setTeam(this);
+        teamUserList.add(teamUser);
+    }
+
+    public void deleteTeamUser(int userId){
+        teamUserList.stream().filter(tu -> tu.getUser().getId() == userId).findFirst().ifPresentOrElse(
+                tu -> teamUserList.remove(tu),
+                () -> {throw new IllegalStateException("Cannot find teamUser user with id \"" + userId + "\"");}
+        );
+    }
 
     private Team(){}
 
@@ -69,6 +87,10 @@ public final class Team{
         return teamBuilding;
     }
 
+    public void setTeamBuilding(TeamBuilding teamBuilding){
+        this.teamBuilding = teamBuilding;
+    }
+
     public void setTeamName(String teamName){
         this.teamName = teamName;
     }
@@ -86,7 +108,7 @@ public final class Team{
         private TeamBuilding teamBuilding;
         private String teamName;
         private LocalDateTime lastModifiedAt;
-        private List<TeamUser> teamUserList;
+        private List<TeamUser> teamUserList = new ArrayList<>();
 
         private Builder(){
             lastModifiedAt = LocalDateTime.now();

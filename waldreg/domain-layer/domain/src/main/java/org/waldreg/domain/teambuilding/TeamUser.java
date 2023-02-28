@@ -47,6 +47,10 @@ public final class TeamUser{
         return user;
     }
 
+    public void setTeam(Team team){
+        this.team = team;
+    }
+
     public static Builder builder(){
         return new Builder();
     }

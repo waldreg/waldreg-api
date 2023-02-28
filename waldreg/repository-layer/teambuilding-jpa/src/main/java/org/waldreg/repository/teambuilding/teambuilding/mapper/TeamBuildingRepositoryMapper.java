@@ -1,18 +1,21 @@
-package org.waldreg.repository.teambuilding.mapper;
+package org.waldreg.repository.teambuilding.teambuilding.mapper;
 
 import java.util.ArrayList;
 import java.util.List;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.waldreg.domain.teambuilding.Team;
 import org.waldreg.domain.teambuilding.TeamBuilding;
-import org.waldreg.domain.teambuilding.TeamUser;
-import org.waldreg.domain.user.User;
-import org.waldreg.teambuilding.dto.TeamDto;
-import org.waldreg.teambuilding.dto.UserDto;
 import org.waldreg.teambuilding.teambuilding.dto.TeamBuildingDto;
 
 @Service
 public class TeamBuildingRepositoryMapper{
+
+    private final TeamInTeamBuildingRepositoryMapper teamInTeamBuildingRepositoryMapper;
+
+    @Autowired
+    public TeamBuildingRepositoryMapper(TeamInTeamBuildingRepositoryMapper teamInTeamBuildingRepositoryMapper){
+        this.teamInTeamBuildingRepositoryMapper = teamInTeamBuildingRepositoryMapper;
+    }
 
     public TeamBuilding teamBuildingTitleToTeamBuildingDomain(String teamBuildingTitle){
         return TeamBuilding.builder()
@@ -36,7 +39,7 @@ public class TeamBuildingRepositoryMapper{
                 .createdAt(teamBuilding.getCreatedAt());
         if (!isTeamListEmpty(teamBuilding)){
             return builder
-                    .teamDtoList(teamListToTeamDtoList(teamBuilding.getTeamList()))
+                    .teamDtoList(teamInTeamBuildingRepositoryMapper.teamListToTeamDtoList(teamBuilding.getTeamList()))
                     .build();
         }
         return builder.build();
@@ -44,40 +47,6 @@ public class TeamBuildingRepositoryMapper{
 
     private boolean isTeamListEmpty(TeamBuilding teamBuilding){
         return teamBuilding.getTeamList() == null;
-    }
-
-    public List<TeamDto> teamListToTeamDtoList(List<Team> teamList){
-        List<TeamDto> teamDtoList = new ArrayList<>();
-        for (Team team : teamList){
-            teamDtoList.add(teamToTeamDto(team));
-        }
-        return teamDtoList;
-    }
-
-    public TeamDto teamToTeamDto(Team team){
-        return TeamDto.builder()
-                .teamId(team.getTeamId())
-                .teamBuildingId(team.getTeamBuilding().getTeamBuildingId())
-                .teamName(team.getTeamName())
-                .lastModifiedAt(team.getLastModifiedAt())
-                .userDtoList(teamUserListToUserDtoList(team.getTeamUserList()))
-                .build();
-    }
-
-    public List<UserDto> teamUserListToUserDtoList(List<TeamUser> teamUserList){
-        List<UserDto> userDtoList = new ArrayList<>();
-        for (TeamUser teamUser : teamUserList){
-            userDtoList.add(userToUserDto(teamUser.getUser()));
-        }
-        return userDtoList;
-    }
-
-    public UserDto userToUserDto(User user){
-        return UserDto.builder()
-                .id(user.getId())
-                .name(user.getName())
-                .userId(user.getUserId())
-                .build();
     }
 
 }
