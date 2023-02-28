@@ -13,7 +13,7 @@ import org.waldreg.domain.character.Character;
 import org.waldreg.domain.teambuilding.Team;
 import org.waldreg.domain.teambuilding.TeamUser;
 import org.waldreg.domain.user.User;
-import org.waldreg.repository.teambuilding.repository.JpaTeamUserRepository;
+import org.waldreg.repository.teambuilding.teamuser.repository.JpaTeamUserRepository;
 import org.waldreg.repository.teambuilding.repository.TestJpaCharacterRepository;
 import org.waldreg.repository.teambuilding.repository.TestJpaTeamUserWrapperRepository;
 import org.waldreg.repository.teambuilding.team.repository.JpaTeamRepository;

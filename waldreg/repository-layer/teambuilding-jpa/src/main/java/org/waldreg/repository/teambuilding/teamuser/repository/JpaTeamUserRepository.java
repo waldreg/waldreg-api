@@ -1,4 +1,4 @@
-package org.waldreg.repository.teambuilding.repository;
+package org.waldreg.repository.teambuilding.teamuser.repository;
 
 import java.util.Optional;
 import org.springframework.data.jpa.repository.JpaRepository;
