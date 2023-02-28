@@ -162,15 +162,15 @@ public class CommentRepositoryTest{
 
         //then
         Assertions.assertAll(
-                ()->Assertions.assertEquals(commentDto.getContent(),result.get(0).getContent()),
-                ()->Assertions.assertEquals(commentDto.getBoardId(),result.get(0).getBoardId()),
-                ()->Assertions.assertEquals(commentDto.getUserDto().getUserId(),result.get(0).getUserDto().getUserId()),
-                ()->Assertions.assertEquals(commentDto2.getContent(),result.get(1).getContent()),
-                ()->Assertions.assertEquals(commentDto2.getBoardId(),result.get(1).getBoardId()),
-                ()->Assertions.assertEquals(commentDto2.getUserDto().getUserId(),result.get(1).getUserDto().getUserId()),
-                ()->Assertions.assertEquals(commentDto3.getContent(),result.get(2).getContent()),
-                ()->Assertions.assertEquals(commentDto3.getBoardId(),result.get(2).getBoardId()),
-                ()->Assertions.assertEquals(commentDto3.getUserDto().getUserId(),result.get(2).getUserDto().getUserId())
+                () -> Assertions.assertEquals(commentDto.getContent(), result.get(0).getContent()),
+                () -> Assertions.assertEquals(commentDto.getBoardId(), result.get(0).getBoardId()),
+                () -> Assertions.assertEquals(commentDto.getUserDto().getUserId(), result.get(0).getUserDto().getUserId()),
+                () -> Assertions.assertEquals(commentDto2.getContent(), result.get(1).getContent()),
+                () -> Assertions.assertEquals(commentDto2.getBoardId(), result.get(1).getBoardId()),
+                () -> Assertions.assertEquals(commentDto2.getUserDto().getUserId(), result.get(1).getUserDto().getUserId()),
+                () -> Assertions.assertEquals(commentDto3.getContent(), result.get(2).getContent()),
+                () -> Assertions.assertEquals(commentDto3.getBoardId(), result.get(2).getBoardId()),
+                () -> Assertions.assertEquals(commentDto3.getUserDto().getUserId(), result.get(2).getUserDto().getUserId())
         );
 
     }
@@ -212,9 +212,9 @@ public class CommentRepositoryTest{
                 () -> Assertions.assertEquals(createdCommentDto.getContent(), result.getContent()),
                 () -> Assertions.assertEquals(createdCommentDto.getUserDto().getUserId(), result.getUserDto().getUserId()),
                 () -> Assertions.assertEquals(createdCommentDto.getUserDto().getId(), result.getUserDto().getId()),
-                ()->Assertions.assertEquals(createdCommentDto.getCreatedAt(),result.getCreatedAt()),
-                ()->Assertions.assertEquals(createdCommentDto.getLastModifiedAt(),result.getLastModifiedAt())
-                );
+                () -> Assertions.assertEquals(createdCommentDto.getCreatedAt(), result.getCreatedAt()),
+                () -> Assertions.assertEquals(createdCommentDto.getLastModifiedAt(), result.getLastModifiedAt())
+        );
     }
 
     @Test
@@ -252,15 +252,16 @@ public class CommentRepositoryTest{
         CommentDto result = commentRepository.inquiryCommentById(createdCommentDto.getId());
 
         Assertions.assertAll(
-                ()->Assertions.assertEquals(createdCommentDto.getId(),result.getId()),
-                ()->Assertions.assertEquals(createdCommentDto.getCreatedAt(),result.getCreatedAt()),
-                ()->Assertions.assertEquals(createdCommentDto.getBoardId(),result.getBoardId()),
-                ()->Assertions.assertEquals(createdCommentDto.getUserDto().getUserId(),result.getUserDto().getUserId()),
-                ()->Assertions.assertEquals(createdCommentDto.getContent(),result.getContent()),
-                ()->Assertions.assertNotEquals(createdCommentDto.getLastModifiedAt(),result.getLastModifiedAt())
+                () -> Assertions.assertEquals(createdCommentDto.getId(), result.getId()),
+                () -> Assertions.assertEquals(createdCommentDto.getCreatedAt(), result.getCreatedAt()),
+                () -> Assertions.assertEquals(createdCommentDto.getBoardId(), result.getBoardId()),
+                () -> Assertions.assertEquals(createdCommentDto.getUserDto().getUserId(), result.getUserDto().getUserId()),
+                () -> Assertions.assertEquals(createdCommentDto.getContent(), result.getContent()),
+                () -> Assertions.assertNotEquals(createdCommentDto.getLastModifiedAt(), result.getLastModifiedAt())
         );
 
     }
+
     @Test
     @DisplayName("댓글이 존재 하는지 테스트")
     public void IS_EXIST_COMMENT_SUCCESS_TEST(){
@@ -293,6 +294,7 @@ public class CommentRepositoryTest{
         //then
         Assertions.assertTrue(commentRepository.isExistComment(createdCommentDto.getId()));
     }
+
     @Test
     @DisplayName("댓글 삭제 성공 테스트")
     public void DELETE_COMMENT_SUCCESS_TEST(){
@@ -325,7 +327,51 @@ public class CommentRepositoryTest{
         commentRepository.deleteComment(createdCommentDto.getId());
 
         //then
-        Assertions.assertFalse(commentRepository.isExistComment(createdCommentDto.getId()));
+        Assertions.assertAll(
+                () -> Assertions.assertFalse(commentRepository.isExistComment(createdCommentDto.getId())),
+                () -> Assertions.assertTrue(jpaUserRepository.existsById(user.getId())),
+                () -> Assertions.assertTrue(jpaBoardRepository.existsById(board.getId()))
+        );
+    }
+
+    @Test
+    @DisplayName("보드 삭제시 댓글 삭제 성공 테스트")
+    public void DELETE_COMMENT_BY_DELETE_BOARD_SUCCESS_TEST(){
+        //given
+        Board board = setDefaultBoard();
+        Character character = jpaCharacterRepository.findAll().get(0);
+        User user = User.builder()
+                .userId("commentUser")
+                .name("aaaa")
+                .userPassword("bocda")
+                .phoneNumber("010-1234-5678")
+                .character(character)
+                .build();
+        jpaUserRepository.save(user);
+        entityManager.flush();
+        entityManager.clear();
+        UserDto userDto = UserDto.builder()
+                .id(user.getId())
+                .userId(user.getUserId())
+                .name(user.getName())
+                .build();
+
+        CommentDto commentDto = CommentDto.builder()
+                .boardId(board.getId())
+                .content("commnet1")
+                .userDto(userDto)
+                .build();
+        //when
+        CommentDto createdCommentDto = commentRepository.createComment(commentDto);
+        jpaBoardRepository.deleteById(board.getId());
+        entityManager.flush();
+        entityManager.clear();
+        //then
+        Assertions.assertAll(
+                () -> Assertions.assertFalse(commentRepository.isExistComment(createdCommentDto.getId())),
+                () -> Assertions.assertTrue(jpaUserRepository.existsById(user.getId())),
+                () -> Assertions.assertFalse(jpaBoardRepository.existsById(board.getId()))
+        );
     }
 
 

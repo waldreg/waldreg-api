@@ -21,15 +21,19 @@ import org.waldreg.domain.character.Character;
 import org.waldreg.domain.user.User;
 import org.waldreg.repository.board.mapper.BoardRepositoryMapper;
 import org.waldreg.repository.board.mapper.CategoryRepositoryMapper;
+import org.waldreg.repository.board.mapper.CommentRepositoryMapper;
+import org.waldreg.repository.board.mapper.ReactionRepositoryMapper;
 import org.waldreg.repository.board.repository.JpaBoardRepository;
 import org.waldreg.repository.board.repository.JpaCategoryRepository;
 import org.waldreg.repository.board.repository.JpaCharacterRepository;
+import org.waldreg.repository.board.repository.JpaReactionRepository;
+import org.waldreg.repository.board.repository.JpaReactionUserRepository;
 import org.waldreg.repository.board.repository.JpaUserRepository;
 
 @DataJpaTest
-@ContextConfiguration(classes = {BoardRepositoryServiceProvider.class, CategoryRepositoryServiceProvider.class,
-        BoardRepositoryMapper.class, CategoryRepositoryMapper.class,
-        JpaCharacterRepository.class, JpaCategoryRepository.class, JpaUserRepository.class,
+@ContextConfiguration(classes = {BoardRepositoryServiceProvider.class, CategoryRepositoryServiceProvider.class, CommentRepositoryServiceProvider.class, ReactionRepositoryServiceProvider.class,
+        BoardRepositoryMapper.class, CategoryRepositoryMapper.class, ReactionRepositoryMapper.class, CommentRepositoryMapper.class,
+        JpaCharacterRepository.class, JpaCategoryRepository.class, JpaUserRepository.class, JpaReactionRepository.class, JpaReactionUserRepository.class,
         JpaBoardTestInitializer.class})
 @TestPropertySource("classpath:h2-application.properties")
 class BoardRepositoryTest{
@@ -55,7 +59,8 @@ class BoardRepositoryTest{
         jpaBoardRepository.deleteAll();
         jpaUserRepository.deleteAll();
         jpaCategoryRepository.deleteAll();
-        jpaCharacterRepository.deleteAll();    }
+        jpaCharacterRepository.deleteAll();
+    }
 
     @Test
     @DisplayName("새로운 게시글 생성 테스트")
@@ -102,7 +107,8 @@ class BoardRepositoryTest{
                 () -> Assertions.assertEquals(boardDto.getUserDto().getName(), result.getUserDto().getName()),
                 () -> Assertions.assertEquals(boardDto.getCategoryId(), result.getCategoryId()),
                 () -> Assertions.assertEquals(boardDto.getImageUrls(), result.getImageUrls()),
-                () -> Assertions.assertEquals(boardDto.getFileUrls(), result.getFileUrls())
+                () -> Assertions.assertEquals(boardDto.getFileUrls(), result.getFileUrls()),
+                () -> Assertions.assertEquals(6, result.getReactions().getReactionMap().size())
         );
     }
 
@@ -154,7 +160,7 @@ class BoardRepositoryTest{
     void INQUIRY_ALL_BOARD_LIST_BY_CATEGORY_SUCCESS_TEST(){
         //given
         setDefaultBoardList();
-        Integer categoryId = boardRepository.inquiryAllBoard(0,6).get(0).getCategoryId();
+        Integer categoryId = boardRepository.inquiryAllBoard(0, 6).get(0).getCategoryId();
         //when
         List<BoardDto> foundBoardList = boardRepository.inquiryAllBoardByCategory(categoryId, 0, 6);
         //then
@@ -266,7 +272,9 @@ class BoardRepositoryTest{
         boardRepository.deleteBoard(boardDto.getId());
         //then
         Assertions.assertAll(
-                () -> Assertions.assertFalse(boardRepository.isExistBoard(boardDto.getId()))
+                () -> Assertions.assertFalse(boardRepository.isExistBoard(boardDto.getId())),
+                () -> Assertions.assertTrue(jpaUserRepository.existsById(boardDto.getUserDto().getId())),
+                () -> Assertions.assertTrue(jpaCategoryRepository.existsById(boardDto.getCategoryId()))
         );
     }
 

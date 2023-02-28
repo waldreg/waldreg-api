@@ -31,7 +31,7 @@ public final class Reaction{
     @Column(name = "REACTION_TYPE")
     private String type;
 
-    @OneToMany(mappedBy = "reaction", fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
+    @OneToMany(mappedBy = "reaction", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private List<ReactionUser> reactionUserList;
 
     private Reaction(){}

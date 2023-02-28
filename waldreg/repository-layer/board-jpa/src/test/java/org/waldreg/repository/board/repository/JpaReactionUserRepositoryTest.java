@@ -188,11 +188,77 @@ public class JpaReactionUserRepositoryTest{
 
         Reaction result = jpaReactionRepository.findById(foundReaction.getId()).get();
         Assertions.assertAll(
-                ()->Assertions.assertEquals(result.getType(), reaction.getType()),
-                ()->Assertions.assertEquals(result.getBoard().getId(), reaction.getBoard().getId()),
-                ()->Assertions.assertEquals(result.getReactionUserList().size(),0),
-                ()->Assertions.assertEquals(result.getId(), reaction.getId())
+                () -> Assertions.assertEquals(result.getType(), reaction.getType()),
+                () -> Assertions.assertEquals(result.getBoard().getId(), reaction.getBoard().getId()),
+                () -> Assertions.assertEquals(result.getReactionUserList().size(), 0),
+                () -> Assertions.assertEquals(result.getId(), reaction.getId())
         );
+    }
+
+
+    @Test
+    @DisplayName("리액션 삭제시 전체 리액션 유저 삭제 성공")
+    void DELETE_REACTION_USER_BY_DELETE_REACTION_SUCCESS_TEST(){
+        //given
+        Board board = setDefaultBoard();
+        //when
+        Character character = jpaCharacterRepository.findAll().get(0);
+        User user = User.builder()
+                .userId("commentUser")
+                .name("aaaa")
+                .userPassword("bocda")
+                .phoneNumber("010-1234-5678")
+                .character(character)
+                .build();
+        User user2 = User.builder()
+                .userId("commentUser2")
+                .name("aaaa")
+                .userPassword("bocda")
+                .phoneNumber("010-1234-5678")
+                .character(character)
+                .build();
+
+        Reaction reaction = Reaction.builder()
+                .board(board)
+                .type("GOOD")
+                .reactionUserList(List.of())
+                .build();
+
+        jpaUserRepository.save(user);
+        jpaUserRepository.save(user2);
+        jpaReactionRepository.save(reaction);
+        entityManager.flush();
+        entityManager.clear();
+
+        Reaction foundReaction = jpaReactionRepository.findAll().get(0);
+        ReactionUser reactionUser = ReactionUser.builder()
+                .user(user)
+                .reaction(foundReaction)
+                .build();
+        jpaReactionUserRepository.save(reactionUser);
+        ReactionUser reactionUser2 = ReactionUser.builder()
+                .user(user2)
+                .reaction(foundReaction)
+                .build();
+        jpaReactionUserRepository.save(reactionUser2);
+
+        List<ReactionUser> reactionUserList = foundReaction.getReactionUserList();
+        reactionUserList.add(reactionUser);
+        foundReaction.setReactionUserList(reactionUserList);
+        jpaReactionRepository.save(foundReaction);
+
+        entityManager.flush();
+        entityManager.clear();
+        //when
+        Reaction reaction1 = jpaReactionRepository.findById(foundReaction.getId()).get();
+        jpaReactionUserRepository.deleteAllReactionUserByReactionId(reaction1.getId());
+
+        Assertions.assertAll(
+                () -> Assertions.assertTrue(jpaUserRepository.existsById(user.getId())),
+                () -> Assertions.assertTrue(jpaUserRepository.existsById(user2.getId())),
+                () -> Assertions.assertFalse(jpaReactionUserRepository.existsById(reactionUser.getId())),
+                () -> Assertions.assertFalse(jpaReactionUserRepository.existsById(reactionUser2.getId()))
+                );
     }
 
     private Board setDefaultBoard(){

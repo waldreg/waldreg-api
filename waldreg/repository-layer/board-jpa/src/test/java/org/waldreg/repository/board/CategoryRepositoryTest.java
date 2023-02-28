@@ -1,6 +1,9 @@
 package org.waldreg.repository.board;
 
+import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
+import javax.persistence.EntityManager;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
@@ -12,8 +15,15 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.TestPropertySource;
 import org.waldreg.board.category.spi.CategoryRepository;
 import org.waldreg.board.dto.CategoryDto;
+import org.waldreg.domain.board.Board;
+import org.waldreg.domain.board.category.Category;
+import org.waldreg.domain.character.Character;
+import org.waldreg.domain.user.User;
 import org.waldreg.repository.board.mapper.CategoryRepositoryMapper;
+import org.waldreg.repository.board.repository.JpaBoardRepository;
 import org.waldreg.repository.board.repository.JpaCategoryRepository;
+import org.waldreg.repository.board.repository.JpaCharacterRepository;
+import org.waldreg.repository.board.repository.JpaUserRepository;
 
 @DataJpaTest
 @ContextConfiguration(classes = {
@@ -28,6 +38,14 @@ public class CategoryRepositoryTest{
 
     @Autowired
     private JpaCategoryRepository jpaCategoryRepository;
+    @Autowired
+    private JpaBoardRepository jpaBoardRepository;
+    @Autowired
+    private JpaUserRepository jpaUserRepository;
+    @Autowired
+    private JpaCharacterRepository jpaCharacterRepository;
+    @Autowired
+    private EntityManager entityManager;
 
     @BeforeEach
     @AfterEach
@@ -140,24 +158,66 @@ public class CategoryRepositoryTest{
         CategoryDto result = categoryRepository.inquiryCategoryById(foundCategoryDto.getId());
 
         Assertions.assertAll(
-                ()->Assertions.assertEquals(foundCategoryDto.getId(),result.getId()),
-                ()->Assertions.assertEquals("modified", result.getCategoryName())
+                () -> Assertions.assertEquals(foundCategoryDto.getId(), result.getId()),
+                () -> Assertions.assertEquals("modified", result.getCategoryName())
         );
     }
 
     @Test
-    @DisplayName("카테고리 삭제 성공 테스트")
+    @DisplayName("카테고리 삭제 성공 테스트 - 속한 보드도 모두 삭제")
     void DELETE_CATEGORY_SUCCESS_TEST(){
-        String categoryName = "catecate";
-        CategoryDto categoryDto = CategoryDto.builder()
-                .categoryName(categoryName)
+        //given
+        Board board = setDefaultBoard();
+
+        //when
+        categoryRepository.deleteCategory(board.getCategory().getId());
+
+        Assertions.assertAll(
+                () -> Assertions.assertFalse(categoryRepository.isExistCategory(board.getCategory().getId())),
+                () -> Assertions.assertFalse(jpaBoardRepository.existsById(board.getId()))
+        );
+    }
+
+    private Board setDefaultBoard(){
+        Character character = Character.builder()
+                .characterName("Guest")
+                .permissionList(List.of())
                 .build();
-        categoryRepository.createCategory(categoryDto);
 
-        Integer categoryId = categoryRepository.inquiryAllCategory().get(0).getId();
-        categoryRepository.deleteCategory(categoryId);
+        User user = User.builder()
+                .userId("Fixtar")
+                .name("123")
+                .userPassword("abcd")
+                .phoneNumber("010-1234-5678")
+                .character(character)
+                .build();
 
-        Assertions.assertFalse(categoryRepository.isExistCategory(categoryId));
+        Category category = Category.builder()
+                .categoryName("cate1")
+                .build();
+
+        List<String> filePathList = new ArrayList<>();
+        filePathList.add("uuid.pptx");
+        List<String> imagePathList = new ArrayList<>();
+        imagePathList.add("uuid.png");
+        Board board = Board.builder()
+                .title("boardTitle")
+                .content("boardContent")
+                .user(user)
+                .category(category)
+                .createdAt(LocalDateTime.now())
+                .imagePathList(imagePathList)
+                .filePathList(filePathList)
+                .build();
+
+        jpaCharacterRepository.save(character);
+        jpaUserRepository.save(user);
+        jpaCategoryRepository.save(category);
+        jpaBoardRepository.save(board);
+
+        entityManager.flush();
+        entityManager.clear();
+        return board;
     }
 
     @Test

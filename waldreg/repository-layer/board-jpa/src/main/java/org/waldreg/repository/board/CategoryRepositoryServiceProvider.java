@@ -6,19 +6,23 @@ import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 import org.waldreg.board.category.spi.CategoryRepository;
 import org.waldreg.board.dto.CategoryDto;
+import org.waldreg.domain.board.Board;
 import org.waldreg.domain.board.category.Category;
 import org.waldreg.repository.board.mapper.CategoryRepositoryMapper;
+import org.waldreg.repository.board.repository.JpaBoardRepository;
 import org.waldreg.repository.board.repository.JpaCategoryRepository;
 
 @Repository
 public class CategoryRepositoryServiceProvider implements CategoryRepository{
 
     private final JpaCategoryRepository jpaCategoryRepository;
+    private final JpaBoardRepository jpaBoardRepository;
     private final CategoryRepositoryMapper categoryRepositoryMapper;
 
     @Autowired
-    public CategoryRepositoryServiceProvider(JpaCategoryRepository jpaCategoryRepository, CategoryRepositoryMapper categoryRepositoryMapper){
+    public CategoryRepositoryServiceProvider(JpaCategoryRepository jpaCategoryRepository, JpaBoardRepository jpaBoardRepository, CategoryRepositoryMapper categoryRepositoryMapper){
         this.jpaCategoryRepository = jpaCategoryRepository;
+        this.jpaBoardRepository = jpaBoardRepository;
         this.categoryRepositoryMapper = categoryRepositoryMapper;
     }
 
@@ -61,6 +65,9 @@ public class CategoryRepositoryServiceProvider implements CategoryRepository{
     @Override
     @Transactional
     public void deleteCategory(int id){
+        int maxIdx = jpaBoardRepository.getBoardMaxIdxByCategoryId(id);
+        List<Board> boardList = jpaBoardRepository.findByCategoryId(id,0,maxIdx);
+        jpaBoardRepository.deleteAll(boardList);
         jpaCategoryRepository.deleteById(id);
     }
 

@@ -13,6 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.util.Assert;
+import org.waldreg.board.reaction.spi.ReactionInBoardRepository;
 import org.waldreg.domain.board.Board;
 import org.waldreg.domain.board.category.Category;
 import org.waldreg.domain.board.reaction.Reaction;
@@ -81,7 +82,7 @@ public class JpaReactionRepositoryTest{
                 .reactionUserList(List.of())
                 .build();
 
-        Assertions.assertDoesNotThrow(()->jpaReactionRepository.save(reaction));
+        Assertions.assertDoesNotThrow(() -> jpaReactionRepository.save(reaction));
     }
 
     @Test
@@ -128,14 +129,12 @@ public class JpaReactionRepositoryTest{
         Reaction result = jpaReactionRepository.findById(foundReaction.getId()).get();
 
         Assertions.assertAll(
-                ()->Assertions.assertEquals(result.getType(), reaction.getType()),
-                ()->Assertions.assertEquals(result.getBoard().getId(), reaction.getBoard().getId()),
-                ()->Assertions.assertEquals(result.getReactionUserList().size(),1),
-                ()->Assertions.assertEquals(result.getId(), reaction.getId())
+                () -> Assertions.assertEquals(result.getType(), reaction.getType()),
+                () -> Assertions.assertEquals(result.getBoard().getId(), reaction.getBoard().getId()),
+                () -> Assertions.assertEquals(result.getReactionUserList().size(), 1),
+                () -> Assertions.assertEquals(result.getId(), reaction.getId())
         );
     }
-
-
 
 
     @Test
@@ -188,9 +187,9 @@ public class JpaReactionRepositoryTest{
 
         //then
         Assertions.assertAll(
-                ()->Assertions.assertEquals(2,reactionList.size()),
-                ()->Assertions.assertEquals(reaction.getBoard().getId(),reactionList.get(0).getBoard().getId()),
-                ()->Assertions.assertEquals(reaction.getBoard().getId(),reactionList.get(0).getBoard().getId())
+                () -> Assertions.assertEquals(2, reactionList.size()),
+                () -> Assertions.assertEquals(reaction.getBoard().getId(), reactionList.get(0).getBoard().getId()),
+                () -> Assertions.assertEquals(reaction.getBoard().getId(), reactionList.get(0).getBoard().getId())
         );
 
 
@@ -216,18 +215,28 @@ public class JpaReactionRepositoryTest{
                 .type("GOOD")
                 .reactionUserList(List.of())
                 .build();
-
         jpaUserRepository.save(user);
         jpaReactionRepository.save(reaction);
         entityManager.flush();
         entityManager.clear();
 
+        Reaction foundReaction = jpaReactionRepository.findAll().get(0);
+        ReactionUser reactionUser = ReactionUser.builder()
+                .user(user)
+                .reaction(foundReaction)
+                .build();
+        jpaReactionUserRepository.save(reactionUser);
+
         jpaReactionRepository.deleteById(reaction.getId());
         entityManager.flush();
         entityManager.clear();
-        Assertions.assertFalse(jpaReactionRepository.existsById(reaction.getId()));
-    }
 
+        Assertions.assertAll(
+                () -> Assertions.assertFalse(jpaReactionRepository.existsById(reaction.getId())),
+                () -> Assertions.assertTrue(jpaUserRepository.existsById(user.getId())),
+                () -> Assertions.assertFalse(jpaReactionUserRepository.existsById(reactionUser.getId()))
+        );
+    }
 
 
     private Board setDefaultBoard(){
@@ -271,7 +280,6 @@ public class JpaReactionRepositoryTest{
         entityManager.clear();
         return board;
     }
-
 
 
 }
