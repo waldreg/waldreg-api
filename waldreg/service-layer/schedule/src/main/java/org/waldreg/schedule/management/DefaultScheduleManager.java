@@ -31,6 +31,7 @@ public class DefaultScheduleManager implements ScheduleManager{
             LocalDateTime finishAt = LocalDateTime.parse(scheduleDto.getFinishAt());
             throwIfUnderYearLimit(startedAt.getYear(), finishAt.getYear());
             throwIfContentOverflow(scheduleDto.getScheduleContent());
+            throwIfTitleOverflow(scheduleDto.getScheduleTitle());
             throwIfFinishAtPrecedeStartedAt(startedAt, finishAt);
             throwIfRepeatExist(startedAt, finishAt, scheduleDto.getRepeatDto());
             scheduleRepository.createSchedule(scheduleDto);
@@ -76,6 +77,7 @@ public class DefaultScheduleManager implements ScheduleManager{
             LocalDateTime finishAt = LocalDateTime.parse(scheduleDto.getFinishAt());
             throwIfUnderYearLimit(startedAt.getYear(), finishAt.getYear());
             throwIfContentOverflow(scheduleDto.getScheduleContent());
+            throwIfTitleOverflow(scheduleDto.getScheduleTitle());
             throwIfFinishAtPrecedeStartedAt(startedAt, finishAt);
             throwIfRepeatExist(startedAt, finishAt, scheduleDto.getRepeatDto());
             scheduleRepository.updateScheduleById(id, scheduleDto);
@@ -93,7 +95,14 @@ public class DefaultScheduleManager implements ScheduleManager{
     private void throwIfContentOverflow(String content){
         int length = content.length();
         if (length > 1000){
-            throw new ContentOverflowException("SCHEDULE-409", "Schedule length content cannot be more than 1000 current length \"" + length + "\"");
+            throw new ContentOverflowException("SCHEDULE-409", "Schedule content length cannot be more than 1000 current length \"" + length + "\"");
+        }
+    }
+
+    private void throwIfTitleOverflow(String title){
+        int length = title.length();
+        if (length > 1000){
+            throw new ContentOverflowException("SCHEDULE-411", "Schedule title length cannot be more than 1000 current length \"" + length + "\"");
         }
     }
 

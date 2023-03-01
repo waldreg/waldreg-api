@@ -13,12 +13,13 @@ import org.waldreg.domain.character.Character;
 import org.waldreg.domain.teambuilding.Team;
 import org.waldreg.domain.teambuilding.TeamUser;
 import org.waldreg.domain.user.User;
-import org.waldreg.repository.teambuilding.mapper.TeamBuildingRepositoryMapper;
-import org.waldreg.repository.teambuilding.repository.JpaTeamBuildingRepository;
-import org.waldreg.repository.teambuilding.repository.JpaTeamRepository;
-import org.waldreg.repository.teambuilding.repository.JpaTeamUserRepository;
+import org.waldreg.repository.teambuilding.teamuser.repository.JpaTeamUserRepository;
 import org.waldreg.repository.teambuilding.repository.TestJpaCharacterRepository;
-import org.waldreg.repository.teambuilding.repository.TestJpaUserRepository;
+import org.waldreg.repository.teambuilding.repository.TestJpaTeamUserWrapperRepository;
+import org.waldreg.repository.teambuilding.team.repository.JpaTeamRepository;
+import org.waldreg.repository.teambuilding.teambuilding.TeamBuildingRepositoryServiceProvider;
+import org.waldreg.repository.teambuilding.teambuilding.mapper.TeamBuildingRepositoryMapper;
+import org.waldreg.repository.teambuilding.teambuilding.repository.JpaTeamBuildingRepository;
 import org.waldreg.teambuilding.dto.TeamDto;
 import org.waldreg.teambuilding.dto.UserDto;
 import org.waldreg.teambuilding.teambuilding.dto.TeamBuildingDto;
@@ -36,11 +37,11 @@ public class TeamBuildingRepositoryTest{
     @Autowired
     private JpaTeamRepository jpaTeamRepository;
     @Autowired
-    private TestJpaUserRepository testJpaUserRepository;
-    @Autowired
     private JpaTeamUserRepository jpaTeamUserRepository;
     @Autowired
     private TestJpaCharacterRepository testJpaCharacterRepository;
+    @Autowired
+    private TestJpaTeamUserWrapperRepository testJpaTeamUserWrapperRepository;
 
     @Test
     @DisplayName("새로운 팀빌딩 그룹 생성")
@@ -269,7 +270,7 @@ public class TeamBuildingRepositoryTest{
         Assertions.assertAll(
                 () -> Assertions.assertFalse(teamBuildingRepository.isExistTeamBuilding(teamBuildingDto.getTeamBuildingId())),
                 () -> Assertions.assertFalse(jpaTeamRepository.existsById(teamDtoList.get(0).getTeamId())),
-                () -> Assertions.assertTrue(testJpaUserRepository.existsById(userDtoList.get(0).getId()))
+                () -> Assertions.assertTrue(jpaTeamUserRepository.existsById(userDtoList.get(0).getId()))
         );
 
     }
@@ -290,7 +291,7 @@ public class TeamBuildingRepositoryTest{
                 .build();
         team = jpaTeamRepository.saveAndFlush(team);
         List<User> userList = new ArrayList<>();
-        userDtoList.stream().forEach(u -> userList.add(testJpaUserRepository.findById(u.getId()).get()));
+        userDtoList.stream().forEach(u -> userList.add(jpaTeamUserRepository.findById(u.getId()).get()));
         team.setTeamUserList(createTeamUserList(team, userList));
         Team storedTeam = jpaTeamRepository.saveAndFlush(team);
         return TeamDto.builder()
@@ -304,7 +305,7 @@ public class TeamBuildingRepositoryTest{
 
     private List<TeamUser> createTeamUserList(Team team, List<User> userList){
         List<TeamUser> teamUserList = new ArrayList<>();
-        userList.stream().forEach(u -> teamUserList.add(jpaTeamUserRepository.saveAndFlush(TeamUser.builder()
+        userList.stream().forEach(u -> teamUserList.add(testJpaTeamUserWrapperRepository.saveAndFlush(TeamUser.builder()
                 .team(team)
                 .user(u)
                 .build())));
@@ -330,7 +331,7 @@ public class TeamBuildingRepositoryTest{
                 .phoneNumber("010-1234-1234")
                 .character(character)
                 .build();
-        User storedUser = testJpaUserRepository.saveAndFlush(user);
+        User storedUser = jpaTeamUserRepository.saveAndFlush(user);
         return UserDto.builder()
                 .id(storedUser.getId())
                 .name(storedUser.getName())

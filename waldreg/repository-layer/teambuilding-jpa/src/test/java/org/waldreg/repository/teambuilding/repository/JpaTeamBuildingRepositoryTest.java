@@ -14,6 +14,9 @@ import org.waldreg.domain.teambuilding.Team;
 import org.waldreg.domain.teambuilding.TeamBuilding;
 import org.waldreg.domain.teambuilding.TeamUser;
 import org.waldreg.domain.user.User;
+import org.waldreg.repository.teambuilding.team.repository.JpaTeamRepository;
+import org.waldreg.repository.teambuilding.teambuilding.repository.JpaTeamBuildingRepository;
+import org.waldreg.repository.teambuilding.teamuser.repository.JpaTeamUserRepository;
 
 @DataJpaTest
 @TestPropertySource("classpath:h2-application.properties")
@@ -24,11 +27,11 @@ public class JpaTeamBuildingRepositoryTest{
     @Autowired
     private JpaTeamRepository jpaTeamRepository;
     @Autowired
-    private JpaTeamUserRepository jpaTeamUserRepository;
+    private TestJpaTeamUserWrapperRepository testJpaTeamUserWrapperRepository;
     @Autowired
     private TestJpaCharacterRepository testJpaCharacterRepository;
     @Autowired
-    private TestJpaUserRepository testJpaUserRepository;
+    private JpaTeamUserRepository jpaTeamUserRepository;
     @Autowired
     private EntityManager entityManager;
 
@@ -258,7 +261,7 @@ public class JpaTeamBuildingRepositoryTest{
         Assertions.assertAll(
                 () -> Assertions.assertFalse(() -> jpaTeamBuildingRepository.existsById(storedTeamBuilding.getTeamBuildingId())),
                 () -> Assertions.assertFalse(() -> jpaTeamRepository.existsById(teamList.get(0).getTeamId())),
-                () -> Assertions.assertTrue(() -> testJpaUserRepository.existsById(userList.get(0).getId()))
+                () -> Assertions.assertTrue(() -> jpaTeamUserRepository.existsById(userList.get(0).getId()))
         );
 
     }
@@ -297,7 +300,7 @@ public class JpaTeamBuildingRepositoryTest{
                 .phoneNumber("010-1234-1234")
                 .character(character)
                 .build();
-        User storedUser = testJpaUserRepository.saveAndFlush(user);
+        User storedUser = jpaTeamUserRepository.saveAndFlush(user);
         return storedUser;
     }
 
@@ -315,7 +318,7 @@ public class JpaTeamBuildingRepositoryTest{
 
     private List<TeamUser> createTeamUserList(Team team, List<User> userList){
         List<TeamUser> teamUserList = new ArrayList<>();
-        userList.stream().forEach(u -> teamUserList.add(jpaTeamUserRepository.saveAndFlush(TeamUser.builder()
+        userList.stream().forEach(u -> teamUserList.add(testJpaTeamUserWrapperRepository.saveAndFlush(TeamUser.builder()
                 .team(team)
                 .user(u)
                 .build())));

@@ -520,7 +520,47 @@ public class ScheduleAcceptanceTest{
                 MockMvcResultMatchers.header().string("api-version", apiVersion),
                 MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON),
                 MockMvcResultMatchers.jsonPath("$.code").value("SCHEDULE-409"),
-                MockMvcResultMatchers.jsonPath("$.messages").value("Schedule length content cannot be more than 1000 current length \"" + scheduleContent.length() + "\""),
+                MockMvcResultMatchers.jsonPath("$.messages").value("Schedule content length cannot be more than 1000 current length \"" + scheduleContent.length() + "\""),
+                MockMvcResultMatchers.jsonPath("$.document_url").value("docs.waldreg.org")
+        ).andDo(MockMvcResultHandlers.print());
+
+    }
+
+    @Test
+    @DisplayName("새로운 일정 생성 실패 테스트 - schedule title 글자 제한 초과")
+    public void CREATE_NEW_SCHEDULE_FAIL_CAUSE_TITLE_OVERFLOW_TEST() throws Exception{
+        //given
+        String adminToken = AuthenticationAcceptanceTestHelper.getAdminToken(mvc, objectMapper);
+
+        String scheduleTitle = createOverflow();
+        String scheduleContent = "seminar";
+        String startedAt = "2023-01-24T20:52";
+        String finishAt = "2023-01-31T23:59";
+        int cycle = 123;
+        String repeatFinishAt = "2023-12-31T23:59";
+        ScheduleRepeatRequest scheduleRepeatRequest = ScheduleRepeatRequest.builder()
+                .cycle(cycle)
+                .repeatFinishAt(repeatFinishAt)
+                .build();
+        ScheduleRequest scheduleRequest = ScheduleRequest.builder()
+                .scheduleTitle(scheduleTitle)
+                .scheduleContent(scheduleContent)
+                .startedAt(startedAt)
+                .finishAt(finishAt)
+                .repeat(scheduleRepeatRequest)
+                .build();
+
+        //when
+        ResultActions result = ScheduleAcceptanceTestHelper.createNewSchedule(mvc, adminToken, objectMapper.writeValueAsString(scheduleRequest));
+
+        //then
+        result.andExpectAll(
+                MockMvcResultMatchers.status().isBadRequest(),
+                MockMvcResultMatchers.header().string(HttpHeaders.CONTENT_TYPE, "application/json"),
+                MockMvcResultMatchers.header().string("api-version", apiVersion),
+                MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON),
+                MockMvcResultMatchers.jsonPath("$.code").value("SCHEDULE-411"),
+                MockMvcResultMatchers.jsonPath("$.messages").value("Schedule title length cannot be more than 1000 current length \"" + scheduleTitle.length() + "\""),
                 MockMvcResultMatchers.jsonPath("$.document_url").value("docs.waldreg.org")
         ).andDo(MockMvcResultHandlers.print());
 
@@ -1306,7 +1346,63 @@ public class ScheduleAcceptanceTest{
                 MockMvcResultMatchers.header().string("api-version", apiVersion),
                 MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON),
                 MockMvcResultMatchers.jsonPath("$.code").value("SCHEDULE-409"),
-                MockMvcResultMatchers.jsonPath("$.messages").value("Schedule length content cannot be more than 1000 current length \"" + wrongModifiedScheduleContent.length() + "\""),
+                MockMvcResultMatchers.jsonPath("$.messages").value("Schedule content length cannot be more than 1000 current length \"" + wrongModifiedScheduleContent.length() + "\""),
+                MockMvcResultMatchers.jsonPath("$.document_url").value("docs.waldreg.org")
+        ).andDo(MockMvcResultHandlers.print());
+
+    }
+
+    @Test
+    @DisplayName("일정 수정 실패 테스트 - schedule title 글자 제한 초과")
+    public void MODIFY_SCHEDULE_FAIL_CAUSE_TITLE_OVERFLOW_TEST() throws Exception{
+        //given
+        String adminToken = AuthenticationAcceptanceTestHelper.getAdminToken(mvc, objectMapper);
+
+        String scheduleTitle = "seminar";
+        String scheduleContent = "BFS";
+        String startedAt = "2023-01-24T20:52";
+        String finishAt = "2023-01-31T23:59";
+        ScheduleRequest scheduleRequest = ScheduleRequest.builder()
+                .scheduleTitle(scheduleTitle)
+                .scheduleContent(scheduleContent)
+                .startedAt(startedAt)
+                .finishAt(finishAt)
+                .build();
+        String wrongModifiedScheduleTitle = createOverflow();
+        String modifiedScheduleContent = "seminar";
+        String modifiedStartedAt = "2023-01-24T20:52";
+        String modifiedfinishAt = "2023-01-31T23:59";
+        int modifiedCycle = 7;
+        String modifiedRepeatFinishAt = "2023-12-31T23:59";
+        ScheduleRepeatRequest scheduleRepeatRequest = ScheduleRepeatRequest.builder()
+                .cycle(modifiedCycle)
+                .repeatFinishAt(modifiedRepeatFinishAt)
+                .build();
+        ScheduleRequest modifiedScheduleRequest = ScheduleRequest.builder()
+                .scheduleTitle(wrongModifiedScheduleTitle)
+                .scheduleContent(modifiedScheduleContent)
+                .startedAt(modifiedStartedAt)
+                .finishAt(modifiedfinishAt)
+                .repeat(scheduleRepeatRequest)
+                .build();
+
+        //when
+        ScheduleAcceptanceTestHelper.createNewSchedule(mvc, adminToken, objectMapper.writeValueAsString(scheduleRequest));
+        ScheduleListResponse scheduleListResponse = objectMapper.readValue(
+                ScheduleAcceptanceTestHelper.inquiryScheduleListByTerm(mvc, 2023, 1, adminToken)
+                        .andReturn()
+                        .getResponse()
+                        .getContentAsString(), ScheduleListResponse.class);
+        ResultActions result = ScheduleAcceptanceTestHelper.modifySchedule(mvc, scheduleListResponse.getScheduleList().get(0).getId(), adminToken, objectMapper.writeValueAsString(modifiedScheduleRequest));
+
+        //then
+        result.andExpectAll(
+                MockMvcResultMatchers.status().isBadRequest(),
+                MockMvcResultMatchers.header().string(HttpHeaders.CONTENT_TYPE, "application/json"),
+                MockMvcResultMatchers.header().string("api-version", apiVersion),
+                MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON),
+                MockMvcResultMatchers.jsonPath("$.code").value("SCHEDULE-411"),
+                MockMvcResultMatchers.jsonPath("$.messages").value("Schedule title length cannot be more than 1000 current length \"" + wrongModifiedScheduleTitle.length() + "\""),
                 MockMvcResultMatchers.jsonPath("$.document_url").value("docs.waldreg.org")
         ).andDo(MockMvcResultHandlers.print());
 
