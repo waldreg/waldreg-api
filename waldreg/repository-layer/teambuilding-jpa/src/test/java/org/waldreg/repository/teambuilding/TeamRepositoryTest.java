@@ -166,9 +166,7 @@ public class TeamRepositoryTest{
         TeamDto teamDto = createTeamDto(teamBuildingDto.getTeamBuildingId(), teamName, userDtoList);
         TeamDto teamDto2 = createTeamDto(teamBuildingDto.getTeamBuildingId(), "~~~", List.of());
         TeamDto storedTeamDto = teamRepository.createTeam(teamDto);
-        teamInTeamBuildingRepository.addTeamInTeamBuildingTeamList(storedTeamDto);
         TeamDto storedTeamDto2 = teamRepository.createTeam(teamDto2);
-        teamInTeamBuildingRepository.addTeamInTeamBuildingTeamList(storedTeamDto2);
         teamRepository.deleteTeamById(storedTeamDto.getTeamId());
 
         //then

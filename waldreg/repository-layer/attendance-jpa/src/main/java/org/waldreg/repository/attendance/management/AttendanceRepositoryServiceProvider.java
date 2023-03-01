@@ -63,14 +63,22 @@ public class AttendanceRepositoryServiceProvider implements AttendanceRepository
     @Override
     @Transactional
     public void deleteRegisteredAttendanceTarget(int id){
+        List<Attendance> attendanceList = jpaAttendanceRepository.findSpecific(id);
+        if(!attendanceList.isEmpty()){
+            jpaAttendanceRepository.deleteByAttendanceUserId(attendanceList.get(0).getAttendanceUser().getAttendanceUserId());
+        }
         jpaAttendanceUserRepository.deleteByUserId(id);
     }
 
     @Override
     @Transactional(readOnly = true)
     public Optional<AttendanceTargetDto> readAttendanceTarget(int id){
-        Attendance attendance = getAttendance(id);
-        return Optional.of(attendanceManagementMapper.attendanceToAttendanceTargetDto(attendance));
+        try{
+            Attendance attendance = getAttendance(id);
+            return Optional.of(attendanceManagementMapper.attendanceToAttendanceTargetDto(attendance));
+        } catch (IllegalStateException ise){
+            return Optional.empty();
+        }
     }
 
     private Attendance getAttendance(int id){

@@ -63,8 +63,7 @@ public class JpaTeamBuildingRepositoryTest{
 
         //when
         TeamBuilding storedTeamBuilding = jpaTeamBuildingRepository.saveAndFlush(teamBuilding);
-        List<Team> teamList = createTeamList(userList, storedTeamBuilding);
-        storedTeamBuilding.setTeamList(teamList);
+        createTeamList(userList, storedTeamBuilding);
         entityManager.flush();
         entityManager.clear();
         TeamBuilding result = jpaTeamBuildingRepository.findById(storedTeamBuilding.getTeamBuildingId()).get();
@@ -115,20 +114,17 @@ public class JpaTeamBuildingRepositoryTest{
         //when
         TeamBuilding teamBuilding = createTeamBuilding(title);
         TeamBuilding storedTeamBuilding = jpaTeamBuildingRepository.saveAndFlush(teamBuilding);
-        List<Team> teamList = createTeamList(userList, storedTeamBuilding);
-        storedTeamBuilding.setTeamList(teamList);
+        createTeamList(userList, storedTeamBuilding);
         entityManager.flush();
         entityManager.clear();
         TeamBuilding teamBuilding2 = createTeamBuilding(title2);
         TeamBuilding storedTeamBuilding2 = jpaTeamBuildingRepository.saveAndFlush(teamBuilding2);
-        List<Team> teamList2 = createTeamList(userList, storedTeamBuilding2);
-        storedTeamBuilding2.setTeamList(teamList2);
+        createTeamList(userList, storedTeamBuilding2);
         entityManager.flush();
         entityManager.clear();
         TeamBuilding teamBuilding3 = createTeamBuilding(title3);
         TeamBuilding storedTeamBuilding3 = jpaTeamBuildingRepository.saveAndFlush(teamBuilding3);
-        List<Team> teamList3 = createTeamList(userList, storedTeamBuilding3);
-        storedTeamBuilding3.setTeamList(teamList3);
+        createTeamList(userList, storedTeamBuilding3);
         entityManager.flush();
         entityManager.clear();
         List<TeamBuilding> result = jpaTeamBuildingRepository.findAll(startIdx - 1, endIdx - startIdx + 1);
@@ -199,8 +195,7 @@ public class JpaTeamBuildingRepositoryTest{
         //when
         TeamBuilding teamBuilding = createTeamBuilding(title);
         TeamBuilding storedTeamBuilding = jpaTeamBuildingRepository.saveAndFlush(teamBuilding);
-        List<Team> teamList = createTeamList(userList, storedTeamBuilding);
-        storedTeamBuilding.setTeamList(teamList);
+        createTeamList(userList, storedTeamBuilding);
         entityManager.flush();
         entityManager.clear();
         storedTeamBuilding.setTeamBuildingTitle(modifiedTitle);
@@ -260,7 +255,7 @@ public class JpaTeamBuildingRepositoryTest{
         //then
         Assertions.assertAll(
                 () -> Assertions.assertFalse(() -> jpaTeamBuildingRepository.existsById(storedTeamBuilding.getTeamBuildingId())),
-                () -> Assertions.assertFalse(() -> jpaTeamRepository.existsById(teamList.get(0).getTeamId())),
+                () -> Assertions.assertEquals(0,teamList.size()),
                 () -> Assertions.assertTrue(() -> jpaTeamUserRepository.existsById(userList.get(0).getId()))
         );
 
@@ -273,7 +268,7 @@ public class JpaTeamBuildingRepositoryTest{
     }
 
     private List<Team> createTeamList(List<User> userList, TeamBuilding teamBuilding){
-        List<Team> teamList = new ArrayList<>();
+        List<Team> teamList = teamBuilding.getTeamList();
         teamList.add(createTeam(teamBuilding, "team 1", List.of(userList.get(0), userList.get(2))));
         teamList.add(createTeam(teamBuilding, "team 2", List.of(userList.get(3), userList.get(4))));
         teamList.add(createTeam(teamBuilding, "team 3", List.of(userList.get(1), userList.get(5))));
@@ -309,20 +304,11 @@ public class JpaTeamBuildingRepositoryTest{
                 .teamBuilding(teamBuilding)
                 .teamName(teamName)
                 .build();
-        team = jpaTeamRepository.saveAndFlush(team);
-        team.setTeamUserList(createTeamUserList(team, userList));
+        Team storedTeam = jpaTeamRepository.saveAndFlush(team);
+        userList.forEach(t -> storedTeam.addTeamUser(t));
         entityManager.flush();
         entityManager.clear();
         return team;
-    }
-
-    private List<TeamUser> createTeamUserList(Team team, List<User> userList){
-        List<TeamUser> teamUserList = new ArrayList<>();
-        userList.stream().forEach(u -> teamUserList.add(testJpaTeamUserWrapperRepository.saveAndFlush(TeamUser.builder()
-                .team(team)
-                .user(u)
-                .build())));
-        return teamUserList;
     }
 
 }

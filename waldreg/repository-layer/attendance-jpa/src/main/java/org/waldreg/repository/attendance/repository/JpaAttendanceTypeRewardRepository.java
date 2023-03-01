@@ -7,7 +7,7 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 import org.waldreg.domain.attendance.AttendanceTypeReward;
 
-@Repository
+@Repository("attendanceJpaAttendanceTypeRewardRepository")
 public interface JpaAttendanceTypeRewardRepository extends JpaRepository<AttendanceTypeReward, Integer>{
 
     @Query("select a from AttendanceTypeReward as a where a.name = :name")

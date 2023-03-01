@@ -34,10 +34,6 @@ public class ReactionRepositoryMapper{
     }
 
     private ReactionUser getReactionUserByUserIdAndReaction(UserDto userDto, Reaction reaction){
-        boolean isExist = jpaReactionUserRepository.existsByUserIdAndReactionId(userDto.getUserId(), reaction.getId());
-        if (isExist){
-            return jpaReactionUserRepository.findByUserIdAndReactionId(userDto.getUserId(), reaction.getId());
-        }
         User user = getUserById(userDto.getId());
         ReactionUser reactionUser = buildReactionUser(user, reaction);
         jpaReactionUserRepository.save(reactionUser);

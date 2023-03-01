@@ -7,7 +7,7 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 import org.waldreg.domain.user.User;
 
-@Repository
+@Repository("teamuserJpaTeamUserRepository")
 public interface JpaTeamUserRepository extends JpaRepository<User, Integer>{
 
     @Query("select u from User as u join u.character where u.userInfo.userId = :userId")

@@ -142,7 +142,11 @@ public class BoardRepositoryServiceProvider implements BoardRepository{
     @Override
     @Transactional
     public void deleteBoard(int id){
-        jpaBoardRepository.deleteById(id);
+        Board board = jpaBoardRepository.findById(id).orElseThrow(
+                () -> {throw new IllegalStateException("Cannot find board id \"" + id + "\"");}
+        );
+        board.getCategory().getBoardList().remove(board);
+        jpaBoardRepository.delete(board);
     }
 
     @Override

@@ -19,6 +19,16 @@ import org.waldreg.domain.board.Board;
 @Table(name = "REACTION")
 public final class Reaction{
 
+    @Override
+    public String toString(){
+        return "Reaction{" +
+                "id=" + id +
+                ", board=" + board +
+                ", type='" + type + '\'' +
+                ", reactionUserList=" + reactionUserList +
+                '}';
+    }
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "REACTION_ID")
@@ -59,7 +69,8 @@ public final class Reaction{
     }
 
     public void setReactionUserList(List<ReactionUser> reactionUserList){
-        this.reactionUserList = reactionUserList;
+        this.reactionUserList.clear();
+        this.reactionUserList.addAll(reactionUserList);
     }
 
     public static Builder builder(){

@@ -11,8 +11,11 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.TestPropertySource;
 import org.waldreg.domain.character.Character;
 import org.waldreg.domain.teambuilding.Team;
+import org.waldreg.domain.teambuilding.TeamBuilding;
 import org.waldreg.domain.teambuilding.TeamUser;
 import org.waldreg.domain.user.User;
+import org.waldreg.repository.teambuilding.team.mapper.TeamRepositoryMapper;
+import org.waldreg.repository.teambuilding.teambuilding.mapper.TeamInTeamBuildingRepositoryMapper;
 import org.waldreg.repository.teambuilding.teamuser.repository.JpaTeamUserRepository;
 import org.waldreg.repository.teambuilding.repository.TestJpaCharacterRepository;
 import org.waldreg.repository.teambuilding.repository.TestJpaTeamUserWrapperRepository;
@@ -26,7 +29,7 @@ import org.waldreg.teambuilding.teambuilding.dto.TeamBuildingDto;
 import org.waldreg.teambuilding.teambuilding.spi.TeamBuildingRepository;
 
 @DataJpaTest
-@ContextConfiguration(classes = {TeamBuildingRepositoryMapper.class, TeamBuildingRepositoryServiceProvider.class, JpaTeamBuildingTestInitializer.class})
+@ContextConfiguration(classes = {TeamBuildingRepositoryMapper.class, TeamRepositoryMapper.class, TeamBuildingRepositoryServiceProvider.class, JpaTeamBuildingTestInitializer.class})
 @TestPropertySource("classpath:h2-application.properties")
 public class TeamBuildingRepositoryTest{
 
@@ -56,7 +59,7 @@ public class TeamBuildingRepositoryTest{
         Assertions.assertAll(
                 () -> Assertions.assertTrue(result.getTeamBuildingId() != 0),
                 () -> Assertions.assertEquals(title, result.getTeamBuildingTitle()),
-                () -> Assertions.assertNull(result.getTeamList()),
+                () -> Assertions.assertEquals(0,result.getTeamList().size()),
                 () -> Assertions.assertNotNull(result.getCreatedAt()),
                 () -> Assertions.assertNotNull(result.getLastModifiedAt())
         );
@@ -285,31 +288,24 @@ public class TeamBuildingRepositoryTest{
     }
 
     private TeamDto createTeamAndTeamDto(int teamBuildingId, String teamName, List<org.waldreg.teambuilding.dto.UserDto> userDtoList){
+        TeamBuilding teamBuilding = jpaTeamBuildingRepository.findById(teamBuildingId).get();
         Team team = Team.builder()
-                .teamBuilding(jpaTeamBuildingRepository.findById(teamBuildingId).get())
+                .teamBuilding(teamBuilding)
                 .teamName(teamName)
                 .build();
-        team = jpaTeamRepository.saveAndFlush(team);
+        teamBuilding.addTeam(team);
+        Team storedTeam = jpaTeamRepository.saveAndFlush(team);
         List<User> userList = new ArrayList<>();
         userDtoList.stream().forEach(u -> userList.add(jpaTeamUserRepository.findById(u.getId()).get()));
-        team.setTeamUserList(createTeamUserList(team, userList));
-        Team storedTeam = jpaTeamRepository.saveAndFlush(team);
+        userList.forEach(t -> storedTeam.addTeamUser(t));
+        Team storedTeam2 = jpaTeamRepository.saveAndFlush(team);
         return TeamDto.builder()
                 .teamBuildingId(teamBuildingId)
-                .teamId(storedTeam.getTeamId())
-                .lastModifiedAt(storedTeam.getLastModifiedAt())
-                .teamName(storedTeam.getTeamName())
+                .teamId(storedTeam2.getTeamId())
+                .lastModifiedAt(storedTeam2.getLastModifiedAt())
+                .teamName(storedTeam2.getTeamName())
                 .userDtoList(userDtoList)
                 .build();
-    }
-
-    private List<TeamUser> createTeamUserList(Team team, List<User> userList){
-        List<TeamUser> teamUserList = new ArrayList<>();
-        userList.stream().forEach(u -> teamUserList.add(testJpaTeamUserWrapperRepository.saveAndFlush(TeamUser.builder()
-                .team(team)
-                .user(u)
-                .build())));
-        return teamUserList;
     }
 
     private List<UserDto> createUserDtoList(Character character){

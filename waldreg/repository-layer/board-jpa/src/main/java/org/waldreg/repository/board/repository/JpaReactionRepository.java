@@ -7,7 +7,7 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 import org.waldreg.domain.board.reaction.Reaction;
 
-@Repository
+@Repository("boardJpaReactionRepository")
 public interface JpaReactionRepository extends JpaRepository<Reaction,Integer>{
 
     @Query(value = "select R.* from REACTION R where R.BOARD_ID = :boardId",nativeQuery = true)

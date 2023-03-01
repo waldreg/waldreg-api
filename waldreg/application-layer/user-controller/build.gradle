@@ -27,7 +27,7 @@ dependencies {
     implementation project(':repository-layer:user-jpa')
     implementation project(':stable-service-layer:character')
     implementation project(':core-layer:util')
-    implementation project (':core-layer:template')
+    implementation project(':core-layer:template')
     implementation project(':service-layer:auth')
 
     implementation 'org.springframework.boot:spring-boot-starter'

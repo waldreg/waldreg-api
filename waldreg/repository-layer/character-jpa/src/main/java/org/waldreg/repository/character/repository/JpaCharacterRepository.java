@@ -8,13 +8,13 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 import org.waldreg.domain.character.Character;
 
-@Repository
+@Repository("characterJpaCharacterRepository")
 public interface JpaCharacterRepository extends JpaRepository<Character, Integer>{
 
     @Query("select c from Character as c join fetch c.permissionList where c.characterName = :characterName")
     Optional<Character> findByCharacterName(@Param("characterName") String characterName);
 
-    @Query("select c from Character as c join fetch c.permissionList")
+    @Query("select c from Character as c")
     List<Character> findAll();
 
     @Query("select u.character from User as u join u.character where u.id = :id")

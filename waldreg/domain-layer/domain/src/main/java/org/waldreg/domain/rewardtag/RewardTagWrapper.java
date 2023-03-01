@@ -24,7 +24,7 @@ public final class RewardTagWrapper{
     @Column(name = "REWARD_TAG_WRAPPER_REWARD_PRESENTED_AT", columnDefinition = "TIMESTAMP", nullable = false)
     private LocalDateTime rewardPresentedAt;
 
-    @OneToOne(fetch = FetchType.LAZY, optional = false)
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "REWARD_TAG_REWARD_TAG_ID")
     private RewardTag rewardTag;
 

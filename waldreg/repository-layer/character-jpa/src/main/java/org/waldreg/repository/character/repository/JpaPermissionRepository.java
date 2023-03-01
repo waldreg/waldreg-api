@@ -7,7 +7,7 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 import org.waldreg.domain.character.Permission;
 
-@Repository
+@Repository("characterJpaPermissionRepository")
 public interface JpaPermissionRepository extends JpaRepository<Permission, Integer>{
 
     @Modifying

@@ -7,7 +7,7 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 import org.waldreg.domain.teambuilding.TeamBuilding;
 
-@Repository
+@Repository("teambuildingJpaTeamBuildingRepository")
 public interface JpaTeamBuildingRepository extends JpaRepository<TeamBuilding, Integer>{
 
     @Query(value = "SELECT TB.* FROM TEAM_BUILDING AS TB ORDER BY TB.TEAM_BUILDING_CREATED_AT DESC LIMIT :count OFFSET :start", nativeQuery = true)

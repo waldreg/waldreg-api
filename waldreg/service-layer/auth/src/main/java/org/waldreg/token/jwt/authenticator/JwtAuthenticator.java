@@ -44,7 +44,7 @@ public class JwtAuthenticator implements TokenAuthenticator{
         }
     }
     private void throwIfPasswordMissMatch(String storedPassword, String userPassword, String userId){
-        if(storedPassword!= userPassword){
+        if(!storedPassword.equals(userPassword)){
             throw new PasswordMissMatchException(userId, userPassword);
         }
     }

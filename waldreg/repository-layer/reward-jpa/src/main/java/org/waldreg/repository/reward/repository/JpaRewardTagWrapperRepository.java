@@ -7,7 +7,7 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 import org.waldreg.domain.rewardtag.RewardTagWrapper;
 
-@Repository
+@Repository("rewardJpaRewardTagWrapperRepository")
 public interface JpaRewardTagWrapperRepository extends JpaRepository<RewardTagWrapper, Integer>{
 
     @Modifying

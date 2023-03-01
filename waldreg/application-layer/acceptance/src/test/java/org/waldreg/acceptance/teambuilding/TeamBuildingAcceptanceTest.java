@@ -327,7 +327,7 @@ public class TeamBuildingAcceptanceTest{
                 MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON),
                 MockMvcResultMatchers.jsonPath("$.max_idx").value(2),
                 MockMvcResultMatchers.jsonPath("$.teambuildings.[0].teambuilding_id").isNumber(),
-                MockMvcResultMatchers.jsonPath("$.teambuildings.[0].teambuilding_title").value(teamBuildingRequest.getTeamBuildingTitle()),
+                MockMvcResultMatchers.jsonPath("$.teambuildings.[0].teambuilding_title").value(teamBuildingRequest2.getTeamBuildingTitle()),
                 MockMvcResultMatchers.jsonPath("$.teambuildings.[0].created_at").isNotEmpty(),
                 MockMvcResultMatchers.jsonPath("$.teambuildings.[0].last_modified_at").isNotEmpty(),
                 MockMvcResultMatchers.jsonPath("$.teambuildings.[0].teams.[0].team_id").isNumber(),
@@ -339,7 +339,7 @@ public class TeamBuildingAcceptanceTest{
                 MockMvcResultMatchers.jsonPath("$.teambuildings.[0].teams.[1].team_id").isNumber(),
                 MockMvcResultMatchers.jsonPath("$.teambuildings.[0].teams.[1].team_members.[0]").isNotEmpty(),
                 MockMvcResultMatchers.jsonPath("$.teambuildings.[1].teambuilding_id").isNumber(),
-                MockMvcResultMatchers.jsonPath("$.teambuildings.[1].teambuilding_title").value(teamBuildingRequest2.getTeamBuildingTitle()),
+                MockMvcResultMatchers.jsonPath("$.teambuildings.[1].teambuilding_title").value(teamBuildingRequest.getTeamBuildingTitle()),
                 MockMvcResultMatchers.jsonPath("$.teambuildings.[1].created_at").isNotEmpty(),
                 MockMvcResultMatchers.jsonPath("$.teambuildings.[1].last_modified_at").isNotEmpty(),
                 MockMvcResultMatchers.jsonPath("$.teambuildings.[1].teams.[0].team_id").isNumber(),
@@ -351,7 +351,7 @@ public class TeamBuildingAcceptanceTest{
                 MockMvcResultMatchers.jsonPath("$.teambuildings.[1].teams.[1].team_id").isNumber(),
                 MockMvcResultMatchers.jsonPath("$.teambuildings.[1].teams.[1].team_members.[0]").isNotEmpty(),
                 MockMvcResultMatchers.jsonPath("$.teambuildings.[1].teams.[1].team_id").isNumber(),
-                MockMvcResultMatchers.jsonPath("$.teambuildings.[1].teams.[2].team_members.[0]").isNotEmpty()
+                MockMvcResultMatchers.jsonPath("$.teambuildings.[1].teams.[1].team_members.[0]").isNotEmpty()
         ).andDo(MockMvcResultHandlers.print());
 
     }
@@ -438,7 +438,7 @@ public class TeamBuildingAcceptanceTest{
                 MockMvcResultMatchers.header().string("api-version", apiVersion),
                 MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON),
                 MockMvcResultMatchers.jsonPath("$.teambuilding_id").value(id),
-                MockMvcResultMatchers.jsonPath("$.teambuilding_title").value(teamBuildingRequest.getTeamBuildingTitle()),
+                MockMvcResultMatchers.jsonPath("$.teambuilding_title").value(teamBuildingRequest2.getTeamBuildingTitle()),
                 MockMvcResultMatchers.jsonPath("$.created_at").isNotEmpty(),
                 MockMvcResultMatchers.jsonPath("$.last_modified_at").isNotEmpty(),
                 MockMvcResultMatchers.jsonPath("$.teams.[0].team_id").isNumber(),

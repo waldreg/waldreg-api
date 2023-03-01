@@ -7,7 +7,7 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 import org.waldreg.domain.board.comment.Comment;
 
-@Repository
+@Repository("boardJpaCommentRepository")
 public interface JpaCommentRepository extends JpaRepository<Comment,Integer>{
 
     @Query(value = "select A.* from (select C.*,U.USER_NAME,U.USER_USER_ID from COMMENT as C LEFT JOIN USER as U WHERE C.USER_ID = U.USER_ID AND C.BOARD_ID = :boardId) as A LIMIT :count OFFSET :start", nativeQuery = true)

@@ -7,7 +7,7 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 import org.waldreg.domain.character.Character;
 
-@Repository
+@Repository("userJpaCharacterRepository")
 public interface JpaCharacterRepository extends JpaRepository<Character, Integer>{
 
     @Query("select case when count(c) > 0 then true else false end from Character as c where characterName = :characterName")

@@ -30,6 +30,7 @@ public class JoiningPoolMapper{
         return UserDto.builder()
                 .userId(userJoiningPool.getUserId())
                 .userPassword(userJoiningPool.getUserPassword())
+                .character("Guest")
                 .name(userJoiningPool.getName())
                 .phoneNumber(userJoiningPool.getPhoneNumber())
                 .build();

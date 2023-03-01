@@ -4,6 +4,6 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 import org.waldreg.domain.board.Board;
 
-@Repository
+@Repository("authJpaBoardRepository")
 public interface JpaBoardRepository extends JpaRepository<Board, Integer>{
 }

@@ -3,12 +3,13 @@ package org.waldreg.repository.board.repository;
 import java.util.List;
 
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 import org.waldreg.domain.board.Board;
 
-@Repository
+@Repository("boardJpaBoardRepository")
 public interface JpaBoardRepository extends JpaRepository<Board, Integer>{
 
     @Query(value = "select A.* from (select B.*, C.CATEGORY_NAME,U.USER_NAME,U.USER_USER_ID from BOARD as B LEFT JOIN CATEGORY as C, USER as U WHERE B.CATEGORY_ID = C.CATEGORY_ID AND B.USER_ID = U.USER_ID) as A LIMIT :count OFFSET :start", nativeQuery = true)

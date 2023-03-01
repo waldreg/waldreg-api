@@ -32,7 +32,7 @@ public final class TeamBuilding{
     private LocalDateTime lastModifiedAt;
 
     @OneToMany(mappedBy = "teamBuilding", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
-    private List<Team> teamList;
+    private List<Team> teamList = new ArrayList<>();
 
     private TeamBuilding(){}
 
@@ -80,14 +80,23 @@ public final class TeamBuilding{
     }
 
     public void setTeamList(List<Team> teamList){
-        this.teamList = teamList;
+        teamList.clear();
+        this.teamList.addAll(teamList);
+    }
+
+    public void addTeam(Team team){
+        this.teamList.add(team);
     }
 
     public void deleteTeam(int teamId){
         teamList.stream().filter(t -> t.getTeamId() == teamId).findFirst().ifPresentOrElse(
-                t -> teamList.remove(t),
+                t -> {
+                    t.setTeamBuilding(null);
+                    teamList.remove(t);
+                },
                 () -> {throw new IllegalStateException("Cannot find team with id \"" + teamId + "\"");}
         );
+
     }
 
     public static final class Builder{

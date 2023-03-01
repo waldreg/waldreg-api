@@ -3,6 +3,7 @@ package org.waldreg.acceptance.board;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.io.FileInputStream;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -382,7 +383,8 @@ public class BoardAcceptanceTest{
                                                                              .andReturn()
                                                                              .getResponse()
                                                                              .getContentAsString(), CategoryListResponse.class);
-        int categoryId = categoryResult.getCategories()[0].getCategoryId();
+
+        int categoryId = categoryResult.getCategories()[2].getCategoryId();
 
         String name = "alcuk";
         String userId = "alcuk_id";
@@ -1966,7 +1968,7 @@ public class BoardAcceptanceTest{
                 MockMvcResultMatchers.header().string("api-version", apiVersion),
                 MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON),
                 MockMvcResultMatchers.jsonPath("$.code").value("BOARD-405"),
-                MockMvcResultMatchers.jsonPath("$.messages").value("Overflow content"),
+                MockMvcResultMatchers.jsonPath("$.messages").value("Overflow comment content"),
                 MockMvcResultMatchers.jsonPath("$.document_url").value("docs.waldreg.org")
         );
 
@@ -2192,7 +2194,7 @@ public class BoardAcceptanceTest{
                 MockMvcResultMatchers.header().string("api-version", apiVersion),
                 MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON),
                 MockMvcResultMatchers.jsonPath("$.code").value("BOARD-405"),
-                MockMvcResultMatchers.jsonPath("$.messages").value("Overflow content"),
+                MockMvcResultMatchers.jsonPath("$.messages").value("Overflow comment content"),
                 MockMvcResultMatchers.jsonPath("$.document_url").value("docs.waldreg.org")
         );
 

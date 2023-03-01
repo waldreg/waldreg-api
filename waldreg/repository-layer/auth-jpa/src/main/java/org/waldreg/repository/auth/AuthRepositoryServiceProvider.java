@@ -1,5 +1,6 @@
 package org.waldreg.repository.auth;
 
+import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 import org.waldreg.domain.user.User;
 import org.waldreg.repository.auth.mapper.AuthRepositoryMapper;
@@ -8,6 +9,7 @@ import org.waldreg.token.dto.TokenUserDto;
 import org.waldreg.token.exception.UnknownUserIdException;
 import org.waldreg.token.spi.AuthRepository;
 
+@Repository
 public class AuthRepositoryServiceProvider implements AuthRepository{
 
     private final JpaUserRepository jpaUserRepository;

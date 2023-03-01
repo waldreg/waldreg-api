@@ -8,7 +8,7 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 import org.waldreg.domain.attendance.AttendanceUser;
 
-@Repository
+@Repository("attendanceJpaAttendanceUserRepository")
 public interface JpaAttendanceUserRepository extends JpaRepository<AttendanceUser, Integer>{
 
     @Modifying

@@ -8,23 +8,28 @@ import org.springframework.transaction.annotation.Transactional;
 import org.waldreg.character.dto.CharacterDto;
 import org.waldreg.character.spi.CharacterRepository;
 import org.waldreg.domain.character.Character;
+import org.waldreg.domain.user.User;
 import org.waldreg.repository.character.mapper.CharacterRepositoryMapper;
 import org.waldreg.repository.character.repository.JpaCharacterRepository;
 import org.waldreg.repository.character.repository.JpaPermissionRepository;
+import org.waldreg.repository.character.repository.JpaUserRepository;
 
 @Repository
 public class CharacterRepositoryServiceProvider implements CharacterRepository{
 
     private final JpaCharacterRepository characterRepository;
     private final JpaPermissionRepository permissionRepository;
+    private final JpaUserRepository userRepository;
     private final CharacterRepositoryMapper characterRepositoryMapper;
 
     @Autowired
     CharacterRepositoryServiceProvider(JpaCharacterRepository characterRepository,
                                         JpaPermissionRepository permissionRepository,
+                                        JpaUserRepository userRepository,
                                         CharacterRepositoryMapper characterRepositoryMapper){
         this.characterRepository = characterRepository;
         this.permissionRepository = permissionRepository;
+        this.userRepository = userRepository;
         this.characterRepositoryMapper = characterRepositoryMapper;
     }
 
@@ -79,11 +84,18 @@ public class CharacterRepositoryServiceProvider implements CharacterRepository{
     @Override
     @Transactional
     public void deleteCharacter(String characterName){
-        Character character = characterRepository.findByCharacterName(characterName).orElseThrow(
-                () -> {throw new IllegalStateException("Cannot find character \"" + characterName + "\"");}
-        );
+        Character character = findByCharacterName(characterName);
+        Character guest = findByCharacterName("Guest");
+        List<User> user = userRepository.findByCharacterId(character.getId());
+        user.forEach(u -> userRepository.updateUserCharacter(guest.getId(), u.getId()));
         permissionRepository.deleteByCharacterId(character.getId());
         characterRepository.deleteById(character.getId());
+    }
+
+    private Character findByCharacterName(String characterName){
+        return characterRepository.findByCharacterName(characterName).orElseThrow(
+                () -> {throw new IllegalStateException("Cannot find character \"" + characterName + "\"");}
+        );
     }
 
 }

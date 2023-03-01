@@ -89,6 +89,9 @@ public final class Team{
 
     public void setTeamBuilding(TeamBuilding teamBuilding){
         this.teamBuilding = teamBuilding;
+        if(teamBuilding != null){
+            teamBuilding.addTeam(this);
+        }
     }
 
     public void setTeamName(String teamName){
@@ -100,7 +103,8 @@ public final class Team{
     }
 
     public void setTeamUserList(List<TeamUser> teamUserList){
-        this.teamUserList = teamUserList;
+        this.teamUserList.clear();
+        this.teamUserList.addAll(teamUserList);
     }
 
     public static final class Builder{

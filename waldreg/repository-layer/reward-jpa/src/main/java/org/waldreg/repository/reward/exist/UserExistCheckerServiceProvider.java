@@ -5,7 +5,7 @@ import org.springframework.stereotype.Repository;
 import org.waldreg.repository.reward.repository.JpaRewardUserRepository;
 import org.waldreg.reward.users.spi.repository.UserExistChecker;
 
-@Repository
+@Repository("rewardUserExistCheckerServiceProvider")
 public class UserExistCheckerServiceProvider implements UserExistChecker{
 
     private final JpaRewardUserRepository jpaRewardUserRepository;

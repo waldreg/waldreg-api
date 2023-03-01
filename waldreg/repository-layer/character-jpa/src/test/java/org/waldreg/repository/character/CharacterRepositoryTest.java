@@ -2,6 +2,7 @@ package org.waldreg.repository.character;
 
 import java.util.List;
 import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -37,6 +38,15 @@ class CharacterRepositoryTest{
 
     @Autowired
     private JpaUserRepository jpaUserRepository;
+
+    @BeforeEach
+    void INIT_CHARACTER(){
+        Character character = Character.builder()
+                .characterName("Guest")
+                .permissionList(List.of(Permission.builder().name("test").status("test").service("test").permissionUnitId(1).build()))
+                .build();
+        jpaCharacterRepository.saveAndFlush(character);
+    }
 
     @Test
     @DisplayName("새로운 Character 생성 테스트")

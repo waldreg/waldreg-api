@@ -2,6 +2,7 @@ package org.waldreg.domain.attendance;
 
 import java.time.LocalDate;
 import java.util.Objects;
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;

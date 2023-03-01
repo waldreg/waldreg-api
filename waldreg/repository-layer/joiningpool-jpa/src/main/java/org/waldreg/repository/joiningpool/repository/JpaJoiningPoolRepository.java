@@ -9,7 +9,7 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 import org.waldreg.domain.user.UserJoiningPool;
 
-@Repository
+@Repository("joiningpoolJpaJoiningPoolRepository")
 public interface JpaJoiningPoolRepository extends JpaRepository<UserJoiningPool, Integer>{
 
     @Query(value = "select JU.* from USER_JOINING_POOL as JU LIMIT :count OFFSET :start",nativeQuery = true)

@@ -7,7 +7,7 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 import org.waldreg.domain.user.User;
 
-@Repository
+@Repository("authJpaUserRepository")
 public interface JpaUserRepository extends JpaRepository<User, Integer>{
 
     @Query(value = "select EXISTS (select U.* from USER U where U.USER_USER_ID = :userId)", nativeQuery = true)

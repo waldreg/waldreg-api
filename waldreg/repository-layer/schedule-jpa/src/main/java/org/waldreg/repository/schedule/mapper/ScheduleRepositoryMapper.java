@@ -3,11 +3,13 @@ package org.waldreg.repository.schedule.mapper;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import org.springframework.stereotype.Component;
 import org.waldreg.domain.calendar.Schedule;
 import org.waldreg.domain.calendar.ScheduleRepeat;
 import org.waldreg.schedule.dto.RepeatDto;
 import org.waldreg.schedule.dto.ScheduleDto;
 
+@Component
 public class ScheduleRepositoryMapper{
 
     public Schedule scheduleDtoToSchedule(ScheduleDto scheduleDto){

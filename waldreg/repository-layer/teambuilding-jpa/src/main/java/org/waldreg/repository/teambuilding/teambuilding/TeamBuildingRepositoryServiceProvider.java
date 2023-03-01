@@ -93,9 +93,7 @@ public class TeamBuildingRepositoryServiceProvider implements TeamBuildingReposi
         Team team = jpaTeamRepository.findById(teamDto.getTeamId()).orElseThrow(
                 () -> {throw new IllegalStateException("Cannot find team with id \"" + teamDto.getTeamId() + "\"");}
         );
-        List<Team> teamList = teamBuilding.getTeamList();
-        teamList.add(team);
-        teamBuilding.setTeamList(teamList);
+        teamBuilding.addTeam(team);
     }
 
     @Override

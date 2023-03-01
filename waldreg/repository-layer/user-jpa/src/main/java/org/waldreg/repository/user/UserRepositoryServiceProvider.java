@@ -4,9 +4,13 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
+import org.waldreg.domain.attendance.Attendance;
+import org.waldreg.domain.attendance.AttendanceUser;
 import org.waldreg.domain.character.Character;
 import org.waldreg.domain.user.User;
 import org.waldreg.repository.user.mapper.UserRepositoryMapper;
+import org.waldreg.repository.user.repository.JpaAttendanceRepository;
+import org.waldreg.repository.user.repository.JpaAttendanceUserRepository;
 import org.waldreg.repository.user.repository.JpaCharacterRepository;
 import org.waldreg.repository.user.repository.JpaUserRepository;
 import org.waldreg.user.dto.UserDto;
@@ -17,12 +21,16 @@ public class UserRepositoryServiceProvider implements UserRepository{
 
     private final JpaUserRepository jpaUserRepository;
     private final JpaCharacterRepository jpaCharacterRepository;
+    private final JpaAttendanceRepository jpaAttendanceRepository;
+    private final JpaAttendanceUserRepository jpaAttendanceUserRepository;
     private final UserRepositoryMapper userRepositoryMapper;
 
     @Autowired
-    public UserRepositoryServiceProvider(JpaUserRepository jpaUserRepository, JpaCharacterRepository jpaCharacterRepository, UserRepositoryMapper userRepositoryMapper){
+    public UserRepositoryServiceProvider(JpaUserRepository jpaUserRepository, JpaCharacterRepository jpaCharacterRepository, UserRepositoryMapper userRepositoryMapper, JpaAttendanceRepository jpaAttendanceRepository, JpaAttendanceUserRepository jpaAttendanceUserRepository){
         this.jpaUserRepository = jpaUserRepository;
         this.jpaCharacterRepository = jpaCharacterRepository;
+        this.jpaAttendanceRepository = jpaAttendanceRepository;
+        this.jpaAttendanceUserRepository = jpaAttendanceUserRepository;
         this.userRepositoryMapper = userRepositoryMapper;
     }
 
@@ -95,10 +103,23 @@ public class UserRepositoryServiceProvider implements UserRepository{
     @Override
     @Transactional
     public void deleteById(int id){
-        jpaUserRepository.findById(id).orElseThrow(
+        User user = jpaUserRepository.findById(id).orElseThrow(
                 () -> {throw new IllegalStateException("Cannot find user with id \"" + id + "\"");}
         );
+        deleteAttendanceUser(user);
         jpaUserRepository.deleteById(id);
+    }
+
+    private void deleteAttendanceUser(User user){
+        if(!jpaAttendanceUserRepository.existsByUser(user)){
+            return;
+        }
+        AttendanceUser attendanceUser = jpaAttendanceUserRepository.findByUser(user);
+        List<Attendance> attendanceList = jpaAttendanceRepository.findByUserId(user.getId());
+        if(!attendanceList.isEmpty()){
+            jpaAttendanceRepository.deleteByAttendanceUserId(attendanceList.get(0).getAttendanceUser().getAttendanceUserId());
+        }
+        jpaAttendanceUserRepository.deleteById(attendanceUser.getAttendanceUserId());
     }
 
     @Override

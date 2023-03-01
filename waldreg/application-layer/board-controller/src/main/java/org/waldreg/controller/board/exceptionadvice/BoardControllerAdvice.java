@@ -112,7 +112,7 @@ public class BoardControllerAdvice{
         return new ResponseEntity<>(exceptionTemplate, HttpStatus.BAD_REQUEST);
     }
 
-    @ExceptionHandler({UnknownFileId.class})
+    @ExceptionHandler({BoardTitleOverFlowException.class})
     public ResponseEntity<ExceptionTemplate> catchBoardTitleOverFlowException(BoardTitleOverFlowException boardTitleOverFlowException){
         ExceptionTemplate exceptionTemplate = ExceptionTemplate.builder()
                 .code("BOARD-414")
@@ -122,7 +122,7 @@ public class BoardControllerAdvice{
         return new ResponseEntity<>(exceptionTemplate, HttpStatus.BAD_REQUEST);
     }
 
-    @ExceptionHandler({UnknownFileId.class})
+    @ExceptionHandler({CategoryNameOverFlowException.class})
     public ResponseEntity<ExceptionTemplate> catchCategoryNameOverFlowException(CategoryNameOverFlowException categoryNameOverFlowException){
         ExceptionTemplate exceptionTemplate = ExceptionTemplate.builder()
                 .code("BOARD-416")

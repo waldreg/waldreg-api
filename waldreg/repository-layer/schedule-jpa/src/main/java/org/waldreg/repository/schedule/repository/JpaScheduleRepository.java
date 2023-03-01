@@ -7,7 +7,7 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 import org.waldreg.domain.calendar.Schedule;
 
-@Repository
+@Repository("scheduleJpaScheduleRepository")
 public interface JpaScheduleRepository extends JpaRepository<Schedule, Integer>{
 
     @Query(value = "SELECT * FROM SCHEDULE WHERE (YEAR(SCHEDULE_STARTED_AT) = :year AND MONTH(SCHEDULE_STARTED_AT) = :month) OR (YEAR(SCHEDULE_FINISH_AT) = :year AND MONTH(SCHEDULE_FINISH_AT) = :month)",nativeQuery = true)

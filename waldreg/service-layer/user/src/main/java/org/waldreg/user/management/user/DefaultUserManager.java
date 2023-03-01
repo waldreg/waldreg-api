@@ -147,7 +147,7 @@ public class DefaultUserManager implements UserManager{
 
     private void throwIfUserNameOverflowDetected(UserDto userDto){
         if(userDto.getName().length()>50){
-            throw new ContentOverflowException("USER-412","User Name length cannot be over 50 current length \""+userDto.getName().length()+"\"");
+            throw new ContentOverflowException("USER-412","User name length cannot be over 50 current length \""+userDto.getName().length()+"\"");
         }
     }
 

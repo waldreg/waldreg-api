@@ -232,19 +232,10 @@ public class JpaTeamRepositoryTest{
                 .teamName(teamName)
                 .build();
         Team storedTeam = jpaTeamRepository.saveAndFlush(team);
-        storedTeam.setTeamUserList(createTeamUserList(storedTeam, userList));
+        userList.forEach(t -> storedTeam.addTeamUser(t));
         entityManager.flush();
         entityManager.clear();
-        return storedTeam;
-    }
-
-    private List<TeamUser> createTeamUserList(Team team, List<User> userList){
-        List<TeamUser> teamUserList = new ArrayList<>();
-        userList.stream().forEach(u -> teamUserList.add(testJpaTeamUserWrapperRepository.saveAndFlush(TeamUser.builder()
-                .team(team)
-                .user(u)
-                .build())));
-        return teamUserList;
+        return team;
     }
 
     private List<User> createUserList(Character character){

@@ -1,6 +1,5 @@
 package org.waldreg.repository.board;
 
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,19 +15,22 @@ import org.waldreg.domain.user.User;
 import org.waldreg.repository.board.mapper.ReactionRepositoryMapper;
 import org.waldreg.repository.board.repository.JpaBoardRepository;
 import org.waldreg.repository.board.repository.JpaReactionRepository;
+import org.waldreg.repository.board.repository.JpaReactionUserRepository;
 import org.waldreg.repository.board.repository.JpaUserRepository;
 
 @Repository
 public class ReactionRepositoryServiceProvider implements ReactionUserRepository, ReactionInBoardRepository{
 
     private final JpaReactionRepository jpaReactionRepository;
+    private final JpaReactionUserRepository jpaReactionUserRepository;
     private final ReactionRepositoryMapper reactionRepositoryMapper;
     private final JpaBoardRepository jpaBoardRepository;
     private final JpaUserRepository jpaUserRepository;
 
     @Autowired
-    public ReactionRepositoryServiceProvider(JpaReactionRepository jpaReactionRepository, ReactionRepositoryMapper reactionRepositoryMapper, JpaBoardRepository jpaBoardRepository, JpaUserRepository jpaUserRepository){
+    public ReactionRepositoryServiceProvider(JpaReactionRepository jpaReactionRepository, JpaReactionUserRepository jpaReactionUserRepository, ReactionRepositoryMapper reactionRepositoryMapper, JpaBoardRepository jpaBoardRepository, JpaUserRepository jpaUserRepository){
         this.jpaReactionRepository = jpaReactionRepository;
+        this.jpaReactionUserRepository = jpaReactionUserRepository;
         this.reactionRepositoryMapper = reactionRepositoryMapper;
         this.jpaBoardRepository = jpaBoardRepository;
         this.jpaUserRepository = jpaUserRepository;
@@ -44,16 +46,20 @@ public class ReactionRepositoryServiceProvider implements ReactionUserRepository
     @Override
     @Transactional
     public void storeReactionDto(ReactionDto reactionDto){
+        System.out.println("reaction Dto : " + reactionDto);
         List<Reaction> reactionList = jpaReactionRepository.findByBoardId(reactionDto.getBoardId());
+        reactionList.forEach(r -> System.out.println("reaction List : " + r));
         Map<BoardServiceReactionType, List<UserDto>> map = reactionDto.getReactionMap();
         for (BoardServiceReactionType type : map.keySet()){
             for (Reaction reaction : reactionList){
                 if (type.name().equals(reaction.getType())){
+                    reaction.getReactionUserList().forEach(r -> jpaReactionUserRepository.deleteById(r.getId()));
                     List<UserDto> userDtoList = map.get(type);
                     reaction.setReactionUserList(reactionRepositoryMapper.userDtoListToReactionUserList(userDtoList, reaction));
                 }
             }
         }
+        reactionList.forEach(r -> System.out.println("reaction List : " + r));
         jpaReactionRepository.saveAll(reactionList);
     }
 
