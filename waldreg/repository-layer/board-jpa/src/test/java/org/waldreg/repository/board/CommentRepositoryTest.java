@@ -435,6 +435,51 @@ public class CommentRepositoryTest{
     }
 
 
+    @Test
+    @DisplayName("comment 생성시 board 에서 접근 가능한지 테스트")
+    void COMMENT_BOARD_ACCESS_TEST(){
+        Board board = setDefaultBoard();
+        Character character = jpaCharacterRepository.findAll().get(0);
+        User user = User.builder()
+                .userId("commentUser")
+                .name("aaaa")
+                .userPassword("bocda")
+                .phoneNumber("010-1234-5678")
+                .character(character)
+                .build();
+        jpaUserRepository.save(user);
+        entityManager.flush();
+        entityManager.clear();
+        UserDto userDto = UserDto.builder()
+                .id(user.getId())
+                .userId(user.getUserId())
+                .name(user.getName())
+                .build();
+
+        CommentDto commentDto = CommentDto.builder()
+                .boardId(board.getId())
+                .content("commnet1")
+                .userDto(userDto)
+                .build();
+        //when
+        CommentDto createdCommentDto = commentRepository.createComment(commentDto);
+        entityManager.flush();
+        entityManager.clear();
+
+        Board board1 = jpaBoardRepository.findById(board.getId()).get();
+
+        //then
+        Assertions.assertAll(
+                ()->Assertions.assertEquals(board1.getCommentList().size(),1),
+                ()->Assertions.assertEquals(board1.getCommentList().get(0).getContent(),commentDto.getContent()),
+                ()->Assertions.assertEquals(board1.getCommentList().get(0).getUser().getUserId(),commentDto.getUserDto().getUserId())
+
+        );
+
+
+    }
+
+
     private Board setDefaultBoard(){
         Character character = Character.builder()
                 .characterName("Guest")

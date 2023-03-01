@@ -4,6 +4,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
+import org.waldreg.board.comment.spi.CommentInBoardRepository;
 import org.waldreg.board.comment.spi.CommentRepository;
 import org.waldreg.board.dto.CommentDto;
 import org.waldreg.domain.board.Board;
@@ -15,7 +16,7 @@ import org.waldreg.repository.board.repository.JpaCommentRepository;
 import org.waldreg.repository.board.repository.JpaUserRepository;
 
 @Repository
-public class CommentRepositoryServiceProvider implements CommentRepository{
+public class CommentRepositoryServiceProvider implements CommentRepository, CommentInBoardRepository{
 
     private final CommentRepositoryMapper commentRepositoryMapper;
     private final JpaCommentRepository jpaCommentRepository;
@@ -96,6 +97,11 @@ public class CommentRepositoryServiceProvider implements CommentRepository{
     @Transactional
     public void deleteComment(int id){
         jpaCommentRepository.deleteById(id);
+    }
+
+    @Override
+    public boolean isExistBoard(int id){
+        return jpaBoardRepository.existsById(id);
     }
 
 }

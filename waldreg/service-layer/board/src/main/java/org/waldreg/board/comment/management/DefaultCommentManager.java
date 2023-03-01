@@ -38,7 +38,6 @@ public class DefaultCommentManager implements CommentManager{
         UserDto userDto = commentUserRepository.getUserInfo(id);
         commentDto.setUserDto(userDto);
         CommentDto storedCommentDto = commentRepository.createComment(commentDto);
-        commentInBoardRepository.addCommentInBoardCommentList(storedCommentDto);
     }
 
     @Override
