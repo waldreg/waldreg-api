@@ -24,7 +24,7 @@ dependencyManagement {
 
 dependencies {
     implementation project(':service-layer:schedule')
-    implementation project(':repository-layer:memory-repository')
+    implementation project(':repository-layer:schedule-jpa')
     implementation project(':stable-service-layer:character')
     implementation project(':core-layer:util')
     implementation project(':core-layer:template')

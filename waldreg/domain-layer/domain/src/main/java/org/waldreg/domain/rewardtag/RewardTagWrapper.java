@@ -1,31 +1,50 @@
 package org.waldreg.domain.rewardtag;
 
 import java.time.LocalDateTime;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.OneToOne;
+import javax.persistence.Table;
+import org.waldreg.domain.user.User;
 
-public class RewardTagWrapper{
+@Entity
+@Table(name = "REWARD_TAG_WRAPPER")
+public final class RewardTagWrapper{
 
-    private int rewardId;
-    private final LocalDateTime rewardPresentedAt;
-    private final RewardTag rewardTag;
+    @Id
+    @GeneratedValue
+    @Column(name = "REWARD_TAG_WRAPPER_REWARD_ID")
+    private Integer rewardId;
 
-    private RewardTagWrapper(){
-        throw new UnsupportedOperationException("Can not invoke constructor \"RewardTagWrapper()\"");
-    }
+    @Column(name = "REWARD_TAG_WRAPPER_REWARD_PRESENTED_AT", columnDefinition = "TIMESTAMP", nullable = false)
+    private LocalDateTime rewardPresentedAt;
+
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name = "REWARD_TAG_REWARD_TAG_ID")
+    private RewardTag rewardTag;
+
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name = "USER_ID", nullable = false)
+    private User user;
+
+    private RewardTagWrapper(){}
 
     private RewardTagWrapper(Builder builder){
         this.rewardPresentedAt = builder.rewardPresentedAt;
         this.rewardTag = builder.rewardTag;
+        this.user = builder.user;
     }
 
     public static Builder builder(){
         return new Builder();
     }
 
-    public void setRewardId(int rewardId){
-        this.rewardId = rewardId;
-    }
-
-    public int getRewardId(){
+    public Integer getRewardId(){
         return rewardId;
     }
 
@@ -37,19 +56,27 @@ public class RewardTagWrapper{
         return rewardTag;
     }
 
-    public final static class Builder{
+    public User getUser(){
+        return user;
+    }
+
+    public static final class Builder{
 
         private final LocalDateTime rewardPresentedAt;
         private RewardTag rewardTag;
+        private User user;
 
-        {
+        private Builder(){
             rewardPresentedAt = LocalDateTime.now();
         }
 
-        private Builder(){}
-
         public Builder rewardTag(RewardTag rewardTag){
             this.rewardTag = rewardTag;
+            return this;
+        }
+
+        public Builder user(User user){
+            this.user = user;
             return this;
         }
 

@@ -5,6 +5,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.waldreg.token.dto.TokenDto;
@@ -12,6 +13,7 @@ import org.waldreg.token.exception.TokenExpiredException;
 import org.waldreg.token.jwt.authenticator.JwtAuthenticator;
 import org.waldreg.token.jwt.publisher.JwtTokenPublisher;
 import org.waldreg.token.jwt.secret.Secret;
+import org.waldreg.token.spi.AuthRepository;
 import org.waldreg.util.token.DecryptedTokenContext;
 
 @ExtendWith(SpringExtension.class)
@@ -23,6 +25,9 @@ public class JwtAuthenticatorTest{
 
     @Autowired
     private JwtAuthenticator jwtTokenAuthenticator;
+
+    @MockBean
+    private AuthRepository authRepository;
 
     @Test
     @DisplayName("jwt 토큰 인증 성공")

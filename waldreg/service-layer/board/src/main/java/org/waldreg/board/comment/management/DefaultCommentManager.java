@@ -38,7 +38,6 @@ public class DefaultCommentManager implements CommentManager{
         UserDto userDto = commentUserRepository.getUserInfo(id);
         commentDto.setUserDto(userDto);
         CommentDto storedCommentDto = commentRepository.createComment(commentDto);
-        commentInBoardRepository.addCommentInBoardCommentList(storedCommentDto);
     }
 
     @Override
@@ -79,7 +78,7 @@ public class DefaultCommentManager implements CommentManager{
 
     private void throwIfContentOverFlowThousand(String content){
         if (content.length() > 1000){
-            throw new ContentOverFlowException();
+            throw new ContentOverFlowException("BOARD-405","Overflow comment content");
         }
     }
 

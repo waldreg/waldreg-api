@@ -14,6 +14,7 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.waldreg.character.exception.NoPermissionException;
 import org.waldreg.character.management.CharacterManager;
 import org.waldreg.user.dto.UserDto;
+import org.waldreg.user.exception.ContentOverflowException;
 import org.waldreg.user.exception.DuplicatedUserIdException;
 import org.waldreg.user.exception.InvalidRangeException;
 import org.waldreg.user.exception.UnknownIdException;
@@ -65,6 +66,48 @@ public class UserServiceTest{
 
         // when & then
         Assertions.assertDoesNotThrow(() -> joiningPoolManager.createUser(createRequest));
+
+    }
+
+    @Test
+    @DisplayName("유저 생성 실패 테스트 - user_id 가 50자 초과")
+    public void CREATE_USER_FAIL_CAUSE_USER_ID_OVERFLOW_TEST(){
+        // given
+        String name = "홍길동";
+        String userId = "hellohellohellohellohellohellohellohellohellohellohellohello";
+        String userPassword = "hello1234";
+        String phoneNumber = "010-1234-1234";
+        UserDto createRequest = UserDto.builder()
+                .name(name)
+                .userId(userId)
+                .userPassword(userPassword)
+                .phoneNumber(phoneNumber)
+                .build();
+        Mockito.when(userCharacterRepository.isExistCharacterName(Mockito.anyString())).thenReturn(true);
+
+        // when & then
+        Assertions.assertThrows(ContentOverflowException.class, () -> joiningPoolManager.createUser(createRequest));
+
+    }
+
+    @Test
+    @DisplayName("유저 생성 실패 테스트 - user_name이 50자 초과")
+    public void CREATE_USER_FAIL_CAUSE_USER_NAME_OVERFLOW_TEST(){
+        // given
+        String name = "hellohellohellohellohellohellohellohellohellohellohellohello";
+        String userId = "홍길동";
+        String userPassword = "hello1234";
+        String phoneNumber = "010-1234-1234";
+        UserDto createRequest = UserDto.builder()
+                .name(name)
+                .userId(userId)
+                .userPassword(userPassword)
+                .phoneNumber(phoneNumber)
+                .build();
+        Mockito.when(userCharacterRepository.isExistCharacterName(Mockito.anyString())).thenReturn(true);
+
+        // when & then
+        Assertions.assertThrows(ContentOverflowException.class, () -> joiningPoolManager.createUser(createRequest));
 
     }
 
@@ -534,6 +577,43 @@ public class UserServiceTest{
     }
 
     @Test
+    @DisplayName("특정 유저 수정 실패 테스트 - user_name이 50자 초과")
+    public void UPDATE_SPECIFIC_USER_FAIL_CAUSE_USER_NAME_OVERFLOW_TEST(){
+        //given
+        int id = 1;
+        String name = "짱구";
+        String userId = "hello123";
+        String userPassword = "hello1234";
+        String phoneNumber = "010-1234-1234";
+        UserDto createRequest = UserDto.builder()
+                .name(name)
+                .userId(userId)
+                .userPassword(userPassword)
+                .phoneNumber(phoneNumber)
+                .build();
+        String updateName = "hellohellohellohellohellohellohellohellohellohellohellohello";
+        String updatePhoneNumber = "010-4321-1234";
+        UserDto createUpdateRequest = UserDto.builder()
+                .name(updateName)
+                .phoneNumber(updatePhoneNumber)
+                .build();
+        UserDto changedRequest = UserDto.builder()
+                .name(updateName)
+                .userId(userId)
+                .userPassword(userPassword)
+                .phoneNumber(updatePhoneNumber)
+                .build();
+
+        //when
+        Mockito.when(userRepository.readUserById(Mockito.anyInt())).thenReturn(createRequest);
+        Mockito.when(userRepository.isExistId(Mockito.anyInt())).thenReturn(true);
+        UserDto result = userManager.readUserById(id);
+
+        //then
+        Assertions.assertThrows(ContentOverflowException.class, () -> userManager.updateUser(result.getId(), createUpdateRequest));
+    }
+
+    @Test
     @DisplayName("유저 역할 수정 성공 테스트")
     public void UPDATE_USER_CHARACTER_SUCCESS_TEST(){
         //given
@@ -679,6 +759,7 @@ public class UserServiceTest{
         Mockito.when(userRepository.readUserById(Mockito.anyInt())).thenReturn(createRequest);
         //then
         Assertions.assertDoesNotThrow(() -> userManager.deleteById(id));
+        Assertions.assertTrue(userCharacterRepository.isExistCharacterName("Guest"));
     }
 
 }

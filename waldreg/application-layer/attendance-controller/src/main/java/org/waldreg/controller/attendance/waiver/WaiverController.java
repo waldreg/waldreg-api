@@ -3,6 +3,7 @@ package org.waldreg.controller.attendance.waiver;
 import java.util.List;
 import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -37,7 +38,7 @@ public class WaiverController{
 
     @Authenticating
     @PostMapping("/attendance/waiver")
-    public void waiveAttendance(@RequestBody AttendanceWaiverRequest attendanceWaiverRequest){
+    public void waiveAttendance(@RequestBody @Validated AttendanceWaiverRequest attendanceWaiverRequest){
         int id = decryptedTokenContextGetter.get();
         WaiverDto waiverDto = waiverControllerMapper.attendanceWaiverRequestToWavierDto(id, attendanceWaiverRequest);
         waiverManager.waive(waiverDto);

@@ -52,10 +52,6 @@ public class TeamBuildingDto{
         this.teamBuildingTitle = teamBuildingTitle;
     }
 
-    public void setCreatedAt(LocalDateTime createdAt){
-        this.createdAt = createdAt;
-    }
-
     public void setLastModifiedAt(LocalDateTime lastModifiedAt){
         this.lastModifiedAt = lastModifiedAt;
     }

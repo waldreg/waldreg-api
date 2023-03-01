@@ -3,40 +3,83 @@ package org.waldreg.domain.board;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import javax.persistence.CascadeType;
+import javax.persistence.Column;
+import javax.persistence.ElementCollection;
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.Lob;
+import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
+import javax.persistence.Table;
 import org.waldreg.domain.board.comment.Comment;
 import org.waldreg.domain.board.reaction.Reaction;
+import org.waldreg.domain.board.category.Category;
 import org.waldreg.domain.user.User;
 
+@Entity
+@Table(name = "BOARD")
 public final class Board{
 
-    private int id;
-    private String title;
-    private int categoryId;
-    private String content;
-    private User user;
-    private LocalDateTime createdAt;
-    private LocalDateTime lastModifiedAt;
-    private List<String> imagePathList;
-    private List<String> filePathList;
-    private Reaction reactions;
-    private List<Comment> commentList;
-    private int views;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "BOARD_ID")
+    private Integer id;
 
-    private Board(){
-        throw new UnsupportedOperationException("Can not invoke constructor \"Board()\"");
-    }
+    @Column(name = "BOARD_TITLE", nullable = false, length = 250)
+    private String title;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "CATEGORY_ID", nullable = false)
+    private Category category;
+
+    @Lob
+    @Column(name = "BOARD_CONTENT")
+    private String content;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "USER_ID", nullable = false)
+    private User user;
+
+    @Column(name = "BOARD_CREATED_AT", columnDefinition = "TIMESTAMP", nullable = false)
+    private LocalDateTime createdAt;
+
+    @Column(name = "BOARD_LAST_MODIFIED_AT", columnDefinition = "TIMESTAMP", nullable = false)
+    private LocalDateTime lastModifiedAt;
+
+    @Column(name = "BOARD_IMAGE_PATH_LIST")
+    @ElementCollection(fetch = FetchType.LAZY)
+    private List<String> imagePathList;
+
+    @Column(name = "BOARD_FILE_PATH_LIST")
+    @ElementCollection(fetch = FetchType.LAZY)
+    private List<String> filePathList;
+
+    @OneToMany(mappedBy = "board", orphanRemoval = true, fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    private List<Reaction> reactionList;
+
+    @OneToMany(mappedBy = "board", orphanRemoval = true, fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    private List<Comment> commentList;
+
+    @Column(name = "BOARD_VIEWS", nullable = false)
+    private Integer views;
+
+    private Board(){}
 
     private Board(Builder builder){
-        this.id = builder.id;
         this.title = builder.title;
-        this.categoryId = builder.categoryId;
+        this.category = builder.category;
         this.content = builder.content;
         this.user = builder.user;
         this.createdAt = builder.createdAt;
         this.lastModifiedAt = builder.lastModifiedAt;
         this.imagePathList = builder.imagePathList;
         this.filePathList = builder.filePathList;
-        this.reactions = builder.reactions;
+        this.reactionList = builder.reactionList;
         this.commentList = builder.commentList;
         this.views = builder.views;
     }
@@ -45,18 +88,16 @@ public final class Board{
         return new Builder();
     }
 
-    public int getId(){
+    public Integer getId(){
         return id;
     }
-
-    public void setId(int id){this.id = id;}
 
     public String getTitle(){
         return title;
     }
 
-    public int getCategoryId(){
-        return categoryId;
+    public Category getCategory(){
+        return category;
     }
 
     public String getContent(){
@@ -83,7 +124,7 @@ public final class Board{
         return filePathList;
     }
 
-    public Reaction getReactions(){return reactions;}
+    public List<Reaction> getReactionList(){return reactionList;}
 
     public List<Comment> getCommentList(){
         return commentList;
@@ -97,8 +138,8 @@ public final class Board{
         this.title = title;
     }
 
-    public void setCategoryId(int categoryId){
-        this.categoryId = categoryId;
+    public void setCategory(Category category){
+        this.category = category;
     }
 
     public void setContent(String content){
@@ -113,24 +154,12 @@ public final class Board{
         this.lastModifiedAt = lastModifiedAt;
     }
 
-    public void setImagePathList(List<String> imagePathList){
-        this.imagePathList = imagePathList;
-    }
-
-    public void setFilePathList(List<String> filePathList){
-        this.filePathList = filePathList;
-    }
-
-    public void setReactions(Reaction reactions){
-        this.reactions = reactions;
+    public void setReactions(List<Reaction> reactionList){
+        this.reactionList = reactionList;
     }
 
     public void setCommentList(List<Comment> commentList){
         this.commentList = commentList;
-    }
-
-    public void setViews(int views){
-        this.views = views;
     }
 
     public void addComment(Comment comment){
@@ -139,32 +168,24 @@ public final class Board{
 
     public static final class Builder{
 
-        private int id;
         private String title;
-        private int categoryId;
+        private Category category;
         private String content;
         private User user;
         private LocalDateTime createdAt;
         private LocalDateTime lastModifiedAt;
         private List<String> imagePathList;
         private List<String> filePathList;
-        private Reaction reactions;
+        private List<Reaction> reactionList;
         private List<Comment> commentList;
-        private int views;
+        private Integer views;
 
-        {
+        private Builder(){
             createdAt = LocalDateTime.now();
             lastModifiedAt = createdAt;
-            reactions = Reaction.builder().build();
+            reactionList = new ArrayList<>();
             commentList = new ArrayList<>();
             views = 0;
-        }
-
-        private Builder(){}
-
-        public Builder id(int id){
-            this.id = id;
-            return this;
         }
 
         public Builder title(String title){
@@ -172,8 +193,8 @@ public final class Board{
             return this;
         }
 
-        public Builder categoryId(int categoryId){
-            this.categoryId = categoryId;
+        public Builder category(Category category){
+            this.category = category;
             return this;
         }
 
@@ -208,8 +229,8 @@ public final class Board{
             return this;
         }
 
-        public Builder reactions(Reaction reactions){
-            this.reactions = reactions;
+        public Builder reactionList(List<Reaction> reactionList){
+            this.reactionList = reactionList;
             return this;
         }
 
@@ -218,7 +239,7 @@ public final class Board{
             return this;
         }
 
-        public Builder views(int views){
+        public Builder views(Integer views){
             this.views = views;
             return this;
         }

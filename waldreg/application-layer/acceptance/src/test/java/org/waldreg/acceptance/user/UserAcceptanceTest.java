@@ -146,6 +146,69 @@ public class UserAcceptanceTest{
     }
 
     @Test
+    @DisplayName("유저 생성 실패 인수 테스트 - user_Id 50자 초과")
+    public void CREATE_NEW_USER_FAIL_CAUSE_USER_ID_OVERFLOW_TEST() throws Exception{
+        //given
+        String name = "alcuk";
+        String userId = "alcukalcukalcukalcukalcukalcukalcukalcukalcukalcukalcukalcuk";
+        String userPassword = "2gdddddd!";
+        String phoneNumber = "010-1234-1234";
+        UserRequest userCreateRequest = UserRequest.builder()
+                .name(name)
+                .userId(userId)
+                .userPassword(userPassword)
+                .phoneNumber(phoneNumber)
+                .build();
+
+        //when
+        ResultActions result = UserAcceptanceTestHelper.createUser(mvc, objectMapper.writeValueAsString(userCreateRequest));
+        userCreateRequestList.add(userCreateRequest);
+
+        //then
+        result.andExpectAll(
+                MockMvcResultMatchers.status().isBadRequest(),
+                MockMvcResultMatchers.header().string(HttpHeaders.CONTENT_TYPE, "application/json"),
+                MockMvcResultMatchers.header().string("api-version", apiVersion),
+                MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON),
+                MockMvcResultMatchers.jsonPath("$.code").value("USER-411"),
+                MockMvcResultMatchers.jsonPath("$.messages").value("User_id length cannot be over 50 current length \"" + userId.length() + "\""),
+                MockMvcResultMatchers.jsonPath("$.document_url").value("docs.waldreg.org")
+        ).andDo(MockMvcResultHandlers.print());
+    }
+
+    @Test
+    @DisplayName("유저 생성 실패 인수 테스트 - user_Name 50자 초과")
+    public void CREATE_NEW_USER_FAIL_CAUSE_USER_NAME_OVERFLOW_TEST() throws Exception{
+        //given
+        String name = "alcukalcukalcukalcukalcukalcukalcukalcukalcukalcukalcukalcuk";
+        String userId = "alcuk";
+        String userPassword = "2gdddddd!";
+        String phoneNumber = "010-1234-1234";
+        UserRequest userCreateRequest = UserRequest.builder()
+                .name(name)
+                .userId(userId)
+                .userPassword(userPassword)
+                .phoneNumber(phoneNumber)
+                .build();
+
+        //when
+        ResultActions result = UserAcceptanceTestHelper.createUser(mvc, objectMapper.writeValueAsString(userCreateRequest));
+        userCreateRequestList.add(userCreateRequest);
+
+        //then
+        result.andExpectAll(
+                MockMvcResultMatchers.status().isBadRequest(),
+                MockMvcResultMatchers.header().string(HttpHeaders.CONTENT_TYPE, "application/json"),
+                MockMvcResultMatchers.header().string("api-version", apiVersion),
+                MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON),
+                MockMvcResultMatchers.jsonPath("$.code").value("USER-412"),
+                MockMvcResultMatchers.jsonPath("$.messages").value("User name length cannot be over 50 current length \"" + name.length() + "\""),
+                MockMvcResultMatchers.jsonPath("$.document_url").value("docs.waldreg.org")
+        ).andDo(MockMvcResultHandlers.print());
+    }
+
+
+    @Test
     @DisplayName("유저 생성 실패 인수 테스트 - 중복 아이디")
     public void CREATE_NEW_USER_FAIL_CAUSE_DUPLICATE_USER_ID() throws Exception{
         //given
@@ -640,12 +703,12 @@ public class UserAcceptanceTest{
                 MockMvcResultMatchers.jsonPath("$.users.[0].user_id").value(userCreateRequest1.getUserId()),
                 MockMvcResultMatchers.jsonPath("$.users.[0].phone_number").value(userCreateRequest1.getPhoneNumber()),
                 MockMvcResultMatchers.jsonPath("$.users.[1].id").isNumber(),
-                MockMvcResultMatchers.jsonPath("$.users.[1].name").value(userCreateRequest3.getName()),
-                MockMvcResultMatchers.jsonPath("$.users.[1].user_id").value(userCreateRequest3.getUserId()),
-                MockMvcResultMatchers.jsonPath("$.users.[1].phone_number").value(userCreateRequest3.getPhoneNumber()),
-                MockMvcResultMatchers.jsonPath("$.users.[2].name").value(userCreateRequest2.getName()),
-                MockMvcResultMatchers.jsonPath("$.users.[2].user_id").value(userCreateRequest2.getUserId()),
-                MockMvcResultMatchers.jsonPath("$.users.[2].phone_number").value(userCreateRequest2.getPhoneNumber())
+                MockMvcResultMatchers.jsonPath("$.users.[1].name").value(userCreateRequest2.getName()),
+                MockMvcResultMatchers.jsonPath("$.users.[1].user_id").value(userCreateRequest2.getUserId()),
+                MockMvcResultMatchers.jsonPath("$.users.[1].phone_number").value(userCreateRequest2.getPhoneNumber()),
+                MockMvcResultMatchers.jsonPath("$.users.[2].name").value(userCreateRequest3.getName()),
+                MockMvcResultMatchers.jsonPath("$.users.[2].user_id").value(userCreateRequest3.getUserId()),
+                MockMvcResultMatchers.jsonPath("$.users.[2].phone_number").value(userCreateRequest3.getPhoneNumber())
         ).andDo(MockMvcResultHandlers.print());
 
     }
@@ -811,8 +874,7 @@ public class UserAcceptanceTest{
                 MockMvcResultMatchers.jsonPath("$.phone_number").value(userCreateRequest.getPhoneNumber()),
                 MockMvcResultMatchers.jsonPath("$.character").isString(),
                 MockMvcResultMatchers.jsonPath("$.created_at").isNotEmpty(),
-                MockMvcResultMatchers.jsonPath("$.reward_point").isNumber(),
-                MockMvcResultMatchers.jsonPath("$.social_login").isArray()
+                MockMvcResultMatchers.jsonPath("$.reward_point").isNumber()
         ).andDo(MockMvcResultHandlers.print());
 
     }
@@ -899,8 +961,7 @@ public class UserAcceptanceTest{
                 MockMvcResultMatchers.jsonPath("$.phone_number").isString(),
                 MockMvcResultMatchers.jsonPath("$.character").isString(),
                 MockMvcResultMatchers.jsonPath("$.created_at").isNotEmpty(),
-                MockMvcResultMatchers.jsonPath("$.reward_point").isNumber(),
-                MockMvcResultMatchers.jsonPath("$.social_login").isArray()
+                MockMvcResultMatchers.jsonPath("$.reward_point").isNumber()
         ).andDo(MockMvcResultHandlers.print());
 
     }
@@ -980,6 +1041,45 @@ public class UserAcceptanceTest{
         result.andExpectAll(
                 MockMvcResultMatchers.status().isOk(),
                 MockMvcResultMatchers.header().string("api-version", apiVersion)
+        ).andDo(MockMvcResultHandlers.print());
+    }
+
+    @Test
+    @DisplayName("유저 수정 실패 인수 테스트 - user_Name 50자 초과")
+    public void UPDATE_USER_FAIL_CAUSE_USER_NAME_OVERFLOW_TEST() throws Exception{
+        //given
+        String name = "alcuk2";
+        String userId = "alcuk";
+        String userPassword = "2gdddddd!";
+        String phoneNumber = "010-1234-1234";
+        UserRequest userCreateRequest = UserRequest.builder()
+                .name(name)
+                .userId(userId)
+                .userPassword(userPassword)
+                .phoneNumber(phoneNumber)
+                .build();
+        String modifiedName = "alcukalcukalcukalcukalcukalcukalcukalcukalcukalcukalcukalcuk";
+        String modifiedUserPassword = "alcud2234!";
+        String modifiedPhoneNumber = "010-1234-1234";
+        UpdateUserRequest modifyUserCreateRequest = UpdateUserRequest.builder()
+                .name(modifiedName)
+                .userPassword(modifiedUserPassword)
+                .phoneNumber(modifiedPhoneNumber)
+                .build();
+
+        //when
+        String token = createUserAndGetToken(userCreateRequest);
+        ResultActions result = UserAcceptanceTestHelper.modifyUserWithToken(mvc, token, userPassword, objectMapper.writeValueAsString(modifyUserCreateRequest));
+
+        //then
+        result.andExpectAll(
+                MockMvcResultMatchers.status().isBadRequest(),
+                MockMvcResultMatchers.header().string(HttpHeaders.CONTENT_TYPE, "application/json"),
+                MockMvcResultMatchers.header().string("api-version", apiVersion),
+                MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON),
+                MockMvcResultMatchers.jsonPath("$.code").value("USER-412"),
+                MockMvcResultMatchers.jsonPath("$.messages").value("User name length cannot be over 50 current length \"" + modifiedName.length() + "\""),
+                MockMvcResultMatchers.jsonPath("$.document_url").value("docs.waldreg.org")
         ).andDo(MockMvcResultHandlers.print());
     }
 
@@ -1829,29 +1929,26 @@ public class UserAcceptanceTest{
                 MockMvcResultMatchers.header().string("api-version", apiVersion),
                 MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON),
                 MockMvcResultMatchers.jsonPath("$.max_idx").value(4),
-                MockMvcResultMatchers.jsonPath("$.users.[0].id").isNumber(),
-                MockMvcResultMatchers.jsonPath("$.users.[0].name").value(userCreateRequest2.getName()),
-                MockMvcResultMatchers.jsonPath("$.users.[0].user_id").value(userCreateRequest2.getUserId()),
-                MockMvcResultMatchers.jsonPath("$.users.[0].phone_number").value(userCreateRequest2.getPhoneNumber()),
-                MockMvcResultMatchers.jsonPath("$.users.[0].character").isString(),
-                MockMvcResultMatchers.jsonPath("$.users.[0].created_at").isNotEmpty(),
-                MockMvcResultMatchers.jsonPath("$.users.[0].reward_point").isNumber(),
-                MockMvcResultMatchers.jsonPath("$.users.[0].social_login").isArray(),
                 MockMvcResultMatchers.jsonPath("$.users.[1].id").isNumber(),
-                MockMvcResultMatchers.jsonPath("$.users.[1].name").value(userCreateRequest3.getName()),
-                MockMvcResultMatchers.jsonPath("$.users.[1].user_id").value(userCreateRequest3.getUserId()),
-                MockMvcResultMatchers.jsonPath("$.users.[1].phone_number").value(userCreateRequest3.getPhoneNumber()),
+                MockMvcResultMatchers.jsonPath("$.users.[1].name").value(userCreateRequest1.getName()),
+                MockMvcResultMatchers.jsonPath("$.users.[1].user_id").value(userCreateRequest1.getUserId()),
+                MockMvcResultMatchers.jsonPath("$.users.[1].phone_number").value(userCreateRequest1.getPhoneNumber()),
                 MockMvcResultMatchers.jsonPath("$.users.[1].character").isString(),
                 MockMvcResultMatchers.jsonPath("$.users.[1].created_at").isNotEmpty(),
                 MockMvcResultMatchers.jsonPath("$.users.[1].reward_point").isNumber(),
-                MockMvcResultMatchers.jsonPath("$.users.[1].social_login").isArray(),
-                MockMvcResultMatchers.jsonPath("$.users.[2].name").value(userCreateRequest1.getName()),
-                MockMvcResultMatchers.jsonPath("$.users.[2].user_id").value(userCreateRequest1.getUserId()),
-                MockMvcResultMatchers.jsonPath("$.users.[2].phone_number").value(userCreateRequest1.getPhoneNumber()),
+                MockMvcResultMatchers.jsonPath("$.users.[2].id").isNumber(),
+                MockMvcResultMatchers.jsonPath("$.users.[2].name").value(userCreateRequest2.getName()),
+                MockMvcResultMatchers.jsonPath("$.users.[2].user_id").value(userCreateRequest2.getUserId()),
+                MockMvcResultMatchers.jsonPath("$.users.[2].phone_number").value(userCreateRequest2.getPhoneNumber()),
                 MockMvcResultMatchers.jsonPath("$.users.[2].character").isString(),
                 MockMvcResultMatchers.jsonPath("$.users.[2].created_at").isNotEmpty(),
                 MockMvcResultMatchers.jsonPath("$.users.[2].reward_point").isNumber(),
-                MockMvcResultMatchers.jsonPath("$.users.[2].social_login").isArray()
+                MockMvcResultMatchers.jsonPath("$.users.[3].name").value(userCreateRequest3.getName()),
+                MockMvcResultMatchers.jsonPath("$.users.[3].user_id").value(userCreateRequest3.getUserId()),
+                MockMvcResultMatchers.jsonPath("$.users.[3].phone_number").value(userCreateRequest3.getPhoneNumber()),
+                MockMvcResultMatchers.jsonPath("$.users.[3].character").isString(),
+                MockMvcResultMatchers.jsonPath("$.users.[3].created_at").isNotEmpty(),
+                MockMvcResultMatchers.jsonPath("$.users.[3].reward_point").isNumber()
         ).andDo(MockMvcResultHandlers.print());
 
     }
@@ -1921,29 +2018,26 @@ public class UserAcceptanceTest{
                 MockMvcResultMatchers.header().string("api-version", apiVersion),
                 MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON),
                 MockMvcResultMatchers.jsonPath("$.max_idx").value(4),
-                MockMvcResultMatchers.jsonPath("$.users.[0].id").isNumber(),
-                MockMvcResultMatchers.jsonPath("$.users.[0].name").value(userCreateRequest2.getName()),
-                MockMvcResultMatchers.jsonPath("$.users.[0].user_id").value(userCreateRequest2.getUserId()),
-                MockMvcResultMatchers.jsonPath("$.users.[0].phone_number").value(userCreateRequest2.getPhoneNumber()),
-                MockMvcResultMatchers.jsonPath("$.users.[0].character").isString(),
-                MockMvcResultMatchers.jsonPath("$.users.[0].created_at").isNotEmpty(),
-                MockMvcResultMatchers.jsonPath("$.users.[0].reward_point").isNumber(),
-                MockMvcResultMatchers.jsonPath("$.users.[0].social_login").isArray(),
                 MockMvcResultMatchers.jsonPath("$.users.[1].id").isNumber(),
-                MockMvcResultMatchers.jsonPath("$.users.[1].name").value(userCreateRequest3.getName()),
-                MockMvcResultMatchers.jsonPath("$.users.[1].user_id").value(userCreateRequest3.getUserId()),
-                MockMvcResultMatchers.jsonPath("$.users.[1].phone_number").value(userCreateRequest3.getPhoneNumber()),
+                MockMvcResultMatchers.jsonPath("$.users.[1].name").value(userCreateRequest1.getName()),
+                MockMvcResultMatchers.jsonPath("$.users.[1].user_id").value(userCreateRequest1.getUserId()),
+                MockMvcResultMatchers.jsonPath("$.users.[1].phone_number").value(userCreateRequest1.getPhoneNumber()),
                 MockMvcResultMatchers.jsonPath("$.users.[1].character").isString(),
                 MockMvcResultMatchers.jsonPath("$.users.[1].created_at").isNotEmpty(),
                 MockMvcResultMatchers.jsonPath("$.users.[1].reward_point").isNumber(),
-                MockMvcResultMatchers.jsonPath("$.users.[1].social_login").isArray(),
-                MockMvcResultMatchers.jsonPath("$.users.[2].name").value(userCreateRequest1.getName()),
-                MockMvcResultMatchers.jsonPath("$.users.[2].user_id").value(userCreateRequest1.getUserId()),
-                MockMvcResultMatchers.jsonPath("$.users.[2].phone_number").value(userCreateRequest1.getPhoneNumber()),
+                MockMvcResultMatchers.jsonPath("$.users.[2].id").isNumber(),
+                MockMvcResultMatchers.jsonPath("$.users.[2].name").value(userCreateRequest2.getName()),
+                MockMvcResultMatchers.jsonPath("$.users.[2].user_id").value(userCreateRequest2.getUserId()),
+                MockMvcResultMatchers.jsonPath("$.users.[2].phone_number").value(userCreateRequest2.getPhoneNumber()),
                 MockMvcResultMatchers.jsonPath("$.users.[2].character").isString(),
                 MockMvcResultMatchers.jsonPath("$.users.[2].created_at").isNotEmpty(),
                 MockMvcResultMatchers.jsonPath("$.users.[2].reward_point").isNumber(),
-                MockMvcResultMatchers.jsonPath("$.users.[2].social_login").isArray()
+                MockMvcResultMatchers.jsonPath("$.users.[3].name").value(userCreateRequest3.getName()),
+                MockMvcResultMatchers.jsonPath("$.users.[3].user_id").value(userCreateRequest3.getUserId()),
+                MockMvcResultMatchers.jsonPath("$.users.[3].phone_number").value(userCreateRequest3.getPhoneNumber()),
+                MockMvcResultMatchers.jsonPath("$.users.[3].character").isString(),
+                MockMvcResultMatchers.jsonPath("$.users.[3].created_at").isNotEmpty(),
+                MockMvcResultMatchers.jsonPath("$.users.[3].reward_point").isNumber()
         ).andDo(MockMvcResultHandlers.print());
 
     }
@@ -2054,7 +2148,7 @@ public class UserAcceptanceTest{
         userCreateRequestList.add(userCreateRequest1);
         userCreateRequestList.add(userCreateRequest2);
         userCreateRequestList.add(userCreateRequest3);
-        ResultActions result = UserAcceptanceTestHelper.inquiryAllUserWithoutToken(mvc, 1, 2);
+        ResultActions result = UserAcceptanceTestHelper.inquiryAllUserWithoutToken(mvc, 2, 3);
 
         //then
         result.andExpectAll(
@@ -2064,13 +2158,13 @@ public class UserAcceptanceTest{
                 MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON),
                 MockMvcResultMatchers.jsonPath("$.max_idx").value(4),
                 MockMvcResultMatchers.jsonPath("$.users.[0].id").isNumber(),
-                MockMvcResultMatchers.jsonPath("$.users.[0].name").value(userCreateRequest2.getName()),
-                MockMvcResultMatchers.jsonPath("$.users.[0].user_id").value(userCreateRequest2.getUserId()),
+                MockMvcResultMatchers.jsonPath("$.users.[0].name").value(userCreateRequest1.getName()),
+                MockMvcResultMatchers.jsonPath("$.users.[0].user_id").value(userCreateRequest1.getUserId()),
                 MockMvcResultMatchers.jsonPath("$.users.[0].character").isString(),
                 MockMvcResultMatchers.jsonPath("$.users.[0].created_at").isNotEmpty(),
                 MockMvcResultMatchers.jsonPath("$.users.[1].id").isNumber(),
-                MockMvcResultMatchers.jsonPath("$.users.[1].name").value(userCreateRequest3.getName()),
-                MockMvcResultMatchers.jsonPath("$.users.[1].user_id").value(userCreateRequest3.getUserId()),
+                MockMvcResultMatchers.jsonPath("$.users.[1].name").value(userCreateRequest2.getName()),
+                MockMvcResultMatchers.jsonPath("$.users.[1].user_id").value(userCreateRequest2.getUserId()),
                 MockMvcResultMatchers.jsonPath("$.users.[1].character").isString(),
                 MockMvcResultMatchers.jsonPath("$.users.[1].created_at").isNotEmpty()
         ).andDo(MockMvcResultHandlers.print());

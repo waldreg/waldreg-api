@@ -26,7 +26,7 @@ dependencies {
     implementation project(':core-layer:template')
     implementation project(':service-layer:auth')
     implementation project(':core-layer:util')
-    implementation project(':repository-layer:memory-repository')
+    implementation project(':repository-layer:auth-jpa')
 
     implementation 'org.springframework.boot:spring-boot-starter'
     implementation 'org.springframework.boot:spring-boot-starter-web'

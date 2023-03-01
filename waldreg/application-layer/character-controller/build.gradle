@@ -14,6 +14,7 @@ targetCompatibility = '11'
 
 repositories {
     mavenCentral()
+    maven { url 'https://jitpack.io' }
 }
 
 dependencyManagement {
@@ -24,7 +25,7 @@ dependencyManagement {
 
 dependencies {
     implementation project(':core-layer:template')
-    implementation project(':repository-layer:memory-repository')
+    implementation project(':repository-layer:character-jpa')
     implementation project(':stable-service-layer:character')
     implementation project(':service-layer:auth')
 

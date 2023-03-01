@@ -24,10 +24,10 @@ dependencyManagement {
 
 dependencies {
     implementation project(':service-layer:teambuilding')
-    implementation project(':repository-layer:memory-repository')
+    implementation project(':repository-layer:teambuilding-jpa')
     implementation project(':stable-service-layer:character')
     implementation project(':core-layer:util')
-    implementation project (':core-layer:template')
+    implementation project(':core-layer:template')
     implementation project(':service-layer:auth')
 
     implementation 'org.springframework.boot:spring-boot-starter'

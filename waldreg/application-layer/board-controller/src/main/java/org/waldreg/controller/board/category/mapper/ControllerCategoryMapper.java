@@ -23,7 +23,7 @@ public class ControllerCategoryMapper{
         return CategoryResponse.builder()
                 .categoryId(categoryDto.getId())
                 .categoryName(categoryDto.getCategoryName())
-                .categoryBoards(categoryDto.getBoardDtoList().size())
+                .categoryBoards(categoryDto.getBoardCount())
                 .build();
     }
 
