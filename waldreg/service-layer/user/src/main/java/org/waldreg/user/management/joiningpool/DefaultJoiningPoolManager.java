@@ -114,13 +114,15 @@ public class DefaultJoiningPoolManager implements JoiningPoolManager{
     @Override
     public void approveJoin(String userId){
         throwIfUnknownUserId(userId);
-        joiningPoolRepository.approveJoin(userId);
+        UserDto userDto = joiningPoolRepository.getUserByUserId(userId);
+        userRepository.createUser(userDto);
+        joiningPoolRepository.deleteUserByUserId(userId);
     }
 
     @Override
     public void rejectJoin(String userId){
         throwIfUnknownUserId(userId);
-        joiningPoolRepository.rejectJoin(userId);
+        joiningPoolRepository.deleteUserByUserId(userId);
     }
 
     private void throwIfUnknownUserId(String userId){

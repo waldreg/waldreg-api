@@ -29,14 +29,15 @@ public class MemoryJoiningPoolRepository implements JoiningPoolRepository{
     }
 
     @Override
-    public void approveJoin(String userId){
-
+    public UserDto getUserByUserId(String userId){
+        return null;
     }
 
     @Override
-    public void rejectJoin(String userId){
+    public void deleteUserByUserId(String userId){
 
     }
+
 
     @Override
     public boolean isExistUserId(String userId){
