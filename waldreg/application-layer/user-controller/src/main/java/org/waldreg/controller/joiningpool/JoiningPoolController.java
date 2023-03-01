@@ -10,6 +10,8 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.stage.xss.core.meta.Xss;
+import org.stage.xss.core.meta.XssFiltering;
 import org.waldreg.character.aop.annotation.PermissionVerifying;
 import org.waldreg.controller.joiningpool.mapper.ControllerJoiningPoolMapper;
 import org.waldreg.controller.joiningpool.response.UserJoiningPoolResponse;
@@ -36,8 +38,9 @@ public class JoiningPoolController{
         this.decryptedTokenContextGetter = decryptedTokenContextGetter;
     }
 
+    @XssFiltering
     @PostMapping("/user")
-    public void createUser(@RequestBody @Validated UserRequest createRequest){
+    public void createUser(@RequestBody @Validated @Xss("json") UserRequest createRequest){
         UserDto userDto = controllerJoiningPoolMapper.userRequestToUserDto(createRequest);
         joiningPoolManager.createUser(controllerJoiningPoolMapper.userRequestToUserDto(createRequest));
     }
@@ -60,6 +63,7 @@ public class JoiningPoolController{
         return from == null || to == null;
     }
 
+    @XssFiltering
     @Authenticating
     @PermissionVerifying("User join manager")
     @GetMapping("/user/joiningpool/{user-id}")

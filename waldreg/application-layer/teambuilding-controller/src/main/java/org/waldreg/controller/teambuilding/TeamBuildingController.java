@@ -15,6 +15,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.stage.xss.core.meta.Xss;
+import org.stage.xss.core.meta.XssFiltering;
 import org.waldreg.character.aop.annotation.PermissionVerifying;
 import org.waldreg.character.aop.behavior.VerifyingFailBehavior;
 import org.waldreg.character.aop.parameter.PermissionVerifyState;
@@ -55,18 +57,20 @@ public class TeamBuildingController{
         this.decryptedTokenContextGetter = decryptedTokenContextGetter;
     }
 
+    @XssFiltering
     @Authenticating
     @PermissionVerifying(value = "Teambuilding create manager")
     @PostMapping("/teambuilding")
-    public void createTeamBuilding(@RequestBody @Validated TeamBuildingRequest teamBuildingRequest){
+    public void createTeamBuilding(@RequestBody @Validated @Xss("json") TeamBuildingRequest teamBuildingRequest){
         TeamBuildingRequestDto teamBuildingRequestDto = controllerTeamBuildingMapper.teamBuildingRequestToTeamBuildingDto(teamBuildingRequest);
         teamBuildingManager.createTeamBuilding(teamBuildingRequestDto);
     }
 
+    @XssFiltering
     @Authenticating
     @PermissionVerifying(value = "Teambuilding create manager")
     @PostMapping("/teambuilding/team/{teambuilding-id}")
-    public void createTeam(@PathVariable("teambuilding-id") int teamBuildingId, @RequestBody @Validated TeamRequest teamRequest){
+    public void createTeam(@PathVariable("teambuilding-id") int teamBuildingId, @RequestBody @Validated @Xss("json") TeamRequest teamRequest){
         TeamRequestDto teamRequestDto = controllerTeamBuildingMapper.teamRequestToTeamRequestDto(teamRequest);
         teamManager.createTeam(teamBuildingId, teamRequestDto);
     }
@@ -95,25 +99,28 @@ public class TeamBuildingController{
         return from == null || to == null;
     }
 
+    @XssFiltering
     @Authenticating
     @PermissionVerifying(value = "Teambuilding update manager")
     @PutMapping("/teambuilding/{team-id}")
-    public void updateTeamByTeamId(@PathVariable("team-id") int teamId, @RequestBody @Validated TeamRequest teamRequest){
+    public void updateTeamByTeamId(@PathVariable("team-id") int teamId, @RequestBody @Validated @Xss("json") TeamRequest teamRequest){
         TeamRequestDto teamRequestDto = controllerTeamBuildingMapper.teamRequestToTeamRequestDto(teamRequest);
         teamManager.updateTeamById(teamId, teamRequestDto);
     }
 
+    @XssFiltering
     @Authenticating
     @PermissionVerifying(value = "Teambuilding update manager")
     @PatchMapping("/teambuilding/group/{teambuilding-id}")
-    public void updateTeamBuildingByTeamBuildingId(@PathVariable("teambuilding-id") int teamBuildingId, @RequestBody @Validated TeamBuildingUpdateRequest teamBuildingUpdateRequest){
+    public void updateTeamBuildingByTeamBuildingId(@PathVariable("teambuilding-id") int teamBuildingId, @RequestBody @Validated @Xss("json") TeamBuildingUpdateRequest teamBuildingUpdateRequest){
         teamBuildingManager.updateTeamBuildingTitleById(teamBuildingId, teamBuildingUpdateRequest.getTeamBuildingTitle());
     }
 
+    @XssFiltering
     @Authenticating
     @PermissionVerifying(value = "Teambuilding update manager", fail = VerifyingFailBehavior.PASS)
     @PatchMapping("/teambuilding/team/{team-id}")
-    public void updateTeamNameByTeamId(@PathVariable("team-id") int teamId, @RequestBody @Validated TeamUpdateRequest teamUpdateRequest, @Nullable PermissionVerifyState permissionVerifyState){
+    public void updateTeamNameByTeamId(@PathVariable("team-id") int teamId, @RequestBody @Validated @Xss("json") TeamUpdateRequest teamUpdateRequest, @Nullable PermissionVerifyState permissionVerifyState){
         int id = decryptedTokenContextGetter.get();
         List<UserDto> userDtoList = teamManager.readTeamById(teamId).getUserList();
         throwIfNoUpdatePermission(permissionVerifyState, id, userDtoList);
