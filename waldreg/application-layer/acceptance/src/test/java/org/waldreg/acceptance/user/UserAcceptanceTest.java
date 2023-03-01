@@ -146,6 +146,69 @@ public class UserAcceptanceTest{
     }
 
     @Test
+    @DisplayName("유저 생성 실패 인수 테스트 - user_Id 50자 초과")
+    public void CREATE_NEW_USER_FAIL_CAUSE_USER_ID_OVERFLOW_TEST() throws Exception{
+        //given
+        String name = "alcuk";
+        String userId = "alcukalcukalcukalcukalcukalcukalcukalcukalcukalcukalcukalcuk";
+        String userPassword = "2gdddddd!";
+        String phoneNumber = "010-1234-1234";
+        UserRequest userCreateRequest = UserRequest.builder()
+                .name(name)
+                .userId(userId)
+                .userPassword(userPassword)
+                .phoneNumber(phoneNumber)
+                .build();
+
+        //when
+        ResultActions result = UserAcceptanceTestHelper.createUser(mvc, objectMapper.writeValueAsString(userCreateRequest));
+        userCreateRequestList.add(userCreateRequest);
+
+        //then
+        result.andExpectAll(
+                MockMvcResultMatchers.status().isBadRequest(),
+                MockMvcResultMatchers.header().string(HttpHeaders.CONTENT_TYPE, "application/json"),
+                MockMvcResultMatchers.header().string("api-version", apiVersion),
+                MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON),
+                MockMvcResultMatchers.jsonPath("$.code").value("USER-411"),
+                MockMvcResultMatchers.jsonPath("$.messages").value("User_id length cannot be over 50 current length \"" + userId + "\""),
+                MockMvcResultMatchers.jsonPath("$.document_url").value("docs.waldreg.org")
+        ).andDo(MockMvcResultHandlers.print());
+    }
+
+    @Test
+    @DisplayName("유저 생성 실패 인수 테스트 - user_Name 50자 초과")
+    public void CREATE_NEW_USER_FAIL_CAUSE_USER_NAME_OVERFLOW_TEST() throws Exception{
+        //given
+        String name = "alcukalcukalcukalcukalcukalcukalcukalcukalcukalcukalcukalcuk";
+        String userId = "alcuk";
+        String userPassword = "2gdddddd!";
+        String phoneNumber = "010-1234-1234";
+        UserRequest userCreateRequest = UserRequest.builder()
+                .name(name)
+                .userId(userId)
+                .userPassword(userPassword)
+                .phoneNumber(phoneNumber)
+                .build();
+
+        //when
+        ResultActions result = UserAcceptanceTestHelper.createUser(mvc, objectMapper.writeValueAsString(userCreateRequest));
+        userCreateRequestList.add(userCreateRequest);
+
+        //then
+        result.andExpectAll(
+                MockMvcResultMatchers.status().isBadRequest(),
+                MockMvcResultMatchers.header().string(HttpHeaders.CONTENT_TYPE, "application/json"),
+                MockMvcResultMatchers.header().string("api-version", apiVersion),
+                MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON),
+                MockMvcResultMatchers.jsonPath("$.code").value("USER-412"),
+                MockMvcResultMatchers.jsonPath("$.messages").value("User name length cannot be over 50 current length \"" + name + "\""),
+                MockMvcResultMatchers.jsonPath("$.document_url").value("docs.waldreg.org")
+        ).andDo(MockMvcResultHandlers.print());
+    }
+
+
+    @Test
     @DisplayName("유저 생성 실패 인수 테스트 - 중복 아이디")
     public void CREATE_NEW_USER_FAIL_CAUSE_DUPLICATE_USER_ID() throws Exception{
         //given
@@ -978,6 +1041,45 @@ public class UserAcceptanceTest{
         result.andExpectAll(
                 MockMvcResultMatchers.status().isOk(),
                 MockMvcResultMatchers.header().string("api-version", apiVersion)
+        ).andDo(MockMvcResultHandlers.print());
+    }
+
+    @Test
+    @DisplayName("유저 수정 실패 인수 테스트 - user_Name 50자 초과")
+    public void UPDATE_USER_FAIL_CAUSE_USER_NAME_OVERFLOW_TEST() throws Exception{
+        //given
+        String name = "alcuk2";
+        String userId = "alcuk";
+        String userPassword = "2gdddddd!";
+        String phoneNumber = "010-1234-1234";
+        UserRequest userCreateRequest = UserRequest.builder()
+                .name(name)
+                .userId(userId)
+                .userPassword(userPassword)
+                .phoneNumber(phoneNumber)
+                .build();
+        String modifiedName = "alcukalcukalcukalcukalcukalcukalcukalcukalcukalcukalcukalcuk";
+        String modifiedUserPassword = "alcud2234!";
+        String modifiedPhoneNumber = "010-1234-1234";
+        UpdateUserRequest modifyUserCreateRequest = UpdateUserRequest.builder()
+                .name(modifiedName)
+                .userPassword(modifiedUserPassword)
+                .phoneNumber(modifiedPhoneNumber)
+                .build();
+
+        //when
+        String token = createUserAndGetToken(userCreateRequest);
+        ResultActions result = UserAcceptanceTestHelper.modifyUserWithToken(mvc, token, userPassword, objectMapper.writeValueAsString(modifyUserCreateRequest));
+
+        //then
+        result.andExpectAll(
+                MockMvcResultMatchers.status().isBadRequest(),
+                MockMvcResultMatchers.header().string(HttpHeaders.CONTENT_TYPE, "application/json"),
+                MockMvcResultMatchers.header().string("api-version", apiVersion),
+                MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON),
+                MockMvcResultMatchers.jsonPath("$.code").value("USER-412"),
+                MockMvcResultMatchers.jsonPath("$.messages").value("User name length cannot be over 50 current length \"" + name + "\""),
+                MockMvcResultMatchers.jsonPath("$.document_url").value("docs.waldreg.org")
         ).andDo(MockMvcResultHandlers.print());
     }
 

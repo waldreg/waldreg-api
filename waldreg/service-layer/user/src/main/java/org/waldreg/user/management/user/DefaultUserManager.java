@@ -6,6 +6,7 @@ import org.springframework.stereotype.Service;
 import org.waldreg.character.exception.NoPermissionException;
 import org.waldreg.character.exception.UnknownCharacterException;
 import org.waldreg.user.dto.UserDto;
+import org.waldreg.user.exception.ContentOverflowException;
 import org.waldreg.user.exception.DuplicatedUserIdException;
 import org.waldreg.user.exception.InvalidRangeException;
 import org.waldreg.user.exception.UnknownIdException;
@@ -32,6 +33,8 @@ public class DefaultUserManager implements UserManager{
     @Override
     public void createUser(UserDto userDto){
         throwIfDuplicatedUserId(userDto.getUserId());
+        throwIfUserIdOverflowDetected(userDto);
+        throwIfUserNameOverflowDetected(userDto);
         setDefaultCharacter(userDto);
         userRepository.createUser(userDto);
     }
@@ -39,6 +42,12 @@ public class DefaultUserManager implements UserManager{
     public void throwIfDuplicatedUserId(String userId){
         if (userRepository.isExistUserId(userId) || joiningPoolRepository.isExistUserId(userId)){
             throw new DuplicatedUserIdException("Duplicated user_id \"" + userId + "\"");
+        }
+    }
+
+    private void throwIfUserIdOverflowDetected(UserDto userDto){
+        if(userDto.getUserId().length()>50){
+            throw new ContentOverflowException("USER-411","User_id length cannot be over 50 current length \""+userDto.getUserId().length()+"\"");
         }
     }
 
@@ -118,6 +127,7 @@ public class DefaultUserManager implements UserManager{
     @Override
     public void updateUser(int id, UserDto userDto){
         throwIfUnknownId(id);
+        throwIfUserNameOverflowDetected(userDto);
         userRepository.updateUser(id, userDto);
     }
 
@@ -132,6 +142,12 @@ public class DefaultUserManager implements UserManager{
     private void throwIfUnknownId(int id){
         if (!userRepository.isExistId(id)){
             throw new UnknownIdException("Unknown id \"" + id + "\"");
+        }
+    }
+
+    private void throwIfUserNameOverflowDetected(UserDto userDto){
+        if(userDto.getName().length()>50){
+            throw new ContentOverflowException("USER-412","User Name length cannot be over 50 current length \""+userDto.getName().length()+"\"");
         }
     }
 

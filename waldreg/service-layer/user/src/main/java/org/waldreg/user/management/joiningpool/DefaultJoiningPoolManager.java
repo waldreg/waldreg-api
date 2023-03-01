@@ -5,6 +5,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.waldreg.character.exception.UnknownCharacterException;
 import org.waldreg.user.dto.UserDto;
+import org.waldreg.user.exception.ContentOverflowException;
 import org.waldreg.user.exception.DuplicatedUserIdException;
 import org.waldreg.user.exception.InvalidRangeException;
 import org.waldreg.user.exception.UnknownUserIdException;
@@ -30,8 +31,22 @@ public class DefaultJoiningPoolManager implements JoiningPoolManager{
     @Override
     public void createUser(UserDto userDto){
         throwIfDuplicatedUserId(userDto.getUserId());
+        throwIfUserIdOverflowDetected(userDto);
+        throwIfUserNameOverflowDetected(userDto);
         setDefaultCharacter(userDto);
         joiningPoolRepository.createUser(userDto);
+    }
+
+    private void throwIfUserIdOverflowDetected(UserDto userDto){
+        if(userDto.getUserId().length()>50){
+            throw new ContentOverflowException("USER-411","User_id length cannot be over 50 current length \""+userDto.getUserId().length()+"\"");
+        }
+    }
+
+    private void throwIfUserNameOverflowDetected(UserDto userDto){
+        if(userDto.getName().length()>50){
+            throw new ContentOverflowException("USER-412","User Name length cannot be over 50 current length \""+userDto.getName().length()+"\"");
+        }
     }
 
     public void throwIfDuplicatedUserId(String userId){
@@ -99,13 +114,15 @@ public class DefaultJoiningPoolManager implements JoiningPoolManager{
     @Override
     public void approveJoin(String userId){
         throwIfUnknownUserId(userId);
-        joiningPoolRepository.approveJoin(userId);
+        UserDto userDto = joiningPoolRepository.getUserByUserId(userId);
+        userRepository.createUser(userDto);
+        joiningPoolRepository.deleteUserByUserId(userId);
     }
 
     @Override
     public void rejectJoin(String userId){
         throwIfUnknownUserId(userId);
-        joiningPoolRepository.rejectJoin(userId);
+        joiningPoolRepository.deleteUserByUserId(userId);
     }
 
     private void throwIfUnknownUserId(String userId){
