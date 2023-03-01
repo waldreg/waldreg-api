@@ -34,12 +34,7 @@ public class CategoryMapper{
     }
 
     private Category categoryDtoToCategoryDomainIfNotCreateCategory(CategoryDto categoryDto, Category.Builder builder){
-        builder = builder.id(categoryDto.getId());
-        if (isBoardDtoListNotEmpty(categoryDto.getBoardDtoList())){
-            return builder.boardList(boardInCategoryMapper.boardDtoListToBoardDomainList(categoryDto.getBoardDtoList()))
-                    .build();
-        }
-        return builder.build();
+        return null;
     }
 
     private boolean isBoardDtoListNotEmpty(List<BoardDto> boardDtoList){
@@ -55,11 +50,7 @@ public class CategoryMapper{
     }
 
     public CategoryDto categoryDomainToCategoryDto(Category category){
-        return CategoryDto.builder()
-                .id(category.getId())
-                .categoryName(category.getCategoryName())
-                .boardDtoList(boardInCategoryMapper.boardDomainListToBoardDtoList(category.getBoardList()))
-                .build();
+        return null;
     }
 
     public Board boardDtoToBoardDomain(BoardDto boardDto){
