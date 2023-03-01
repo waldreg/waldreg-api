@@ -6,6 +6,8 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
+import org.stage.xss.core.meta.Xss;
+import org.stage.xss.core.meta.XssFiltering;
 import org.waldreg.auth.request.AuthTokenRequest;
 import org.waldreg.auth.response.AuthTokenResponse;
 import org.waldreg.auth.response.TemporaryTokenResponse;
@@ -32,8 +34,9 @@ public class AuthController{
         this.decryptedTokenContextGetter = decryptedTokenContextGetter;
     }
 
+    @XssFiltering
     @PostMapping("/token")
-    public AuthTokenResponse getToken(@RequestBody @Validated AuthTokenRequest authRequest){
+    public AuthTokenResponse getToken(@Xss("json") @RequestBody @Validated AuthTokenRequest authRequest){
         TokenUserDto tokenUserDto = tokenAuthenticator.getTokenUserDtoByUserIdAndPassword(authRequest.getUserId(), authRequest.getUserPassword());
         TokenDto tokenDto = TokenDto.builder().id(tokenUserDto.getId()).build();
         String accessToken = tokenPublisher.publish(tokenDto);

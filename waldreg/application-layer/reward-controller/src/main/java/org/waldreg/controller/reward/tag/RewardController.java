@@ -11,6 +11,8 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
+import org.stage.xss.core.meta.Xss;
+import org.stage.xss.core.meta.XssFiltering;
 import org.waldreg.reward.tag.RewardTagManager;
 import org.waldreg.reward.tag.dto.RewardTagDto;
 import org.waldreg.character.aop.annotation.PermissionVerifying;
@@ -32,10 +34,11 @@ public class RewardController{
         this.controllerRewardTagMapper = controllerRewardTagMapper;
     }
 
+    @XssFiltering
     @Authenticating
     @PermissionVerifying("Reward manager")
     @PostMapping("/reward-tag")
-    public void createRewardTag(@RequestBody @Validated RewardTagRequest rewardTagRequest){
+    public void createRewardTag(@Xss("json") @RequestBody @Validated RewardTagRequest rewardTagRequest){
         rewardTagManager.createRewardTag(
                 controllerRewardTagMapper.rewardTagRequestToRewardTagDto(rewardTagRequest)
         );
@@ -49,11 +52,12 @@ public class RewardController{
         return Map.of("reward_tags", controllerRewardTagMapper.rewardTagDtoListToRewardTagResponseList(rewardTagDtoList));
     }
 
+    @XssFiltering
     @Authenticating
     @PermissionVerifying("Reward manager")
     @PutMapping("/reward-tag/{reward-tag-id}")
     public void updateRewardTag(@PathVariable("reward-tag-id") int rewardTagId,
-            @RequestBody @Validated RewardTagRequest rewardTagRequest){
+                                @Xss("json") @RequestBody @Validated RewardTagRequest rewardTagRequest){
         rewardTagManager.updateRewardTag(
                 rewardTagId, controllerRewardTagMapper.rewardTagRequestToRewardTagDto(rewardTagRequest)
         );
