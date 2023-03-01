@@ -209,7 +209,7 @@ public class DefaultBoardManager implements BoardManager{
         try{
             future.get();
         } catch (InterruptedException | ExecutionException e){
-            throw new FileDoesNotSavedException("BOARD-502", "File does not saved");
+            throw new FileDoesNotSavedException("BOARD-502", "File does not saved cause \"" + e.getMessage() + "\"");
         }
 
     }
@@ -261,7 +261,7 @@ public class DefaultBoardManager implements BoardManager{
         try{
             return future.get();
         } catch (InterruptedException | ExecutionException e){
-            throw new FileDoesNotSavedException("BOARD-502", "File does not saved");
+            throw new FileDoesNotSavedException("BOARD-502", "File does not saved cause \"" + e.getMessage() + "\"");
         }
     }
 

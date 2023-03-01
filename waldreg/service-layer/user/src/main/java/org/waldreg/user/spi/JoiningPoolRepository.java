@@ -11,9 +11,9 @@ public interface JoiningPoolRepository{
 
     List<UserDto> readUserJoiningPool(int startIdx, int endIdx);
 
-    void approveJoin(String userId);
+    UserDto getUserByUserId(String userId);
 
-    void rejectJoin(String userId);
+    void deleteUserByUserId(String userId);
 
     boolean isExistUserId(String userId);
 }

@@ -81,7 +81,7 @@ public class BoardController{
 
     @Authenticating
     @GetMapping("/boards")
-    public BoardListResponse getBoardList(@RequestParam(value = "category-id", required = false) Integer categoryId, @RequestParam(value = "from", required = false) Integer from, @RequestParam(value = "to", required = false) Integer to){
+    public BoardListResponse getBoardList(@RequestParam(value = "category", required = false) Integer categoryId, @RequestParam(value = "from", required = false) Integer from, @RequestParam(value = "to", required = false) Integer to){
         List<BoardDto> boardDtoList;
         if (isInvalidRange(from, to)){
             from = 1;

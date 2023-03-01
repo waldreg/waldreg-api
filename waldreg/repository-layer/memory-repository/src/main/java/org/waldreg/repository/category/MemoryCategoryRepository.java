@@ -27,7 +27,6 @@ public class MemoryCategoryRepository implements CategoryRepository{
         this.categoryMapper = categoryMapper;
     }
 
-    @Override
     public void addBoardInCategoryBoardList(BoardDto boardDto){
         Board board = categoryMapper.boardDtoToBoardDomain(boardDto);
         memoryCategoryStorage.addBoardInCategoryBoardList(board);
