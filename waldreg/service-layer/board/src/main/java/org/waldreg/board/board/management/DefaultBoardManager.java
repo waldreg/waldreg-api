@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.waldreg.board.board.spi.BoardInCommentRepository;
 import org.waldreg.board.exception.BoardDoesNotExistException;
+import org.waldreg.board.exception.BoardTitleOverFlowException;
 import org.waldreg.board.exception.CategoryDoesNotExistException;
 import org.waldreg.board.exception.FileDoesNotSavedException;
 import org.waldreg.board.exception.InvalidRangeException;
@@ -44,6 +45,7 @@ public class DefaultBoardManager implements BoardManager{
     @Override
     public void createBoard(BoardRequest request){
         throwIfCategoryDoesNotExist(request.getCategoryId());
+        throwIfBoardTitleOverFlow(request.getTitle());
         List<String> saveFileNameList = getFileNameList();
         List<String> saveImageNameList = getImageNameList();
         BoardDto boardDto = buildBoardDto(request);
@@ -153,6 +155,7 @@ public class DefaultBoardManager implements BoardManager{
     public void modifyBoard(BoardRequest boardRequest){
         throwIfBoardDoesNotExist(boardRequest.getId());
         throwIfCategoryDoesNotExist(boardRequest.getCategoryId());
+        throwIfBoardTitleOverFlow(boardRequest.getTitle());
         BoardDto boardDto = boardRepository.inquiryBoardById(boardRequest.getId());
         BoardDto updatedBoardDto = updateBoardDto(boardDto, boardRequest);
         boardRepository.modifyBoard(updatedBoardDto);
@@ -161,6 +164,12 @@ public class DefaultBoardManager implements BoardManager{
     private void throwIfCategoryDoesNotExist(int categoryId){
         if (!boardInCategoryRepository.isExistCategory(categoryId)){
             throw new CategoryDoesNotExistException("BOARD-403", "Unknown category id : " + categoryId);
+        }
+    }
+
+    private void throwIfBoardTitleOverFlow(String title){
+        if (title.length() > 250){
+            throw new BoardTitleOverFlowException("BOARD-414", "Overflow board title");
         }
     }
 
