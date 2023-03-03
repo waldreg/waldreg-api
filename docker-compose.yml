@@ -1,4 +1,4 @@
-version: '3'
+version: '2'
 
 services:
   api-server:
@@ -12,6 +12,8 @@ services:
       - SPRING_JPA_HIBERNATE_DDL_AUTO=${DDL_AUTO_RULE}
     ports:
       - "9344:9344"
+    networks:
+      - share-network
 
   database:
     image: mysql:8.0.32
@@ -20,13 +22,15 @@ services:
       - MYSQL_USER=waldreg
       - MYSQL_PASSWORD=${DB_PASSWORD}
       - MYSQL_DATABASE=waldreg
-    command:
-      - --character-set-server=utf8mb4
-      - --collation-server=utf8mb4_unicode_ci
     ports:
       - "3306:3306"
     volumes:
       - persistence-volume:/var/lib/mysql
+    networks:
+      - share-network
 
 volumes:
   persistence-volume:
+
+networks:
+  share-network:
