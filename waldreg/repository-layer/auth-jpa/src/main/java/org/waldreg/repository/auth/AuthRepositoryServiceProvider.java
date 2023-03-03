@@ -70,11 +70,11 @@ public class AuthRepositoryServiceProvider implements AuthRepository{
     @Override
     @Transactional(readOnly = true)
     public boolean isExistUserId(String userId){
-        return jpaUserRepository.isExistUserByUserId(userId);
+        return jpaUserRepository.existsByUserInfoUserId(userId);
     }
 
     private void throwIfUnknownUserIdException(String userId){
-        if (!jpaUserRepository.isExistUserByUserId(userId)){
+        if (!jpaUserRepository.existsByUserInfoUserId(userId)){
             throw new UnknownUserIdException(userId);
         }
     }

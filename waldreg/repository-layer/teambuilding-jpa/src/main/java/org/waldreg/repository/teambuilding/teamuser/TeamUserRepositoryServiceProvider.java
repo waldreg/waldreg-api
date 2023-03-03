@@ -34,7 +34,7 @@ public class TeamUserRepositoryServiceProvider implements TeamBuildingUserReposi
     @Override
     @Transactional(readOnly = true)
     public boolean isExistUserByUserId(String userId){
-        return jpaTeamUserRepository.existsByUserId(userId);
+        return jpaTeamUserRepository.existsByUserInfoUserId(userId);
     }
 
 }

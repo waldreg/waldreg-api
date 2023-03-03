@@ -19,16 +19,6 @@ import org.waldreg.domain.board.Board;
 @Table(name = "REACTION")
 public final class Reaction{
 
-    @Override
-    public String toString(){
-        return "Reaction{" +
-                "id=" + id +
-                ", board=" + board +
-                ", type='" + type + '\'' +
-                ", reactionUserList=" + reactionUserList +
-                '}';
-    }
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "REACTION_ID")

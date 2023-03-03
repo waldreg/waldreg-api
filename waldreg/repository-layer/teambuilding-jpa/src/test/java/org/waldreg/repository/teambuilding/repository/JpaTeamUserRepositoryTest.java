@@ -72,7 +72,7 @@ public class JpaTeamUserRepositoryTest{
         entityManager.clear();
 
         //then
-        Assertions.assertTrue(jpaTeamUserRepository.existsByUserId(user.getUserId()));
+        Assertions.assertTrue(jpaTeamUserRepository.existsByUserInfoUserId(user.getUserId()));
 
     }
 

@@ -9,7 +9,7 @@ targetCompatibility = '11'
 
 group 'org.waldreg'
 
-version '0.4.3-SNAPSHOT'
+version '0.5.0-SNAPSHOT'
 
 jar {
     enabled = false;
@@ -35,9 +35,6 @@ dependencies {
 
     implementation 'org.springframework.boot:spring-boot-starter'
     implementation 'org.springframework.boot:spring-boot-starter-web'
-    implementation 'com.github.xss-stage:xss-core:1.1'
-    implementation 'com.github.xss-stage:xss-extension-string:1.1'
-    implementation 'com.github.xss-stage:xss-extension-json:1.1'
 
     implementation 'org.springframework.boot:spring-boot-starter-aop'
 
@@ -45,7 +42,7 @@ dependencies {
 
     implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
 
-    implementation 'mysql:mysql-connector-java:8.0.28'
+    implementation 'mysql:mysql-connector-java:8.0.32'
 
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
 
