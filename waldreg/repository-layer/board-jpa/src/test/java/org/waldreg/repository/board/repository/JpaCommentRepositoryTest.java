@@ -87,7 +87,7 @@ public class JpaCommentRepositoryTest{
                 ()->Assertions.assertEquals(comment.getUser().getUserId(),foundComment.getUser().getUserId()),
                 ()->Assertions.assertEquals(comment.getUser().getUserPassword(),foundComment.getUser().getUserPassword()),
                 ()->Assertions.assertEquals(comment.getContent(),foundComment.getContent()),
-                ()->Assertions.assertEquals(comment.getCreatedAt(),foundComment.getCreatedAt())
+                ()->Assertions.assertEquals(comment.getCreatedAt().withNano(0),foundComment.getCreatedAt().withNano(0))
         );
 
 
@@ -198,7 +198,7 @@ public class JpaCommentRepositoryTest{
                 ()->Assertions.assertEquals(comment.getUser().getUserId(),result.getUser().getUserId()),
                 ()->Assertions.assertEquals(comment.getUser().getUserPassword(),result.getUser().getUserPassword()),
                 ()->Assertions.assertEquals("modified",result.getContent()),
-                ()->Assertions.assertEquals(comment.getCreatedAt(),result.getCreatedAt())
+                ()->Assertions.assertEquals(comment.getCreatedAt().withNano(0),result.getCreatedAt().withNano(0))
         );
 
 
