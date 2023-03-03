@@ -362,7 +362,7 @@ class AttendanceAcceptanceTest{
                 MockMvcResultMatchers.jsonPath("$.waivers.[0].id").isNumber(),
                 MockMvcResultMatchers.jsonPath("$.waivers.[0].user_name").value("Admin"),
                 MockMvcResultMatchers.jsonPath("$.waivers.[0].waiver_date").value(date.toString()),
-                MockMvcResultMatchers.jsonPath("$.waivers.[0].waiver_reason").value("doctor's appointment")
+                MockMvcResultMatchers.jsonPath("$.waivers.[0].waiver_reason").value("doctor&#39;s appointment")
         );
     }
 

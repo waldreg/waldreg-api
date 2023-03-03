@@ -2,8 +2,7 @@
    
 ![Wald logo](https://user-images.githubusercontent.com/62425964/214485760-209749e1-fddd-44ea-9c21-a689a4add5cc.svg) __api__
 ---
-Waldreg는 동아리와 스터디 관리를 도와주기위해 탄생했습니다.   
-
+Waldreg는 동아리와 스터디 관리를 도와주기위해 탄생했습니다.
 
 [License](https://github.com/)      
 [Architecture](https://github.com/)     
