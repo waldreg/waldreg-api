@@ -33,7 +33,7 @@ public interface JpaUserRepository extends JpaRepository<User, Integer>{
     @Query("select case when count(u) > 0 then true else false end from User as u where u.userInfo.userId = :userId")
     boolean existsByUserId(@Param("userId") String userId);
 
-    @Query(value = "SELECT A.* FROM (SELECT U.*, C.CHARACTER_CHARACTER_NAME FROM USER as U JOIN CHARACTER as C WHERE U.CHARACTER_ID = C.CHARACTER_ID ORDER BY U.USER_ID) as A LIMIT :count OFFSET :start", nativeQuery = true)
+    @Query(value = "SELECT A.* FROM (SELECT U.*, C.CHARACTER_CHARACTER_NAME FROM USER as U JOIN CHARACTERS as C WHERE U.CHARACTER_ID = C.CHARACTER_ID ORDER BY U.USER_ID) as A LIMIT :count OFFSET :start", nativeQuery = true)
     List<User> findAll(@Param("start") int start, @Param("count") int count);
 
 
