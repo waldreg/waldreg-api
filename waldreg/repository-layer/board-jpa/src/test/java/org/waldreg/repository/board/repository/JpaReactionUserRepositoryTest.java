@@ -89,7 +89,7 @@ public class JpaReactionUserRepositoryTest{
         entityManager.flush();
         entityManager.clear();
         //when
-        boolean result = jpaReactionUserRepository.existsByUserIdAndReactionId(user.getUserId(), reaction.getId());
+        boolean result = jpaReactionUserRepository.existsByUserUserInfoUserIdAndReactionId(user.getUserId(), reaction.getId());
         //then
         Assertions.assertTrue(result);
     }

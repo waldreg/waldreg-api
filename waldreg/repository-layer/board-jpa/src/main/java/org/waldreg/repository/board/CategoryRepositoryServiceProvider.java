@@ -74,7 +74,7 @@ public class CategoryRepositoryServiceProvider implements CategoryRepository{
     @Override
     @Transactional(readOnly = true)
     public boolean isDuplicateCategoryName(String categoryName){
-        return jpaCategoryRepository.isDuplicatedName(categoryName);
+        return jpaCategoryRepository.existsByCategoryName(categoryName);
     }
 
 }

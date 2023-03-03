@@ -302,7 +302,7 @@ class JpaUserRepositoryTest{
         entityManager.clear();
 
         //then
-        Assertions.assertTrue(jpaUserRepository.existsByUserId(user.getUserId()));
+        Assertions.assertTrue(jpaUserRepository.existsByUserInfoUserId(user.getUserId()));
 
     }
 
