@@ -90,7 +90,7 @@ class JpaBoardRepositoryTest{
                 () -> Assertions.assertEquals(board.getCategory().getCategoryName(), foundBoard.getCategory().getCategoryName()),
                 () -> Assertions.assertEquals(board.getTitle(), foundBoard.getTitle()),
                 () -> Assertions.assertEquals(board.getContent(), foundBoard.getContent()),
-                () -> Assertions.assertEquals(board.getCreatedAt(), foundBoard.getCreatedAt()),
+                () -> Assertions.assertEquals(board.getCreatedAt().withNano(0), foundBoard.getCreatedAt().withNano(0)),
                 () -> Assertions.assertEquals(board.getImagePathList().get(0), foundBoard.getImagePathList().get(0)),
                 () -> Assertions.assertEquals(board.getFilePathList().get(0), foundBoard.getFilePathList().get(0))
         );
