@@ -9,6 +9,5 @@ import org.waldreg.domain.board.category.Category;
 @Repository("boardJpaCategoryRepository")
 public interface JpaCategoryRepository extends JpaRepository<Category,Integer>{
 
-    @Query(value = "SELECT EXISTS (SELECT C.* FROM CATEGORY as C WHERE C.CATEGORY_NAME = :name)",nativeQuery = true)
-    boolean isDuplicatedName(@Param("name") String name);
+    boolean existsByCategoryName(String name);
 }

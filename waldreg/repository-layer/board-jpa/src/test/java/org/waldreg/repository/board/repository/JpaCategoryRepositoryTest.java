@@ -57,6 +57,19 @@ public class JpaCategoryRepositoryTest{
     }
 
     @Test
+    @DisplayName("카테고리 존재여부 테스트")
+    void EXIST_CATEGORY_SUCCESS_TEST(){
+        Category category = Category.builder()
+                .categoryName("cate1")
+                .build();
+
+        jpaCategoryRepository.saveAndFlush(category);
+        entityManager.clear();
+
+        Assertions.assertTrue(()->jpaCategoryRepository.existsByCategoryName(category.getCategoryName()));
+    }
+
+    @Test
     @DisplayName("카테고리 전체 조회 테스트")
     void INQUIRY_ALL_CATEGORY_SUCCESS_TEST(){
         Category category = Category.builder()
