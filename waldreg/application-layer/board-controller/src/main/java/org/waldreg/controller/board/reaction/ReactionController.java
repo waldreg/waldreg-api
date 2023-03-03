@@ -5,6 +5,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.stage.xss.core.meta.Xss;
 import org.waldreg.board.dto.ReactionRequestDto;
 import org.waldreg.board.reaction.management.ReactionManager;
 import org.waldreg.character.aop.annotation.PermissionVerifying;
@@ -30,7 +31,7 @@ public class ReactionController{
     @Authenticating
     @PermissionVerifying("Reaction manager")
     @GetMapping("/reaction/{board-id}")
-    public void reaction(@PathVariable("board-id") int boardId, @RequestParam("reaction-type") String type){
+    public void reaction(@PathVariable("board-id") int boardId, @Xss("string") @RequestParam("reaction-type") String type){
         int id = decryptedTokenContextGetter.get();
         String userId = userManager.readUserById(id).getUserId();
         ReactionRequestDto reactionRequestDto = ReactionRequestDto.builder()

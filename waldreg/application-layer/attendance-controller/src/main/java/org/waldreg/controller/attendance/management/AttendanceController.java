@@ -14,6 +14,8 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.stage.xss.core.meta.Xss;
+import org.stage.xss.core.meta.XssFiltering;
 import org.waldreg.attendance.management.AttendanceManager;
 import org.waldreg.attendance.management.dto.AttendanceDayDto;
 import org.waldreg.attendance.management.dto.AttendanceStatusChangeDto;
@@ -78,10 +80,11 @@ public class AttendanceController{
         return attendanceControllerMapper.attendanceTargetDtoToAttendanceCheckResponse(attendanceTargetDto);
     }
 
+    @XssFiltering
     @Authenticating
     @PermissionVerifying("Attendance manager")
     @PostMapping("/attendance/status")
-    public void modifyAttendanceStatus(@RequestBody AttendanceModifyRequest attendanceModifyRequest){
+    public void modifyAttendanceStatus(@Xss("json") @RequestBody AttendanceModifyRequest attendanceModifyRequest){
         AttendanceStatusChangeDto attendanceStatusChangeDto = attendanceControllerMapper
                 .attendanceModifyRequestToAttendanceChangeDto(attendanceModifyRequest);
         attendanceManager.changeAttendanceStatus(attendanceStatusChangeDto);

@@ -12,6 +12,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.stage.xss.core.meta.Xss;
+import org.stage.xss.core.meta.XssFiltering;
 import org.waldreg.character.aop.annotation.PermissionVerifying;
 import org.waldreg.character.aop.behavior.VerifyingFailBehavior;
 import org.waldreg.character.aop.parameter.PermissionVerifyState;
@@ -83,9 +85,10 @@ public class UserController{
         return controllerUserMapper.userDtoToUserResponseWithPermission(userDto);
     }
 
+    @XssFiltering
     @HeaderPasswordAuthenticating
     @PutMapping("/user")
-    public void updateUser(@RequestBody @Validated UpdateUserRequest updateUserRequest){
+    public void updateUser(@RequestBody @Validated @Xss("json") UpdateUserRequest updateUserRequest){
         int id = decryptedTokenContextGetter.get();
         UserDto update = controllerUserMapper.updateUserRequestToUserDto(updateUserRequest);
         userManager.updateUser(id, update);
@@ -105,10 +108,11 @@ public class UserController{
         userManager.deleteById(id);
     }
 
+    @XssFiltering
     @Authenticating
     @PermissionVerifying("User's character update manager")
     @PutMapping("/user/character/{id}")
-    public void updateUserCharacter(@PathVariable("id") int id, @RequestBody @Validated CharacterRequest characterRequest){
+    public void updateUserCharacter(@PathVariable("id") int id, @RequestBody @Validated @Xss("json") CharacterRequest characterRequest){
         String character = characterRequest.getCharacter();
         userManager.updateCharacter(id, character);
     }

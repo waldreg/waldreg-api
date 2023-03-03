@@ -9,6 +9,8 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
+import org.stage.xss.core.meta.Xss;
+import org.stage.xss.core.meta.XssFiltering;
 import org.waldreg.board.category.management.CategoryManager;
 import org.waldreg.board.dto.CategoryDto;
 import org.waldreg.character.aop.annotation.PermissionVerifying;
@@ -29,10 +31,11 @@ public class CategoryController{
         this.controllerCategoryMapper = controllerCategoryMapper;
     }
 
+    @XssFiltering
     @Authenticating
     @PermissionVerifying(value = "Category manager")
     @PostMapping("/category")
-    public void createCategory(@RequestBody @Validated CategoryRequest categoryRequest){
+    public void createCategory(@Xss("json") @RequestBody @Validated CategoryRequest categoryRequest){
         CategoryDto categoryDto = CategoryDto.builder().categoryName(categoryRequest.getCategoryName()).build();
         categoryManager.createCategory(categoryDto);
     }
@@ -43,10 +46,11 @@ public class CategoryController{
         return controllerCategoryMapper.categoryListToCategoryListResponse(categoryManager.inquiryAllCategory());
     }
 
+    @XssFiltering
     @Authenticating
     @PermissionVerifying(value = "Category manager")
     @PutMapping("/category/{category-id}")
-    public void updateCategory(@RequestBody @Validated CategoryRequest categoryRequest, @PathVariable("category-id") int categoryId){
+    public void updateCategory(@Xss("json") @RequestBody @Validated CategoryRequest categoryRequest, @PathVariable("category-id") int categoryId){
         CategoryDto categoryDto = CategoryDto.builder()
                 .id(categoryId)
                 .categoryName(categoryRequest.getCategoryName())

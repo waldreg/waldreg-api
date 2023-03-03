@@ -9,6 +9,8 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
+import org.stage.xss.core.meta.Xss;
+import org.stage.xss.core.meta.XssFiltering;
 import org.waldreg.attendance.exception.UnknownAttendanceTypeException;
 import org.waldreg.attendance.type.AttendanceType;
 import org.waldreg.attendance.waiver.WaiverManager;
@@ -36,9 +38,10 @@ public class WaiverController{
         this.decryptedTokenContextGetter = decryptedTokenContextGetter;
     }
 
+    @XssFiltering
     @Authenticating
     @PostMapping("/attendance/waiver")
-    public void waiveAttendance(@RequestBody @Validated AttendanceWaiverRequest attendanceWaiverRequest){
+    public void waiveAttendance(@Xss("json") @RequestBody @Validated AttendanceWaiverRequest attendanceWaiverRequest){
         int id = decryptedTokenContextGetter.get();
         WaiverDto waiverDto = waiverControllerMapper.attendanceWaiverRequestToWavierDto(id, attendanceWaiverRequest);
         waiverManager.waive(waiverDto);

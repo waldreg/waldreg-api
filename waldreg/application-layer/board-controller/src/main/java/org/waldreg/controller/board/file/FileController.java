@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
+import org.stage.xss.core.meta.Xss;
 import org.waldreg.board.file.FileManager;
 import org.waldreg.character.aop.annotation.PermissionVerifying;
 import org.waldreg.token.aop.annotation.Authenticating;
