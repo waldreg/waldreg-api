@@ -51,7 +51,7 @@ public class JpaJoiningPoolTest{
         jpaJoiningPoolRepository.deleteByUserId(userJoiningPool.getUserId());
 
         //then
-        Assertions.assertFalse(jpaJoiningPoolRepository.existsByUserId(userJoiningPool.getUserId()));
+        Assertions.assertFalse(jpaJoiningPoolRepository.existsByUserInfoUserId(userJoiningPool.getUserId()));
 
     }
 
@@ -93,7 +93,7 @@ public class JpaJoiningPoolTest{
         entityManager.flush();
         entityManager.clear();
         //when
-        boolean result = jpaJoiningPoolRepository.existsByUserId(userJoiningPool.getUserId());
+        boolean result = jpaJoiningPoolRepository.existsByUserInfoUserId(userJoiningPool.getUserId());
         //then
         Assertions.assertTrue(result);
     }
