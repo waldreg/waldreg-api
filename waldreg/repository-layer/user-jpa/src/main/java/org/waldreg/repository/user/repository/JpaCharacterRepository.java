@@ -10,8 +10,7 @@ import org.waldreg.domain.character.Character;
 @Repository("userJpaCharacterRepository")
 public interface JpaCharacterRepository extends JpaRepository<Character, Integer>{
 
-    @Query("select case when count(c) > 0 then true else false end from Character as c where characterName = :characterName")
-    boolean existsByCharacterName(@Param("characterName") String characterName);
+    boolean existsByCharacterName(String characterName);
 
     @Query("select c from Character as c where characterName = :characterName")
     Optional<Character> getCharacterByCharacterName(@Param("characterName") String characterName);

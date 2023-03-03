@@ -30,8 +30,7 @@ public interface JpaUserRepository extends JpaRepository<User, Integer>{
     @Query(value = "DELETE FROM USER WHERE USER_ID = :id", nativeQuery = true)
     void deleteById(@Param("id") int id);
 
-    @Query("select case when count(u) > 0 then true else false end from User as u where u.userInfo.userId = :userId")
-    boolean existsByUserId(@Param("userId") String userId);
+    boolean existsByUserInfoUserId(String userId);
 
     @Query(value = "SELECT A.* FROM (SELECT U.*, C.CHARACTER_CHARACTER_NAME FROM USER as U JOIN CHARACTERS as C WHERE U.CHARACTER_ID = C.CHARACTER_ID ORDER BY U.USER_ID) as A LIMIT :count OFFSET :start", nativeQuery = true)
     List<User> findAll(@Param("start") int start, @Param("count") int count);

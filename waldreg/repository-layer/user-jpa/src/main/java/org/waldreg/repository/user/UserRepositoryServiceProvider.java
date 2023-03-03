@@ -125,7 +125,7 @@ public class UserRepositoryServiceProvider implements UserRepository{
     @Override
     @Transactional(readOnly = true)
     public boolean isExistUserId(String userId){
-        return jpaUserRepository.existsByUserId(userId);
+        return jpaUserRepository.existsByUserInfoUserId(userId);
     }
 
     @Override
