@@ -10,8 +10,7 @@ import org.waldreg.domain.user.User;
 @Repository("authJpaUserRepository")
 public interface JpaUserRepository extends JpaRepository<User, Integer>{
 
-    @Query(value = "select EXISTS (select U.* from USER U where U.USER_USER_ID = :userId)", nativeQuery = true)
-    boolean isExistUserByUserId(@Param("userId") String userId);
+    boolean existsByUserInfoUserId(String userId);
 
     @Query(value = "select U.* from USER U where U.USER_USER_ID =:userId", nativeQuery = true)
     Optional<User> findUserByUserId(@Param("userId") String userId);
