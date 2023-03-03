@@ -22,8 +22,7 @@ public interface JpaJoiningPoolRepository extends JpaRepository<UserJoiningPool,
     @Query(value = "DELETE FROM USER_JOINING_POOL as JU where JU.USER_USER_ID =:userId",nativeQuery = true)
     void deleteByUserId(@Param("userId") String userId);
 
-    @Query(value = "select exists(select JU.* from USER_JOINING_POOL as JU where JU.USER_USER_ID =:userId)",nativeQuery = true)
-    boolean existsByUserId(@Param("userId") String userId);
+    boolean existsByUserInfoUserId(@Param("userId") String userId);
 
 }
 

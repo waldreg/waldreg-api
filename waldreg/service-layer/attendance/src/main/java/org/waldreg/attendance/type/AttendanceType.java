@@ -52,10 +52,10 @@ public enum AttendanceType{
 
         @EventListener(ApplicationReadyEvent.class)
         void listenApplicationReady(){
-            this.attendanceTypeRepository.createAttendanceType(ATTENDANCED.toString());
-            this.attendanceTypeRepository.createAttendanceType(ACKNOWLEDGE_ABSENCE.toString());
-            this.attendanceTypeRepository.createAttendanceType(ABSENCE.toString());
-            this.attendanceTypeRepository.createAttendanceType(LATE_ATTENDANCE.toString());
+            this.attendanceTypeRepository.createAttendanceTypeIfDoesNotExist(ATTENDANCED.toString());
+            this.attendanceTypeRepository.createAttendanceTypeIfDoesNotExist(ACKNOWLEDGE_ABSENCE.toString());
+            this.attendanceTypeRepository.createAttendanceTypeIfDoesNotExist(ABSENCE.toString());
+            this.attendanceTypeRepository.createAttendanceTypeIfDoesNotExist(LATE_ATTENDANCE.toString());
         }
 
     }
