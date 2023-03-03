@@ -20,6 +20,8 @@ import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 import org.springframework.web.multipart.MultipartFile;
+import org.stage.xss.core.meta.Xss;
+import org.stage.xss.core.meta.XssFiltering;
 import org.waldreg.board.board.management.BoardManager;
 import org.waldreg.board.board.management.BoardManager.BoardRequest;
 import org.waldreg.board.board.management.PerPage;
@@ -54,10 +56,11 @@ public class BoardController{
         this.controllerBoardMapper = controllerBoardMapper;
     }
 
+    @XssFiltering
     @Authenticating
     @PermissionVerifying("Board create manager")
     @RequestMapping(value = "/board", method = RequestMethod.POST, consumes = {MediaType.APPLICATION_JSON_VALUE, MediaType.MULTIPART_FORM_DATA_VALUE})
-    public void createBoard(@Validated @RequestPart(value = "boardCreateRequest") BoardCreateRequest boardCreateRequest,
+    public void createBoard(@Xss("json") @Validated @RequestPart(value = "boardCreateRequest") BoardCreateRequest boardCreateRequest,
                             @RequestPart(value = "image", required = false) List<MultipartFile> imageFileList,
                             @RequestPart(value = "file", required = false) List<MultipartFile> fileList
     ){
@@ -99,13 +102,14 @@ public class BoardController{
         return categoryId == null;
     }
 
+    @XssFiltering
     @BoardIdAuthenticating(fail = AuthFailBehavior.PASS)
     @PermissionVerifying(value = "Board modify manager", fail = VerifyingFailBehavior.PASS)
     @PostMapping("/board/{board-id}")
     public void modifyBoard(@PathVariable("board-id") int boardId,
                             AuthenticateVerifyState authenticateVerifyState,
                             PermissionVerifyState permissionVerifyState,
-                            @Validated @RequestPart(value = "boardUpdateRequest") BoardUpdateRequest boardUpdateRequest,
+                            @Xss("json") @Validated @RequestPart(value = "boardUpdateRequest") BoardUpdateRequest boardUpdateRequest,
                             @RequestPart(value = "image", required = false) List<MultipartFile> imageFileList,
                             @RequestPart(value = "file", required = false) List<MultipartFile> fileList
     ){
@@ -164,9 +168,10 @@ public class BoardController{
         }
     }
 
+    @XssFiltering
     @Authenticating
     @GetMapping("/board/search")
-    public BoardListResponse searchBoard(@RequestParam("type") Type type, @RequestParam(value = "keyword", required = false, defaultValue = "") String keyword, @RequestParam(value = "from", required = false) Integer from, @RequestParam(value = "to", required = false) Integer to){
+    public BoardListResponse searchBoard(@RequestParam("type") Type type, @Xss("string") @RequestParam(value = "keyword", required = false, defaultValue = "") String keyword, @RequestParam(value = "from", required = false) Integer from, @RequestParam(value = "to", required = false) Integer to){
         if (isInvalidRange(from, to)){
             from = 1;
             to = PerPage.PER_PAGE;

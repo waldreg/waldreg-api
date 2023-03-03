@@ -1,18 +1,44 @@
 package org.waldreg.domain.character;
 
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.Table;
+
+@Entity
+@Table(name = "PERMISSION")
 public final class Permission{
 
-    private final int id;
-    private final String service;
-    private final String name;
-    private final String status;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "PERMISSION_ID")
+    private Integer id;
 
-    private Permission(){
-        throw new UnsupportedOperationException("Can not invoke constructor \"Permission()\"");
-    }
+    @Column(name = "PERMISSION_PERMISSION_UNIT_ID", nullable = false)
+    private Integer permissionUnitId;
+
+    @Column(name = "PERMISSION_SERVICE", nullable = false)
+    private String service;
+
+    @Column(name = "PERMISSION_NAME", nullable = false)
+    private String name;
+
+    @Column(name = "PERMISSION_STATUS", nullable = false)
+    private String status;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "CHARACTER_ID")
+    private Character character;
+
+    private Permission(){}
 
     private Permission(Builder builder){
-        this.id = builder.id;
+        this.permissionUnitId = builder.permissionUnitId;
         this.service = builder.service;
         this.name = builder.name;
         this.status = builder.status;
@@ -30,25 +56,37 @@ public final class Permission{
         return this.status;
     }
 
-    public int getId(){
+    public Integer getId(){
         return id;
+    }
+
+    public Integer getPermissionUnitId(){
+        return permissionUnitId;
     }
 
     public String getService(){
         return service;
     }
 
+    void setCharacter(Character character){
+        this.character = character;
+    }
+
+    public void setPermissionStatus(String status){
+        this.status = status;
+    }
+
     public static final class Builder{
 
-        private int id;
+        private Integer permissionUnitId;
         private String service;
         private String name;
         private String status;
 
         private Builder(){}
 
-        public Builder id(int id){
-            this.id = id;
+        public Builder permissionUnitId(Integer permissionUnitId){
+            this.permissionUnitId = permissionUnitId;
             return this;
         }
 

@@ -11,6 +11,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.stage.xss.core.meta.Xss;
+import org.stage.xss.core.meta.XssFiltering;
 import org.waldreg.character.aop.annotation.PermissionVerifying;
 import org.waldreg.controller.schedule.mapper.ControllerScheduleMapper;
 import org.waldreg.controller.schedule.request.ScheduleRequest;
@@ -32,10 +34,11 @@ public class ScheduleController{
         this.controllerScheduleMapper = controllerScheduleMapper;
     }
 
+    @XssFiltering
     @Authenticating
     @PermissionVerifying(value = "Schedule create manager")
     @PostMapping("/schedule")
-    public void createSchedule(@RequestBody @Validated ScheduleRequest scheduleRequest){
+    public void createSchedule(@RequestBody @Validated @Xss("json") ScheduleRequest scheduleRequest){
         ScheduleDto scheduleDto = controllerScheduleMapper.scheduleRequestToScheduleDto(scheduleRequest);
         scheduleManager.createSchedule(scheduleDto);
     }
@@ -54,10 +57,11 @@ public class ScheduleController{
         return controllerScheduleMapper.scheduleDtoToScheduleResponse(scheduleDto);
     }
 
+    @XssFiltering
     @Authenticating
     @PermissionVerifying(value = "Schedule update manager")
     @PutMapping("/schedule/{schedule-id}")
-    public void updateSchedule(@PathVariable("schedule-id") int id, @RequestBody @Validated ScheduleRequest scheduleRequest){
+    public void updateSchedule(@PathVariable("schedule-id") int id, @RequestBody @Validated @Xss("json") ScheduleRequest scheduleRequest){
         ScheduleDto scheduleDto = controllerScheduleMapper.scheduleRequestToScheduleDto(scheduleRequest);
         scheduleManager.updateScheduleById(id, scheduleDto);
     }

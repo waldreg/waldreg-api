@@ -1,17 +1,40 @@
 package org.waldreg.domain.waiver;
 
 import java.time.LocalDate;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.OneToOne;
+import javax.persistence.Table;
 import org.waldreg.domain.user.User;
 
+@Entity
+@Table(name = "WAIVER")
 public final class Waiver{
 
-    private int waiverId;
-    private final User waiverUser;
-    private final LocalDate waiverDate;
-    private final String waiverReason;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "WAIVER_WAIVER_ID")
+    private Integer waiverId;
+
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name = "USER_ID", nullable = false)
+    private User waiverUser;
+
+    @Column(name = "WAIVER_WAIVER_DATE", columnDefinition = "DATE", nullable = false)
+    private LocalDate waiverDate;
+
+    @Column(name = "WAIVER_WAIVER_REASON", length = 1000)
+    private String waiverReason;
+
+    private Waiver(){}
 
     private Waiver(Builder builder){
-        this.waiverId = builder.waiverId;
         this.waiverUser = builder.waiverUser;
         this.waiverDate = builder.waiverDate;
         this.waiverReason = builder.waiverReason;
@@ -21,11 +44,7 @@ public final class Waiver{
         return new Builder();
     }
 
-    public void setWaiverId(int waiverId){
-        this.waiverId = waiverId;
-    }
-
-    public int getWaiverId(){
+    public Integer getWaiverId(){
         return waiverId;
     }
 
@@ -43,17 +62,11 @@ public final class Waiver{
 
     public static final class Builder{
 
-        private int waiverId;
         private User waiverUser;
         private LocalDate waiverDate;
         private String waiverReason;
 
         private Builder(){}
-
-        public Builder waiverId(int waiverId){
-            this.waiverId = waiverId;
-            return this;
-        }
 
         public Builder waiverUser(User waiverUser){
             this.waiverUser = waiverUser;

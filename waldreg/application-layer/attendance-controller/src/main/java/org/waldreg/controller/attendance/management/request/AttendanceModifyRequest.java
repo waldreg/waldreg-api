@@ -1,6 +1,8 @@
 package org.waldreg.controller.attendance.management.request;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateDeserializer;
 import java.time.LocalDate;
 
 public final class AttendanceModifyRequest{
@@ -8,6 +10,7 @@ public final class AttendanceModifyRequest{
     private int id;
     @JsonProperty("attendance_type")
     private String attendanceType;
+
     @JsonProperty("attendance_date")
     private LocalDate attendanceDate;
 

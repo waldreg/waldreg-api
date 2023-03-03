@@ -1,12 +1,21 @@
 package org.waldreg.controller.attendance.waiver.request;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateDeserializer;
+import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateSerializer;
 import java.time.LocalDate;
+import javax.validation.constraints.Size;
 
 public final class AttendanceWaiverRequest{
 
     @JsonProperty("waiver_date")
+    @JsonSerialize(using = LocalDateSerializer.class)
+    @JsonDeserialize(using = LocalDateDeserializer.class)
     private LocalDate waiverDate;
+
+    @Size(max = 1000, message = "ATTENDANCE-422 waiver_reason’s max size is 1000")
     @JsonProperty("waiver_reason")
     private String waiverReason;
 

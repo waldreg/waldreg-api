@@ -1,14 +1,28 @@
 package org.waldreg.domain.rewardtag;
 
-public class RewardTag{
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.Table;
 
-    private int rewardTagId;
-    private final String rewardTagTitle;
-    private final int rewardPoint;
+@Entity
+@Table(name = "REWARD_TAG")
+public final class RewardTag{
 
-    private RewardTag(){
-        throw new UnsupportedOperationException("Can not invoke constructor \"RewardTag()\"");
-    }
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "REWARD_TAG_REWARD_TAG_ID")
+    private Integer rewardTagId;
+
+    @Column(name = "REWARD_TAG_REWARD_TAG_TITLE", nullable = false, length = 105)
+    private String rewardTagTitle;
+
+    @Column(name = "REWARD_TAG_REWARD_POINT", nullable = false)
+    private Integer rewardPoint;
+
+    private RewardTag(){}
 
     private RewardTag(Builder builder){
         this.rewardTagTitle = builder.rewardTagTitle;
@@ -19,11 +33,7 @@ public class RewardTag{
         return new Builder();
     }
 
-    public void setRewardTagId(int rewardTagId){
-        this.rewardTagId = rewardTagId;
-    }
-
-    public int getRewardTagId(){
+    public Integer getRewardTagId(){
         return rewardTagId;
     }
 
@@ -31,14 +41,19 @@ public class RewardTag{
         return rewardTagTitle;
     }
 
-    public int getRewardPoint(){
+    public Integer getRewardPoint(){
         return rewardPoint;
     }
 
-    public final static class Builder{
+    public void updateRewardTag(RewardTag rewardTag){
+        this.rewardTagTitle = rewardTag.getRewardTagTitle();
+        this.rewardPoint = rewardTag.getRewardPoint();
+    }
+
+    public static final class Builder{
 
         private String rewardTagTitle;
-        private int rewardPoint;
+        private Integer rewardPoint;
 
         private Builder(){}
 
@@ -47,7 +62,7 @@ public class RewardTag{
             return this;
         }
 
-        public Builder rewardPoint(int rewardPoint){
+        public Builder rewardPoint(Integer rewardPoint){
             this.rewardPoint = rewardPoint;
             return this;
         }

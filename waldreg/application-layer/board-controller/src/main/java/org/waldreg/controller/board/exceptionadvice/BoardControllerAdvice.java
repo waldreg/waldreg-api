@@ -5,7 +5,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.waldreg.board.exception.BoardDoesNotExistException;
+import org.waldreg.board.exception.BoardTitleOverFlowException;
 import org.waldreg.board.exception.CategoryDoesNotExistException;
+import org.waldreg.board.exception.CategoryNameOverFlowException;
 import org.waldreg.board.exception.CommentDoesNotExistException;
 import org.waldreg.board.exception.ContentOverFlowException;
 import org.waldreg.board.exception.DuplicateCategoryNameException;
@@ -105,6 +107,26 @@ public class BoardControllerAdvice{
         ExceptionTemplate exceptionTemplate = ExceptionTemplate.builder()
                 .code("BOARD-408")
                 .message(unknownFileId.getMessage())
+                .documentUrl(documentUrl)
+                .build();
+        return new ResponseEntity<>(exceptionTemplate, HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler({BoardTitleOverFlowException.class})
+    public ResponseEntity<ExceptionTemplate> catchBoardTitleOverFlowException(BoardTitleOverFlowException boardTitleOverFlowException){
+        ExceptionTemplate exceptionTemplate = ExceptionTemplate.builder()
+                .code("BOARD-414")
+                .message(boardTitleOverFlowException.getMessage())
+                .documentUrl(documentUrl)
+                .build();
+        return new ResponseEntity<>(exceptionTemplate, HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler({CategoryNameOverFlowException.class})
+    public ResponseEntity<ExceptionTemplate> catchCategoryNameOverFlowException(CategoryNameOverFlowException categoryNameOverFlowException){
+        ExceptionTemplate exceptionTemplate = ExceptionTemplate.builder()
+                .code("BOARD-416")
+                .message(categoryNameOverFlowException.getMessage())
                 .documentUrl(documentUrl)
                 .build();
         return new ResponseEntity<>(exceptionTemplate, HttpStatus.BAD_REQUEST);

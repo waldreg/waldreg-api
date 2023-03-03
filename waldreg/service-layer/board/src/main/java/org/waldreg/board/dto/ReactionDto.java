@@ -6,6 +6,14 @@ import java.util.Map;
 
 public class ReactionDto{
 
+    @Override
+    public String toString(){
+        return "ReactionDto{" +
+                "boardId=" + boardId +
+                ", reactionMap=" + reactionMap +
+                '}';
+    }
+
     private int boardId;
     private Map<BoardServiceReactionType, List<UserDto>> reactionMap;
 

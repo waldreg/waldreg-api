@@ -2,20 +2,41 @@ package org.waldreg.domain.attendance;
 
 import java.time.LocalDate;
 import java.util.Objects;
+import javax.persistence.CascadeType;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.OneToOne;
+import javax.persistence.Table;
 
+@Entity
+@Table(name = "ATTENDANCE")
 public final class Attendance{
 
-    private int attendanceId;
-    private final AttendanceUser attendanceUser;
-    private AttendanceTypeReward attendanceType;
-    private final LocalDate attendanceDate;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "ATTENDANCE_ATTENDANCE_ID")
+    private Integer attendanceId;
 
-    private Attendance(){
-        throw new UnsupportedOperationException("Cannot invoke constructor \"Attendance()\"");
-    }
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name = "ATTENDANCE_USER_ATTENDANCE_USER_ID", nullable = false)
+    private AttendanceUser attendanceUser;
+
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name = "ATTENDANCE_TYPE_REWARD_ID", nullable = false)
+    private AttendanceTypeReward attendanceType;
+
+    @Column(name = "ATTENDANCE_ATTENDANCE_DATE", nullable = false)
+    private LocalDate attendanceDate;
+
+    private Attendance(){}
 
     private Attendance(Builder builder){
-        this.attendanceId = builder.attendanceId;
         this.attendanceUser = builder.attendanceUser;
         this.attendanceType = builder.attendanceType;
         this.attendanceDate = builder.attendanceDate;
@@ -25,11 +46,7 @@ public final class Attendance{
         return new Builder();
     }
 
-    public void setAttendanceId(int attendanceId){
-        this.attendanceId = attendanceId;
-    }
-
-    public int getAttendanceId(){
+    public Integer getAttendanceId(){
         return attendanceId;
     }
 
@@ -56,7 +73,7 @@ public final class Attendance{
         }
         Attendance attendance = (Attendance)object;
         return attendance.getAttendanceDate().equals(this.attendanceDate)
-                && attendance.getAttendanceUser().getUser().getId() == this.attendanceUser.getUser().getId();
+                && Objects.equals(attendance.getAttendanceUser().getUser().getId(), this.attendanceUser.getUser().getId());
     }
 
     @Override
@@ -66,17 +83,11 @@ public final class Attendance{
 
     public static final class Builder{
 
-        private int attendanceId;
         private AttendanceUser attendanceUser;
         private AttendanceTypeReward attendanceType;
         private LocalDate attendanceDate;
 
         private Builder(){}
-
-        public Builder attendanceId(int attendanceId){
-            this.attendanceId = attendanceId;
-            return this;
-        }
 
         public Builder user(AttendanceUser attendanceUser){
             this.attendanceUser = attendanceUser;

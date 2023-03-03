@@ -1,38 +1,73 @@
 package org.waldreg.domain.teambuilding;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
+import javax.persistence.CascadeType;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
+import javax.persistence.Table;
 import org.waldreg.domain.user.User;
 
+@Entity
+@Table(name = "TEAM")
 public final class Team{
 
-    private int teamId;
-    private int teamBuildingId;
-    private String teamName;
-    private LocalDateTime lastModifiedAt;
-    private List<User> userList;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "TEAM_TEAM_ID")
+    private Integer teamId;
 
-    private Team(){
-        throw new UnsupportedOperationException("Cannot invoke constructor \"Team()\"");
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "TEAM_BUILDING_TEAM_BUILDING_ID")
+    private TeamBuilding teamBuilding;
+
+    @Column(name = "TEAM_TEAM_NAME", length = 1005, nullable = false)
+    private String teamName;
+
+    @Column(name = "TEAM_LAST_MODIFIED_AT", nullable = false, columnDefinition = "TIMESTAMP")
+    private LocalDateTime lastModifiedAt;
+
+    @OneToMany(mappedBy = "team", fetch = FetchType.LAZY, orphanRemoval = true, cascade = CascadeType.ALL)
+    private List<TeamUser> teamUserList;
+
+    public void addTeamUser(User user){
+        TeamUser teamUser = TeamUser.builder()
+                .team(this)
+                .user(user)
+                .build();
+        teamUser.setTeam(this);
+        teamUserList.add(teamUser);
     }
 
+    public void deleteTeamUser(int userId){
+        teamUserList.stream().filter(tu -> tu.getUser().getId() == userId).findFirst().ifPresentOrElse(
+                tu -> teamUserList.remove(tu),
+                () -> {throw new IllegalStateException("Cannot find teamUser user with id \"" + userId + "\"");}
+        );
+    }
+
+    private Team(){}
+
     private Team(Builder builder){
-        this.teamId = builder.teamId;
-        this.teamBuildingId = builder.teamBuildingId;
+        this.teamBuilding = builder.teamBuilding;
         this.teamName = builder.teamName;
         this.lastModifiedAt = builder.lastModifiedAt;
-        this.userList = builder.userList;
+        this.teamUserList = builder.teamUserList;
     }
 
     public static Builder builder(){
         return new Builder();
     }
 
-    public void setTeamId(int teamId){
-        this.teamId = teamId;
-    }
-
-    public int getTeamId(){
+    public Integer getTeamId(){
         return teamId;
     }
 
@@ -44,29 +79,43 @@ public final class Team{
         return lastModifiedAt;
     }
 
-    public List<User> getUserList(){
-        return userList;
+    public List<TeamUser> getTeamUserList(){
+        return teamUserList;
     }
 
-    public int getTeamBuildingId(){
-        return teamBuildingId;
+    public TeamBuilding getTeamBuilding(){
+        return teamBuilding;
+    }
+
+    public void setTeamBuilding(TeamBuilding teamBuilding){
+        this.teamBuilding = teamBuilding;
+        if(teamBuilding != null){
+            teamBuilding.addTeam(this);
+        }
+    }
+
+    public void setTeamName(String teamName){
+        this.teamName = teamName;
+    }
+
+    public void setLastModifiedAt(LocalDateTime lastModifiedAt){
+        this.lastModifiedAt = lastModifiedAt;
+    }
+
+    public void setTeamUserList(List<TeamUser> teamUserList){
+        this.teamUserList.clear();
+        this.teamUserList.addAll(teamUserList);
     }
 
     public static final class Builder{
 
-        private int teamId;
-        private int teamBuildingId;
+        private TeamBuilding teamBuilding;
         private String teamName;
         private LocalDateTime lastModifiedAt;
-        private List<User> userList;
+        private List<TeamUser> teamUserList = new ArrayList<>();
 
         private Builder(){
             lastModifiedAt = LocalDateTime.now();
-        }
-
-        public Builder teamId(int teamId){
-            this.teamId = teamId;
-            return this;
         }
 
         public Builder teamName(String teamName){
@@ -79,13 +128,13 @@ public final class Team{
             return this;
         }
 
-        public Builder userList(List<User> userList){
-            this.userList = userList;
+        public Builder userList(List<TeamUser> teamUserList){
+            this.teamUserList = teamUserList;
             return this;
         }
 
-        public Builder teamBuildingId(int teamBuildingId){
-            this.teamBuildingId = teamBuildingId;
+        public Builder teamBuilding(TeamBuilding teamBuilding){
+            this.teamBuilding = teamBuilding;
             return this;
         }
 

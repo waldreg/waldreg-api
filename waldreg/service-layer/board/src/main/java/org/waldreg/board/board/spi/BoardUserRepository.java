@@ -5,4 +5,5 @@ import org.waldreg.board.dto.UserDto;
 public interface BoardUserRepository{
 
     UserDto getUserInfo(int id);
+
 }

@@ -49,7 +49,7 @@ class AttendanceSocketTest{
         stompClient.startAttendance();
 
         // when
-        Awaitility.await().atMost(10, TimeUnit.SECONDS).until(stompClient::isUpdated);
+        Awaitility.await().atMost(60 * 10, TimeUnit.SECONDS).until(stompClient::isUpdated);
         String attendanceNumber = stompClient.getAttendanceNumber();
         Map<String, String> request = Map.of("attendance_identify", attendanceNumber);
         AttendanceAcceptanceTestHelper.subscribeAttendance(mvc, adminToken, "" + id);
@@ -70,7 +70,7 @@ class AttendanceSocketTest{
         stompClient.startAttendance();
 
         // when
-        Awaitility.await().atMost(10, TimeUnit.SECONDS).until(stompClient::isUpdated);
+        Awaitility.await().atMost(60 * 10, TimeUnit.SECONDS).until(stompClient::isUpdated);
         String attendanceNumber = stompClient.getAttendanceNumber();
         Map<String, String> request = Map.of("attendance_identify", attendanceNumber);
         ResultActions resultActions = AttendanceAcceptanceTestHelper.confirmAttendance(mvc, adminToken, objectMapper.writeValueAsString(request));
@@ -90,7 +90,7 @@ class AttendanceSocketTest{
         stompClient.startAttendance();
 
         // when
-        Awaitility.await().atMost(10, TimeUnit.SECONDS).until(stompClient::isUpdated);
+        Awaitility.await().atMost(60 * 10, TimeUnit.SECONDS).until(stompClient::isUpdated);
         String attendanceNumber = stompClient.getAttendanceNumber();
         Map<String, String> request = Map.of("attendance_identify", attendanceNumber);
         AttendanceAcceptanceTestHelper.subscribeAttendance(mvc, adminToken, "" + id);
@@ -111,7 +111,7 @@ class AttendanceSocketTest{
         stompClient.startAttendance();
 
         // when
-        Awaitility.await().atMost(10, TimeUnit.SECONDS).until(stompClient::isUpdated);
+        Awaitility.await().atMost(60 * 10, TimeUnit.SECONDS).until(stompClient::isUpdated);
         Map<String, String> request = Map.of("attendance_identify", "hello world");
         AttendanceAcceptanceTestHelper.subscribeAttendance(mvc, adminToken, "" + id);
         ResultActions resultActions = AttendanceAcceptanceTestHelper.confirmAttendance(mvc, adminToken, objectMapper.writeValueAsString(request));

@@ -11,6 +11,8 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.stage.xss.core.meta.Xss;
+import org.stage.xss.core.meta.XssFiltering;
 import org.waldreg.board.board.management.PerPage;
 import org.waldreg.board.comment.management.CommentManager;
 import org.waldreg.board.dto.CommentDto;
@@ -39,10 +41,11 @@ public class CommentController{
         this.controllerCommentMapper = controllerCommentMapper;
     }
 
+    @XssFiltering
     @Authenticating
     @PermissionVerifying(value = "Comment create manager")
     @PostMapping("/comment/{board-id}")
-    public void createComment(@PathVariable("board-id") int boardId, @RequestBody @Validated CommentRequest commentRequest){
+    public void createComment(@PathVariable("board-id") int boardId, @Xss("json") @RequestBody @Validated CommentRequest commentRequest){
         CommentDto commentDto = controllerCommentMapper.commentRequestToCommentDto(commentRequest);
         commentDto.setBoardId(boardId);
         commentManager.createComment(commentDto);
@@ -64,13 +67,14 @@ public class CommentController{
         return from == null || to == null;
     }
 
+    @XssFiltering
     @CommentIdAuthenticating(fail = AuthFailBehavior.PASS)
     @PermissionVerifying(value = "Comment modify manager", fail = VerifyingFailBehavior.PASS)
     @PutMapping("/comment/{comment-id}")
     public void modifyComment(@PathVariable("comment-id") int commentId,
                               AuthenticateVerifyState authenticateVerifyState,
                               PermissionVerifyState permissionVerifyState,
-                              @RequestBody @Validated CommentRequest commentRequest){
+                              @Xss("json") @RequestBody @Validated CommentRequest commentRequest){
         throwIfDoseNotHaveCommentModifyPermission(authenticateVerifyState, permissionVerifyState);
         CommentDto commentDto = controllerCommentMapper.commentRequestToCommentDto(commentRequest);
         commentDto.setId(commentId);

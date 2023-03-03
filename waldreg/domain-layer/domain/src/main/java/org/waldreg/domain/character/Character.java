@@ -1,20 +1,37 @@
 package org.waldreg.domain.character;
 
 import java.util.List;
+import javax.persistence.CascadeType;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.OneToMany;
+import javax.persistence.Table;
 
+@Entity
+@Table(name = "CHARACTERS")
 public final class Character{
 
-    private int id;
-    private final String characterName;
-    private final List<Permission> permissionList;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "CHARACTER_ID")
+    private Integer id;
 
-    private Character(){
-        throw new UnsupportedOperationException("Can not invoke constructor \"Character()\"");
-    }
+    @Column(name = "CHARACTER_CHARACTER_NAME", nullable = false, unique = true, length = 25)
+    private String characterName;
+
+    @OneToMany(mappedBy = "character", cascade = CascadeType.PERSIST, fetch = FetchType.LAZY)
+    private List<Permission> permissionList;
+
+    private Character(){}
 
     private Character(Builder builder){
         this.characterName = builder.characterName;
         this.permissionList = builder.permissionList;
+        permissionList.forEach(p -> p.setCharacter(this));
     }
 
     public static Builder builder(){
@@ -25,19 +42,19 @@ public final class Character{
         return characterName;
     }
 
+    public void setCharacterName(String characterName){
+        this.characterName = characterName;
+    }
+
     public List<Permission> getPermissionList(){
         return permissionList;
     }
 
-    public void setId(int id){
-        this.id = id;
-    }
-
-    public int getId(){
+    public Integer getId(){
         return id;
     }
 
-    public final static class Builder{
+    public static final class Builder{
 
         private String characterName;
         private List<Permission> permissionList;

@@ -11,6 +11,8 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
+import org.stage.xss.core.meta.Xss;
+import org.stage.xss.core.meta.XssFiltering;
 import org.waldreg.character.aop.annotation.PermissionVerifying;
 import org.waldreg.character.dto.CharacterDto;
 import org.waldreg.character.management.CharacterManager;
@@ -34,9 +36,9 @@ public class CharacterController{
 
     @Autowired
     public CharacterController(CharacterManager characterManager,
-            PermissionUnitListReadable permissionUnitListReadable,
-            ControllerPermissionMapper controllerPermissionMapper,
-            ControllerCharacterMapper controllerCharacterMapper){
+                               PermissionUnitListReadable permissionUnitListReadable,
+                               ControllerPermissionMapper controllerPermissionMapper,
+                               ControllerCharacterMapper controllerCharacterMapper){
         this.characterManager = characterManager;
         this.permissionUnitListReadable = permissionUnitListReadable;
         this.controllerPermissionMapper = controllerPermissionMapper;
@@ -60,10 +62,11 @@ public class CharacterController{
         return Map.of("characters", simpleCharacterResponseList);
     }
 
+    @XssFiltering
     @Authenticating
     @PermissionVerifying("Character manager")
     @PostMapping("/character")
-    public void createNewCharacter(@RequestBody @Validated CharacterRequest characterRequest){
+    public void createNewCharacter(@Xss("json") @RequestBody @Validated CharacterRequest characterRequest){
         CharacterDto characterDto = controllerCharacterMapper.characterRequestToCharacterDto(characterRequest);
         characterManager.createCharacter(characterDto);
     }
@@ -76,10 +79,11 @@ public class CharacterController{
         return controllerCharacterMapper.characterDtoToCharacterResponse(characterDto);
     }
 
+    @XssFiltering
     @Authenticating
     @PermissionVerifying("Character manager")
     @PatchMapping("/character/{character-name}")
-    public void updateCharacter(@PathVariable("character-name") String characterName, @RequestBody CharacterRequest characterRequest){
+    public void updateCharacter(@PathVariable("character-name") String characterName, @Xss("json") @RequestBody @Validated CharacterRequest characterRequest){
         characterManager.updateCharacter(characterName, controllerCharacterMapper.characterRequestToCharacterDto(characterRequest));
     }
 

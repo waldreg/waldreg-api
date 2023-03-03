@@ -1,15 +1,34 @@
 package org.waldreg.domain.attendance;
 
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.OneToOne;
+import javax.persistence.Table;
 import org.waldreg.domain.rewardtag.RewardTag;
 
+@Entity
+@Table(name = "ATTENDANCE_TYPE_REWARD")
 public final class AttendanceTypeReward{
 
-    private final String name;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "ATTENDANCE_TYPE_REWARD_ID")
+    private Integer id;
+
+    @Column(name = "ATTENDANCE_TYPE_NAME", nullable = false, unique = true)
+    private String name;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "REWARD_TAG_REWARD_TAG_ID")
     private RewardTag rewardTag;
 
-    private AttendanceTypeReward(){
-        throw new UnsupportedOperationException("Cannot invoke constructor \"AttendanceTypeReward()\"");
-    }
+    private AttendanceTypeReward(){}
 
     public static Builder builder(){
         return new Builder();
@@ -18,6 +37,10 @@ public final class AttendanceTypeReward{
     private AttendanceTypeReward(Builder builder){
         this.name = builder.name;
         this.rewardTag = builder.rewardTag;
+    }
+
+    public Integer getId(){
+        return id;
     }
 
     public String getName(){

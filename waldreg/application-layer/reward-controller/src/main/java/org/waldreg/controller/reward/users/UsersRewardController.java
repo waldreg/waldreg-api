@@ -9,6 +9,8 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.stage.xss.core.meta.Xss;
+import org.stage.xss.core.meta.XssFiltering;
 import org.waldreg.character.aop.behavior.VerifyingFailBehavior;
 import org.waldreg.character.aop.parameter.PermissionVerifyState;
 import org.waldreg.character.exception.NoPermissionException;
@@ -30,17 +32,18 @@ public class UsersRewardController{
 
     @Autowired
     public UsersRewardController(UsersRewardManager usersRewardManager,
-            ControllerUsersRewardMapper controllerUsersRewardMapper){
+                                 ControllerUsersRewardMapper controllerUsersRewardMapper){
         this.usersRewardManager = usersRewardManager;
         this.controllerUsersRewardMapper = controllerUsersRewardMapper;
     }
 
+    @XssFiltering
     @Authenticating
     @PermissionVerifying("Reward manager")
     @GetMapping("/reward-tag/users")
-    public void givenRewardToUsers(@RequestParam("id") String userId, @RequestParam("reward-tag-id") int rewardTagId){
+    public void givenRewardToUsers(@Xss("string") @RequestParam("id") String userId, @RequestParam("reward-tag-id") int rewardTagId){
         List<Integer> userIdList = getUserIdList(userId);
-        for(Integer id : userIdList){
+        for (Integer id : userIdList){
             usersRewardManager.assignRewardToUser(id, rewardTagId);
         }
     }
@@ -48,7 +51,7 @@ public class UsersRewardController{
     private List<Integer> getUserIdList(String userId){
         String[] userIds = userId.split(",");
         List<Integer> userIdList = new ArrayList<>();
-        for(String element : userIds){
+        for (String element : userIds){
             userIdList.add(Integer.parseInt(element.strip()));
         }
         return userIdList;
@@ -65,15 +68,15 @@ public class UsersRewardController{
     @PermissionVerifying(value = "Reward manager", fail = VerifyingFailBehavior.PASS)
     @GetMapping("/reward-tag/user/{id}")
     public UsersRewardTagResponse readSpecifyUsersReward(@PathVariable("id") int id,
-            PermissionVerifyState permissionVerifyState,
-            AuthenticateVerifyState authenticateVerifyState){
+                                                         PermissionVerifyState permissionVerifyState,
+                                                         AuthenticateVerifyState authenticateVerifyState){
         throwIfValidationFail(permissionVerifyState, authenticateVerifyState);
         UsersRewardDto usersRewardDto = usersRewardManager.readSpecifyUsersReward(id);
         return controllerUsersRewardMapper.usersRewardDtoToUsersRewardTagResponse(usersRewardDto);
     }
 
     private void throwIfValidationFail(PermissionVerifyState permissionVerifyState, AuthenticateVerifyState authenticateVerifyState){
-        if(!permissionVerifyState.isVerified() && !authenticateVerifyState.isVerified()){
+        if (!permissionVerifyState.isVerified() && !authenticateVerifyState.isVerified()){
             throw new NoPermissionException();
         }
     }

@@ -137,13 +137,6 @@ public class DefaultTeamBuildingManager implements TeamBuildingManager{
         return userDtoList;
     }
 
-    private TeamBuildingDto buildTeamBuildingDto(String title, List<TeamDto> teamDtoList){
-        return TeamBuildingDto.builder()
-                .teamBuildingTitle(title)
-                .teamDtoList(teamDtoList)
-                .build();
-    }
-
     @Override
     public TeamBuildingDto readTeamBuildingById(int teamBuildingId){
         throwIfUnknownTeamBuildingId(teamBuildingId);

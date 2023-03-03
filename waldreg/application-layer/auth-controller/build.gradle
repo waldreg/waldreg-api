@@ -14,6 +14,7 @@ targetCompatibility = '11'
 
 repositories {
     mavenCentral()
+    maven {url 'https://jitpack.io'}
 }
 
 dependencyManagement {
@@ -26,11 +27,16 @@ dependencies {
     implementation project(':core-layer:template')
     implementation project(':service-layer:auth')
     implementation project(':core-layer:util')
-    implementation project(':repository-layer:memory-repository')
+    implementation project(':repository-layer:auth-jpa')
 
     implementation 'org.springframework.boot:spring-boot-starter'
     implementation 'org.springframework.boot:spring-boot-starter-web'
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
+    implementation 'org.springframework.boot:spring-boot-starter-aop'
+
+    implementation 'com.github.xss-stage:xss-core:1.2'
+    implementation 'com.github.xss-stage:xss-extension-string:1.2'
+    implementation 'com.github.xss-stage:xss-extension-json:1.2'
 
     implementation 'org.springframework.boot:spring-boot-starter-validation'
 

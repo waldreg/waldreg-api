@@ -1,0 +1,36 @@
+version: '2'
+
+services:
+  api-server:
+    build: .
+    depends_on:
+      - database
+    environment:
+      - SPRING_DATASOURCE_URL=${DB_URL}
+      - SPRING_DATASOURCE_USERNAME=waldreg
+      - SPRING_DATASOURCE_PASSWORD=${DB_PASSWORD}
+      - SPRING_JPA_HIBERNATE_DDL_AUTO=${DDL_AUTO_RULE}
+    ports:
+      - "9344:9344"
+    networks:
+      - share-network
+
+  database:
+    image: mysql:8.0.32
+    environment:
+      - MYSQL_ROOT_PASSWORD=${DB_ROOT_PASSWORD}
+      - MYSQL_USER=waldreg
+      - MYSQL_PASSWORD=${DB_PASSWORD}
+      - MYSQL_DATABASE=waldreg
+    ports:
+      - "3306:3306"
+    volumes:
+      - persistence-volume:/var/lib/mysql
+    networks:
+      - share-network
+
+volumes:
+  persistence-volume:
+
+networks:
+  share-network:

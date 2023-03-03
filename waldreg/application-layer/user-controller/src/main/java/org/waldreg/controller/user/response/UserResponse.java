@@ -23,13 +23,6 @@ public class UserResponse{
     private String character;
     @JsonProperty("reward_point")
     private int rewardPoint;
-    @JsonProperty("social_login")
-    private List<String> socialLogin;
-
-    {
-        socialLogin = new ArrayList<>();
-    }
-
 
     public UserResponse(){}
 
@@ -42,7 +35,6 @@ public class UserResponse{
         this.phoneNumber = builder.phoneNumber;
         this.character = builder.character;
         this.rewardPoint = builder.rewardPoint;
-        this.socialLogin = builder.socialLogin;
     }
 
     public static Builder builder(){return new Builder();}
@@ -107,14 +99,6 @@ public class UserResponse{
         this.rewardPoint = rewardPoint;
     }
 
-    public List<String> getSocialLogin(){
-        return socialLogin;
-    }
-
-    public void setSocialLogin(ArrayList<String> socialLogin){
-        this.socialLogin = socialLogin;
-    }
-
     public final static class Builder{
 
         private int id;
@@ -125,11 +109,6 @@ public class UserResponse{
         private LocalDate createdAt;
         private String character;
         private int rewardPoint;
-        private List<String> socialLogin;
-
-        {
-            socialLogin = new ArrayList<>();
-        }
 
         private Builder(){}
 
@@ -170,11 +149,6 @@ public class UserResponse{
 
         public Builder rewardPoint(int rewardPoint){
             this.rewardPoint = rewardPoint;
-            return this;
-        }
-
-        public Builder socialLogin(List<String> socialLogin){
-            this.socialLogin = socialLogin;
             return this;
         }
 

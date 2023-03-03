@@ -110,11 +110,13 @@ class PermissionAcceptanceTest{
                 .permissionList(
                         List.of(
                                 PermissionRequest.builder()
+                                        .permissionService(permissionResponseList.get(0).getPermissionService())
                                         .id(permissionResponseList.get(0).getId())
                                         .name(permissionResponseList.get(0).getName())
                                         .status(permissionResponseList.get(0).getStatusList().get(0))
                                         .build(),
                                 PermissionRequest.builder()
+                                        .permissionService(permissionResponseList.get(1).getPermissionService())
                                         .id(permissionResponseList.get(1).getId())
                                         .name(permissionResponseList.get(1).getName())
                                         .status(permissionResponseList.get(1).getStatusList().get(0))
@@ -313,11 +315,11 @@ class PermissionAcceptanceTest{
                 MockMvcResultMatchers.header().string(HttpHeaders.CONTENT_TYPE, "application/json"),
                 MockMvcResultMatchers.header().string("Api-version", apiVersion),
                 MockMvcResultMatchers.jsonPath("$.characters.[0].id").isNumber(),
-                MockMvcResultMatchers.jsonPath("$.characters.[0].character_name").value("mock acceptance"),
+                MockMvcResultMatchers.jsonPath("$.characters.[0].character_name").value("Admin"),
                 MockMvcResultMatchers.jsonPath("$.characters.[1].id").isNumber(),
                 MockMvcResultMatchers.jsonPath("$.characters.[1].character_name").value("Guest"),
                 MockMvcResultMatchers.jsonPath("$.characters.[2].id").isNumber(),
-                MockMvcResultMatchers.jsonPath("$.characters.[2].character_name").value("Admin")
+                MockMvcResultMatchers.jsonPath("$.characters.[2].character_name").value("mock acceptance")
         );
     }
 
@@ -434,6 +436,7 @@ class PermissionAcceptanceTest{
                 .characterName(characterName)
                 .permissionList(List.of(
                         PermissionRequest.builder()
+                                .permissionService(permissionResponseList.get(0).getPermissionService())
                                 .id(permissionResponseList.get(0).getId())
                                 .name(permissionResponseList.get(0).getName())
                                 .status(permissionResponseList.get(0).getStatusList().get(0))
@@ -535,7 +538,7 @@ class PermissionAcceptanceTest{
     @DisplayName("특정 역할 수정 실패 인수테스트 - path-parameter 에 잘못된 character-name 으로 수정 요청")
     void MODIFY_CHARACTER_BY_NAME_FAIL_INVALID_PATH_NAME_ACCEPTANCE_TEST() throws Exception{
         // given
-        String characterName = "hello world character name";
+        String characterName = "hello world";
         String token = AuthenticationAcceptanceTestHelper.getAdminToken(mvc, objectMapper);
         CharacterRequest request = CharacterRequest.builder()
                 .characterName(characterName)
@@ -552,7 +555,7 @@ class PermissionAcceptanceTest{
                 MockMvcResultMatchers.header().string(HttpHeaders.CONTENT_TYPE, "application/json"),
                 MockMvcResultMatchers.header().string("api-version", apiVersion),
                 MockMvcResultMatchers.jsonPath("$.code").value("CHARACTER-420"),
-                MockMvcResultMatchers.jsonPath("$.messages").value("Can not find character named \"hello world character name\""),
+                MockMvcResultMatchers.jsonPath("$.messages").value("Can not find character named \"hello world\""),
                 MockMvcResultMatchers.jsonPath("$.document_url").value("docs.waldreg.org")
         );
     }
@@ -571,15 +574,17 @@ class PermissionAcceptanceTest{
                 .characterName(characterName)
                 .permissionList(List.of(
                         PermissionRequest.builder()
+                                .permissionService(permissionResponseList.get(0).getPermissionService())
                                 .id(permissionResponseList.get(0).getId())
-                                .name(permissionName)
-                                .status(permissionStatus)
+                                .name(permissionResponseList.get(0).getName())
+                                .status(permissionResponseList.get(0).getStatusList().get(0))
                                 .build()
                 )).build();
         CharacterRequest changeRequest = CharacterRequest.builder()
                 .characterName(characterName)
                 .permissionList(List.of(
                         PermissionRequest.builder()
+                                .permissionService(permissionResponseList.get(0).getPermissionService())
                                 .id(permissionResponseList.get(0).getId())
                                 .name("invalid_permission_name")
                                 .status(permissionStatus)
@@ -619,6 +624,7 @@ class PermissionAcceptanceTest{
                 .characterName(characterName)
                 .permissionList(List.of(
                         PermissionRequest.builder()
+                                .permissionService(permissionResponseList.get(0).getPermissionService())
                                 .id(permissionResponseList.get(0).getId())
                                 .name(permissionResponseList.get(0).getName())
                                 .status(permissionResponseList.get(0).getStatusList().get(0))
@@ -628,6 +634,7 @@ class PermissionAcceptanceTest{
                 .characterName(characterName)
                 .permissionList(List.of(
                         PermissionRequest.builder()
+                                .permissionService(permissionResponseList.get(0).getPermissionService())
                                 .id(permissionResponseList.get(0).getId())
                                 .name(permissionResponseList.get(0).getName())
                                 .status("wrong_status")
