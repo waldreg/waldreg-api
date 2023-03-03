@@ -59,7 +59,7 @@ public class JoiningPoolRepositoryServiceProvider implements JoiningPoolReposito
     @Override
     @Transactional(readOnly = true)
     public boolean isExistUserId(String userId){
-        return jpaJoiningPoolRepository.existsByUserId(userId);
+        return jpaJoiningPoolRepository.existsByUserInfoUserId(userId);
     }
 
 }
