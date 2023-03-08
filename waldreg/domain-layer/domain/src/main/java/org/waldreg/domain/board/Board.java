@@ -4,6 +4,7 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import javax.persistence.CascadeType;
+import javax.persistence.CollectionTable;
 import javax.persistence.Column;
 import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
@@ -52,10 +53,12 @@ public final class Board{
     private LocalDateTime lastModifiedAt;
 
     @Column(name = "BOARD_IMAGE_PATH_LIST")
+    @CollectionTable(name = "IMAGE_PATH_LIST")
     @ElementCollection(fetch = FetchType.LAZY)
     private List<String> imagePathList;
 
     @Column(name = "BOARD_FILE_PATH_LIST")
+    @CollectionTable(name = "FILE_PATH_LIST")
     @ElementCollection(fetch = FetchType.LAZY)
     private List<String> filePathList;
 
