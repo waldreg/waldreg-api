@@ -2,7 +2,7 @@
    
 ![Wald logo](https://user-images.githubusercontent.com/62425964/214485760-209749e1-fddd-44ea-9c21-a689a4add5cc.svg) __api__
 ---
-[License](https://github.com/)      
+[License](https://github.com/waldreg/waldreg-api/blob/main/LICENSE)      
 [Architecture](https://waldreg.notion.site/Architecture-7a8ff1b597464d468a692f150ca3f755)     
       
 ![api-version](https://img.shields.io/badge/api--version-0.5.1-92CE64)    
