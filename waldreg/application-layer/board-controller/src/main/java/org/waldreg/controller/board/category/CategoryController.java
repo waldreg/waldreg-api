@@ -49,8 +49,8 @@ public class CategoryController{
     @XssFiltering
     @Authenticating
     @PermissionVerifying(value = "Category manager")
-    @PutMapping("/category/{category-id}")
-    public void updateCategory(@Xss("json") @RequestBody @Validated CategoryRequest categoryRequest, @PathVariable("category-id") int categoryId){
+    @PutMapping("/category/{category}")
+    public void updateCategory(@Xss("json") @RequestBody @Validated CategoryRequest categoryRequest, @PathVariable("category") int categoryId){
         CategoryDto categoryDto = CategoryDto.builder()
                 .id(categoryId)
                 .categoryName(categoryRequest.getCategoryName())

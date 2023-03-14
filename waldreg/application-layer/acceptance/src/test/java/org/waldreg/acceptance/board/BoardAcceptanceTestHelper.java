@@ -1,6 +1,5 @@
 package org.waldreg.acceptance.board;
 
-
 import java.util.List;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
@@ -215,7 +214,7 @@ public class BoardAcceptanceTestHelper{
     }
 
     public static ResultActions modifyCategory(MockMvc mvc, String token, int categoryId, String content) throws Exception{
-        return mvc.perform(MockMvcRequestBuilders.put("/category/{category-id}", categoryId)
+        return mvc.perform(MockMvcRequestBuilders.put("/category/{category}", categoryId)
                                    .header(HttpHeaders.AUTHORIZATION, token)
                                    .accept(MediaType.APPLICATION_JSON)
                                    .contentType(MediaType.APPLICATION_JSON)
@@ -224,7 +223,7 @@ public class BoardAcceptanceTestHelper{
     }
 
     public static ResultActions deleteCategory(MockMvc mvc, String token, int categoryId) throws Exception{
-        return mvc.perform(MockMvcRequestBuilders.delete("/category/{category-id}", categoryId)
+        return mvc.perform(MockMvcRequestBuilders.delete("/category/{category}", categoryId)
                                    .header(HttpHeaders.AUTHORIZATION, token)
                                    .accept(MediaType.APPLICATION_JSON)
                                    .header("api-version", apiVersion));
