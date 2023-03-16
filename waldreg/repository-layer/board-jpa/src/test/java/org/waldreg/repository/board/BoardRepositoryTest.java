@@ -34,6 +34,7 @@ import org.waldreg.repository.board.repository.JpaUserRepository;
 @ContextConfiguration(classes = {BoardRepositoryServiceProvider.class, CategoryRepositoryServiceProvider.class, CommentRepositoryServiceProvider.class, ReactionRepositoryServiceProvider.class,
         BoardRepositoryMapper.class, CategoryRepositoryMapper.class, ReactionRepositoryMapper.class, CommentRepositoryMapper.class,
         JpaCharacterRepository.class, JpaCategoryRepository.class, JpaUserRepository.class, JpaReactionRepository.class, JpaReactionUserRepository.class,
+        BoardCommander.class,
         JpaBoardTestInitializer.class})
 @TestPropertySource("classpath:h2-application.properties")
 class BoardRepositoryTest{
@@ -162,7 +163,7 @@ class BoardRepositoryTest{
         setDefaultBoardList();
         Integer categoryId = boardRepository.inquiryAllBoard(0, 6).get(0).getCategoryId();
         //when
-        List<BoardDto> foundBoardList = boardRepository.inquiryAllBoardByCategory(categoryId, 0, 6);
+        List<BoardDto> foundBoardList = boardRepository.inquiryAllBoardByCategory(categoryId, 1, 6);
         //then
         Assertions.assertAll(
                 () -> Assertions.assertTrue(foundBoardList.size() == 3),
@@ -182,7 +183,7 @@ class BoardRepositoryTest{
         setDefaultBoardList();
         String title = "boardTitle";
         //when
-        List<BoardDto> foundBoardList = boardRepository.searchByTitle(title, 0, 6);
+        List<BoardDto> foundBoardList = boardRepository.searchByTitle(title, 1, 6);
         //then
         Assertions.assertAll(
                 () -> Assertions.assertTrue(foundBoardList.size() == 5),
@@ -202,7 +203,7 @@ class BoardRepositoryTest{
         setDefaultBoardList();
         String content = "boardContent";
         //when
-        List<BoardDto> foundBoardList = boardRepository.searchByContent(content, 0, 6);
+        List<BoardDto> foundBoardList = boardRepository.searchByContent(content, 1, 6);
         //then
         Assertions.assertAll(
                 () -> Assertions.assertTrue(foundBoardList.size() == 5),
@@ -222,7 +223,7 @@ class BoardRepositoryTest{
         setDefaultBoardList();
         String userId = "Fixtar";
         //when
-        List<BoardDto> foundBoardList = boardRepository.searchByAuthorUserId(userId, 0, 6);
+        List<BoardDto> foundBoardList = boardRepository.searchByAuthorUserId(userId, 1, 6);
         //then
         Assertions.assertAll(
                 () -> Assertions.assertTrue(foundBoardList.size() == 3),

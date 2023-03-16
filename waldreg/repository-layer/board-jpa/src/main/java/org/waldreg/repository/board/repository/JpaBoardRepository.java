@@ -15,18 +15,6 @@ public interface JpaBoardRepository extends JpaRepository<Board, Integer>{
     @Query(value = "select A.* from (select B.*, C.CATEGORY_NAME,U.USER_NAME,U.USER_USER_ID from BOARD as B LEFT JOIN CATEGORY as C, USER as U WHERE B.CATEGORY_ID = C.CATEGORY_ID AND B.USER_ID = U.USER_ID) as A LIMIT :count OFFSET :start", nativeQuery = true)
     List<Board> findAll(@Param("start") int start, @Param("count") int count);
 
-    @Query(value = "select A.* from (select B.*, C.CATEGORY_NAME,U.USER_NAME,U.USER_USER_ID from BOARD as B LEFT JOIN CATEGORY as C, USER as U WHERE B.CATEGORY_ID = C.CATEGORY_ID AND B.USER_ID = U.USER_ID AND B.BOARD_TITLE LIKE %:title%) as A LIMIT :count OFFSET :start", nativeQuery = true)
-    List<Board> findByTitle(@Param("title") String title, @Param("start") int start, @Param("count") int count);
-
-    @Query(value = "select A.* from (select B.*, C.CATEGORY_NAME,U.USER_NAME,U.USER_USER_ID from BOARD as B LEFT JOIN CATEGORY as C, USER as U WHERE B.CATEGORY_ID = C.CATEGORY_ID AND B.USER_ID = U.USER_ID AND B.BOARD_CONTENT LIKE %:content%) as A LIMIT :count OFFSET :start", nativeQuery = true)
-    List<Board> findByContent(@Param("content") String content, @Param("start") int start, @Param("count") int count);
-
-    @Query(value = "select A.* from (select B.*, C.CATEGORY_NAME,U.USER_NAME,U.USER_USER_ID from BOARD as B LEFT JOIN CATEGORY as C, USER as U WHERE B.CATEGORY_ID = C.CATEGORY_ID AND B.USER_ID = U.USER_ID AND U.USER_USER_ID LIKE %:userId%) as A LIMIT :count OFFSET :start", nativeQuery = true)
-    List<Board> findByUserId(@Param("userId") String userId, @Param("start") int start, @Param("count") int count);
-
-    @Query(value = "select A.* from (select B.*, C.CATEGORY_NAME,U.USER_NAME,U.USER_USER_ID from BOARD as B LEFT JOIN CATEGORY as C, USER as U WHERE B.CATEGORY_ID = C.CATEGORY_ID AND B.USER_ID = U.USER_ID AND B.CATEGORY_ID = :categoryId) as A LIMIT :count OFFSET :start", nativeQuery = true)
-    List<Board> findByCategoryId(@Param("categoryId") Integer categoryId, @Param("start") int start, @Param("count") int count);
-
     @Query("select count(b) from Board b where b.title like %:title%")
     Integer getBoardMaxIdxByTitle(@Param("title") String title);
 

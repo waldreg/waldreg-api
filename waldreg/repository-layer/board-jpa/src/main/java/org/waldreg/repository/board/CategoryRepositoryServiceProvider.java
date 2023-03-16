@@ -19,11 +19,14 @@ public class CategoryRepositoryServiceProvider implements CategoryRepository{
     private final JpaBoardRepository jpaBoardRepository;
     private final CategoryRepositoryMapper categoryRepositoryMapper;
 
+    private final BoardCommander boardCommander;
+
     @Autowired
-    public CategoryRepositoryServiceProvider(JpaCategoryRepository jpaCategoryRepository, JpaBoardRepository jpaBoardRepository, CategoryRepositoryMapper categoryRepositoryMapper){
+    public CategoryRepositoryServiceProvider(JpaCategoryRepository jpaCategoryRepository, JpaBoardRepository jpaBoardRepository, CategoryRepositoryMapper categoryRepositoryMapper, BoardCommander boardCommander){
         this.jpaCategoryRepository = jpaCategoryRepository;
         this.jpaBoardRepository = jpaBoardRepository;
         this.categoryRepositoryMapper = categoryRepositoryMapper;
+        this.boardCommander = boardCommander;
     }
 
     @Override
@@ -66,7 +69,7 @@ public class CategoryRepositoryServiceProvider implements CategoryRepository{
     @Transactional
     public void deleteCategory(int id){
         int maxIdx = jpaBoardRepository.getBoardMaxIdxByCategoryId(id);
-        List<Board> boardList = jpaBoardRepository.findByCategoryId(id,0,maxIdx);
+        List<Board> boardList = boardCommander.inquiryBoardByCategoryId(id,1,maxIdx);
         jpaBoardRepository.deleteAll(boardList);
         jpaCategoryRepository.deleteById(id);
     }

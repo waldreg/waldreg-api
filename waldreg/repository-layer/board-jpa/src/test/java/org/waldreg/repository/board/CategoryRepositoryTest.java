@@ -28,7 +28,7 @@ import org.waldreg.repository.board.repository.JpaUserRepository;
 @DataJpaTest
 @ContextConfiguration(classes = {
         CategoryRepositoryServiceProvider.class,
-        CategoryRepositoryMapper.class,
+        CategoryRepositoryMapper.class, BoardCommander.class,
         JpaBoardTestInitializer.class})
 @TestPropertySource("classpath:h2-application.properties")
 public class CategoryRepositoryTest{
