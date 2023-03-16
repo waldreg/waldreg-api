@@ -17,9 +17,13 @@ import org.waldreg.user.spi.UserRepository;
 import org.waldreg.user.spi.UsersCharacterRepository;
 
 @DataJpaTest
-@ContextConfiguration(classes = {UserRepositoryMapper.class, UsersCharacterRepository.class, UserRepositoryServiceProvider.class, JpaUserTestInitializer.class})
+@ContextConfiguration(classes = {UserRepositoryMapper.class,
+        UsersCharacterRepository.class,
+        UserRepositoryServiceProvider.class,
+        UserRepositoryCommander.class,
+        JpaUserTestInitializer.class})
 @TestPropertySource("classpath:h2-application.properties")
-public class UserRepositoryTest{
+class UserRepositoryTest{
 
     @Autowired
     private UserRepository userRepository;
@@ -32,7 +36,7 @@ public class UserRepositoryTest{
 
     @Test
     @DisplayName("새로운 User 생성 성공 테스트")
-    public void CREATE_NEW_USER_SUCCESS_TEST(){
+    void CREATE_NEW_USER_SUCCESS_TEST(){
         //given
         Character character = Character.builder()
                 .characterName("Guest")
@@ -56,7 +60,7 @@ public class UserRepositoryTest{
 
     @Test
     @DisplayName("user_id로 User 조회 성공 테스트")
-    public void READ_USER_BY_USER_ID_SUCCESS_TEST(){
+    void READ_USER_BY_USER_ID_SUCCESS_TEST(){
         //given
         Character character = Character.builder()
                 .characterName("Guest")
@@ -88,7 +92,7 @@ public class UserRepositoryTest{
 
     @Test
     @DisplayName("id로 User 조회 성공 테스트")
-    public void READ_USER_BY_ID_SUCCESS_TEST(){
+    void READ_USER_BY_ID_SUCCESS_TEST(){
         //given
         Character character = Character.builder()
                 .characterName("Guest")
@@ -121,7 +125,7 @@ public class UserRepositoryTest{
 
     @Test
     @DisplayName("User 전체 조회 성공 테스트")
-    public void READ_ALL_USER_SUCCESS_TEST(){
+    void READ_ALL_USER_SUCCESS_TEST(){
         //given
         Character character = Character.builder()
                 .characterName("Guest")
@@ -177,7 +181,7 @@ public class UserRepositoryTest{
 
     @Test
     @DisplayName("User 수정 성공 테스트")
-    public void UPDATE_USER_SUCCESS_TEST(){
+    void UPDATE_USER_SUCCESS_TEST(){
         //given
         Character character = Character.builder()
                 .characterName("Guest")
@@ -220,7 +224,7 @@ public class UserRepositoryTest{
 
     @Test
     @DisplayName("User 역할 수정 성공 테스트")
-    public void UPDATE_USER_CHARACTER_SUCCESS_TEST(){
+    void UPDATE_USER_CHARACTER_SUCCESS_TEST(){
         //given
         Character character = Character.builder()
                 .characterName("Guest")
@@ -262,7 +266,7 @@ public class UserRepositoryTest{
 
     @Test
     @DisplayName("id로 User 삭제 성공 테스트")
-    public void DELETE_USER_BY_ID_SUCCESS_TEST(){
+    void DELETE_USER_BY_ID_SUCCESS_TEST(){
         //given
         Character character = Character.builder()
                 .characterName("Guest")
