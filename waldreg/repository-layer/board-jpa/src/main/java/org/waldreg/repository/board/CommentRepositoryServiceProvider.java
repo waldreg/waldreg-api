@@ -22,12 +22,14 @@ public class CommentRepositoryServiceProvider implements CommentRepository, Comm
     private final JpaCommentRepository jpaCommentRepository;
     private final JpaUserRepository jpaUserRepository;
     private final JpaBoardRepository jpaBoardRepository;
+    private final CommentCommander commentCommander;
 
-    public CommentRepositoryServiceProvider(CommentRepositoryMapper commentRepositoryMapper, JpaCommentRepository jpaCommentRepository, JpaUserRepository jpaUserRepository, JpaBoardRepository jpaBoardRepository){
+    public CommentRepositoryServiceProvider(CommentRepositoryMapper commentRepositoryMapper, JpaCommentRepository jpaCommentRepository, JpaUserRepository jpaUserRepository, JpaBoardRepository jpaBoardRepository, CommentCommander commentCommander){
         this.commentRepositoryMapper = commentRepositoryMapper;
         this.jpaCommentRepository = jpaCommentRepository;
         this.jpaUserRepository = jpaUserRepository;
         this.jpaBoardRepository = jpaBoardRepository;
+        this.commentCommander = commentCommander;
     }
 
     @Override
@@ -61,7 +63,7 @@ public class CommentRepositoryServiceProvider implements CommentRepository, Comm
     @Override
     @Transactional(readOnly = true)
     public List<CommentDto> inquiryAllCommentByBoardId(int boardId, int startIdx, int endIdx){
-        List<Comment> commentList = jpaCommentRepository.findAllByBoardId(boardId, startIdx - 1, endIdx - startIdx + 1);
+        List<Comment> commentList = commentCommander.findAllByBoardId(boardId, startIdx, endIdx);
         return commentRepositoryMapper.commentDomainListToCommentDtoList(commentList);
     }
 

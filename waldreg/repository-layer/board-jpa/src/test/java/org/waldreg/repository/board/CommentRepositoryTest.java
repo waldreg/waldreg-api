@@ -30,7 +30,7 @@ import org.waldreg.repository.board.repository.JpaUserRepository;
 @DataJpaTest
 @ContextConfiguration(classes = {
         CommentRepositoryServiceProvider.class,
-        CommentRepositoryMapper.class,
+        CommentRepositoryMapper.class, CommentCommander.class,
         JpaBoardTestInitializer.class})
 @TestPropertySource("classpath:h2-application.properties")
 public class CommentRepositoryTest{
@@ -41,16 +41,14 @@ public class CommentRepositoryTest{
     private JpaCommentRepository jpaCommentRepository;
     @Autowired
     private JpaBoardRepository jpaBoardRepository;
-
     @Autowired
     private JpaUserRepository jpaUserRepository;
-
     @Autowired
     private JpaCategoryRepository jpaCategoryRepository;
-
     @Autowired
     private JpaCharacterRepository jpaCharacterRepository;
-
+    @Autowired
+    private CommentCommander commentCommander;
     @Autowired
     private EntityManager entityManager;
 
@@ -158,7 +156,7 @@ public class CommentRepositoryTest{
         commentRepository.createComment(commentDto2);
         commentRepository.createComment(commentDto3);
         //when
-        List<CommentDto> result = commentRepository.inquiryAllCommentByBoardId(board.getId(), 0, 5);
+        List<CommentDto> result = commentRepository.inquiryAllCommentByBoardId(board.getId(), 1, 5);
 
         //then
         Assertions.assertAll(
@@ -470,9 +468,9 @@ public class CommentRepositoryTest{
 
         //then
         Assertions.assertAll(
-                ()->Assertions.assertEquals(board1.getCommentList().size(),1),
-                ()->Assertions.assertEquals(board1.getCommentList().get(0).getContent(),commentDto.getContent()),
-                ()->Assertions.assertEquals(board1.getCommentList().get(0).getUser().getUserId(),commentDto.getUserDto().getUserId())
+                () -> Assertions.assertEquals(board1.getCommentList().size(), 1),
+                () -> Assertions.assertEquals(board1.getCommentList().get(0).getContent(), commentDto.getContent()),
+                () -> Assertions.assertEquals(board1.getCommentList().get(0).getUser().getUserId(), commentDto.getUserDto().getUserId())
 
         );
 
