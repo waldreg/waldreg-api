@@ -11,6 +11,7 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.TestPropertySource;
 import org.waldreg.domain.character.Character;
 import org.waldreg.domain.user.User;
+import org.waldreg.repository.teambuilding.teambuilding.TeamBuildingRepositoryCommander;
 import org.waldreg.repository.teambuilding.teamuser.repository.JpaTeamUserRepository;
 import org.waldreg.repository.teambuilding.repository.TestJpaCharacterRepository;
 import org.waldreg.repository.teambuilding.team.TeamRepositoryServiceProvider;
@@ -26,7 +27,12 @@ import org.waldreg.teambuilding.teambuilding.dto.TeamBuildingDto;
 import org.waldreg.teambuilding.teambuilding.spi.TeamBuildingRepository;
 
 @DataJpaTest
-@ContextConfiguration(classes = {TeamRepositoryMapper.class, TeamBuildingRepositoryServiceProvider.class, TeamBuildingRepositoryMapper.class, TeamRepositoryServiceProvider.class, JpaTeamBuildingTestInitializer.class})
+@ContextConfiguration(classes = {TeamRepositoryMapper.class,
+        TeamBuildingRepositoryServiceProvider.class,
+        TeamBuildingRepositoryMapper.class,
+        TeamRepositoryServiceProvider.class,
+        JpaTeamBuildingTestInitializer.class,
+        TeamBuildingRepositoryCommander.class})
 @TestPropertySource("classpath:h2-application.properties")
 public class TeamRepositoryTest{
 
