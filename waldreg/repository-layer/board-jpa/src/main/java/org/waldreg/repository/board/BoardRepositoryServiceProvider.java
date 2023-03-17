@@ -27,13 +27,16 @@ public class BoardRepositoryServiceProvider implements BoardRepository{
     private final JpaCategoryRepository jpaCategoryRepository;
     private final JpaReactionRepository jpaReactionRepository;
 
+    private final BoardCommander boardCommander;
+
     @Autowired
-    public BoardRepositoryServiceProvider(BoardRepositoryMapper boardRepositoryMapper, JpaBoardRepository jpaBoardRepository, JpaUserRepository jpaUserRepository, JpaCategoryRepository jpaCategoryRepository, JpaReactionRepository jpaReactionRepository){
+    public BoardRepositoryServiceProvider(BoardRepositoryMapper boardRepositoryMapper, JpaBoardRepository jpaBoardRepository, JpaUserRepository jpaUserRepository, JpaCategoryRepository jpaCategoryRepository, JpaReactionRepository jpaReactionRepository, BoardCommander boardCommander){
         this.boardRepositoryMapper = boardRepositoryMapper;
         this.jpaBoardRepository = jpaBoardRepository;
         this.jpaUserRepository = jpaUserRepository;
         this.jpaCategoryRepository = jpaCategoryRepository;
         this.jpaReactionRepository = jpaReactionRepository;
+        this.boardCommander = boardCommander;
     }
 
     @Override
@@ -94,14 +97,14 @@ public class BoardRepositoryServiceProvider implements BoardRepository{
     @Override
     @Transactional(readOnly = true)
     public List<BoardDto> inquiryAllBoard(int from, int to){
-        List<Board> boardList = jpaBoardRepository.findAll(from - 1, to - from + 1);
+        List<Board> boardList = boardCommander.inquiryAllBoard(from,to);
         return boardRepositoryMapper.boardDomainListToBoardDtoList(boardList);
     }
 
     @Override
     @Transactional(readOnly = true)
     public List<BoardDto> inquiryAllBoardByCategory(int categoryId, int from, int to){
-        List<Board> boardList = jpaBoardRepository.findByCategoryId(categoryId, from - 1, to - from + 1);
+        List<Board> boardList = boardCommander.inquiryBoardByCategoryId(categoryId, from, to);
         return boardRepositoryMapper.boardDomainListToBoardDtoList(boardList);
     }
 
@@ -152,21 +155,21 @@ public class BoardRepositoryServiceProvider implements BoardRepository{
     @Override
     @Transactional(readOnly = true)
     public List<BoardDto> searchByTitle(String keyword, int from, int to){
-        List<Board> boardList = jpaBoardRepository.findByTitle(keyword, from - 1, to - from + 1);
+        List<Board> boardList = boardCommander.searchBoardByTitle(keyword, from, to);
         return boardRepositoryMapper.boardDomainListToBoardDtoList(boardList);
     }
 
     @Override
     @Transactional(readOnly = true)
     public List<BoardDto> searchByContent(String keyword, int from, int to){
-        List<Board> boardList = jpaBoardRepository.findByContent(keyword, from - 1, to - from + 1);
+        List<Board> boardList = boardCommander.searchBoardByContent(keyword, from, to);
         return boardRepositoryMapper.boardDomainListToBoardDtoList(boardList);
     }
 
     @Override
     @Transactional(readOnly = true)
     public List<BoardDto> searchByAuthorUserId(String keyword, int from, int to){
-        List<Board> boardList = jpaBoardRepository.findByUserId(keyword, from - 1, to - from + 1);
+        List<Board> boardList = boardCommander.searchBoardByUserId(keyword, from, to);
         return boardRepositoryMapper.boardDomainListToBoardDtoList(boardList);
     }
 
