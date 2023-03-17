@@ -12,9 +12,6 @@ import org.waldreg.domain.board.Board;
 @Repository("boardJpaBoardRepository")
 public interface JpaBoardRepository extends JpaRepository<Board, Integer>{
 
-    @Query(value = "select A.* from (select B.*, C.CATEGORY_NAME,U.USER_NAME,U.USER_USER_ID from BOARD as B LEFT JOIN CATEGORY as C, USER as U WHERE B.CATEGORY_ID = C.CATEGORY_ID AND B.USER_ID = U.USER_ID) as A LIMIT :count OFFSET :start", nativeQuery = true)
-    List<Board> findAll(@Param("start") int start, @Param("count") int count);
-
     @Query("select count(b) from Board b where b.title like %:title%")
     Integer getBoardMaxIdxByTitle(@Param("title") String title);
 

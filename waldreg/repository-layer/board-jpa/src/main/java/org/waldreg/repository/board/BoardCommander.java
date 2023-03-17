@@ -17,6 +17,13 @@ public class BoardCommander{
         this.entityManager = entityManager;
     }
 
+    public List<Board> inquiryAllBoard(int from, int to){
+        return entityManager.createQuery("select B from Board as B", Board.class)
+                .setFirstResult(from - 1)
+                .setMaxResults(to - from + 1)
+                .getResultList();
+    }
+
     public List<Board> inquiryBoardByCategoryId(int categoryId, int from, int to){
         return entityManager.createQuery("select B from Board as B where B.category.id = ?1", Board.class)
                 .setParameter(1, categoryId)

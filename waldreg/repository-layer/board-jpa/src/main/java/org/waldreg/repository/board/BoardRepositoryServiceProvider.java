@@ -97,7 +97,7 @@ public class BoardRepositoryServiceProvider implements BoardRepository{
     @Override
     @Transactional(readOnly = true)
     public List<BoardDto> inquiryAllBoard(int from, int to){
-        List<Board> boardList = jpaBoardRepository.findAll(from - 1, to - from + 1);
+        List<Board> boardList = boardCommander.inquiryAllBoard(from,to);
         return boardRepositoryMapper.boardDomainListToBoardDtoList(boardList);
     }
 

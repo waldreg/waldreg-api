@@ -98,26 +98,6 @@ class JpaBoardRepositoryTest{
     }
 
     @Test
-    @DisplayName("전체 게시글 목록 조회 성공 테스트")
-    void INQUIRY_ALL_BOARD_LIST_SUCCESS_TEST(){
-        //given
-        setDefaultBoardList();
-        //when
-        List<Board> foundBoardList = jpaBoardRepository.findAll(0, 6);
-        //then
-        Assertions.assertAll(
-                () -> Assertions.assertTrue(foundBoardList.size() == 5),
-                () -> Assertions.assertEquals(foundBoardList.get(0).getTitle(), "boardTitle"),
-                () -> Assertions.assertEquals(foundBoardList.get(1).getTitle(), "boardTitle2"),
-                () -> Assertions.assertEquals(foundBoardList.get(2).getTitle(), "boardTitle3"),
-                () -> Assertions.assertEquals(foundBoardList.get(3).getTitle(), "boardTitle4"),
-                () -> Assertions.assertEquals(foundBoardList.get(4).getTitle(), "boardTitle5")
-        );
-
-    }
-
-
-    @Test
     @DisplayName("게시글 삭제 성공 테스트")
     void DELETE_BOARD_BY_ID_SUCCESS_TEST(){
         //given

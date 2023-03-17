@@ -142,7 +142,7 @@ class BoardRepositoryTest{
         //given
         setDefaultBoardList();
         //when
-        List<BoardDto> boardDtoList = boardRepository.inquiryAllBoard(0, 6);
+        List<BoardDto> boardDtoList = boardRepository.inquiryAllBoard(1, 6);
 
         //then
         Assertions.assertAll(
@@ -161,7 +161,7 @@ class BoardRepositoryTest{
     void INQUIRY_ALL_BOARD_LIST_BY_CATEGORY_SUCCESS_TEST(){
         //given
         setDefaultBoardList();
-        Integer categoryId = boardRepository.inquiryAllBoard(0, 6).get(0).getCategoryId();
+        Integer categoryId = boardRepository.inquiryAllBoard(1, 6).get(0).getCategoryId();
         //when
         List<BoardDto> foundBoardList = boardRepository.inquiryAllBoardByCategory(categoryId, 1, 6);
         //then
