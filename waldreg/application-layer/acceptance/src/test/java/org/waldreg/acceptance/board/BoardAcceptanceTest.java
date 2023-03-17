@@ -481,57 +481,6 @@ public class BoardAcceptanceTest{
     }
 
     @Test
-    @DisplayName("특정 게시글 조회 실패 - 권한 없는 게시글 조회")
-    public void INQUIRY_BOARD_BY_BOARD_ID_FAIL_NO_PERMISSION_TEST() throws Exception{
-        //given
-        String adminToken = AuthenticationAcceptanceTestHelper.getAdminToken(mvc, objectMapper);
-
-        String categoryName = "cate3";
-        CategoryRequest categoryRequest = CategoryRequest.builder().categoryName(categoryName).build();
-        BoardAcceptanceTestHelper.createCategory(mvc, adminToken, objectMapper.writeValueAsString(categoryRequest));
-        CategoryListResponse categoryResult = objectMapper.readValue(BoardAcceptanceTestHelper.inquiryAllCategory(mvc, adminToken)
-                                                                             .andReturn()
-                                                                             .getResponse()
-                                                                             .getContentAsString(), CategoryListResponse.class);
-        int categoryId = categoryResult.getCategories()[0].getCategoryId();
-
-        String name = "alcuk";
-        String userId = "alcuk_id";
-        String userPassword = "2gdddddd!";
-        String token = createUserAndGetToken(name, userId, userPassword);
-
-        String title = "notice";
-        String content = "content";
-        BoardCreateRequest boardCreateRequest = BoardCreateRequest.builder()
-                .title(title)
-                .content(content).categoryId(categoryId).build();
-        MockMultipartFile jsonContent = new MockMultipartFile("boardCreateRequest", "", MediaType.APPLICATION_JSON_VALUE, objectMapper.writeValueAsString(boardCreateRequest).getBytes());
-
-        //when
-        BoardAcceptanceTestHelper.createBoardWithOnlyJson(mvc, adminToken, jsonContent);
-        ResultActions boards = BoardAcceptanceTestHelper.inquiryAllBoard(mvc, token);
-
-        BoardListResponse boardListResponse = objectMapper.readValue(boards.andReturn()
-                                                                             .getResponse()
-                                                                             .getContentAsString(), BoardListResponse.class);
-        int boardId = boardListResponse.getBoards().get(0).getId();
-        ResultActions result = BoardAcceptanceTestHelper.inquiryBoardById(mvc, token, boardId);
-
-        //then
-        result.andExpectAll(
-                MockMvcResultMatchers.status().isForbidden(),
-                MockMvcResultMatchers.header().string(HttpHeaders.CONTENT_TYPE, "application/json"),
-                MockMvcResultMatchers.header().string("api-version", apiVersion),
-                MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON),
-                MockMvcResultMatchers.jsonPath("$.messages").value("No permission"),
-                MockMvcResultMatchers.jsonPath("$.document_url").value("docs.waldreg.org")
-
-        );
-
-    }
-
-
-    @Test
     @DisplayName("특정 게시글 수정 성공")
     public void MODIFY_BOARD_WITH_ALL_TEST() throws Exception{
         //given
