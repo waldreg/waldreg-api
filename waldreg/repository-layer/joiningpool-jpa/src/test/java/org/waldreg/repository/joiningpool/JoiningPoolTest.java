@@ -16,11 +16,14 @@ import org.waldreg.user.spi.JoiningPoolRepository;
 
 @DataJpaTest
 @ContextConfiguration(classes = {JoiningPoolRepositoryServiceProvider.class,
-        JpaUserRepository.class, JpaJoiningPoolRepository.class,JoiningPoolMapper.class,
-        JpaJoiningPoolTestInitializer.class
+        JpaUserRepository.class,
+        JpaJoiningPoolRepository.class,
+        JoiningPoolMapper.class,
+        JpaJoiningPoolTestInitializer.class,
+        JoiningPoolCommander.class
 })
 @TestPropertySource("classpath:h2-application.properties")
-public class JoiningPoolTest{
+class JoiningPoolTest{
 
     @Autowired
     private JoiningPoolRepository joiningPoolRepository;
@@ -100,7 +103,8 @@ public class JoiningPoolTest{
         joiningPoolRepository.createUser(userDto3);
 
         //when
-        List<UserDto> userDtoList = joiningPoolRepository.readUserJoiningPool(0,2);
+        List<UserDto> userDtoList = joiningPoolRepository.readUserJoiningPool(1,3);
+
         //then
         Assertions.assertAll(
                 ()->Assertions.assertEquals(3,userDtoList.size()),

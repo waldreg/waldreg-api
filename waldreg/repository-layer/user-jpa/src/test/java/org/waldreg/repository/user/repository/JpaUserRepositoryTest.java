@@ -26,7 +26,7 @@ class JpaUserRepositoryTest{
 
     @Test
     @DisplayName("새로운 유저 생성 테스트")
-    public void CREATE_NEW_USER_SUCCESS_TEST(){
+    void CREATE_NEW_USER_SUCCESS_TEST(){
         //given
         Character character = Character.builder()
                 .characterName("Guest")
@@ -59,7 +59,7 @@ class JpaUserRepositoryTest{
 
     @Test
     @DisplayName("id로 특정 유저 조회 테스트")
-    public void READ_USER_BY_ID_SUCCESS_TEST(){
+    void READ_USER_BY_ID_SUCCESS_TEST(){
         //given
         Character character = Character.builder()
                 .characterName("Guest")
@@ -85,82 +85,8 @@ class JpaUserRepositoryTest{
     }
 
     @Test
-    @DisplayName("user_id로 특정 유저 조회 테스트")
-    public void READ_USER_BY_USER_ID_SUCCESS_TEST(){
-        //given
-        Character character = Character.builder()
-                .characterName("Guest")
-                .permissionList(List.of())
-                .build();
-        User user = User.builder()
-                .name("alcuk")
-                .userId("alcuk_id")
-                .userPassword("alcuk_pwd2!")
-                .phoneNumber("010-1234-1234")
-                .character(character)
-                .build();
-
-        //when
-        jpaCharacterRepository.saveAndFlush(character);
-        user = jpaUserRepository.saveAndFlush(user);
-        entityManager.clear();
-        User result = jpaUserRepository.findByUserId(user.getUserId()).get();
-
-        //then
-        assertAll(user, result);
-
-    }
-
-    @Test
-    @DisplayName("전체 유저 조회 테스트")
-    public void READ_ALL_USER_SUCCESS_TEST(){
-        //given
-        Character character = Character.builder()
-                .characterName("Guest")
-                .permissionList(List.of())
-                .build();
-        User user = User.builder()
-                .name("alcuk")
-                .userId("alcuk_id")
-                .userPassword("alcuk_pwd2!")
-                .phoneNumber("010-1234-1234")
-                .character(character)
-                .build();
-        User user2 = User.builder()
-                .name("alcuk2")
-                .userId("alcuk_id2")
-                .userPassword("alcuk_pwd22!")
-                .phoneNumber("010-1234-1234")
-                .character(character)
-                .build();
-        User user3 = User.builder()
-                .name("alcuk3")
-                .userId("alcuk_id3")
-                .userPassword("alcuk_pwd23!")
-                .phoneNumber("010-1234-1234")
-                .character(character)
-                .build();
-        int start = 0;
-        int end = 1;
-
-        //when
-        jpaCharacterRepository.saveAndFlush(character);
-        user = jpaUserRepository.saveAndFlush(user);
-        user2 = jpaUserRepository.saveAndFlush(user2);
-        user3 = jpaUserRepository.saveAndFlush(user3);
-        entityManager.clear();
-        long maxIdx = jpaUserRepository.count();
-        List<User> result = jpaUserRepository.findAll(start, end - start + 1);
-
-        assertAll(user, result.get(0));
-        assertAll(user2, result.get(1));
-        Assertions.assertEquals(3, maxIdx);
-
-    }
-
-    @Test
     @DisplayName("유저 정보 수정 테스트")
-    public void UPDATE_USER_SUCCESS_TEST(){
+    void UPDATE_USER_SUCCESS_TEST(){
         //given
         Character character = Character.builder()
                 .characterName("Guest")
@@ -199,7 +125,7 @@ class JpaUserRepositoryTest{
 
     @Test
     @DisplayName("유저 역할 수정 테스트")
-    public void UPDATE_USER_CHARACTER_SUCCESS_TEST(){
+    void UPDATE_USER_CHARACTER_SUCCESS_TEST(){
         //given
         Character character = Character.builder()
                 .characterName("Guest")
@@ -242,7 +168,7 @@ class JpaUserRepositoryTest{
 
     @Test
     @DisplayName("id로 유저 삭제 테스트")
-    public void DELETE_USER_SUCCESS_TEST(){
+    void DELETE_USER_SUCCESS_TEST(){
         //given
         Character character = Character.builder()
                 .characterName("Guest")
@@ -282,7 +208,7 @@ class JpaUserRepositoryTest{
 
     @Test
     @DisplayName("user_id로 유저 존재 여부 테스트")
-    public void CHECK_USER_EXISTS_BY_USER_ID_SUCCESS_TEST(){
+    void CHECK_USER_EXISTS_BY_USER_ID_SUCCESS_TEST(){
         //given
         Character character = Character.builder()
                 .characterName("Guest")

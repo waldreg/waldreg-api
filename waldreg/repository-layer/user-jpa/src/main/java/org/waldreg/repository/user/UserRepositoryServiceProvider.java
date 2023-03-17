@@ -23,14 +23,22 @@ public class UserRepositoryServiceProvider implements UserRepository{
     private final JpaCharacterRepository jpaCharacterRepository;
     private final JpaAttendanceRepository jpaAttendanceRepository;
     private final JpaAttendanceUserRepository jpaAttendanceUserRepository;
+
+    private final UserRepositoryCommander userRepositoryCommander;
     private final UserRepositoryMapper userRepositoryMapper;
 
     @Autowired
-    public UserRepositoryServiceProvider(JpaUserRepository jpaUserRepository, JpaCharacterRepository jpaCharacterRepository, UserRepositoryMapper userRepositoryMapper, JpaAttendanceRepository jpaAttendanceRepository, JpaAttendanceUserRepository jpaAttendanceUserRepository){
+    public UserRepositoryServiceProvider(JpaUserRepository jpaUserRepository,
+            JpaCharacterRepository jpaCharacterRepository,
+            UserRepositoryMapper userRepositoryMapper,
+            JpaAttendanceRepository jpaAttendanceRepository,
+            JpaAttendanceUserRepository jpaAttendanceUserRepository,
+            UserRepositoryCommander userRepositoryCommander){
         this.jpaUserRepository = jpaUserRepository;
         this.jpaCharacterRepository = jpaCharacterRepository;
         this.jpaAttendanceRepository = jpaAttendanceRepository;
         this.jpaAttendanceUserRepository = jpaAttendanceUserRepository;
+        this.userRepositoryCommander = userRepositoryCommander;
         this.userRepositoryMapper = userRepositoryMapper;
     }
 
@@ -48,26 +56,21 @@ public class UserRepositoryServiceProvider implements UserRepository{
     @Override
     @Transactional(readOnly = true)
     public UserDto readUserById(int id){
-        User user = jpaUserRepository.findById(id).orElseThrow(
-                () -> {throw new IllegalStateException("Cannot find user with id \"" + id + "\"");}
-        );
+        User user = userRepositoryCommander.readUserById(id);
         return userRepositoryMapper.userToUserDto(user);
     }
 
     @Override
     @Transactional(readOnly = true)
     public UserDto readUserByUserId(String userId){
-        User user = jpaUserRepository.findByUserId(userId).orElseThrow(
-                () -> {throw new IllegalStateException("Cannot find user with user_id \"" + userId + "\"");}
-        );
+        User user = userRepositoryCommander.readUserByUserId(userId);
         return userRepositoryMapper.userToUserDto(user);
     }
 
     @Override
     @Transactional(readOnly = true)
     public List<UserDto> readUserList(int startIdx, int endIdx){
-        int count = endIdx - startIdx + 1;
-        List<User> userList = jpaUserRepository.findAll(startIdx - 1, count);
+        List<User> userList = userRepositoryCommander.readUserList(startIdx, endIdx);
         return userRepositoryMapper.userListToUserDtoList(userList);
     }
 

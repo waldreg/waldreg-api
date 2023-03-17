@@ -1,7 +1,6 @@
 package org.waldreg.repository.joiningpool;
 
 import java.util.List;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 import org.waldreg.domain.user.UserJoiningPool;
@@ -13,10 +12,19 @@ import org.waldreg.user.spi.JoiningPoolRepository;
 @Repository
 public class JoiningPoolRepositoryServiceProvider implements JoiningPoolRepository{
 
-    @Autowired
-    private JpaJoiningPoolRepository jpaJoiningPoolRepository;
-    @Autowired
-    private JoiningPoolMapper joiningPoolMapper;
+    private final JpaJoiningPoolRepository jpaJoiningPoolRepository;
+
+    private final JoiningPoolMapper joiningPoolMapper;
+
+    private final JoiningPoolCommander joinningPoolCommander;
+
+    JoiningPoolRepositoryServiceProvider(JpaJoiningPoolRepository jpaJoiningPoolRepository,
+            JoiningPoolMapper joiningPoolMapper,
+            JoiningPoolCommander joinningPoolCommander){
+        this.jpaJoiningPoolRepository = jpaJoiningPoolRepository;
+        this.joiningPoolMapper = joiningPoolMapper;
+        this.joinningPoolCommander = joinningPoolCommander;
+    }
 
     @Override
     @Transactional
@@ -33,7 +41,7 @@ public class JoiningPoolRepositoryServiceProvider implements JoiningPoolReposito
     @Override
     @Transactional(readOnly = true)
     public List<UserDto> readUserJoiningPool(int startIdx, int endIdx){
-        List<UserJoiningPool> userJoiningPoolList = jpaJoiningPoolRepository.readAllJoiningPoolUser(startIdx - 1, endIdx - startIdx + 1);
+        List<UserJoiningPool> userJoiningPoolList = joinningPoolCommander.readUserJoiningPool(startIdx, endIdx);
         return joiningPoolMapper.userJoiningPoolListToUserDtoList(userJoiningPoolList);
     }
 

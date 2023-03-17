@@ -20,6 +20,7 @@ public class GuestCharacterConfigurer{
     private final CharacterManager characterManager;
     private final PermissionUnitListReadable permissionUnitListReadable;
     private final ApplicationContext applicationContext;
+    private final List<String> accessPermissionList;
 
     @Autowired
     public GuestCharacterConfigurer(CharacterManager characterManager,
@@ -28,6 +29,7 @@ public class GuestCharacterConfigurer{
         this.characterManager = characterManager;
         this.permissionUnitListReadable = permissionUnitListReadable;
         this.applicationContext = applicationContext;
+        this.accessPermissionList = List.of("Board read manager");
     }
 
     @EventListener(ApplicationReadyEvent.class)
@@ -55,16 +57,18 @@ public class GuestCharacterConfigurer{
                     .service(permissionUnit.getService())
                     .id(permissionUnit.getId())
                     .name(permissionUnit.getName())
-                    .status(getFailStatusOfPermissionUnit(permissionUnit))
+                    .status(accessPermissionList.contains(permissionUnit.getName())
+                            ? getFailStatusOfPermissionUnit(permissionUnit, true)
+                            : getFailStatusOfPermissionUnit(permissionUnit, false))
                     .build();
             permissionDtoList.add(permissionDto);
         }
         return permissionDtoList;
     }
 
-    private String getFailStatusOfPermissionUnit(PermissionUnit permissionUnit){
+    private String getFailStatusOfPermissionUnit(PermissionUnit permissionUnit, boolean expectedStatus){
         for(String status : permissionUnit.getStatusList()){
-            if(!permissionUnit.verify(status)) return status;
+            if(permissionUnit.verify(status) == expectedStatus) return status;
         }
         throw new IllegalStateException("Can not find verify fail status of permission named \"" + permissionUnit.getName() + "\"");
     }
