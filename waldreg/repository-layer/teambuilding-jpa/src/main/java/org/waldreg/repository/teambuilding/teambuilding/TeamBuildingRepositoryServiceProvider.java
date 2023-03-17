@@ -21,11 +21,16 @@ public class TeamBuildingRepositoryServiceProvider implements TeamBuildingReposi
     private final JpaTeamBuildingRepository jpaTeamBuildingRepository;
     private final JpaTeamRepository jpaTeamRepository;
     private final TeamBuildingRepositoryMapper teamBuildingRepositoryMapper;
+    private final TeamBuildingRepositoryCommander teamBuildingRepositoryCommander;
 
-    public TeamBuildingRepositoryServiceProvider(JpaTeamBuildingRepository jpaTeamBuildingRepository, JpaTeamRepository jpaTeamRepository, TeamBuildingRepositoryMapper teamBuildingRepositoryMapper){
+    public TeamBuildingRepositoryServiceProvider(JpaTeamBuildingRepository jpaTeamBuildingRepository,
+            JpaTeamRepository jpaTeamRepository,
+            TeamBuildingRepositoryMapper teamBuildingRepositoryMapper,
+            TeamBuildingRepositoryCommander teamBuildingRepositoryCommander){
         this.jpaTeamBuildingRepository = jpaTeamBuildingRepository;
         this.jpaTeamRepository = jpaTeamRepository;
         this.teamBuildingRepositoryMapper = teamBuildingRepositoryMapper;
+        this.teamBuildingRepositoryCommander = teamBuildingRepositoryCommander;
     }
 
     @Override
@@ -63,9 +68,8 @@ public class TeamBuildingRepositoryServiceProvider implements TeamBuildingReposi
     @Override
     @Transactional(readOnly = true)
     public List<TeamBuildingDto> readAllTeamBuilding(int startIdx, int endIdx){
-        int start = startIdx - 1;
-        int count = endIdx - startIdx + 1;
-        return teamBuildingRepositoryMapper.teamBuildingListToTeamBuildingDtoList(jpaTeamBuildingRepository.findAll(start, count));
+        List<TeamBuilding> teamBuildingList = teamBuildingRepositoryCommander.readAllTeamBuilding(startIdx, endIdx);
+        return teamBuildingRepositoryMapper.teamBuildingListToTeamBuildingDtoList(teamBuildingList);
     }
 
     @Override

@@ -15,6 +15,7 @@ import org.waldreg.domain.teambuilding.TeamBuilding;
 import org.waldreg.domain.teambuilding.TeamUser;
 import org.waldreg.domain.user.User;
 import org.waldreg.repository.teambuilding.team.mapper.TeamRepositoryMapper;
+import org.waldreg.repository.teambuilding.teambuilding.TeamBuildingRepositoryCommander;
 import org.waldreg.repository.teambuilding.teambuilding.mapper.TeamInTeamBuildingRepositoryMapper;
 import org.waldreg.repository.teambuilding.teamuser.repository.JpaTeamUserRepository;
 import org.waldreg.repository.teambuilding.repository.TestJpaCharacterRepository;
@@ -29,7 +30,11 @@ import org.waldreg.teambuilding.teambuilding.dto.TeamBuildingDto;
 import org.waldreg.teambuilding.teambuilding.spi.TeamBuildingRepository;
 
 @DataJpaTest
-@ContextConfiguration(classes = {TeamBuildingRepositoryMapper.class, TeamRepositoryMapper.class, TeamBuildingRepositoryServiceProvider.class, JpaTeamBuildingTestInitializer.class})
+@ContextConfiguration(classes = {TeamBuildingRepositoryMapper.class,
+        TeamRepositoryMapper.class,
+        TeamBuildingRepositoryServiceProvider.class,
+        JpaTeamBuildingTestInitializer.class,
+        TeamBuildingRepositoryCommander.class})
 @TestPropertySource("classpath:h2-application.properties")
 public class TeamBuildingRepositoryTest{
 
