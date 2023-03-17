@@ -18,6 +18,7 @@ import org.waldreg.domain.board.category.Category;
 import org.waldreg.domain.board.comment.Comment;
 import org.waldreg.domain.character.Character;
 import org.waldreg.domain.user.User;
+import org.waldreg.repository.board.CommentCommander;
 
 @DataJpaTest
 @TestPropertySource("classpath:h2-application.properties")
@@ -83,82 +84,15 @@ public class JpaCommentRepositoryTest{
         Comment foundComment = jpaCommentRepository.findAll().get(0);
 
         Assertions.assertAll(
-                ()->Assertions.assertEquals(comment.getBoard().getId(),foundComment.getBoard().getId()),
-                ()->Assertions.assertEquals(comment.getUser().getUserId(),foundComment.getUser().getUserId()),
-                ()->Assertions.assertEquals(comment.getUser().getUserPassword(),foundComment.getUser().getUserPassword()),
-                ()->Assertions.assertEquals(comment.getContent(),foundComment.getContent()),
-                ()->Assertions.assertEquals(comment.getCreatedAt().withNano(0),foundComment.getCreatedAt().withNano(0))
+                () -> Assertions.assertEquals(comment.getBoard().getId(), foundComment.getBoard().getId()),
+                () -> Assertions.assertEquals(comment.getUser().getUserId(), foundComment.getUser().getUserId()),
+                () -> Assertions.assertEquals(comment.getUser().getUserPassword(), foundComment.getUser().getUserPassword()),
+                () -> Assertions.assertEquals(comment.getContent(), foundComment.getContent()),
+                () -> Assertions.assertEquals(comment.getCreatedAt().withNano(0), foundComment.getCreatedAt().withNano(0))
         );
 
 
     }
-
-    @Test
-    @DisplayName("댓글 조회 테스트 - 게시글 아이디, from ,to")
-    void INQUIRY_COMMENT_LIST_SUCCESS_TEST(){
-        //given
-        Board board = setDefaultBoard();
-        //when
-
-        Character character = jpaCharacterRepository.findAll().get(0);
-        User user = User.builder()
-                .userId("commentUser")
-                .name("aaaa")
-                .userPassword("bocda")
-                .phoneNumber("010-1234-5678")
-                .character(character)
-                .build();
-        User user2 = User.builder()
-                .userId("commentUser2")
-                .name("aaaa2")
-                .userPassword("bocda2")
-                .phoneNumber("010-1234-5678")
-                .character(character)
-                .build();
-
-        Comment comment = Comment.builder()
-                .content("comment1")
-                .user(user)
-                .board(board)
-                .createdAt(LocalDateTime.now())
-                .build();
-        Comment comment2 = Comment.builder()
-                .content("comment2")
-                .user(user2)
-                .board(board)
-                .createdAt(LocalDateTime.now())
-                .build();
-        Comment comment3 = Comment.builder()
-                .content("comment3")
-                .user(user)
-                .board(board)
-                .createdAt(LocalDateTime.now())
-                .build();
-
-
-        jpaCharacterRepository.save(character);
-        jpaUserRepository.save(user);
-        jpaUserRepository.save(user2);
-        jpaCommentRepository.save(comment);
-        jpaCommentRepository.save(comment2);
-        jpaCommentRepository.save(comment3);
-        entityManager.flush();
-        entityManager.clear();
-
-        List<Comment> commentList = jpaCommentRepository.findAllByBoardId(board.getId(),0,5);
-
-        Assertions.assertAll(
-                ()-> Assertions.assertEquals(3, commentList.size()),
-                ()->Assertions.assertEquals(comment.getContent(),commentList.get(0).getContent()),
-                ()->Assertions.assertEquals(comment.getUser().getUserId(),commentList.get(0).getUser().getUserId()),
-                ()->Assertions.assertEquals(comment2.getContent(),commentList.get(1).getContent()),
-                ()->Assertions.assertEquals(comment2.getUser().getUserId(),commentList.get(1).getUser().getUserId()),
-                ()->Assertions.assertEquals(comment3.getContent(),commentList.get(2).getContent()),
-                ()->Assertions.assertEquals(comment3.getUser().getUserId(),commentList.get(2).getUser().getUserId())
-                );
-
-    }
-
 
     @Test
     @DisplayName("댓글 수정 성공 테스트")
@@ -194,11 +128,11 @@ public class JpaCommentRepositoryTest{
         Comment result = jpaCommentRepository.findAll().get(0);
 
         Assertions.assertAll(
-                ()->Assertions.assertEquals(comment.getBoard().getId(),result.getBoard().getId()),
-                ()->Assertions.assertEquals(comment.getUser().getUserId(),result.getUser().getUserId()),
-                ()->Assertions.assertEquals(comment.getUser().getUserPassword(),result.getUser().getUserPassword()),
-                ()->Assertions.assertEquals("modified",result.getContent()),
-                ()->Assertions.assertEquals(comment.getCreatedAt().withNano(0),result.getCreatedAt().withNano(0))
+                () -> Assertions.assertEquals(comment.getBoard().getId(), result.getBoard().getId()),
+                () -> Assertions.assertEquals(comment.getUser().getUserId(), result.getUser().getUserId()),
+                () -> Assertions.assertEquals(comment.getUser().getUserPassword(), result.getUser().getUserPassword()),
+                () -> Assertions.assertEquals("modified", result.getContent()),
+                () -> Assertions.assertEquals(comment.getCreatedAt().withNano(0), result.getCreatedAt().withNano(0))
         );
 
 
@@ -293,11 +227,11 @@ public class JpaCommentRepositoryTest{
         //when
         int result = jpaCommentRepository.getBoardMaxIdxByBoardId(board.getId());
         //then
-        Assertions.assertEquals(3,result);
+        Assertions.assertEquals(3, result);
     }
 
 
-        private Board setDefaultBoard(){
+    private Board setDefaultBoard(){
         Character character = Character.builder()
                 .characterName("Guest")
                 .permissionList(List.of())

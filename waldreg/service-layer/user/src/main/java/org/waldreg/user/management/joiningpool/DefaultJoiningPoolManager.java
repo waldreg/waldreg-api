@@ -1,6 +1,7 @@
 package org.waldreg.user.management.joiningpool;
 
 import java.util.List;
+import java.util.logging.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.waldreg.character.exception.UnknownCharacterException;
@@ -75,7 +76,12 @@ public class DefaultJoiningPoolManager implements JoiningPoolManager{
     public List<UserDto> readUserJoiningPool(int startIdx, int endIdx){
         int maxIdx = readJoiningPoolMaxIdx();
         throwIfInvalidRangeDetected(startIdx, endIdx);
+        int temp = endIdx;
         endIdx = adjustEndIdx(startIdx, endIdx, maxIdx);
+        Logger logger = Logger.getLogger(this.getClass().getSimpleName());
+        int finalEndIdx = endIdx;
+        logger.info(() -> "adjust endIdx \"" + temp + "\" to \"" + finalEndIdx + "\" maxIdx is \"" + maxIdx + "\"");
+
         return joiningPoolRepository.readUserJoiningPool(startIdx, endIdx);
     }
 

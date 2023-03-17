@@ -1,6 +1,5 @@
 package org.waldreg.repository.user.repository;
 
-import java.util.List;
 import java.util.Optional;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
@@ -11,12 +10,6 @@ import org.waldreg.domain.user.User;
 
 @Repository("userJpaUserRepository")
 public interface JpaUserRepository extends JpaRepository<User, Integer>{
-
-    @Query("select u from User as u join u.character where u.id = :id")
-    Optional<User> findById(@Param("id") int id);
-
-    @Query("select u from User as u join u.character where u.userInfo.userId = :userId")
-    Optional<User> findByUserId(@Param("userId") String userId);
 
     @Modifying
     @Query(value = "delete from Attendance as a where a.attendanceUser.id = (select au.id from AttendanceUser as au where au.user.id = :id)")
@@ -31,9 +24,5 @@ public interface JpaUserRepository extends JpaRepository<User, Integer>{
     void deleteById(@Param("id") int id);
 
     boolean existsByUserInfoUserId(String userId);
-
-    @Query(value = "SELECT A.* FROM (SELECT U.*, C.CHARACTER_CHARACTER_NAME FROM USER as U JOIN CHARACTERS as C WHERE U.CHARACTER_ID = C.CHARACTER_ID ORDER BY U.USER_ID) as A LIMIT :count OFFSET :start", nativeQuery = true)
-    List<User> findAll(@Param("start") int start, @Param("count") int count);
-
 
 }
