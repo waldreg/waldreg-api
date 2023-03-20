@@ -137,6 +137,10 @@ public final class Board{
         return views;
     }
 
+    public void setViews(Integer views){
+        this.views = views;
+    }
+
     public void setTitle(String title){
         this.title = title;
     }
