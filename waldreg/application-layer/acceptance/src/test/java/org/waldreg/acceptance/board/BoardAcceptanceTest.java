@@ -2909,7 +2909,7 @@ public class BoardAcceptanceTest{
                 .name(name)
                 .userId(userId)
                 .userPassword(userPassword)
-                .phoneNumber("010-1234-1234")
+                .phoneNumber("01012341234")
                 .build();
         UserAcceptanceTestHelper.createUser(mvc, objectMapper.writeValueAsString(userRequest));
         UserAcceptanceTestHelper.approveJoinRequest(mvc,adminToken,userRequest.getUserId());

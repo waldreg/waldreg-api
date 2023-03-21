@@ -44,7 +44,7 @@ public class TeamUserRepositoryTest{
                 .name("alcuk")
                 .userId("alcuk_id")
                 .userPassword("alcuk_pwd2!")
-                .phoneNumber("010-1234-1234")
+                .phoneNumber("01012341234")
                 .character(character)
                 .build();
 
@@ -74,7 +74,7 @@ public class TeamUserRepositoryTest{
                 .name("alcuk")
                 .userId("alcuk_id")
                 .userPassword("alcuk_pwd2!")
-                .phoneNumber("010-1234-1234")
+                .phoneNumber("01012341234")
                 .character(character)
                 .build();
 

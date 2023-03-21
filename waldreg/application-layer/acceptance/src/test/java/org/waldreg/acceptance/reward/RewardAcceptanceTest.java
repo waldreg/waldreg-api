@@ -417,7 +417,7 @@ public class RewardAcceptanceTest{
                 .name(name)
                 .userId(userId)
                 .userPassword(userPassword)
-                .phoneNumber("010-1234-1234")
+                .phoneNumber("01012341234")
                 .build();
 
         // when
@@ -474,7 +474,7 @@ public class RewardAcceptanceTest{
                 .name(name)
                 .userId(userId)
                 .userPassword(userPassword)
-                .phoneNumber("010-1234-1234")
+                .phoneNumber("01012341234")
                 .build();
 
         // when
@@ -602,7 +602,7 @@ public class RewardAcceptanceTest{
                 .name(name)
                 .userId(userId)
                 .userPassword(userPassword)
-                .phoneNumber("010-1234-1234")
+                .phoneNumber("01012341234")
                 .build();
 
         // when
@@ -660,7 +660,7 @@ public class RewardAcceptanceTest{
                 .name(name)
                 .userId(userId)
                 .userPassword(userPassword)
-                .phoneNumber("010-1234-1234")
+                .phoneNumber("01012341234")
                 .build();
 
         String token = createUserAndGetToken(name, userId, userPassword);
@@ -759,7 +759,7 @@ public class RewardAcceptanceTest{
                 .name(name)
                 .userId(userId)
                 .userPassword(userPassword)
-                .phoneNumber("010-1234-1234")
+                .phoneNumber("01012341234")
                 .build();
 
         // when
@@ -826,7 +826,7 @@ public class RewardAcceptanceTest{
                 .name(name)
                 .userId(userId)
                 .userPassword(userPassword)
-                .phoneNumber("010-1234-1234")
+                .phoneNumber("01012341234")
                 .build();
 
         // when
@@ -894,7 +894,7 @@ public class RewardAcceptanceTest{
                 .name(name)
                 .userId(userId)
                 .userPassword(userPassword)
-                .phoneNumber("010-1234-1234")
+                .phoneNumber("01012341234")
                 .build();
         UserAcceptanceTestHelper.createUser(mvc, objectMapper.writeValueAsString(userRequest)).andDo(MockMvcResultHandlers.print());
         UserAcceptanceTestHelper.approveJoinRequest(mvc,adminToken,userRequest.getUserId());
