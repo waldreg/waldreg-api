@@ -1,5 +1,6 @@
 package org.waldreg.repository.reward.user;
 
+import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
@@ -47,6 +48,11 @@ public class UsersRewardRepositoryServiceProvider implements UsersRewardReposito
     public UsersRewardDto readSpecifyUsersReward(int id){
         User user = getUser(id);
         return rewardTagWrapperMapper.userToUsersRewardDto(user);
+    }
+
+    @Override
+    public List<Integer> readUsersAssignedRewardHistory(){
+        return null;
     }
 
     @Override
