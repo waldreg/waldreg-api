@@ -21,7 +21,7 @@ import org.waldreg.reward.users.spi.tag.RewardTagExistChecker;
 
 @ExtendWith(SpringExtension.class)
 @ContextConfiguration(classes = DefaultUsersRewardManager.class)
-public class UsersRewardManagerTest{
+class UsersRewardManagerTest{
 
     @Autowired
     private UsersRewardManager usersRewardManager;
@@ -37,7 +37,7 @@ public class UsersRewardManagerTest{
 
     @Test
     @DisplayName("특정 유저에게 상점 부여 성공 테스트")
-    public void ASSIGN_REWARD_TO_USER_TEST(){
+    void ASSIGN_REWARD_TO_USER_TEST(){
         // given
         int id = 1;
         int rewardTagId = 1;
@@ -52,7 +52,7 @@ public class UsersRewardManagerTest{
 
     @Test
     @DisplayName("특정 유저에게 상점 부여 실패 테스트 - reward tag id를 찾을 수 없음")
-    public void ASSIGN_REWARD_TO_USER_FAIL_CANNOT_FIND_REWARD_TAG_ID_TEST(){
+    void ASSIGN_REWARD_TO_USER_FAIL_CANNOT_FIND_REWARD_TAG_ID_TEST(){
         // given
         int id = 1;
         int rewardTagId = 1;
@@ -67,7 +67,7 @@ public class UsersRewardManagerTest{
 
     @Test
     @DisplayName("특정 유저에게 상점 부여 실패 테스트 - id에 해당하는 유저를 찾을 수 없음")
-    public void ASSIGN_REWARD_TO_USER_FAIL_CANNOT_FIND_USER_BY_ID_TEST(){
+    void ASSIGN_REWARD_TO_USER_FAIL_CANNOT_FIND_USER_BY_ID_TEST(){
         // given
         int id = 1;
         int rewardTagId = 1;
@@ -82,7 +82,7 @@ public class UsersRewardManagerTest{
 
     @Test
     @DisplayName("특정 유저의 상점 목록 조회 성공 테스트")
-    public void READ_SPECIFY_USERS_REWARD_TAG_SUCCESS_TEST(){
+    void READ_SPECIFY_USERS_REWARD_TAG_SUCCESS_TEST(){
         // given
         int id = 1;
         UsersRewardDto usersRewardDto = UsersRewardDto.builder()
@@ -111,7 +111,7 @@ public class UsersRewardManagerTest{
 
     @Test
     @DisplayName("특정 유저의 상점 목록 조회 실패 테스트 - 유저를 찾을 수 없음")
-    public void READ_SPECIFY_USERS_REWARD_TAG_FAIL_CANNOT_FIND_USER_TEST(){
+    void READ_SPECIFY_USERS_REWARD_TAG_FAIL_CANNOT_FIND_USER_TEST(){
         // given
         int id = 1;
 
@@ -124,7 +124,7 @@ public class UsersRewardManagerTest{
 
     @Test
     @DisplayName("특정 유저에게 부여된 상 벌점 삭제 성공 테스트")
-    public void DELETE_REWARD_TAG_ASSIGNED_TO_SPECIFY_USERS_SUCCESS_TEST(){
+    void DELETE_REWARD_TAG_ASSIGNED_TO_SPECIFY_USERS_SUCCESS_TEST(){
         // given
         int id = 1;
         int rewardId = 1;
@@ -139,7 +139,7 @@ public class UsersRewardManagerTest{
 
     @Test
     @DisplayName("특정 유저에게 부여된 상 벌점 삭제 실패 테스트 - 상점을 삭제할 대상 유저를 찾을 수 없음")
-    public void DELETE_REWARD_TAG_ASSIGNED_TO_SPECIFY_USERS_FAIL_CANNOT_FIND_USER_TEST(){
+    void DELETE_REWARD_TAG_ASSIGNED_TO_SPECIFY_USERS_FAIL_CANNOT_FIND_USER_TEST(){
         // given
         int id = 1;
         int rewardId = 1;
@@ -154,7 +154,7 @@ public class UsersRewardManagerTest{
 
     @Test
     @DisplayName("특정 유저에게 부여된 상 벌점 삭제 실패 테스트 - 유저가 reward id에 해당하는 상점을 갖고있지 않음")
-    public void DELETE_REWARD_TAG_ASSIGNED_TO_SPECIFY_USERS_FAIL_CANNOT_NOT_FINA_REWARD_TEST(){
+    void DELETE_REWARD_TAG_ASSIGNED_TO_SPECIFY_USERS_FAIL_CANNOT_NOT_FINA_REWARD_TEST(){
         // given
         int id = 1;
         int rewardId = 1;
@@ -168,8 +168,20 @@ public class UsersRewardManagerTest{
     }
 
     @Test
+    @DisplayName("상 벌점을 한번이라도 받은 유저 조회 성공 테스트")
+    void READ_USERS_ASSIGNED_REWARD_HISTORY_SUCCESS_TEST(){
+        // given
+
+        // when
+        Mockito.when(usersRewardRepository.readUsersAssignedRewardHistory()).thenReturn(List.of(1, 2, 3, 4));
+
+        // then
+        Assertions.assertEquals(List.of(1, 2, 3, 4), usersRewardManager.readUsersAssignedRewardHistory());
+    }
+
+    @Test
     @DisplayName("모든 유저의 상점 초기화 성공 테스트")
-    public void RESET_ALL_USERS_REWARD_SUCCESS_TEST(){
+    void RESET_ALL_USERS_REWARD_SUCCESS_TEST(){
         // when & then
         Assertions.assertDoesNotThrow(() -> usersRewardManager.resetAllUsersReward());
     }
