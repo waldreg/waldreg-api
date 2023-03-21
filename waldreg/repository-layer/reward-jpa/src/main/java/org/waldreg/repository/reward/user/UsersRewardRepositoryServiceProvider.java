@@ -1,6 +1,7 @@
 package org.waldreg.repository.reward.user;
 
 import java.util.List;
+import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
@@ -51,8 +52,10 @@ public class UsersRewardRepositoryServiceProvider implements UsersRewardReposito
     }
 
     @Override
+    @Transactional(readOnly = true)
     public List<Integer> readUsersAssignedRewardHistory(){
-        return null;
+        return jpaRewardTagWrapperRepository.readAssignedUsersIdList()
+                .stream().map(User::getId).collect(Collectors.toList());
     }
 
     @Override
