@@ -138,6 +138,7 @@ public class BoardRepositoryServiceProvider implements BoardRepository{
     private Board modifiedBoard(Board board, BoardDto boardDto){
         board.setTitle(boardDto.getTitle());
         board.setContent(boardDto.getContent());
+        board.setViews(boardDto.getViews());
         board.setLastModifiedAt(boardDto.getLastModifiedAt());
         return board;
     }
