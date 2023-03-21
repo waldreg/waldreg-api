@@ -70,6 +70,14 @@ public class RewardAcceptanceTestHelper{
                 .header(HttpHeaders.AUTHORIZATION, token));
     }
 
+    public static ResultActions inquiryUsersRewardTagHistory(MockMvc mvc, String token) throws Exception{
+        return mvc.perform(MockMvcRequestBuilders
+                .get("/reward-tag/users/history")
+                .accept(MediaType.APPLICATION_JSON)
+                .header("Api-version", "1.0")
+                .header(HttpHeaders.AUTHORIZATION, token));
+    }
+
     public static ResultActions deleteSpecifyUsersRewardTags(MockMvc mvc, String token, int id, int rewardId) throws Exception{
         return mvc.perform(MockMvcRequestBuilders
                 .delete("/reward-tag/user?id={id}&reward-id={reward-id}", id, rewardId)
