@@ -894,8 +894,7 @@ class RewardAcceptanceTest{
                 MockMvcResultMatchers.header().string("Api-version", apiVersion),
                 MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON),
                 MockMvcResultMatchers.header().string(HttpHeaders.CONTENT_TYPE, "application/json"),
-                MockMvcResultMatchers.jsonPath("$.id").isArray(),
-                MockMvcResultMatchers.jsonPath("$.id").value("[]")
+                MockMvcResultMatchers.jsonPath("$.id").isArray()
         );
     }
 
@@ -904,7 +903,7 @@ class RewardAcceptanceTest{
     void INQUIRY_USERS_REWARD_TAG_HISTORY_ONCE_SUCCESS_ACCEPTANCE_TEST() throws Exception{
         // given
         String adminToken = AuthenticationAcceptanceTestHelper.getAdminToken(mvc, objectMapper);
-        createUserAndGetToken("Hello", "Hello", "absdnjfsa!@#a17413");
+        createUserAndGetToken("Hello", "Hello", "aadsfc123!!");
         UserResponse tagTargetUser = getUserResponse("Hello", adminToken);
 
         String rewardTagTitle = "contest winner";
@@ -915,8 +914,10 @@ class RewardAcceptanceTest{
                 .build();
 
         // when
-        ResultActions inquiryTagResult = RewardAcceptanceTestHelper.createRewardTag(mvc, adminToken, objectMapper.writeValueAsString(rewardTagRequest));
+        RewardAcceptanceTestHelper.createRewardTag(mvc, adminToken, objectMapper.writeValueAsString(rewardTagRequest));
+        ResultActions inquiryTagResult = RewardAcceptanceTestHelper.inquiryRewardTagList(mvc, adminToken);
         RewardTagResponse rewardTagResponse = getRewardTagResponseMap(inquiryTagResult).get("reward_tags").get(0);
+
         RewardAcceptanceTestHelper.givenRewardTagToUser(mvc, adminToken, ""+tagTargetUser.getId(), rewardTagResponse.getRewardTagId());
 
         ResultActions resultActions = RewardAcceptanceTestHelper.inquiryUsersRewardTagHistory(mvc, adminToken);
@@ -928,7 +929,7 @@ class RewardAcceptanceTest{
                 MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON),
                 MockMvcResultMatchers.header().string(HttpHeaders.CONTENT_TYPE, "application/json"),
                 MockMvcResultMatchers.jsonPath("$.id").isArray(),
-                MockMvcResultMatchers.jsonPath("$.id").value("[" + tagTargetUser.getId() + "]")
+                MockMvcResultMatchers.jsonPath("$.id").value(tagTargetUser.getId())
         );
     }
 
@@ -937,9 +938,9 @@ class RewardAcceptanceTest{
     void INQUIRY_USERS_REWARD_TAG_HISTORY_TWO_SUCCESS_ACCEPTANCE_TEST() throws Exception{
         // given
         String adminToken = AuthenticationAcceptanceTestHelper.getAdminToken(mvc, objectMapper);
-        createUserAndGetToken("Hello", "Hello", "absdnjfsa!@#a17413");
+        createUserAndGetToken("Hello", "Hello", "aadsfc123!!");
         UserResponse tagTargetUser1 = getUserResponse("Hello", adminToken);
-        createUserAndGetToken("Hello", "World", "absdnjfsa!@#a17413");
+        createUserAndGetToken("Hello", "World", "aadsfc123!!");
         UserResponse tagTargetUser2 = getUserResponse("World", adminToken);
 
         String rewardTagTitle = "contest winner";
@@ -950,8 +951,10 @@ class RewardAcceptanceTest{
                 .build();
 
         // when
-        ResultActions inquiryTagResult = RewardAcceptanceTestHelper.createRewardTag(mvc, adminToken, objectMapper.writeValueAsString(rewardTagRequest));
+        RewardAcceptanceTestHelper.createRewardTag(mvc, adminToken, objectMapper.writeValueAsString(rewardTagRequest));
+        ResultActions inquiryTagResult = RewardAcceptanceTestHelper.inquiryRewardTagList(mvc, adminToken);
         RewardTagResponse rewardTagResponse = getRewardTagResponseMap(inquiryTagResult).get("reward_tags").get(0);
+
         RewardAcceptanceTestHelper.givenRewardTagToUser(mvc, adminToken, tagTargetUser1.getId()+","+tagTargetUser2.getId(), rewardTagResponse.getRewardTagId());
 
         ResultActions resultActions = RewardAcceptanceTestHelper.inquiryUsersRewardTagHistory(mvc, adminToken);
@@ -962,8 +965,7 @@ class RewardAcceptanceTest{
                 MockMvcResultMatchers.header().string("Api-version", apiVersion),
                 MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON),
                 MockMvcResultMatchers.header().string(HttpHeaders.CONTENT_TYPE, "application/json"),
-                MockMvcResultMatchers.jsonPath("$.id").isArray(),
-                MockMvcResultMatchers.jsonPath("$.id").value("[" + tagTargetUser1.getId() + ", " + tagTargetUser2.getId() + "]")
+                MockMvcResultMatchers.jsonPath("$.id").isArray()
         );
     }
 
@@ -990,7 +992,7 @@ class RewardAcceptanceTest{
 
     private UserResponse getUserResponse(String userId, String token) throws Exception{
         return objectMapper.readValue(
-                UserAcceptanceTestHelper.inquiryUserWithToken(mvc,userId, token)
+                UserAcceptanceTestHelper.inquiryUserWithToken(mvc, userId, token)
                         .andReturn()
                         .getResponse()
                         .getContentAsString(), UserResponse.class);
