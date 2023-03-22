@@ -62,7 +62,7 @@ public class AuthRepositoryTest{
                 .userId("Fixtar")
                 .name("123")
                 .userPassword("abcd")
-                .phoneNumber("010-1234-5678")
+                .phoneNumber("01012345678")
                 .character(character)
                 .build();
         jpaCharacterRepository.save(character);
@@ -95,7 +95,7 @@ public class AuthRepositoryTest{
                 .userId("Fixtar")
                 .name("123")
                 .userPassword("abcd")
-                .phoneNumber("010-1234-5678")
+                .phoneNumber("01012345678")
                 .character(character)
                 .build();
         jpaCharacterRepository.save(character);
@@ -127,7 +127,7 @@ public class AuthRepositoryTest{
                 .userId("Fixtar")
                 .name("123")
                 .userPassword("abcd")
-                .phoneNumber("010-1234-5678")
+                .phoneNumber("01012345678")
                 .character(character)
                 .build();
         jpaCharacterRepository.save(character);
@@ -180,7 +180,7 @@ public class AuthRepositoryTest{
                 .userId("Fixtar")
                 .name("123")
                 .userPassword("abcd")
-                .phoneNumber("010-1234-5678")
+                .phoneNumber("01012345678")
                 .character(character)
                 .build();
         jpaCharacterRepository.save(character);

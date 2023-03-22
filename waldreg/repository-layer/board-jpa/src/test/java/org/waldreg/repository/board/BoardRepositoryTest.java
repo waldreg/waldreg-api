@@ -76,7 +76,7 @@ class BoardRepositoryTest{
                 .userId("Fixtar")
                 .name("123")
                 .userPassword("abcd")
-                .phoneNumber("010-1234-5678")
+                .phoneNumber("01012345678")
                 .character(character)
                 .build();
         jpaUserRepository.save(user);
@@ -344,7 +344,7 @@ class BoardRepositoryTest{
                 .userId("Fixtar")
                 .name("123")
                 .userPassword("abcd")
-                .phoneNumber("010-1234-5678")
+                .phoneNumber("01012345678")
                 .character(character)
                 .build();
         jpaUserRepository.save(user);
@@ -382,14 +382,14 @@ class BoardRepositoryTest{
                 .userId("Fixtar")
                 .name("123")
                 .userPassword("abcd")
-                .phoneNumber("010-1234-5678")
+                .phoneNumber("01012345678")
                 .character(character)
                 .build();
         User user2 = User.builder()
                 .userId("secondUserId")
                 .name("abce")
                 .userPassword("abcd")
-                .phoneNumber("010-1234-5678")
+                .phoneNumber("01012345678")
                 .character(character)
                 .build();
 

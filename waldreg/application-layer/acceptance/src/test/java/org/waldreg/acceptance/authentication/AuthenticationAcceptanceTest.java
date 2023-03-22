@@ -76,7 +76,7 @@ public class AuthenticationAcceptanceTest{
         String name2 = "alcuk";
         String userId2 = "Fixtar";
         String userPassword2 = "1234abcd@";
-        String phoneNumber2 = "010-1234-1111";
+        String phoneNumber2 = "01012341111";
         UserRequest userRequest = UserRequest.builder()
                 .name(name2)
                 .userId(userId2)
@@ -160,7 +160,7 @@ public class AuthenticationAcceptanceTest{
         String name2 = "alcuk2";
         String userId2 = "alcuk";
         String userPassword2 = "1234abcd@";
-        String phoneNumber2 = "010-1234-1111";
+        String phoneNumber2 = "01012341111";
         UserRequest userRequest = UserRequest.builder()
                 .name(name2)
                 .userId(userId2)
@@ -236,7 +236,7 @@ public class AuthenticationAcceptanceTest{
                 .name(name)
                 .userId(userId)
                 .userPassword(userPassword)
-                .phoneNumber("010-1234-1234")
+                .phoneNumber("01012341234")
                 .build();
         UserAcceptanceTestHelper.createUser(mvc, objectMapper.writeValueAsString(userRequest));
         UserAcceptanceTestHelper.approveJoinRequest(mvc, adminToken, userRequest.getUserId());

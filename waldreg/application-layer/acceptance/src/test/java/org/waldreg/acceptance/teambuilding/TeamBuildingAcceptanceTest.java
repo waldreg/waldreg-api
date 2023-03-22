@@ -1604,7 +1604,7 @@ public class TeamBuildingAcceptanceTest{
                 .name(userId)
                 .userId(userId)
                 .userPassword("2dfgsfvgdd!")
-                .phoneNumber("010-1234-1234")
+                .phoneNumber("01012341234")
                 .build();
         UserAcceptanceTestHelper.createUser(mvc, objectMapper.writeValueAsString(userRequest));
         UserAcceptanceTestHelper.approveJoinRequest(mvc,adminToken,userRequest.getUserId());
@@ -1626,7 +1626,7 @@ public class TeamBuildingAcceptanceTest{
                 .name(name)
                 .userId(userId)
                 .userPassword(userPassword)
-                .phoneNumber("010-1234-1234")
+                .phoneNumber("01012341234")
                 .build();
         UserAcceptanceTestHelper.createUser(mvc, objectMapper.writeValueAsString(userRequest)).andDo(MockMvcResultHandlers.print());
         UserAcceptanceTestHelper.approveJoinRequest(mvc,adminToken,userRequest.getUserId());

@@ -443,7 +443,7 @@ public class ScheduleAcceptanceTest{
         String Name = "object";
         String UserId = "id123";
         String UserPassword = "objectwd123!!";
-        String PhoneNumber = "010-1234-2222";
+        String PhoneNumber = "01012342222";
         UserRequest UserCreateRequest = UserRequest.builder()
                 .name(Name)
                 .userId(UserId)
@@ -1237,7 +1237,7 @@ public class ScheduleAcceptanceTest{
         String Name = "object";
         String UserId = "id123";
         String UserPassword = "objectwd123!!";
-        String PhoneNumber = "010-1234-2222";
+        String PhoneNumber = "01012342222";
         UserRequest UserCreateRequest = UserRequest.builder()
                 .name(Name)
                 .userId(UserId)
@@ -1497,7 +1497,7 @@ public class ScheduleAcceptanceTest{
         String Name = "object";
         String UserId = "id123";
         String UserPassword = "objectwd123!!";
-        String PhoneNumber = "010-1234-2222";
+        String PhoneNumber = "01012342222";
         UserRequest UserCreateRequest = UserRequest.builder()
                 .name(Name)
                 .userId(UserId)
