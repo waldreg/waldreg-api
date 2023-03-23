@@ -21,5 +21,6 @@ public interface UserManager{
 
     int readMaxIdx();
 
+    List<UserDto> readSpecificUserList(List<Integer> idList);
 
 }

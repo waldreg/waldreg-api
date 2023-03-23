@@ -137,4 +137,9 @@ public class UserRepositoryServiceProvider implements UserRepository{
         return jpaUserRepository.existsById(id);
     }
 
+    @Override
+    public List<UserDto> readSpecificUserList(List<Integer> idList){
+        return null;
+    }
+
 }

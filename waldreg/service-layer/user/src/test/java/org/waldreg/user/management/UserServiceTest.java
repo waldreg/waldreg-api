@@ -762,4 +762,75 @@ public class UserServiceTest{
         Assertions.assertTrue(userCharacterRepository.isExistCharacterName("Guest"));
     }
 
+    @Test
+    @DisplayName("특정 유저 목록 조회 성공 테스트")
+    public void READ_SPECIFIC_USERS_SUCCESS_TEST(){
+        //given
+        String name = "홍길동";
+        String userId = "hello123";
+        String userPassword = "hello1234";
+        String phoneNumber = "010-1234-1234";
+        UserDto createRequest = UserDto.builder()
+                .name(name)
+                .userId(userId)
+                .userPassword(userPassword)
+                .phoneNumber(phoneNumber)
+                .build();
+        String name2 = "홍길동2";
+        String userId2 = "hello1234";
+        String userPassword2 = "hello12345";
+        String phoneNumber2 = "010-1234-1111";
+        UserDto createRequest2 = UserDto.builder()
+                .name(name2)
+                .userId(userId2)
+                .userPassword(userPassword2)
+                .phoneNumber(phoneNumber2)
+                .build();
+        String name3 = "홍길동3";
+        String userId3 = "hello12356";
+        String userPassword3 = "hello123456";
+        String phoneNumber3 = "010-1234-333";
+        UserDto createRequest3 = UserDto.builder()
+                .name(name3)
+                .userId(userId3)
+                .userPassword(userPassword3)
+                .phoneNumber(phoneNumber3)
+                .build();
+        List<UserDto> userDtoList = new ArrayList<>();
+
+        //when
+        userDtoList.add(createRequest);
+        userDtoList.add(createRequest2);
+        Mockito.when(userRepository.isExistId(Mockito.anyInt())).thenReturn(true);
+        Mockito.when(userRepository.readSpecificUserList(Mockito.any())).thenReturn(userDtoList);
+        List<UserDto> result = userManager.readSpecificUserList(List.of(1,2));
+
+        //then
+        Assertions.assertAll(
+                () -> Assertions.assertEquals(result.size(),2),
+                () -> Assertions.assertEquals(createRequest.getUserId(),result.get(0).getUserId()),
+                () -> Assertions.assertEquals(createRequest.getName(), result.get(0).getName()),
+                () -> Assertions.assertEquals(createRequest.getRewardPoint(), result.get(0).getRewardPoint()),
+                () -> Assertions.assertEquals(createRequest.getCreatedAt(),result.get(0).getCreatedAt()),
+                () -> Assertions.assertEquals(createRequest2.getUserId(),result.get(1).getUserId()),
+                () -> Assertions.assertEquals(createRequest2.getName(), result.get(1).getName()),
+                () -> Assertions.assertEquals(createRequest2.getRewardPoint(), result.get(1).getRewardPoint()),
+                () -> Assertions.assertEquals(createRequest2.getCreatedAt(),result.get(1).getCreatedAt())
+        );
+
+    }
+
+    @Test
+    @DisplayName("특정 유저 목록 조회 실패 테스트 - 없는 id")
+    public void READ_SPECIFIC_USERS_FAIL_CAUSE_UNKNOWN_ID_TEST(){
+        //given
+
+        //when
+        Mockito.when(userRepository.isExistId(2)).thenReturn(false);
+
+        //then
+        Assertions.assertThrows(UnknownIdException.class, () -> userManager.readSpecificUserList(List.of(1,2)));
+
+    }
+
 }
