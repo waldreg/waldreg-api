@@ -1,5 +1,6 @@
 package org.waldreg.controller.user;
 
+import java.util.ArrayList;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.lang.Nullable;
@@ -20,6 +21,7 @@ import org.waldreg.character.aop.parameter.PermissionVerifyState;
 import org.waldreg.controller.user.mapper.ControllerUserMapper;
 import org.waldreg.controller.user.request.CharacterRequest;
 import org.waldreg.controller.user.request.UpdateUserRequest;
+import org.waldreg.controller.user.response.SpecificUserListResponse;
 import org.waldreg.controller.user.response.UserListResponse;
 import org.waldreg.controller.user.response.UserResponse;
 import org.waldreg.token.aop.annotation.Authenticating;
@@ -115,6 +117,25 @@ public class UserController{
     public void updateUserCharacter(@PathVariable("id") int id, @RequestBody @Validated @Xss("json") CharacterRequest characterRequest){
         String character = characterRequest.getCharacter();
         userManager.updateCharacter(id, character);
+    }
+
+    @Authenticating
+    @PermissionVerifying("User info read manager")
+    @GetMapping("/users/history")
+    public SpecificUserListResponse readSpecificUserList(@RequestParam(value = "id")String ids){
+        List<Integer> idList = getIdList(ids);
+        List<UserResponse> userResponseList= new ArrayList<>();
+        userManager.readSpecificUserList(idList).forEach(userDto ->userResponseList.add(controllerUserMapper.userDtoToUserResponseWithPermission(userDto)));
+        return new SpecificUserListResponse(userResponseList);
+    }
+
+    private List<Integer> getIdList(String id){
+        String[] ids = id.split(",");
+        List<Integer>idList = new ArrayList<>();
+        for(String i : ids){
+            idList.add(Integer.parseInt(i.strip()));
+        }
+        return idList;
     }
 
 }
