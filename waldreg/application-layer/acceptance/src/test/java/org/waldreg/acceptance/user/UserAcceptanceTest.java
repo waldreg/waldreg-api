@@ -2172,39 +2172,6 @@ public class UserAcceptanceTest{
     }
 
     @Test
-    @DisplayName("특정 유저 목록 조회 성공 인수테스트 - 0명")
-    void INQUIRY_SPECIFIC_USERS_WHEN_ZERO_SUCCESS_TEST() throws Exception{
-        // given
-        String adminToken = AuthenticationAcceptanceTestHelper.getAdminToken(mvc, objectMapper);
-        String name1 = "alcuk1";
-        String userId1 = "alcuk_id1";
-        String userPassword1 = "alcuk_pwd1!";
-        String phoneNumber1 = "010-1234-1111";
-        UserRequest userCreateRequest1 = UserRequest.builder()
-                .name(name1)
-                .userId(userId1)
-                .userPassword(userPassword1)
-                .phoneNumber(phoneNumber1)
-                .build();
-
-        // when
-        UserAcceptanceTestHelper.createUser(mvc, objectMapper.writeValueAsString(userCreateRequest1));
-        UserAcceptanceTestHelper.approveJoinRequest(mvc, adminToken, userCreateRequest1.getUserId());
-
-        userCreateRequestList.add(userCreateRequest1);
-        ResultActions result = UserAcceptanceTestHelper.inquirySpecificUsers(mvc, "", adminToken);
-
-        // then
-        result.andExpectAll(
-                MockMvcResultMatchers.status().isOk(),
-                MockMvcResultMatchers.header().string(HttpHeaders.CONTENT_TYPE, "application/json"),
-                MockMvcResultMatchers.header().string("api-version", apiVersion),
-                MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON),
-                MockMvcResultMatchers.jsonPath("$.users").value("[]")
-        ).andDo(MockMvcResultHandlers.print());
-    }
-
-    @Test
     @DisplayName("특정 유저 목록 조회 성공 인수테스트 - 2명")
     void INQUIRY_SPECIFIC_USERS_WHEN_TWO_SUCCESS_TEST() throws Exception{
         // given

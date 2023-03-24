@@ -154,7 +154,7 @@ public class UserAcceptanceTestHelper{
 
     public static ResultActions inquirySpecificUsers(MockMvc mvc, String ids, String token) throws Exception{
         return mvc.perform(MockMvcRequestBuilders
-                .get("/users").param("id",ids)
+                .get("/users/history").param("id",ids)
                 .accept(MediaType.APPLICATION_JSON)
                 .header("Api-version", "1.0")
                 .header(HttpHeaders.AUTHORIZATION, token));
