@@ -119,11 +119,10 @@ public class UserController{
         userManager.updateCharacter(id, character);
     }
 
-    @XssFiltering
     @Authenticating
     @PermissionVerifying("User info read manager")
     @GetMapping("/users/history")
-    public SpecificUserListResponse readSpecificUserList(@Xss("string")@RequestParam(value = "id")String ids){
+    public SpecificUserListResponse readSpecificUserList(@RequestParam(value = "id")String ids){
         List<Integer> idList = getIdList(ids);
         List<UserResponse> userResponseList= new ArrayList<>();
         userManager.readSpecificUserList(idList).forEach(userDto ->userResponseList.add(controllerUserMapper.userDtoToUserResponseWithPermission(userDto)));
