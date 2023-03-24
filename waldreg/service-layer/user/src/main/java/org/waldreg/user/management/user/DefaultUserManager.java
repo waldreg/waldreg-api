@@ -1,5 +1,6 @@
 package org.waldreg.user.management.user;
 
+import java.util.ArrayList;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -96,6 +97,12 @@ public class DefaultUserManager implements UserManager{
     @Override
     public int readMaxIdx(){
         return userRepository.readMaxIdx();
+    }
+
+    @Override
+    public List<UserDto> readSpecificUserList(List<Integer> idList){
+        idList.stream().forEach(id -> throwIfUnknownId(id));
+        return userRepository.readSpecificUserList(idList);
     }
 
     private void throwIfInvalidRangeDetected(int startIdx, int endIdx){
