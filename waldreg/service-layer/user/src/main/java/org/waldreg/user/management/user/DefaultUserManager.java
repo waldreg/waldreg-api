@@ -101,7 +101,7 @@ public class DefaultUserManager implements UserManager{
 
     @Override
     public List<UserDto> readSpecificUserList(List<Integer> idList){
-        idList.stream().forEach(id -> throwIfUnknownId(id));
+        idList.forEach(id -> throwIfUnknownId(id));
         return userRepository.readSpecificUserList(idList);
     }
 
