@@ -1,5 +1,6 @@
 package org.waldreg.repository.user;
 
+import java.util.ArrayList;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
@@ -138,8 +139,13 @@ public class UserRepositoryServiceProvider implements UserRepository{
     }
 
     @Override
+    @Transactional(readOnly = true)
     public List<UserDto> readSpecificUserList(List<Integer> idList){
-        return null;
+        List<UserDto> userDtoList = new ArrayList<>();
+        idList.forEach(id -> {
+            userDtoList.add(userRepositoryMapper.userToUserDto(userRepositoryCommander.readUserById(id)));
+        });
+        return userDtoList;
     }
 
 }
