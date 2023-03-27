@@ -2179,7 +2179,7 @@ public class UserAcceptanceTest{
         String name1 = "alcuk1";
         String userId1 = "alcuk_id1";
         String userPassword1 = "alcuk_pwd1!";
-        String phoneNumber1 = "010-1234-1111";
+        String phoneNumber1 = "01012341111";
         UserRequest userCreateRequest1 = UserRequest.builder()
                 .name(name1)
                 .userId(userId1)
@@ -2189,7 +2189,7 @@ public class UserAcceptanceTest{
         String name2 = "alcuk2";
         String userId2 = "alcuk_id2";
         String userPassword2 = "alcuk_pwd2!";
-        String phoneNumber2 = "010-1234-2222";
+        String phoneNumber2 = "01012342222";
         UserRequest userCreateRequest2 = UserRequest.builder()
                 .name(name2)
                 .userId(userId2)
@@ -2199,7 +2199,7 @@ public class UserAcceptanceTest{
         String name3 = "alcuk3";
         String userId3 = "alcuk_id3";
         String userPassword3 = "alcuk_pwd3!";
-        String phoneNumber3 = "010-1234-3333";
+        String phoneNumber3 = "01012343333";
         UserRequest userCreateRequest3 = UserRequest.builder()
                 .name(name3)
                 .userId(userId3)
