@@ -19,7 +19,7 @@ public class ControllerCategoryMapper{
         return categoryListResponse;
     }
 
-    private CategoryResponse categoryDtoToCategoryResponse(CategoryDto categoryDto){
+    public CategoryResponse categoryDtoToCategoryResponse(CategoryDto categoryDto){
         return CategoryResponse.builder()
                 .categoryId(categoryDto.getId())
                 .categoryName(categoryDto.getCategoryName())

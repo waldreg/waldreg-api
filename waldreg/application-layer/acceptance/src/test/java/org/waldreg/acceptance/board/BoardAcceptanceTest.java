@@ -3,7 +3,6 @@ package org.waldreg.acceptance.board;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.io.FileInputStream;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -2912,7 +2911,8 @@ class BoardAcceptanceTest{
         CategoryRequest categoryRequest = CategoryRequest.builder().categoryName(categoryName).build();
 
         //when
-        ResultActions category = BoardAcceptanceTestHelper.createCategory(mvc, adminToken, objectMapper.writeValueAsString(categoryRequest));
+        BoardAcceptanceTestHelper.createCategory(mvc, adminToken, objectMapper.writeValueAsString(categoryRequest));
+        ResultActions category = BoardAcceptanceTestHelper.inquiryAllCategory(mvc, adminToken);
         CategoryListResponse categoryResponse = objectMapper.readValue(category.andReturn().getResponse().getContentAsString(), CategoryListResponse.class);
 
         ResultActions result = BoardAcceptanceTestHelper.inquirySpecificCategory(mvc, adminToken, categoryResponse.getCategories()[0].getCategoryId());
