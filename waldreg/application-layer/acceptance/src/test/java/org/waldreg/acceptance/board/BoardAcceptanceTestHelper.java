@@ -244,4 +244,13 @@ public class BoardAcceptanceTestHelper{
                                    .header("api-version", apiVersion));
     }
 
+    public static ResultActions inquirySpecificCategory(MockMvc mvc, String token, int categoryId) throws Exception{
+        return mvc.perform(MockMvcRequestBuilders.get("/category/{category-id}", categoryId)
+                .header(HttpHeaders.AUTHORIZATION, token)
+                .accept(MediaType.APPLICATION_JSON)
+                .contentType(MediaType.APPLICATION_JSON)
+                .header("api-version", apiVersion)
+        );
+    }
+
 }
