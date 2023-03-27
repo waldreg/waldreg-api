@@ -2,8 +2,8 @@ package org.waldreg.controller.reward.users;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.lang.Nullable;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -62,6 +62,13 @@ public class UsersRewardController{
     @GetMapping("/reward-tag/users/reset")
     public void resetAllUsersReward(){
         usersRewardManager.resetAllUsersReward();
+    }
+
+    @Authenticating
+    @PermissionVerifying("Reward manager")
+    @GetMapping("/reward-tag/users/history")
+    public Map<String, List<Integer>> readRewardAssignedUsers(){
+        return Map.of("id", usersRewardManager.readUsersAssignedRewardHistory());
     }
 
     @IdAuthenticating(fail = AuthFailBehavior.PASS)

@@ -30,7 +30,7 @@ import org.waldreg.controller.user.response.UserResponse;
 
 @SpringBootTest
 @AutoConfigureMockMvc
-public class RewardAcceptanceTest{
+class RewardAcceptanceTest{
 
     @Autowired
     private MockMvc mvc;
@@ -44,7 +44,7 @@ public class RewardAcceptanceTest{
 
     @BeforeEach
     @AfterEach
-    public void INITIATE_USER() throws Exception{
+    void INITIATE_USER() throws Exception{
         String adminToken = AuthenticationAcceptanceTestHelper.getAdminToken(mvc, objectMapper);
         for (UserRequest request : userCreateRequestList){
             UserResponse userResponse = objectMapper.readValue(UserAcceptanceTestHelper.inquiryUserWithoutToken(mvc, request.getUserId())
@@ -68,7 +68,7 @@ public class RewardAcceptanceTest{
 
     @BeforeEach
     @AfterEach
-    public void INITIATE_REWARD_TAG() throws Exception{
+    void INITIATE_REWARD_TAG() throws Exception{
         String adminToken = AuthenticationAcceptanceTestHelper.getAdminToken(mvc, objectMapper);
         ArrayList<RewardTagResponse> rewardTagResponseList = new ArrayList<>(
                 getRewardTagResponseMap(RewardAcceptanceTestHelper.inquiryRewardTagList(mvc, adminToken)).get("reward_tags")
@@ -91,7 +91,7 @@ public class RewardAcceptanceTest{
 
     @Test
     @DisplayName("상, 벌점 사유 태그 생성 성공 인수 테스트")
-    public void CREATE_REWARD_TAG_SUCCESS_ACCEPTANCE_TEST() throws Exception{
+    void CREATE_REWARD_TAG_SUCCESS_ACCEPTANCE_TEST() throws Exception{
         // given
         String adminToken = AuthenticationAcceptanceTestHelper.getAdminToken(mvc, objectMapper);
         String rewardTagTitle = "contest winner";
@@ -113,7 +113,7 @@ public class RewardAcceptanceTest{
 
     @Test
     @DisplayName("상, 벌점 사유 태그 생성 실패 인수 테스트 - 상점을 생성할 권한이 없는 유저가 상점을 생성하려고 시도 한 경우")
-    public void CREATE_REWARD_TAG_FAIL_NO_PERMISSION_ACCEPTANCE_TEST() throws Exception{
+    void CREATE_REWARD_TAG_FAIL_NO_PERMISSION_ACCEPTANCE_TEST() throws Exception{
         // given
         String token = createUserAndGetToken("some-one-else", "abc123", "aadsfc123!!");
         String rewardTagTitle = "contest winner";
@@ -140,7 +140,7 @@ public class RewardAcceptanceTest{
 
     @Test
     @DisplayName("상, 벌점 사유 태그 생성 실패 인수 테스트 - 인증 실패")
-    public void CREATE_REWARD_TAG_AUTHENTICATE_FAIL_ACCEPTANCE_TEST() throws Exception{
+    void CREATE_REWARD_TAG_AUTHENTICATE_FAIL_ACCEPTANCE_TEST() throws Exception{
         // given
         String token = "abc.abc.abc";
         String rewardTagTitle = "contest winner";
@@ -166,7 +166,7 @@ public class RewardAcceptanceTest{
 
     @Test
     @DisplayName("상, 벌점 사유 태그 조회 성공 인수 테스트")
-    public void INQUIRY_REWARD_TAG_SUCCESS_ACCEPTANCE_TEST() throws Exception{
+    void INQUIRY_REWARD_TAG_SUCCESS_ACCEPTANCE_TEST() throws Exception{
         // given
         String adminToken = AuthenticationAcceptanceTestHelper.getAdminToken(mvc, objectMapper);
         String rewardTagTitle = "contest winner";
@@ -198,7 +198,7 @@ public class RewardAcceptanceTest{
 
     @Test
     @DisplayName("상, 벌점 사유 태그 조회 실패 인수 테스트 - 조회 권한이 없는 유저가 조회를 시도한 경우")
-    public void INQUIRY_REWARD_TAG_FAIL_NO_PERMISSION_ACCEPTANCE_TEST() throws Exception{
+    void INQUIRY_REWARD_TAG_FAIL_NO_PERMISSION_ACCEPTANCE_TEST() throws Exception{
         // given
         String token = createUserAndGetToken("some-one-else", "abc123", "aadsfc123!!");
 
@@ -219,7 +219,7 @@ public class RewardAcceptanceTest{
 
     @Test
     @DisplayName("상, 벌점 사유 태그 조회 실패 인수 테스트 - 인증 실패")
-    public void INQUIRY_REWARD_TAG_FAIL_AUTHORIZATION_FAIL_ACCEPTANCE_TEST() throws Exception{
+    void INQUIRY_REWARD_TAG_FAIL_AUTHORIZATION_FAIL_ACCEPTANCE_TEST() throws Exception{
         // given
         String token = "abc.def.ghi";
 
@@ -239,7 +239,7 @@ public class RewardAcceptanceTest{
 
     @Test
     @DisplayName("상, 벌점 사유 태그 수정 성공 인수테스트")
-    public void UPDATE_REWARD_TAG_SUCCESS_ACCEPTANCE_TEST() throws Exception{
+    void UPDATE_REWARD_TAG_SUCCESS_ACCEPTANCE_TEST() throws Exception{
         // given
         String adminToken = AuthenticationAcceptanceTestHelper.getAdminToken(mvc, objectMapper);
         String rewardTagTitle = "contest winner";
@@ -277,7 +277,7 @@ public class RewardAcceptanceTest{
 
     @Test
     @DisplayName("상, 벌점 사유 태그 수정 실패 테스트 - 권한 없음")
-    public void UPDATE_REWARD_TAG_FAIL_NO_PERMISSION_ACCEPTANCE_TEST() throws Exception{
+    void UPDATE_REWARD_TAG_FAIL_NO_PERMISSION_ACCEPTANCE_TEST() throws Exception{
         // given
         String token = createUserAndGetToken("some-one-else", "abc123", "aadsfc123!!");
         RewardTagRequest updateRequest = RewardTagRequest.builder()
@@ -302,7 +302,7 @@ public class RewardAcceptanceTest{
 
     @Test
     @DisplayName("상, 벌점 사유 태그 수정 실패 테스트 - reward-tag-id에 해당하는 상, 벌점 태그를 찾을 수 없음")
-    public void UPDATE_REWARD_TAG_FAIL_CANNOT_FIND_REWARD_TAG_ID_ACCEPTANCE_TEST() throws Exception{
+    void UPDATE_REWARD_TAG_FAIL_CANNOT_FIND_REWARD_TAG_ID_ACCEPTANCE_TEST() throws Exception{
         // given
         String adminToken = AuthenticationAcceptanceTestHelper.getAdminToken(mvc, objectMapper);
         RewardTagRequest updateRequest = RewardTagRequest.builder()
@@ -327,7 +327,7 @@ public class RewardAcceptanceTest{
 
     @Test
     @DisplayName("상, 벌점 사유 태그 수정 실패 테스트 - 인증 실패")
-    public void UPDATE_REWARD_TAG_FAIL_AUTHENTICATE_FAIL_ACCEPTANCE_TEST() throws Exception{
+    void UPDATE_REWARD_TAG_FAIL_AUTHENTICATE_FAIL_ACCEPTANCE_TEST() throws Exception{
         // given
         String adminToken = "abc.abc.abc";
         RewardTagRequest updateRequest = RewardTagRequest.builder()
@@ -351,7 +351,7 @@ public class RewardAcceptanceTest{
 
     @Test
     @DisplayName("상, 벌점 태그 삭제 성공 테스트")
-    public void DELETE_REWARD_TAG_SUCCESS_ACCEPTANCE_TEST() throws Exception{
+    void DELETE_REWARD_TAG_SUCCESS_ACCEPTANCE_TEST() throws Exception{
         // given
         String adminToken = AuthenticationAcceptanceTestHelper.getAdminToken(mvc, objectMapper);
         RewardTagRequest createRequest = RewardTagRequest.builder()
@@ -380,7 +380,7 @@ public class RewardAcceptanceTest{
 
     @Test
     @DisplayName("상, 벌점 태그 삭제 실패 인수 테스트 - 권한 없음")
-    public void DELETE_REWARD_TAG_FAIL_NO_PERMISSION_ACCEPTANCE_TEST() throws Exception{
+    void DELETE_REWARD_TAG_FAIL_NO_PERMISSION_ACCEPTANCE_TEST() throws Exception{
         // given
         String token = createUserAndGetToken("some-one-else", "abc123", "aadsfc123!!");
 
@@ -401,7 +401,7 @@ public class RewardAcceptanceTest{
 
     @Test
     @DisplayName("유저에게 상, 벌점 부여 성공 인수테스트")
-    public void GIVE_REWARD_TAG_TO_USER_SUCCESS_ACCEPTANCE_TEST() throws Exception{
+    void GIVE_REWARD_TAG_TO_USER_SUCCESS_ACCEPTANCE_TEST() throws Exception{
         // given
         String adminToken = AuthenticationAcceptanceTestHelper.getAdminToken(mvc, objectMapper);
 
@@ -442,7 +442,7 @@ public class RewardAcceptanceTest{
 
     @Test
     @DisplayName("유저에게 상, 벌점 부여 실패 인수테스트 - 권한 없음")
-    public void GIVEN_REWARD_TAG_TO_USER_FAIL_NO_PERMISSION_ACCEPTANCE_TEST() throws Exception{
+    void GIVEN_REWARD_TAG_TO_USER_FAIL_NO_PERMISSION_ACCEPTANCE_TEST() throws Exception{
         // given
         String token = createUserAndGetToken("some", "abc1234", "aafadsfc123!!");
 
@@ -463,7 +463,7 @@ public class RewardAcceptanceTest{
 
     @Test
     @DisplayName("유저에게 상, 벌점 부여 실패 인수테스트 - 태그의 id를 찾을 수 없음")
-    public void GIVEN_REWARD_TAG_TO_USER_FAIL_CANNOT_FIND_REWARD_TAG_ID_ACCEPTANCE_TEST() throws Exception{
+    void GIVEN_REWARD_TAG_TO_USER_FAIL_CANNOT_FIND_REWARD_TAG_ID_ACCEPTANCE_TEST() throws Exception{
         // given
         String adminToken = AuthenticationAcceptanceTestHelper.getAdminToken(mvc, objectMapper);
 
@@ -499,7 +499,7 @@ public class RewardAcceptanceTest{
 
     @Test
     @DisplayName("유저에게 상, 벌점 부여 실패 인수테스트 - 인증 실패")
-    public void GIVEN_REWARD_TAG_TO_USER_FAIL_AUTHENTICATE_FAIL_ACCEPTANCE_TEST() throws Exception{
+    void GIVEN_REWARD_TAG_TO_USER_FAIL_AUTHENTICATE_FAIL_ACCEPTANCE_TEST() throws Exception{
         // given
         String token = "abc.abc.abc";
 
@@ -519,7 +519,7 @@ public class RewardAcceptanceTest{
 
     @Test
     @DisplayName("유저에게 상, 벌점 부여 실패 인수테스트 - 유저를 찾을 수 없음")
-    public void GIVEN_REWARD_TAG_TO_USER_FAIL_CANNOT_FIND_USER_ACCEPTANCE_TEST() throws Exception{
+    void GIVEN_REWARD_TAG_TO_USER_FAIL_CANNOT_FIND_USER_ACCEPTANCE_TEST() throws Exception{
         // given
         String adminToken = AuthenticationAcceptanceTestHelper.getAdminToken(mvc, objectMapper);
 
@@ -549,7 +549,7 @@ public class RewardAcceptanceTest{
 
     @Test
     @DisplayName("모든 유저의 상, 벌점 초기화 성공 인수테스트")
-    public void RESET_REWARD_TAG_FROM_ALL_USER_SUCCESS_ACCEPTANCE_TEST() throws Exception{
+    void RESET_REWARD_TAG_FROM_ALL_USER_SUCCESS_ACCEPTANCE_TEST() throws Exception{
         // given
         String adminToken = AuthenticationAcceptanceTestHelper.getAdminToken(mvc, objectMapper);
 
@@ -565,7 +565,7 @@ public class RewardAcceptanceTest{
 
     @Test
     @DisplayName("모든 유저 상, 벌점 초기화 실패 인수테스트 - 권한 없음")
-    public void RESET_REWARD_TAG_FROM_ALL_USER_FAIL_NO_PERMISSION_ACCEPTANCE_TEST() throws Exception{
+    void RESET_REWARD_TAG_FROM_ALL_USER_FAIL_NO_PERMISSION_ACCEPTANCE_TEST() throws Exception{
         // given
         String token = createUserAndGetToken("some", "abc1234", "aafadsfc123!!");
 
@@ -586,7 +586,7 @@ public class RewardAcceptanceTest{
 
     @Test
     @DisplayName("특정 유저의 상, 벌점 조회 성공 인수테스트")
-    public void INQUIRY_SPECIFY_USERS_REWARD_TAG_SUCCESS_ACCEPTANCE_TEST() throws Exception{
+    void INQUIRY_SPECIFY_USERS_REWARD_TAG_SUCCESS_ACCEPTANCE_TEST() throws Exception{
         // given
         String adminToken = AuthenticationAcceptanceTestHelper.getAdminToken(mvc, objectMapper);
 
@@ -645,7 +645,7 @@ public class RewardAcceptanceTest{
 
     @Test
     @DisplayName("특정 유저의 상 벌점 조회 성공 테스트 - 권한은 없지만 자기자신의 상 벌점을 조회하려고 함")
-    public void INQUIRY_SPECIFY_USERS_REWARD_TAG_FAIL_NO_PERMISSION_BUT_MYSELF_SUCCESS_TEST() throws Exception{
+    void INQUIRY_SPECIFY_USERS_REWARD_TAG_FAIL_NO_PERMISSION_BUT_MYSELF_SUCCESS_TEST() throws Exception{
         // given
         String adminToken = AuthenticationAcceptanceTestHelper.getAdminToken(mvc, objectMapper);
         RewardTagRequest createRequest = RewardTagRequest.builder()
@@ -701,7 +701,7 @@ public class RewardAcceptanceTest{
 
     @Test
     @DisplayName("특정 유저의 상 벌점 조회 실패 테스트 - 권한 없음")
-    public void INQUIRY_SPECIFY_USERS_REWARD_TAG_FAIL_NO_PERMISSION_ACCEPTANCE_TEST() throws Exception{
+    void INQUIRY_SPECIFY_USERS_REWARD_TAG_FAIL_NO_PERMISSION_ACCEPTANCE_TEST() throws Exception{
         // given
         String token = createUserAndGetToken("some", "abc1234", "aafadsfc123!!");
 
@@ -722,7 +722,7 @@ public class RewardAcceptanceTest{
 
     @Test
     @DisplayName("특정 유저의 상 벌점 조회 실패 테스트 - 유저를 찾을 수 없음")
-    public void INQUIRY_SPECIFY_USERS_REWARD_TAG_FAIL_CANNOT_FIND_USER_ACCEPTANCE_TEST() throws Exception{
+    void INQUIRY_SPECIFY_USERS_REWARD_TAG_FAIL_CANNOT_FIND_USER_ACCEPTANCE_TEST() throws Exception{
         // given
         String adminToken = AuthenticationAcceptanceTestHelper.getAdminToken(mvc, objectMapper);
 
@@ -743,7 +743,7 @@ public class RewardAcceptanceTest{
 
     @Test
     @DisplayName("특정 유저에게 상, 벌점 태그 삭제 성공 인수 테스트")
-    public void DELETE_SPECIFY_USERS_REWARD_TAG_SUCCESS_ACCEPTANCE_TEST() throws Exception{
+    void DELETE_SPECIFY_USERS_REWARD_TAG_SUCCESS_ACCEPTANCE_TEST() throws Exception{
         // given
         String adminToken = AuthenticationAcceptanceTestHelper.getAdminToken(mvc, objectMapper);
 
@@ -788,7 +788,7 @@ public class RewardAcceptanceTest{
 
     @Test
     @DisplayName("특정 유저에게 상, 벌점 삭제 실패 인수 테스트 - 권한 없음")
-    public void DELETE_SPECIFY_USERS_REWARD_TAG_FAIL_NO_PERMISSION_ACCEPTANCE_TEST() throws Exception{
+    void DELETE_SPECIFY_USERS_REWARD_TAG_FAIL_NO_PERMISSION_ACCEPTANCE_TEST() throws Exception{
         // given
         String token = createUserAndGetToken("heeeeee", "hee123", "heee7788!!@@");
 
@@ -810,7 +810,7 @@ public class RewardAcceptanceTest{
 
     @Test
     @DisplayName("특정 유저에게 상, 벌점 삭제 실패 인수 테스트 - 유저에 속한 reward id를 찾을 수 없음")
-    public void DELETE_SPECIFY_USERS_REWARD_TAG_FAIL_UNKNOWN_REWARD_ID_ACCEPTANCE_TEST() throws Exception{
+    void DELETE_SPECIFY_USERS_REWARD_TAG_FAIL_UNKNOWN_REWARD_ID_ACCEPTANCE_TEST() throws Exception{
         // given
         String adminToken = AuthenticationAcceptanceTestHelper.getAdminToken(mvc, objectMapper);
 
@@ -860,7 +860,7 @@ public class RewardAcceptanceTest{
 
     @Test
     @DisplayName("특정 유저에게 상, 벌점 삭제 실패 인수 테스트 - id에 해당하는 유저를 찾을 수 없음")
-    public void DELETE_SPECIFY_USERS_REWARD_TAG_FAIL_UNKNOWN_USER_ID_ACCEPTANCE_TEST() throws Exception{
+    void DELETE_SPECIFY_USERS_REWARD_TAG_FAIL_UNKNOWN_USER_ID_ACCEPTANCE_TEST() throws Exception{
         // given
         String adminToken = AuthenticationAcceptanceTestHelper.getAdminToken(mvc, objectMapper);
 
@@ -879,9 +879,120 @@ public class RewardAcceptanceTest{
         );
     }
 
+    @Test
+    @DisplayName("상 벌점 태그를 한번이라도 받은 유저 목록 조회 성공 인수테스트 - 0명")
+    void INQUIRY_USERS_REWARD_TAG_HISTORY_SUCCESS_ACCEPTANCE_TEST() throws Exception{
+        // given
+        String adminToken = AuthenticationAcceptanceTestHelper.getAdminToken(mvc, objectMapper);
+
+        // when
+        ResultActions resultActions = RewardAcceptanceTestHelper.inquiryUsersRewardTagHistory(mvc, adminToken);
+
+        // then
+        resultActions.andExpectAll(
+                MockMvcResultMatchers.status().isOk(),
+                MockMvcResultMatchers.header().string("Api-version", apiVersion),
+                MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON),
+                MockMvcResultMatchers.header().string(HttpHeaders.CONTENT_TYPE, "application/json"),
+                MockMvcResultMatchers.jsonPath("$.id").isArray()
+        );
+    }
+
+    @Test
+    @DisplayName("상 벌점 태그를 한번이라도 받은 유저 목록 조회 성공 인수테스트 - 1명")
+    void INQUIRY_USERS_REWARD_TAG_HISTORY_ONCE_SUCCESS_ACCEPTANCE_TEST() throws Exception{
+        // given
+        String adminToken = AuthenticationAcceptanceTestHelper.getAdminToken(mvc, objectMapper);
+        createUserAndGetToken("Hello", "Hello", "aadsfc123!!");
+        UserResponse tagTargetUser = getUserResponse("Hello", adminToken);
+
+        String rewardTagTitle = "contest winner";
+        int rewardPoint = 10;
+        RewardTagRequest rewardTagRequest = RewardTagRequest.builder()
+                .rewardTagTitle(rewardTagTitle)
+                .rewardPoint(rewardPoint)
+                .build();
+
+        // when
+        RewardAcceptanceTestHelper.createRewardTag(mvc, adminToken, objectMapper.writeValueAsString(rewardTagRequest));
+        ResultActions inquiryTagResult = RewardAcceptanceTestHelper.inquiryRewardTagList(mvc, adminToken);
+        RewardTagResponse rewardTagResponse = getRewardTagResponseMap(inquiryTagResult).get("reward_tags").get(0);
+
+        RewardAcceptanceTestHelper.givenRewardTagToUser(mvc, adminToken, ""+tagTargetUser.getId(), rewardTagResponse.getRewardTagId());
+
+        ResultActions resultActions = RewardAcceptanceTestHelper.inquiryUsersRewardTagHistory(mvc, adminToken);
+
+        // then
+        resultActions.andExpectAll(
+                MockMvcResultMatchers.status().isOk(),
+                MockMvcResultMatchers.header().string("Api-version", apiVersion),
+                MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON),
+                MockMvcResultMatchers.header().string(HttpHeaders.CONTENT_TYPE, "application/json"),
+                MockMvcResultMatchers.jsonPath("$.id").isArray(),
+                MockMvcResultMatchers.jsonPath("$.id").value(tagTargetUser.getId())
+        );
+    }
+
+    @Test
+    @DisplayName("상 벌점 태그를 한번이라도 받은 유저 목록 조회 성공 인수테스트 - 2명")
+    void INQUIRY_USERS_REWARD_TAG_HISTORY_TWO_SUCCESS_ACCEPTANCE_TEST() throws Exception{
+        // given
+        String adminToken = AuthenticationAcceptanceTestHelper.getAdminToken(mvc, objectMapper);
+        createUserAndGetToken("Hello", "Hello", "aadsfc123!!");
+        UserResponse tagTargetUser1 = getUserResponse("Hello", adminToken);
+        createUserAndGetToken("Hello", "World", "aadsfc123!!");
+        UserResponse tagTargetUser2 = getUserResponse("World", adminToken);
+
+        String rewardTagTitle = "contest winner";
+        int rewardPoint = 10;
+        RewardTagRequest rewardTagRequest = RewardTagRequest.builder()
+                .rewardTagTitle(rewardTagTitle)
+                .rewardPoint(rewardPoint)
+                .build();
+
+        // when
+        RewardAcceptanceTestHelper.createRewardTag(mvc, adminToken, objectMapper.writeValueAsString(rewardTagRequest));
+        ResultActions inquiryTagResult = RewardAcceptanceTestHelper.inquiryRewardTagList(mvc, adminToken);
+        RewardTagResponse rewardTagResponse = getRewardTagResponseMap(inquiryTagResult).get("reward_tags").get(0);
+
+        RewardAcceptanceTestHelper.givenRewardTagToUser(mvc, adminToken, tagTargetUser1.getId()+","+tagTargetUser2.getId(), rewardTagResponse.getRewardTagId());
+
+        ResultActions resultActions = RewardAcceptanceTestHelper.inquiryUsersRewardTagHistory(mvc, adminToken);
+
+        // then
+        resultActions.andExpectAll(
+                MockMvcResultMatchers.status().isOk(),
+                MockMvcResultMatchers.header().string("Api-version", apiVersion),
+                MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON),
+                MockMvcResultMatchers.header().string(HttpHeaders.CONTENT_TYPE, "application/json"),
+                MockMvcResultMatchers.jsonPath("$.id").isArray()
+        );
+    }
+
+    @Test
+    @DisplayName("상 벌점 태그를 한번이라도 받은 유저 목록 조회 실패 테스트 - 권한 없음")
+    void INQUIRY_USERS_REWARD_TAG_HISTORY_ONCE_FAIL_NO_PERMISSION_ACCEPTANCE_TEST() throws Exception{
+        // given
+        String noPermissionToken = createUserAndGetToken("Hello", "Hello", "an!@#asdjfn12");
+
+        // when
+        ResultActions resultActions = RewardAcceptanceTestHelper.inquiryUsersRewardTagHistory(mvc, noPermissionToken);
+
+        // then
+        resultActions.andExpectAll(
+                MockMvcResultMatchers.status().isForbidden(),
+                MockMvcResultMatchers.header().string("Api-version", apiVersion),
+                MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON),
+                MockMvcResultMatchers.header().string(HttpHeaders.CONTENT_TYPE, "application/json"),
+                MockMvcResultMatchers.jsonPath("$.code").value("CHARACTER-403"),
+                MockMvcResultMatchers.jsonPath("$.messages").value("No permission"),
+                MockMvcResultMatchers.jsonPath("$.document_url").value("docs.waldreg.org")
+        );
+    }
+
     private UserResponse getUserResponse(String userId, String token) throws Exception{
         return objectMapper.readValue(
-                UserAcceptanceTestHelper.inquiryUserWithToken(mvc,userId, token)
+                UserAcceptanceTestHelper.inquiryUserWithToken(mvc, userId, token)
                         .andReturn()
                         .getResponse()
                         .getContentAsString(), UserResponse.class);

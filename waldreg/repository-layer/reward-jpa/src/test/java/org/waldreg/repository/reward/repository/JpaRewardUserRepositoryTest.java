@@ -1,6 +1,7 @@
 package org.waldreg.repository.reward.repository;
 
 import java.util.List;
+import java.util.stream.Collectors;
 import javax.persistence.EntityManager;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -127,19 +128,50 @@ class JpaRewardUserRepositoryTest{
         assertTrue(jpaRewardTagWrapperRepository.existsById(result.getRewardTagWrapperList().get(0).getRewardId()));
     }
 
+    @Test
+    @DisplayName("상 벌점 태그가 존재하는 유저 확인 테스트")
+    void READ_ASSIGNED_REWARD_TAG_USERS_TEST(){
+        // given
+        User user1 = getUser("hello1");
+        User user2 = getUser("hello2");
+        User user3 = getUser("hello3");
+        RewardTag rewardTag = jpaRewardTagRepository.saveAndFlush(getRewardTag());
+
+        // when
+        User savedUser1 = jpaRewardUserRepository.saveAndFlush(user1);
+        User savedUser2 = jpaRewardUserRepository.saveAndFlush(user2);
+        User savedUser3 = jpaRewardUserRepository.saveAndFlush(user3);
+        savedUser1.addRewardTag(rewardTag);
+        savedUser1.addRewardTag(rewardTag);
+        savedUser1.addRewardTag(rewardTag);
+        savedUser2.addRewardTag(rewardTag);
+        savedUser3.addRewardTag(rewardTag);
+
+        List<Integer> result = jpaRewardTagWrapperRepository.readAssignedUsersIdList().stream()
+                .map(User::getId).collect(Collectors.toList());
+
+        // then
+        assertAll(
+                () -> assertEquals(3, result.size()),
+                () -> assertEquals(savedUser1.getId(), result.get(0)),
+                () -> assertEquals(savedUser2.getId(), result.get(1)),
+                () -> assertEquals(savedUser3.getId(), result.get(2))
+        );
+    }
+
     private User getUser(String userId){
         return User.builder()
                 .userId(userId)
                 .userPassword(userId)
                 .name(userId)
-                .character(getCharacter())
+                .character(getCharacter(userId))
                 .phoneNumber("010-0000-0000")
                 .build();
     }
 
-    private Character getCharacter(){
+    private Character getCharacter(String characterName){
         return jpaCharacterRepository.saveAndFlush(Character.builder()
-                .characterName("Hello world1")
+                .characterName(characterName)
                 .permissionList(List.of())
                 .build());
     }
