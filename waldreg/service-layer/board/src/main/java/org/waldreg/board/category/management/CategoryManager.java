@@ -9,6 +9,8 @@ public interface CategoryManager{
 
     List<CategoryDto> inquiryAllCategory();
 
+    CategoryDto inquiryCategoryById(int categoryId);
+
     void modifyCategory(CategoryDto categoryDto);
 
     void deleteCategory(int id);

@@ -3,7 +3,6 @@ package org.waldreg.acceptance.board;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.io.FileInputStream;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -37,7 +36,7 @@ import org.waldreg.controller.user.response.UserResponse;
 
 @SpringBootTest
 @AutoConfigureMockMvc
-public class BoardAcceptanceTest{
+class BoardAcceptanceTest{
 
     @Autowired
     private MockMvc mvc;
@@ -52,7 +51,7 @@ public class BoardAcceptanceTest{
 
     @BeforeEach
     @AfterEach
-    public void INITIATE_USER() throws Exception{
+    void INITIATE_USER() throws Exception{
         String adminToken = AuthenticationAcceptanceTestHelper.getAdminToken(mvc, objectMapper);
         for (UserRequest request : userCreateRequestList){
             UserResponse userResponse = objectMapper.readValue(UserAcceptanceTestHelper.inquiryUserWithoutToken(mvc, request.getUserId())
@@ -66,7 +65,7 @@ public class BoardAcceptanceTest{
 
     @BeforeEach
     @AfterEach
-    public void INITIATE_BOARD() throws Exception{
+    void INITIATE_BOARD() throws Exception{
         String adminToken = AuthenticationAcceptanceTestHelper.getAdminToken(mvc, objectMapper);
 
         ResultActions resultActions = BoardAcceptanceTestHelper.inquiryAllBoard(mvc, adminToken);
@@ -83,7 +82,7 @@ public class BoardAcceptanceTest{
         INITIATE_CATEGORY();
     }
 
-    public void INITIATE_CATEGORY() throws Exception{
+    void INITIATE_CATEGORY() throws Exception{
         String adminToken = AuthenticationAcceptanceTestHelper.getAdminToken(mvc, objectMapper);
 
         ResultActions result = BoardAcceptanceTestHelper.inquiryAllCategory(mvc, adminToken);
@@ -102,7 +101,7 @@ public class BoardAcceptanceTest{
 
     @Test
     @DisplayName("게시글 생성 성공(이미지,파일 포함)")
-    public void CREATE_BOARD_WITH_ALL_TEST() throws Exception{
+    void CREATE_BOARD_WITH_ALL_TEST() throws Exception{
         //given
         String adminToken = AuthenticationAcceptanceTestHelper.getAdminToken(mvc, objectMapper);
 
@@ -153,7 +152,7 @@ public class BoardAcceptanceTest{
 
     @Test
     @DisplayName("게시글 생성 성공(이미지,파일 여러개)")
-    public void CREATE_BOARD_WITH_ALL_FILE_LIST_TEST() throws Exception{
+    void CREATE_BOARD_WITH_ALL_FILE_LIST_TEST() throws Exception{
         //given
         String adminToken = AuthenticationAcceptanceTestHelper.getAdminToken(mvc, objectMapper);
 
@@ -217,7 +216,7 @@ public class BoardAcceptanceTest{
 
     @Test
     @DisplayName("게시글 생성 성공(json 객체만)")
-    public void CREATE_BOARD_WITH_ONLY_JSON_TEST() throws Exception{
+    void CREATE_BOARD_WITH_ONLY_JSON_TEST() throws Exception{
         //given
         String adminToken = AuthenticationAcceptanceTestHelper.getAdminToken(mvc, objectMapper);
 
@@ -251,7 +250,7 @@ public class BoardAcceptanceTest{
 
     @Test
     @DisplayName("게시글 생성 성공(json과 이미지 포함)")
-    public void CREATE_BOARD_WITH_JSON_AND_IMAGE_TEST() throws Exception{
+    void CREATE_BOARD_WITH_JSON_AND_IMAGE_TEST() throws Exception{
         //given
         String adminToken = AuthenticationAcceptanceTestHelper.getAdminToken(mvc, objectMapper);
 
@@ -291,7 +290,7 @@ public class BoardAcceptanceTest{
 
     @Test
     @DisplayName("게시글 생성 성공(json과 파일 포함)")
-    public void CREATE_BOARD_WITH_JSON_AND_FILE_TEST() throws Exception{
+    void CREATE_BOARD_WITH_JSON_AND_FILE_TEST() throws Exception{
         //given
         String adminToken = AuthenticationAcceptanceTestHelper.getAdminToken(mvc, objectMapper);
 
@@ -333,7 +332,7 @@ public class BoardAcceptanceTest{
 
     @Test
     @DisplayName("게시글 생성 실패 - 게시글 제목이 빈 제목일 경우")
-    public void CREATE_BOARD_FAIL_EMPTY_TITLE_TEST() throws Exception{
+    void CREATE_BOARD_FAIL_EMPTY_TITLE_TEST() throws Exception{
         //given
         String adminToken = AuthenticationAcceptanceTestHelper.getAdminToken(mvc, objectMapper);
 
@@ -372,7 +371,7 @@ public class BoardAcceptanceTest{
 
     @Test
     @DisplayName("특정 게시글 조회 성공 - json 객체만")
-    public void INQUIRY_BOARD_BY_BOARD_ID_SUCCESS_TEST() throws Exception{
+    void INQUIRY_BOARD_BY_BOARD_ID_SUCCESS_TEST() throws Exception{
         //given
         String adminToken = AuthenticationAcceptanceTestHelper.getAdminToken(mvc, objectMapper);
 
@@ -438,7 +437,7 @@ public class BoardAcceptanceTest{
 
     @Test
     @DisplayName("특정 게시글 조회 실패 - 없는 게시글 id")
-    public void INQUERY_BOARD_BY_BOARD_ID_Fail_TEST() throws Exception{
+    void INQUERY_BOARD_BY_BOARD_ID_Fail_TEST() throws Exception{
         //given
         String adminToken = AuthenticationAcceptanceTestHelper.getAdminToken(mvc, objectMapper);
 
@@ -482,7 +481,7 @@ public class BoardAcceptanceTest{
 
     @Test
     @DisplayName("특정 게시글 수정 성공")
-    public void MODIFY_BOARD_WITH_ALL_TEST() throws Exception{
+    void MODIFY_BOARD_WITH_ALL_TEST() throws Exception{
         //given
         String adminToken = AuthenticationAcceptanceTestHelper.getAdminToken(mvc, objectMapper);
 
@@ -540,7 +539,7 @@ public class BoardAcceptanceTest{
 
     @Test
     @DisplayName("특정 게시글 수정 성공 - json 본문만 수정")
-    public void MODIFY_BOARD_WITH_ONLY_JSON_TEST() throws Exception{
+    void MODIFY_BOARD_WITH_ONLY_JSON_TEST() throws Exception{
         //given
         String adminToken = AuthenticationAcceptanceTestHelper.getAdminToken(mvc, objectMapper);
 
@@ -583,7 +582,7 @@ public class BoardAcceptanceTest{
 
     @Test
     @DisplayName("특정 게시글 수정 성공 - json, 이미지 수정")
-    public void MODIFY_BOARD_WITH_JSON_AND_IMAGE_TEST() throws Exception{
+    void MODIFY_BOARD_WITH_JSON_AND_IMAGE_TEST() throws Exception{
         //given
         String adminToken = AuthenticationAcceptanceTestHelper.getAdminToken(mvc, objectMapper);
 
@@ -633,7 +632,7 @@ public class BoardAcceptanceTest{
 
     @Test
     @DisplayName("특정 게시글 수정 성공 - json, 파일수정")
-    public void MODIFY_BOARD_WITH_JSON_AND_FILE_TEST() throws Exception{
+    void MODIFY_BOARD_WITH_JSON_AND_FILE_TEST() throws Exception{
         //given
         String adminToken = AuthenticationAcceptanceTestHelper.getAdminToken(mvc, objectMapper);
 
@@ -684,7 +683,7 @@ public class BoardAcceptanceTest{
 
     @Test
     @DisplayName("특정 게시글 수정 실패 - 없는 아이디")
-    public void MODIFY_BOARD_FAIL_UNKNOWN_ID_TEST() throws Exception{
+    void MODIFY_BOARD_FAIL_UNKNOWN_ID_TEST() throws Exception{
         //given
         String adminToken = AuthenticationAcceptanceTestHelper.getAdminToken(mvc, objectMapper);
 
@@ -746,7 +745,7 @@ public class BoardAcceptanceTest{
 
     @Test
     @DisplayName("특정 게시글 수정 실패 - 권한이 없는 경우")
-    public void MODIFY_BOARD_FAIL_NO_PERMISSION_TEST() throws Exception{
+    void MODIFY_BOARD_FAIL_NO_PERMISSION_TEST() throws Exception{
         //given
         String token = createUserAndGetToken("alcuk", "alcuk_id", "2gdddddd!");
 
@@ -806,7 +805,7 @@ public class BoardAcceptanceTest{
 
     @Test
     @DisplayName("특정 게시글 삭제 성공")
-    public void DELETE_BOARD_SUCCESS_TEST() throws Exception{
+    void DELETE_BOARD_SUCCESS_TEST() throws Exception{
         String adminToken = AuthenticationAcceptanceTestHelper.getAdminToken(mvc, objectMapper);
 
         String categoryName = "cate3";
@@ -862,7 +861,7 @@ public class BoardAcceptanceTest{
 
     @Test
     @DisplayName("특정 게시글 삭제 실패 - 작성자가 아닌 유저")
-    public void DELETE_BOARD_FAIL_TEST() throws Exception{
+    void DELETE_BOARD_FAIL_TEST() throws Exception{
         String adminToken = AuthenticationAcceptanceTestHelper.getAdminToken(mvc, objectMapper);
 
         String categoryName = "cate3";
@@ -923,7 +922,7 @@ public class BoardAcceptanceTest{
 
     @Test
     @DisplayName("특정 게시글 강제 삭제 성공")
-    public void DELETE_FORCE_BOARD_SUCCESS_TEST() throws Exception{
+    void DELETE_FORCE_BOARD_SUCCESS_TEST() throws Exception{
         String adminToken = AuthenticationAcceptanceTestHelper.getAdminToken(mvc, objectMapper);
 
         String categoryName = "cate3";
@@ -977,7 +976,7 @@ public class BoardAcceptanceTest{
 
     @Test
     @DisplayName("전체 게시글 조회 성공 -json ")
-    public void INQUIRY_ALL_BOARD_SUCCESS_TEST() throws Exception{
+    void INQUIRY_ALL_BOARD_SUCCESS_TEST() throws Exception{
         //given
         String name = "alcuk";
         String userId = "alcuk_id";
@@ -1056,7 +1055,7 @@ public class BoardAcceptanceTest{
 
     @Test
     @DisplayName("전체 게시글 조회 성공 -카테고리, json")
-    public void INQUIRY_ALL_BOARD_SUCCESS_WITH_CATEGORY_TEST() throws Exception{
+    void INQUIRY_ALL_BOARD_SUCCESS_WITH_CATEGORY_TEST() throws Exception{
         //given
         String adminToken = AuthenticationAcceptanceTestHelper.getAdminToken(mvc, objectMapper);
 
@@ -1137,7 +1136,7 @@ public class BoardAcceptanceTest{
 
     @Test
     @DisplayName("전체 게시글 조회 성공 -json from 1, to 2")
-    public void INQUIRY_ALL_BOARD_SUCCESS_WITH_FROM_TO_TEST() throws Exception{
+    void INQUIRY_ALL_BOARD_SUCCESS_WITH_FROM_TO_TEST() throws Exception{
         //given
         int startIdx = 1;
         int endIdx = 2;
@@ -1211,7 +1210,7 @@ public class BoardAcceptanceTest{
 
     @Test
     @DisplayName("전체 게시글 조회 성공 - 카테고리, json, from 1, to 2")
-    public void INQUIRY_ALL_BOARD_SUCCESS_WITH_CATEGORY_AND_FROM_TO_TEST() throws Exception{
+    void INQUIRY_ALL_BOARD_SUCCESS_WITH_CATEGORY_AND_FROM_TO_TEST() throws Exception{
         //given
         int startIdx = 1;
         int endIdx = 2;
@@ -1301,7 +1300,7 @@ public class BoardAcceptanceTest{
 
     @Test
     @DisplayName("전체 게시글 조회 실패 - 없는 카테고리 아이디")
-    public void INQUIRY_ALL_BOARD_Fail_UNKNOWN_CATEGORY_TEST() throws Exception{
+    void INQUIRY_ALL_BOARD_Fail_UNKNOWN_CATEGORY_TEST() throws Exception{
         //given
         String adminToken = AuthenticationAcceptanceTestHelper.getAdminToken(mvc, objectMapper);
 
@@ -1373,7 +1372,7 @@ public class BoardAcceptanceTest{
 
     @Test
     @DisplayName("전체 게시글 조회 실패 - 올바르지 않은 범위")
-    public void INQUIRY_ALL_BOARD_FAIL_INVALID_RANGE_TEST() throws Exception{
+    void INQUIRY_ALL_BOARD_FAIL_INVALID_RANGE_TEST() throws Exception{
         //given
         String adminToken = AuthenticationAcceptanceTestHelper.getAdminToken(mvc, objectMapper);
 
@@ -1443,7 +1442,7 @@ public class BoardAcceptanceTest{
 
     @Test
     @DisplayName("게시글 검색 성공 - 제목으로 검색, 1~2개 ")
-    public void SEARCH_BOARD_BY_TITLE_SUCCESS_TEST() throws Exception{
+    void SEARCH_BOARD_BY_TITLE_SUCCESS_TEST() throws Exception{
         //given
         String name = "alcuk";
         String userId = "alcuk_id";
@@ -1537,7 +1536,7 @@ public class BoardAcceptanceTest{
 
     @Test
     @DisplayName("게시글 검색 성공 - 내용으로 검색, 1~2개 ")
-    public void SEARCH_BOARD_BY_content_SUCCESS_TEST() throws Exception{
+    void SEARCH_BOARD_BY_content_SUCCESS_TEST() throws Exception{
         //given
         String name = "alcuk";
         String userId = "alcuk_id";
@@ -1624,7 +1623,7 @@ public class BoardAcceptanceTest{
 
     @Test
     @DisplayName("게시글 검색 성공 - 작성자로 검색, 1~2개 ")
-    public void SEARCH_BOARD_BY_AUTHOR_SUCCESS_TEST() throws Exception{
+    void SEARCH_BOARD_BY_AUTHOR_SUCCESS_TEST() throws Exception{
         //given
         String name = "alcuk";
         String userId = "alcuk_id";
@@ -1705,7 +1704,7 @@ public class BoardAcceptanceTest{
 
     @Test
     @DisplayName("게시글 검색 실패 - 검색하려는 타입이 잘못되었을때")
-    public void SEARCH_BOARD_BY_UNKNOWN_TYPE_TEST() throws Exception{
+    void SEARCH_BOARD_BY_UNKNOWN_TYPE_TEST() throws Exception{
         //given
         String name = "alcuk";
         String userId = "alcuk_id";
@@ -1769,7 +1768,7 @@ public class BoardAcceptanceTest{
 
     @Test
     @DisplayName("게시글 검색 실패 - 검색하려는 범위가 잘못되었을때")
-    public void SEARCH_BOARD_BY_INVALID_RANGE_TEST() throws Exception{
+    void SEARCH_BOARD_BY_INVALID_RANGE_TEST() throws Exception{
         //given
         String name = "alcuk";
         String userId = "alcuk_id";
@@ -1836,7 +1835,7 @@ public class BoardAcceptanceTest{
 
     @Test
     @DisplayName("특정 게시글에 댓글 작성 성공")
-    public void CREATE_COMMENT_SUCCESS_TEST() throws Exception{
+    void CREATE_COMMENT_SUCCESS_TEST() throws Exception{
         //given
         String adminToken = AuthenticationAcceptanceTestHelper.getAdminToken(mvc, objectMapper);
 
@@ -1864,7 +1863,7 @@ public class BoardAcceptanceTest{
 
     @Test
     @DisplayName("특정 게시글에 댓글 작성 실패 - 권한이 없는 경우")
-    public void CREATE_COMMENT_NO_PERMISSION_TEST() throws Exception{
+    void CREATE_COMMENT_NO_PERMISSION_TEST() throws Exception{
         //given
         String adminToken = AuthenticationAcceptanceTestHelper.getAdminToken(mvc, objectMapper);
         String token = createUserAndGetToken("alcuk", "alcuk_id", "2gdddddd!");
@@ -1894,7 +1893,7 @@ public class BoardAcceptanceTest{
 
     @Test
     @DisplayName("특정 게시글에 댓글 작성 실패 - 내용이 1000자를 넘어가는 경우")
-    public void CREATE_COMMENT_OVER_FLOW_TEST() throws Exception{
+    void CREATE_COMMENT_OVER_FLOW_TEST() throws Exception{
         //given
         String adminToken = AuthenticationAcceptanceTestHelper.getAdminToken(mvc, objectMapper);
 
@@ -1926,7 +1925,7 @@ public class BoardAcceptanceTest{
 
     @Test
     @DisplayName("특정 게시글의 댓글 조회 성공 - 0~1 인덱스 댓글 조회")
-    public void INQUIRY_COMMENT_SUCCESS_TEST() throws Exception{
+    void INQUIRY_COMMENT_SUCCESS_TEST() throws Exception{
         //given
         String adminToken = AuthenticationAcceptanceTestHelper.getAdminToken(mvc, objectMapper);
 
@@ -1969,7 +1968,7 @@ public class BoardAcceptanceTest{
 
     @Test
     @DisplayName("특정 게시글의 댓글 조회 실패 - 없는 게시글 아이디")
-    public void INQUIRY_COMMENT_FAIL_UNKNOWN_BOARD_ID_TEST() throws Exception{
+    void INQUIRY_COMMENT_FAIL_UNKNOWN_BOARD_ID_TEST() throws Exception{
         //given
         String adminToken = AuthenticationAcceptanceTestHelper.getAdminToken(mvc, objectMapper);
 
@@ -2004,7 +2003,7 @@ public class BoardAcceptanceTest{
 
     @Test
     @DisplayName("특정 게시글의 댓글 조회 실패 - 권한이 없는 경우")
-    public void INQUIRY_COMMENT_FAIL_NO_PERMISSION_TEST() throws Exception{
+    void INQUIRY_COMMENT_FAIL_NO_PERMISSION_TEST() throws Exception{
         //given
         String adminToken = AuthenticationAcceptanceTestHelper.getAdminToken(mvc, objectMapper);
         String token = createUserAndGetToken("alcuk", "alcuk_id", "2gdddddd!");
@@ -2039,7 +2038,7 @@ public class BoardAcceptanceTest{
 
     @Test
     @DisplayName("특정 게시글의 댓글 조회 실패 - 잘못된 범위")
-    public void INQUIRY_COMMENT_FAIL_INVALID_RANGE_TEST() throws Exception{
+    void INQUIRY_COMMENT_FAIL_INVALID_RANGE_TEST() throws Exception{
         //given
         String adminToken = AuthenticationAcceptanceTestHelper.getAdminToken(mvc, objectMapper);
 
@@ -2075,7 +2074,7 @@ public class BoardAcceptanceTest{
 
     @Test
     @DisplayName("특정 게시글의 댓글 수정 성공 ")
-    public void MODIFY_COMMENT_SUCCESS_TEST() throws Exception{
+    void MODIFY_COMMENT_SUCCESS_TEST() throws Exception{
         //given
         String adminToken = AuthenticationAcceptanceTestHelper.getAdminToken(mvc, objectMapper);
 
@@ -2110,7 +2109,7 @@ public class BoardAcceptanceTest{
 
     @Test
     @DisplayName("특정 게시글의 댓글 수정 실패 - 1000자를 넘는 경우")
-    public void MODIFY_COMMENT_NO_PERMISSION_TEST() throws Exception{
+    void MODIFY_COMMENT_NO_PERMISSION_TEST() throws Exception{
         //given
         String adminToken = AuthenticationAcceptanceTestHelper.getAdminToken(mvc, objectMapper);
 
@@ -2151,7 +2150,7 @@ public class BoardAcceptanceTest{
 
     @Test
     @DisplayName("특정 게시글의 댓글 수정 실패 - 댓글 아이디가 없는 경우 ")
-    public void MODIFY_COMMENT_UNKNOWN_ID_TEST() throws Exception{
+    void MODIFY_COMMENT_UNKNOWN_ID_TEST() throws Exception{
         //given
         String adminToken = AuthenticationAcceptanceTestHelper.getAdminToken(mvc, objectMapper);
 
@@ -2188,7 +2187,7 @@ public class BoardAcceptanceTest{
 
     @Test
     @DisplayName("특정 게시글의 댓글 삭제 성공")
-    public void DELETE_COMMENT_SUCCESS_TEST() throws Exception{
+    void DELETE_COMMENT_SUCCESS_TEST() throws Exception{
         //given
         String adminToken = AuthenticationAcceptanceTestHelper.getAdminToken(mvc, objectMapper);
 
@@ -2219,7 +2218,7 @@ public class BoardAcceptanceTest{
 
     @Test
     @DisplayName("특정 게시글의 댓글 삭제 실패 - 권한 없을때")
-    public void DELETE_COMMENT_NO_PERMISSION_TEST() throws Exception{
+    void DELETE_COMMENT_NO_PERMISSION_TEST() throws Exception{
         //given
         String adminToken = AuthenticationAcceptanceTestHelper.getAdminToken(mvc, objectMapper);
 
@@ -2255,7 +2254,7 @@ public class BoardAcceptanceTest{
 
     @Test
     @DisplayName("특정 게시글의 댓글 삭제 실패 - 없는 댓글 아이디")
-    public void DELETE_COMMENT_UNKNOWN_ID_TEST() throws Exception{
+    void DELETE_COMMENT_UNKNOWN_ID_TEST() throws Exception{
         //given
         String adminToken = AuthenticationAcceptanceTestHelper.getAdminToken(mvc, objectMapper);
 
@@ -2287,7 +2286,7 @@ public class BoardAcceptanceTest{
 
     @Test
     @DisplayName("특정 게시글의 리액션 성공")
-    public void REACTION_CREATE_SUCCESS_TEST() throws Exception{
+    void REACTION_CREATE_SUCCESS_TEST() throws Exception{
         //given
         String adminToken = AuthenticationAcceptanceTestHelper.getAdminToken(mvc, objectMapper);
 
@@ -2310,7 +2309,7 @@ public class BoardAcceptanceTest{
 
     @Test
     @DisplayName("특정 게시글의 리액션 취소 성공")
-    public void REACTION_CANCEL_SUCCESS_TEST() throws Exception{
+    void REACTION_CANCEL_SUCCESS_TEST() throws Exception{
         //given
         String adminToken = AuthenticationAcceptanceTestHelper.getAdminToken(mvc, objectMapper);
 
@@ -2336,7 +2335,7 @@ public class BoardAcceptanceTest{
 
     @Test
     @DisplayName("특정 게시글의 리액션 수정 성공")
-    public void REACTION_MODIFY_SUCCESS_TEST() throws Exception{
+    void REACTION_MODIFY_SUCCESS_TEST() throws Exception{
         //given
         String adminToken = AuthenticationAcceptanceTestHelper.getAdminToken(mvc, objectMapper);
 
@@ -2364,7 +2363,7 @@ public class BoardAcceptanceTest{
 
     @Test
     @DisplayName("특정 게시글의 리액션 실패 - 없는 게시글 아이디")
-    public void REACTION_CREATE_FAIL_UNKNOWN_ID_TEST() throws Exception{
+    void REACTION_CREATE_FAIL_UNKNOWN_ID_TEST() throws Exception{
         //given
         String adminToken = AuthenticationAcceptanceTestHelper.getAdminToken(mvc, objectMapper);
 
@@ -2388,7 +2387,7 @@ public class BoardAcceptanceTest{
 
     @Test
     @DisplayName("특정 게시글의 리액션 실패 - 없는 반응 타입")
-    public void REACTION_CREATE_FAIL_UNKNOWN_REACTION_TYPE_TEST() throws Exception{
+    void REACTION_CREATE_FAIL_UNKNOWN_REACTION_TYPE_TEST() throws Exception{
         //given
         String adminToken = AuthenticationAcceptanceTestHelper.getAdminToken(mvc, objectMapper);
 
@@ -2417,7 +2416,7 @@ public class BoardAcceptanceTest{
 
     @Test
     @DisplayName("특정 게시글의 리액션 실패 - 권한이 없는 경우")
-    public void REACTION_CREATE_FAIL_NO_PERMISSION_TEST() throws Exception{
+    void REACTION_CREATE_FAIL_NO_PERMISSION_TEST() throws Exception{
         //given
         String token = createUserAndGetToken("alcuk", "alcuk_id", "2gdddddd!");
 
@@ -2447,7 +2446,7 @@ public class BoardAcceptanceTest{
 
     @Test
     @DisplayName("새로운 카테고리 생성 성공")
-    public void CREATE_NEW_CATEGORY_SUCCESS_TEST() throws Exception{
+    void CREATE_NEW_CATEGORY_SUCCESS_TEST() throws Exception{
         //given
         String adminToken = AuthenticationAcceptanceTestHelper.getAdminToken(mvc, objectMapper);
 
@@ -2467,7 +2466,7 @@ public class BoardAcceptanceTest{
 
     @Test
     @DisplayName("새로운 카테고리 생성 실패 - 권한 없는 사람의 생성 시도 ")
-    public void CREATE_NEW_CATEGORY_NO_PERMISSION_TEST() throws Exception{
+    void CREATE_NEW_CATEGORY_NO_PERMISSION_TEST() throws Exception{
 
         //given
         String token = createUserAndGetToken("alcuk", "alcuk_id", "2gdddddd!");
@@ -2491,7 +2490,7 @@ public class BoardAcceptanceTest{
 
     @Test
     @DisplayName("새로운 카테고리 생성 실패 - 빈 카테고리명 ")
-    public void CREATE_NEW_CATEGORY_EMPTY_CATEGORY_TITLE_TEST() throws Exception{
+    void CREATE_NEW_CATEGORY_EMPTY_CATEGORY_TITLE_TEST() throws Exception{
 
         //given
         String adminToken = AuthenticationAcceptanceTestHelper.getAdminToken(mvc, objectMapper);
@@ -2517,8 +2516,7 @@ public class BoardAcceptanceTest{
 
     @Test
     @DisplayName("새로운 카테고리 생성 실패 - 중복된 카테고리 이름")
-    public void CREATE_NEW_CATEGORY_DUPLICATED_CATEGORY_TITLE_TEST() throws Exception{
-
+    void CREATE_NEW_CATEGORY_DUPLICATED_CATEGORY_TITLE_TEST() throws Exception{
         //given
         String adminToken = AuthenticationAcceptanceTestHelper.getAdminToken(mvc, objectMapper);
 
@@ -2544,7 +2542,7 @@ public class BoardAcceptanceTest{
 
     @Test
     @DisplayName("전체 카테고리 조회 성공")
-    public void INQUIRY_ALL_CATEGORY_SUCCESS_TEST() throws Exception{
+    void INQUIRY_ALL_CATEGORY_SUCCESS_TEST() throws Exception{
         //given
         String adminToken = AuthenticationAcceptanceTestHelper.getAdminToken(mvc, objectMapper);
 
@@ -2576,7 +2574,7 @@ public class BoardAcceptanceTest{
 
     @Test
     @DisplayName("카테고리 수정 성공")
-    public void MODIFY_CATEGORY_SUCCESS_TEST() throws Exception{
+    void MODIFY_CATEGORY_SUCCESS_TEST() throws Exception{
         //given
         String adminToken = AuthenticationAcceptanceTestHelper.getAdminToken(mvc, objectMapper);
 
@@ -2601,7 +2599,7 @@ public class BoardAcceptanceTest{
 
     @Test
     @DisplayName("카테고리 수정 실패 - 권한이 없는 경우")
-    public void MODIFY_CATEGORY_FAIL_NO_PERMISSION_TEST() throws Exception{
+    void MODIFY_CATEGORY_FAIL_NO_PERMISSION_TEST() throws Exception{
         //given
         String adminToken = AuthenticationAcceptanceTestHelper.getAdminToken(mvc, objectMapper);
 
@@ -2632,7 +2630,7 @@ public class BoardAcceptanceTest{
 
     @Test
     @DisplayName("카테고리 수정 실패 - 카테고리 이름이 공백인 경우")
-    public void MODIFY_CATEGORY_FAIL_EMPTY_NAME_TEST() throws Exception{
+    void MODIFY_CATEGORY_FAIL_EMPTY_NAME_TEST() throws Exception{
         //given
         String adminToken = AuthenticationAcceptanceTestHelper.getAdminToken(mvc, objectMapper);
 
@@ -2662,7 +2660,7 @@ public class BoardAcceptanceTest{
 
     @Test
     @DisplayName("카테고리 수정 실패 - 카테고리 이름이 중복인 경우")
-    public void MODIFY_CATEGORY_FAIL_DUPLICATED_NAME_TEST() throws Exception{
+    void MODIFY_CATEGORY_FAIL_DUPLICATED_NAME_TEST() throws Exception{
         //given
         String adminToken = AuthenticationAcceptanceTestHelper.getAdminToken(mvc, objectMapper);
 
@@ -2697,7 +2695,7 @@ public class BoardAcceptanceTest{
 
     @Test
     @DisplayName("특정 카테고리 삭제 성공")
-    public void DELETE_CATEGORY_SUCCESS_TEST() throws Exception{
+    void DELETE_CATEGORY_SUCCESS_TEST() throws Exception{
         //given
         String adminToken = AuthenticationAcceptanceTestHelper.getAdminToken(mvc, objectMapper);
 
@@ -2721,7 +2719,7 @@ public class BoardAcceptanceTest{
 
     @Test
     @DisplayName("특정 카테고리 삭제 실패 - 권한이 없는 유저")
-    public void DELETE_CATEGORY_FAIL_NO_PERMISSION_TEST() throws Exception{
+    void DELETE_CATEGORY_FAIL_NO_PERMISSION_TEST() throws Exception{
         //given
         String adminToken = AuthenticationAcceptanceTestHelper.getAdminToken(mvc, objectMapper);
 
@@ -2751,7 +2749,7 @@ public class BoardAcceptanceTest{
 
     @Test
     @DisplayName("이미지 불러오기 테스트")
-    public void IMAGE_LOAD_SUCCESS_TEST() throws Exception{
+    void IMAGE_LOAD_SUCCESS_TEST() throws Exception{
         //given
         String adminToken = AuthenticationAcceptanceTestHelper.getAdminToken(mvc, objectMapper);
 
@@ -2774,7 +2772,7 @@ public class BoardAcceptanceTest{
 
     @Test
     @DisplayName("이미지 불러오기 테스트 실패 - 없는 이미지 아이디")
-    public void IMAGE_LOAD_FAIL_UNKNOWN_ID_TEST() throws Exception{
+    void IMAGE_LOAD_FAIL_UNKNOWN_ID_TEST() throws Exception{
         //given
         String adminToken = AuthenticationAcceptanceTestHelper.getAdminToken(mvc, objectMapper);
 
@@ -2800,7 +2798,7 @@ public class BoardAcceptanceTest{
 
     @Test
     @DisplayName("이미지 불러오기 테스트 실패 - 권한이 없는 경우")
-    public void IMAGE_LOAD_FAIL_NO_PERMISSION_TEST() throws Exception{
+    void IMAGE_LOAD_FAIL_NO_PERMISSION_TEST() throws Exception{
         //given
         String adminToken = AuthenticationAcceptanceTestHelper.getAdminToken(mvc, objectMapper);
         String token = createUserAndGetToken("alcuk", "alcuk_id", "2gdddddd!");
@@ -2828,7 +2826,7 @@ public class BoardAcceptanceTest{
 
     @Test
     @DisplayName("파일 다운로드 테스트 성공")
-    public void FILE_DOWNLOAD_SUCCESS_TEST() throws Exception{
+    void FILE_DOWNLOAD_SUCCESS_TEST() throws Exception{
         //given
         String adminToken = AuthenticationAcceptanceTestHelper.getAdminToken(mvc, objectMapper);
 
@@ -2851,7 +2849,7 @@ public class BoardAcceptanceTest{
 
     @Test
     @DisplayName("파일 다운로드 테스트 실패 - 없는 파일 아이디")
-    public void FILE_DOWNLOAD_FAIL_UNKNOWN_ID_TEST() throws Exception{
+    void FILE_DOWNLOAD_FAIL_UNKNOWN_ID_TEST() throws Exception{
         //given
         String adminToken = AuthenticationAcceptanceTestHelper.getAdminToken(mvc, objectMapper);
 
@@ -2876,7 +2874,7 @@ public class BoardAcceptanceTest{
 
     @Test
     @DisplayName("파일 다운로드 테스트 실패 - 권한이 없는 경우")
-    public void FILE_DOWNLOAD_FAIL_NO_PERMISSION_TEST() throws Exception{
+    void FILE_DOWNLOAD_FAIL_NO_PERMISSION_TEST() throws Exception{
         //given
         String adminToken = AuthenticationAcceptanceTestHelper.getAdminToken(mvc, objectMapper);
         String token = createUserAndGetToken("alcuk", "alcuk_id", "2gdddddd!");
@@ -2900,6 +2898,55 @@ public class BoardAcceptanceTest{
                 MockMvcResultMatchers.jsonPath("$.document_url").value("docs.waldreg.org")
         );
 
+    }
+
+    @Test
+    @DisplayName("특정 카테고리 조회 성공 테스트")
+    void INQUIRY_SPECIFIC_CATEGORY_SUCCESS_ACCEPTANCE_TEST() throws Exception{
+        //given
+        String adminToken = AuthenticationAcceptanceTestHelper.getAdminToken(mvc, objectMapper);
+
+        String categoryName = "specific";
+
+        CategoryRequest categoryRequest = CategoryRequest.builder().categoryName(categoryName).build();
+
+        //when
+        BoardAcceptanceTestHelper.createCategory(mvc, adminToken, objectMapper.writeValueAsString(categoryRequest));
+        ResultActions category = BoardAcceptanceTestHelper.inquiryAllCategory(mvc, adminToken);
+        CategoryListResponse categoryResponse = objectMapper.readValue(category.andReturn().getResponse().getContentAsString(), CategoryListResponse.class);
+
+        ResultActions result = BoardAcceptanceTestHelper.inquirySpecificCategory(mvc, adminToken, categoryResponse.getCategories()[0].getCategoryId());
+
+        // then
+        result.andExpectAll(
+                MockMvcResultMatchers.status().isOk(),
+                MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON),
+                MockMvcResultMatchers.jsonPath("$.category_id").value(categoryResponse.getCategories()[0].getCategoryId()),
+                MockMvcResultMatchers.jsonPath("$.category_name").value(categoryResponse.getCategories()[0].getCategoryName()),
+                MockMvcResultMatchers.jsonPath("$.category_boards").value(categoryResponse.getCategories()[0].getCategoryBoards())
+        );
+    }
+
+    @Test
+    @DisplayName("특정 카테고리 조회 실패 테스트 - 잘못된 category id")
+    void INQUIRY_SPECIFIC_CATEGORY_FAIL_NO_PERMISSION_ACCEPTANCE_TEST() throws Exception{
+        //given
+        String adminToken = AuthenticationAcceptanceTestHelper.getAdminToken(mvc, objectMapper);
+        int categoryId = 12345;
+
+        //when
+        ResultActions result = BoardAcceptanceTestHelper.inquirySpecificCategory(mvc, adminToken, categoryId);
+
+        // then
+        result.andExpectAll(
+                MockMvcResultMatchers.status().isBadRequest(),
+                MockMvcResultMatchers.header().string(HttpHeaders.CONTENT_TYPE, "application/json"),
+                MockMvcResultMatchers.header().string("api-version", apiVersion),
+                MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON),
+                MockMvcResultMatchers.jsonPath("$.code").value("BOARD-403"),
+                MockMvcResultMatchers.jsonPath("$.messages").value("Unknown category id : 12345"),
+                MockMvcResultMatchers.jsonPath("$.document_url").value("docs.waldreg.org")
+        );
     }
 
     private String createUserAndGetToken(String name, String userId, String userPassword) throws Exception{
@@ -2956,7 +3003,6 @@ public class BoardAcceptanceTest{
         imgFileList.add(imgFile);
         docxFileList.add(docxFile);
         BoardAcceptanceTestHelper.createBoardWithAll(mvc, adminToken, jsonContent, imgFileList, docxFileList);
-
     }
 
 }

@@ -30,6 +30,12 @@ public class DefaultCategoryManager implements CategoryManager{
     }
 
     @Override
+    public CategoryDto inquiryCategoryById(int categoryId){
+        throwIfCategoryDoesNotExist(categoryId);
+        return categoryRepository.inquiryCategoryById(categoryId);
+    }
+
+    @Override
     public void modifyCategory(CategoryDto categoryDto){
         throwIfCategoryDoesNotExist(categoryDto.getId());
         throwIfCategoryNameOverFlow(categoryDto.getCategoryName());

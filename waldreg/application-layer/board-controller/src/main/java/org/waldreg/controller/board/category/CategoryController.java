@@ -17,6 +17,7 @@ import org.waldreg.character.aop.annotation.PermissionVerifying;
 import org.waldreg.controller.board.category.mapper.ControllerCategoryMapper;
 import org.waldreg.controller.board.category.request.CategoryRequest;
 import org.waldreg.controller.board.category.response.CategoryListResponse;
+import org.waldreg.controller.board.category.response.CategoryResponse;
 import org.waldreg.token.aop.annotation.Authenticating;
 
 @RestController
@@ -44,6 +45,12 @@ public class CategoryController{
     @GetMapping("/category")
     public CategoryListResponse getCategoryList(){
         return controllerCategoryMapper.categoryListToCategoryListResponse(categoryManager.inquiryAllCategory());
+    }
+
+    @Authenticating
+    @GetMapping("/category/{category-id}")
+    public CategoryResponse getCategoryById(@PathVariable("category-id") int categoryId){
+        return controllerCategoryMapper.categoryDtoToCategoryResponse(categoryManager.inquiryCategoryById(categoryId));
     }
 
     @XssFiltering
