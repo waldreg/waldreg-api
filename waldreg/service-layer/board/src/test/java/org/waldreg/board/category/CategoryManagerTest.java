@@ -23,7 +23,7 @@ import org.waldreg.util.token.DecryptedTokenContext;
 
 @ExtendWith(SpringExtension.class)
 @ContextConfiguration(classes = {DefaultCategoryManager.class, DecryptedTokenContext.class})
-public class CategoryManagerTest{
+class CategoryManagerTest{
 
     @MockBean
     private BoardUserRepository userRepository;
@@ -39,14 +39,14 @@ public class CategoryManagerTest{
 
     @BeforeEach
     @AfterEach
-    public void INIT_USER_TOKEN(){
+    void INIT_USER_TOKEN(){
         decryptedTokenContext.resolve();
         decryptedTokenContext.hold(1);
     }
 
     @Test
     @DisplayName("카테고리 생성 성공 테스트")
-    public void CREATE_CATEGORY_SUCCESS_TEST(){
+    void CREATE_CATEGORY_SUCCESS_TEST(){
         //given
         String categoryName = "title";
         CategoryDto categoryDto = CategoryDto.builder()
@@ -60,7 +60,7 @@ public class CategoryManagerTest{
 
     @Test
     @DisplayName("카테고리 생성 실패 중복된 카테고리")
-    public void CREATE_CATEGORY_DUPLICATE_CATEGORY_NAME_TEST(){
+    void CREATE_CATEGORY_DUPLICATE_CATEGORY_NAME_TEST(){
         //given
         String categoryName = "title";
         CategoryDto categoryDto = CategoryDto.builder()
@@ -74,13 +74,13 @@ public class CategoryManagerTest{
 
     @Test
     @DisplayName("전체 카테고리 조회")
-    public void INQUIRY_ALL_CATEGORY_TEST(){
+    void INQUIRY_ALL_CATEGORY_TEST(){
         Assertions.assertDoesNotThrow(() -> categoryManager.inquiryAllCategory());
     }
 
     @Test
     @DisplayName("카테고리 수정 성공 테스트")
-    public void MODIFY_CATEGORY_SUCCESS_TEST(){
+    void MODIFY_CATEGORY_SUCCESS_TEST(){
         //given
         int categoryId = 1;
         String categoryName = "title";
@@ -106,7 +106,7 @@ public class CategoryManagerTest{
 
     @Test
     @DisplayName("카테고리 수정 실패 테스트 - 존재하지 않는 카테고리 아이디")
-    public void MODIFY_CATEGORY_DOES_NOT_EXIST_CATEGORY_ID_TEST(){
+    void MODIFY_CATEGORY_DOES_NOT_EXIST_CATEGORY_ID_TEST(){
         //given
         int categoryId = 1;
         String categoryName = "title";
@@ -132,7 +132,7 @@ public class CategoryManagerTest{
 
     @Test
     @DisplayName("카테고리 수정 실패 테스트 - 중복된 카테고리 이름")
-    public void MODIFY_CATEGORY_DUPLICATE_CATEGORY_NAME_TEST(){
+    void MODIFY_CATEGORY_DUPLICATE_CATEGORY_NAME_TEST(){
         //given
         int categoryId = 1;
         String categoryName = "title";
@@ -158,7 +158,7 @@ public class CategoryManagerTest{
 
     @Test
     @DisplayName("카테고리 삭제 성공 테스트")
-    public void DELETE_CATEGORY_SUCCESS_TEST(){
+    void DELETE_CATEGORY_SUCCESS_TEST(){
         //given
         int categoryId = 1;
         //when
@@ -170,7 +170,7 @@ public class CategoryManagerTest{
 
     @Test
     @DisplayName("카테고리 삭제 실패 - 없는 카테고리 아이디")
-    public void DELETE_CATEGORY_DOES_NOT_EXIST_ID_TEST(){
+    void DELETE_CATEGORY_DOES_NOT_EXIST_ID_TEST(){
         //given
         int categoryId = 1;
         //when

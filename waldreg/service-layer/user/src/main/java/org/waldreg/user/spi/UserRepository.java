@@ -25,4 +25,6 @@ public interface UserRepository{
 
     boolean isExistId(int id);
 
+    List<UserDto> readSpecificUserList(List<Integer> idList);
+
 }

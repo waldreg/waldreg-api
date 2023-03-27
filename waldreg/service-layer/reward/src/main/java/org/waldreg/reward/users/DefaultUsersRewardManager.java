@@ -1,5 +1,6 @@
 package org.waldreg.reward.users;
 
+import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.waldreg.reward.exception.UnknownRewardException;
@@ -62,6 +63,11 @@ public class DefaultUsersRewardManager implements UsersRewardManager{
         if(!usersRewardRepository.isRewardIdExist(id, rewardId)){
             throw new UnknownRewardException(rewardId);
         }
+    }
+
+    @Override
+    public List<Integer> readUsersAssignedRewardHistory(){
+        return usersRewardRepository.readUsersAssignedRewardHistory();
     }
 
     @Override

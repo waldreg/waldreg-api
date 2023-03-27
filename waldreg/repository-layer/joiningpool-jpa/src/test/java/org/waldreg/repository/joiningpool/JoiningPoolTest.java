@@ -40,7 +40,7 @@ class JoiningPoolTest{
                 .userId("userId")
                 .name("name")
                 .userPassword("userPassword")
-                .phoneNumber("010-1234-5678")
+                .phoneNumber("01012345678")
                 .build();
         //when&then
         Assertions.assertDoesNotThrow(() -> joiningPoolRepository.createUser(userDto));
@@ -53,19 +53,19 @@ class JoiningPoolTest{
                 .userId("userId")
                 .name("name")
                 .userPassword("userPassword")
-                .phoneNumber("010-1234-5678")
+                .phoneNumber("01012345678")
                 .build();
         UserDto userDto2 = UserDto.builder()
                 .userId("userId2")
                 .name("name")
                 .userPassword("userPassword")
-                .phoneNumber("010-1234-5678")
+                .phoneNumber("01012345678")
                 .build();
         UserDto userDto3 = UserDto.builder()
                 .userId("userId3")
                 .name("name")
                 .userPassword("userPassword")
-                .phoneNumber("010-1234-5678")
+                .phoneNumber("01012345678")
                 .build();
         joiningPoolRepository.createUser(userDto);
         joiningPoolRepository.createUser(userDto2);
@@ -84,19 +84,19 @@ class JoiningPoolTest{
                 .userId("userId")
                 .name("name")
                 .userPassword("userPassword")
-                .phoneNumber("010-1234-5678")
+                .phoneNumber("01012345678")
                 .build();
         UserDto userDto2 = UserDto.builder()
                 .userId("userId2")
                 .name("name")
                 .userPassword("userPassword")
-                .phoneNumber("010-1234-5678")
+                .phoneNumber("01012345678")
                 .build();
         UserDto userDto3 = UserDto.builder()
                 .userId("userId3")
                 .name("name")
                 .userPassword("userPassword")
-                .phoneNumber("010-1234-5678")
+                .phoneNumber("01012345678")
                 .build();
         joiningPoolRepository.createUser(userDto);
         joiningPoolRepository.createUser(userDto2);
@@ -122,7 +122,7 @@ class JoiningPoolTest{
                 .userId("userId")
                 .name("name")
                 .userPassword("userPassword")
-                .phoneNumber("010-1234-5678")
+                .phoneNumber("01012345678")
                 .build();
         joiningPoolRepository.createUser(userDto);
         //when
@@ -144,7 +144,7 @@ class JoiningPoolTest{
                 .userId("userId")
                 .name("name")
                 .userPassword("userPassword")
-                .phoneNumber("010-1234-5678")
+                .phoneNumber("01012345678")
                 .build();
         joiningPoolRepository.createUser(userDto);
         //when
@@ -161,7 +161,7 @@ class JoiningPoolTest{
                 .userId("userId")
                 .name("name")
                 .userPassword("userPassword")
-                .phoneNumber("010-1234-5678")
+                .phoneNumber("01012345678")
                 .build();
         joiningPoolRepository.createUser(userDto);
         //when

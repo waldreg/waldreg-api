@@ -85,9 +85,9 @@ public class UserAcceptanceTest{
         String adminToken = AuthenticationAcceptanceTestHelper.getAdminToken(mvc, objectMapper);
         for (UserRequest request : userCreateRequestList){
             UserResponse userResponse = objectMapper.readValue(UserAcceptanceTestHelper.inquiryUserWithoutToken(mvc, request.getUserId())
-                                                                       .andReturn()
-                                                                       .getResponse()
-                                                                       .getContentAsString(), UserResponse.class);
+                    .andReturn()
+                    .getResponse()
+                    .getContentAsString(), UserResponse.class);
             UserAcceptanceTestHelper.forcedDeleteUserWithToken(mvc, userResponse.getId(), adminToken);
             ResultActions result = UserAcceptanceTestHelper.inquiryUserWithoutToken(mvc, request.getUserId());
             result.andExpectAll(
@@ -126,7 +126,7 @@ public class UserAcceptanceTest{
         String name = "alcuk";
         String userId = "alcuk_id";
         String userPassword = "2gdddddd!";
-        String phoneNumber = "010-1234-1234";
+        String phoneNumber = "01012341234";
         UserRequest userCreateRequest = UserRequest.builder()
                 .name(name)
                 .userId(userId)
@@ -152,7 +152,7 @@ public class UserAcceptanceTest{
         String name = "alcuk";
         String userId = "alcukalcukalcukalcukalcukalcukalcukalcukalcukalcukalcukalcuk";
         String userPassword = "2gdddddd!";
-        String phoneNumber = "010-1234-1234";
+        String phoneNumber = "01012341234";
         UserRequest userCreateRequest = UserRequest.builder()
                 .name(name)
                 .userId(userId)
@@ -183,7 +183,7 @@ public class UserAcceptanceTest{
         String name = "alcukalcukalcukalcukalcukalcukalcukalcukalcukalcukalcukalcuk";
         String userId = "alcuk";
         String userPassword = "2gdddddd!";
-        String phoneNumber = "010-1234-1234";
+        String phoneNumber = "01012341234";
         UserRequest userCreateRequest = UserRequest.builder()
                 .name(name)
                 .userId(userId)
@@ -215,7 +215,7 @@ public class UserAcceptanceTest{
         String name1 = "alcuk1";
         String userId1 = "alcuk_id";
         String userPassword1 = "2gdddddd!";
-        String phoneNumber1 = "010-1234-1111";
+        String phoneNumber1 = "01012341111";
         UserRequest userCreateRequest1 = UserRequest.builder()
                 .name(name1)
                 .userId(userId1)
@@ -226,7 +226,7 @@ public class UserAcceptanceTest{
         String name2 = "alcuk2";
         String userId2 = "alcuk_id";
         String userPassword2 = "2gdddddd!";
-        String phoneNumber2 = "010-1234-2222";
+        String phoneNumber2 = "01012342222";
         UserRequest userCreateRequest2 = UserRequest.builder()
                 .name(name2)
                 .userId(userId2)
@@ -260,7 +260,7 @@ public class UserAcceptanceTest{
         String name = "alcuk";
         String userId = "alcuk_id";
         String userPassword = "";
-        String phoneNumber = "010-1234-1234";
+        String phoneNumber = "01012341234";
         UserRequest userCreateRequest = UserRequest.builder()
                 .name(name)
                 .userId(userId)
@@ -292,7 +292,7 @@ public class UserAcceptanceTest{
         String name = "";
         String userId = "alcuk123";
         String userPassword = "2dddddddd!";
-        String phoneNumber = "010-1234-1234";
+        String phoneNumber = "01012341234";
         UserRequest userCreateRequest = UserRequest.builder()
                 .name(name)
                 .userId(userId)
@@ -354,7 +354,7 @@ public class UserAcceptanceTest{
         String name = "alcuk12345";
         String userId = "       ";
         String userPassword = "2dddddddd!";
-        String phoneNumber = "010-1234-1234";
+        String phoneNumber = "01012341234";
         UserRequest userCreateRequest = UserRequest.builder()
                 .name(name)
                 .userId(userId)
@@ -385,7 +385,7 @@ public class UserAcceptanceTest{
         String name = "alcuk";
         String userId = "alcuk_id";
         String userPassword = "2gdddddd!";
-        String phoneNumber = "010-1234-1234";
+        String phoneNumber = "01012341234";
         UserRequest userCreateRequest = UserRequest.builder()
                 .name(name)
                 .userId(userId)
@@ -422,7 +422,7 @@ public class UserAcceptanceTest{
         String name = "alcuk";
         String userId = "alcuk_id";
         String userPassword = "2gdddddd!";
-        String phoneNumber = "010-1234-1234";
+        String phoneNumber = "01012341234";
         UserRequest userCreateRequest = UserRequest.builder()
                 .name(name)
                 .userId(userId)
@@ -464,7 +464,7 @@ public class UserAcceptanceTest{
         String name = "alcuk";
         String userId = "alcuk_id";
         String userPassword = "2gdddddd!";
-        String phoneNumber = "010-1234-1234";
+        String phoneNumber = "01012341234";
         UserRequest userCreateRequest = UserRequest.builder()
                 .name(name)
                 .userId(userId)
@@ -475,7 +475,7 @@ public class UserAcceptanceTest{
         String objectName = "object";
         String objectUserId = "id123";
         String objectUserPassword = "objectwd123!!";
-        String objectPhoneNumber = "010-1234-2222";
+        String objectPhoneNumber = "01012342222";
         UserRequest objectUserCreateRequest = UserRequest.builder()
                 .name(objectName)
                 .userId(objectUserId)
@@ -518,7 +518,7 @@ public class UserAcceptanceTest{
         String name = "alcuk";
         String userId = "alcuk_id";
         String userPassword = "2gdddddd!";
-        String phoneNumber = "010-1234-1234";
+        String phoneNumber = "01012341234";
         UserRequest userCreateRequest = UserRequest.builder()
                 .name(name)
                 .userId(userId)
@@ -555,7 +555,7 @@ public class UserAcceptanceTest{
         String name = "alcuk";
         String userId = "alcuk_id";
         String userPassword = "2gdddddd!";
-        String phoneNumber = "010-1234-1234";
+        String phoneNumber = "01012341234";
         UserRequest userCreateRequest = UserRequest.builder()
                 .name(name)
                 .userId(userId)
@@ -597,7 +597,7 @@ public class UserAcceptanceTest{
         String name = "alcuk";
         String userId = "alcuk_id";
         String userPassword = "2gdddddd!";
-        String phoneNumber = "010-1234-1234";
+        String phoneNumber = "01012341234";
         UserRequest userCreateRequest = UserRequest.builder()
                 .name(name)
                 .userId(userId)
@@ -608,7 +608,7 @@ public class UserAcceptanceTest{
         String objectName = "object";
         String objectUserId = "id123";
         String objectUserPassword = "objectwd123!!";
-        String objectPhoneNumber = "010-1234-2222";
+        String objectPhoneNumber = "01012342222";
         UserRequest objectUserCreateRequest = UserRequest.builder()
                 .name(objectName)
                 .userId(objectUserId)
@@ -651,7 +651,7 @@ public class UserAcceptanceTest{
         String name1 = "alcuk1";
         String userId1 = "alcuk_id1";
         String userPassword1 = "alcuk_pwd1!";
-        String phoneNumber1 = "010-1234-1111";
+        String phoneNumber1 = "01012341111";
         String adminToken = AuthenticationAcceptanceTestHelper.getAdminToken(mvc, objectMapper);
         UserRequest userCreateRequest1 = UserRequest.builder()
                 .name(name1)
@@ -662,7 +662,7 @@ public class UserAcceptanceTest{
         String name2 = "alcuk2";
         String userId2 = "alcuk_id2";
         String userPassword2 = "alcuk_pwd2!";
-        String phoneNumber2 = "010-1234-2222";
+        String phoneNumber2 = "01012342222";
         UserRequest userCreateRequest2 = UserRequest.builder()
                 .name(name2)
                 .userId(userId2)
@@ -672,7 +672,7 @@ public class UserAcceptanceTest{
         String name3 = "alcuk3";
         String userId3 = "alcuk_id3";
         String userPassword3 = "alcuk_pwd3!";
-        String phoneNumber3 = "010-1234-3333";
+        String phoneNumber3 = "01012343333";
         UserRequest userCreateRequest3 = UserRequest.builder()
                 .name(name3)
                 .userId(userId3)
@@ -687,9 +687,9 @@ public class UserAcceptanceTest{
 
         ResultActions result = UserAcceptanceTestHelper.inquiryAllUserInJoiningPool(mvc, adminToken, 1, 5);
         UserJoiningPoolListResponse userJoiningPoolListResponse = objectMapper.readValue(result
-                                                                                                 .andReturn()
-                                                                                                 .getResponse()
-                                                                                                 .getContentAsString(), UserJoiningPoolListResponse.class);
+                .andReturn()
+                .getResponse()
+                .getContentAsString(), UserJoiningPoolListResponse.class);
 
         //then
         result.andExpectAll(
@@ -720,7 +720,7 @@ public class UserAcceptanceTest{
         String name1 = "alcuk1";
         String userId1 = "alcuk_id1";
         String userPassword1 = "alcuk_pwd1";
-        String phoneNumber1 = "010-1234-1111";
+        String phoneNumber1 = "01012341111";
         String adminToken = AuthenticationAcceptanceTestHelper.getAdminToken(mvc, objectMapper);
         UserRequest userCreateRequest1 = UserRequest.builder()
                 .name(name1)
@@ -731,7 +731,7 @@ public class UserAcceptanceTest{
         String name2 = "alcuk2";
         String userId2 = "alcuk_id2";
         String userPassword2 = "alcuk_pwd2";
-        String phoneNumber2 = "010-1234-2222";
+        String phoneNumber2 = "01012342222";
         UserRequest userCreateRequest2 = UserRequest.builder()
                 .name(name2)
                 .userId(userId2)
@@ -741,7 +741,7 @@ public class UserAcceptanceTest{
         String name3 = "alcuk3";
         String userId3 = "alcuk_id3";
         String userPassword3 = "alcuk_pwd3";
-        String phoneNumber3 = "010-1234-3333";
+        String phoneNumber3 = "01012343333";
         UserRequest userCreateRequest3 = UserRequest.builder()
                 .name(name3)
                 .userId(userId3)
@@ -778,7 +778,7 @@ public class UserAcceptanceTest{
         String name1 = "alcuk1";
         String userId1 = "alcuk_id1";
         String userPassword1 = "alcuk_pwd1";
-        String phoneNumber1 = "010-1234-1111";
+        String phoneNumber1 = "01012341111";
         String adminToken = AuthenticationAcceptanceTestHelper.getAdminToken(mvc, objectMapper);
         UserRequest userCreateRequest1 = UserRequest.builder()
                 .name(name1)
@@ -789,7 +789,7 @@ public class UserAcceptanceTest{
         String name2 = "alcuk2";
         String userId2 = "alcuk_id2";
         String userPassword2 = "alcuk_pwd2";
-        String phoneNumber2 = "010-1234-2222";
+        String phoneNumber2 = "01012342222";
         UserRequest userCreateRequest2 = UserRequest.builder()
                 .name(name2)
                 .userId(userId2)
@@ -799,7 +799,7 @@ public class UserAcceptanceTest{
         String name3 = "alcuk3";
         String userId3 = "alcuk_id3";
         String userPassword3 = "alcuk_pwd3";
-        String phoneNumber3 = "010-1234-3333";
+        String phoneNumber3 = "01012343333";
         UserRequest userCreateRequest3 = UserRequest.builder()
                 .name(name3)
                 .userId(userId3)
@@ -809,7 +809,7 @@ public class UserAcceptanceTest{
         String objectName = "object";
         String objectUserId = "id123";
         String objectUserPassword = "objectwd123!!";
-        String objectPhoneNumber = "010-1234-2222";
+        String objectPhoneNumber = "01012342222";
         UserRequest objectUserCreateRequest = UserRequest.builder()
                 .name(objectName)
                 .userId(objectUserId)
@@ -848,7 +848,7 @@ public class UserAcceptanceTest{
         String name = "alcuk1";
         String userId = "alcuk_id";
         String userPassword = "alcuk_pwd1sdfq!";
-        String phoneNumber = "010-1234-1111";
+        String phoneNumber = "01012341111";
         UserRequest userCreateRequest = UserRequest.builder()
                 .name(name)
                 .userId(userId)
@@ -888,7 +888,7 @@ public class UserAcceptanceTest{
         String name = "alcuk1";
         String userId = "alcuk_id";
         String userPassword = "alcuk_pwd1234!";
-        String phoneNumber = "010-1234-1111";
+        String phoneNumber = "01012341111";
 
         UserRequest userCreateRequest = UserRequest.builder()
                 .name(name)
@@ -1016,7 +1016,7 @@ public class UserAcceptanceTest{
         String name = "alcuk1";
         String userId = "alcuk_id";
         String userPassword = "alcud1234!";
-        String phoneNumber = "010-1234-1111";
+        String phoneNumber = "01012341111";
         UserRequest userCreateRequest = UserRequest.builder()
                 .name(name)
                 .userId(userId)
@@ -1026,7 +1026,7 @@ public class UserAcceptanceTest{
         String password = userCreateRequest.getUserPassword();
         String modifiedName = "alcuk2";
         String modifiedUserPassword = "alcud2234!";
-        String modifiedPhoneNumber = "010-1234-1234";
+        String modifiedPhoneNumber = "01012341234";
         UpdateUserRequest modifyUserCreateRequest = UpdateUserRequest.builder()
                 .name(modifiedName)
                 .userPassword(modifiedUserPassword)
@@ -1051,7 +1051,7 @@ public class UserAcceptanceTest{
         String name = "alcuk2";
         String userId = "alcuk";
         String userPassword = "2gdddddd!";
-        String phoneNumber = "010-1234-1234";
+        String phoneNumber = "01012341234";
         UserRequest userCreateRequest = UserRequest.builder()
                 .name(name)
                 .userId(userId)
@@ -1060,7 +1060,7 @@ public class UserAcceptanceTest{
                 .build();
         String modifiedName = "alcukalcukalcukalcukalcukalcukalcukalcukalcukalcukalcukalcuk";
         String modifiedUserPassword = "alcud2234!";
-        String modifiedPhoneNumber = "010-1234-1234";
+        String modifiedPhoneNumber = "01012341234";
         UpdateUserRequest modifyUserCreateRequest = UpdateUserRequest.builder()
                 .name(modifiedName)
                 .userPassword(modifiedUserPassword)
@@ -1131,7 +1131,7 @@ public class UserAcceptanceTest{
         String name = "alcuk1";
         String userId = "alcuk_id";
         String userPassword = "alcuk_pwd1!";
-        String phoneNumber = "010-1234-1111";
+        String phoneNumber = "01012341111";
         UserRequest userCreateRequest = UserRequest.builder()
                 .name(name)
                 .userId(userId)
@@ -1141,7 +1141,7 @@ public class UserAcceptanceTest{
         String invalidPassword = "1234ff!";
         String modifiedName = "alcuk2";
         String modifiedUserPassword = "alcud2234!";
-        String modifiedPhoneNumber = "010-1234-1234";
+        String modifiedPhoneNumber = "01012341234";
         UpdateUserRequest modifyUserCreateRequest = UpdateUserRequest.builder()
                 .name(modifiedName)
                 .userPassword(modifiedUserPassword)
@@ -1172,7 +1172,7 @@ public class UserAcceptanceTest{
         String name = "alcuk1";
         String userId = "alcuk_id";
         String userPassword = "alcukpwd1!";
-        String phoneNumber = "010-1234-1111";
+        String phoneNumber = "01012341111";
         UserRequest userCreateRequest = UserRequest.builder()
                 .name(name)
                 .userId(userId)
@@ -1181,7 +1181,7 @@ public class UserAcceptanceTest{
                 .build();
         String modifiedName = "alcuk2";
         String modifiedUserPassword = "alu";
-        String modifiedPhoneNumber = "010-1234-1234";
+        String modifiedPhoneNumber = "01012341234";
         UpdateUserRequest modifyUserCreateRequest = UpdateUserRequest.builder()
                 .name(modifiedName)
                 .userPassword(modifiedUserPassword)
@@ -1212,7 +1212,7 @@ public class UserAcceptanceTest{
         String name = "alcuk1";
         String userId = "alcuk_id";
         String userPassword = "alcuk_pwd1!";
-        String phoneNumber = "010-1234-1111";
+        String phoneNumber = "01012341111";
         UserRequest userCreateRequest = UserRequest.builder()
                 .name(name)
                 .userId(userId)
@@ -1223,7 +1223,7 @@ public class UserAcceptanceTest{
         String password = userCreateRequest.getUserPassword();
         String modifiedName = "alcuk2";
         String modifiedUserPassword = "alcud2234!";
-        String modifiedPhoneNumber = "010-1234-1234";
+        String modifiedPhoneNumber = "01012341234";
         UpdateUserRequest modifyUserCreateRequest = UpdateUserRequest.builder()
                 .name(modifiedName)
                 .userPassword(modifiedUserPassword)
@@ -1254,7 +1254,7 @@ public class UserAcceptanceTest{
         String name = "alcuk1";
         String userId = "alcuk_id";
         String userPassword = "alcuk_pwd!1";
-        String phoneNumber = "010-1234-1111";
+        String phoneNumber = "01012341111";
         UserRequest userCreateRequest = UserRequest.builder()
                 .name(name)
                 .userId(userId)
@@ -1264,7 +1264,7 @@ public class UserAcceptanceTest{
         String password = userCreateRequest.getUserPassword();
         String modifiedName = "alcuk2";
         String modifiedUserPassword = "alcud2234!";
-        String modifiedPhoneNumber = "010-1234-1234";
+        String modifiedPhoneNumber = "01012341234";
         UpdateUserRequest modifyUserCreateRequest = UpdateUserRequest.builder()
                 .name(modifiedName)
                 .userPassword(modifiedUserPassword)
@@ -1295,7 +1295,7 @@ public class UserAcceptanceTest{
         String name = "alcuk1";
         String userId = "alcuk_id";
         String userPassword = "alcuk_pwd1!";
-        String phoneNumber = "010-1234-1111";
+        String phoneNumber = "01012341111";
         UserRequest userCreateRequest = UserRequest.builder()
                 .name(name)
                 .userId(userId)
@@ -1322,7 +1322,7 @@ public class UserAcceptanceTest{
         String name = "alcuk1";
         String userId = "alcuk_id";
         String userPassword = "alcuk_pwd1!";
-        String phoneNumber = "010-1234-1111";
+        String phoneNumber = "01012341111";
         UserRequest userCreateRequest = UserRequest.builder()
                 .name(name)
                 .userId(userId)
@@ -1354,7 +1354,7 @@ public class UserAcceptanceTest{
         String name = "alcuk1";
         String userId = "alcuk_id";
         String userPassword = "alcuk_pwd1!";
-        String phoneNumber = "010-1234-1111";
+        String phoneNumber = "01012341111";
         UserRequest userCreateRequest = UserRequest.builder()
                 .name(name)
                 .userId(userId)
@@ -1388,7 +1388,7 @@ public class UserAcceptanceTest{
         String name = "alcuk1";
         String userId = "alcuk_id";
         String userPassword = "alcuk_pwd1!";
-        String phoneNumber = "010-1234-1111";
+        String phoneNumber = "01012341111";
         UserRequest userCreateRequest = UserRequest.builder()
                 .name(name)
                 .userId(userId)
@@ -1421,7 +1421,7 @@ public class UserAcceptanceTest{
         String name = "alcuk1";
         String userId = "alcuk_id";
         String userPassword = "alcuk_pwd1!";
-        String phoneNumber = "010-1234-1111";
+        String phoneNumber = "01012341111";
         UserRequest userCreateRequest = UserRequest.builder()
                 .name(name)
                 .userId(userId)
@@ -1455,7 +1455,7 @@ public class UserAcceptanceTest{
         String name = "alcuk1";
         String userId = "alcuk_id";
         String userPassword = "alcuk_pwd1!";
-        String phoneNumber = "010-1234-1111";
+        String phoneNumber = "01012341111";
         UserRequest userCreateRequest = UserRequest.builder()
                 .name(name)
                 .userId(userId)
@@ -1489,7 +1489,7 @@ public class UserAcceptanceTest{
         String subjectName = "subject";
         String subjectUserId = "subject_id";
         String subjectUserPassword = "subject_pwd!!";
-        String subjectPhoneNumber = "010-1234-1111";
+        String subjectPhoneNumber = "01012341111";
         UserRequest subjectUserCreateRequest = UserRequest.builder()
                 .name(subjectName)
                 .userId(subjectUserId)
@@ -1499,7 +1499,7 @@ public class UserAcceptanceTest{
         String objectName = "object";
         String objectUserId = "id123";
         String objectUserPassword = "objectwd123!!";
-        String objectPhoneNumber = "010-1234-2222";
+        String objectPhoneNumber = "01012342222";
         UserRequest objectUserCreateRequest = UserRequest.builder()
                 .name(objectName)
                 .userId(objectUserId)
@@ -1539,7 +1539,7 @@ public class UserAcceptanceTest{
         String name = "alcuk1";
         String userId = "alcuk_id";
         String userPassword = "alcuk_pwd123!";
-        String phoneNumber = "010-1234-1111";
+        String phoneNumber = "01012341111";
         UserRequest userCreateRequest = UserRequest.builder()
                 .name(name)
                 .userId(userId)
@@ -1577,7 +1577,7 @@ public class UserAcceptanceTest{
         String name = "alcuk1";
         String userId = "alcuk_id";
         String userPassword = "alcuk_pwd1123!";
-        String phoneNumber = "010-1234-1111";
+        String phoneNumber = "01012341111";
         UserRequest userCreateRequest = UserRequest.builder()
                 .name(name)
                 .userId(userId)
@@ -1615,7 +1615,7 @@ public class UserAcceptanceTest{
         String objectName = "alcuk1";
         String objectUserId = "alcuk_id1";
         String objectUserPassword = "alcuk_pwd1!";
-        String objectPhoneNumber = "010-1234-1111";
+        String objectPhoneNumber = "01012341111";
         UserRequest objectUserCreateRequest = UserRequest.builder()
                 .name(objectName)
                 .userId(objectUserId)
@@ -1660,7 +1660,7 @@ public class UserAcceptanceTest{
         String name1 = "alcuk1";
         String userId1 = "alcuk_id1";
         String userPassword1 = "alcuk_pwd1!";
-        String phoneNumber1 = "010-1234-1111";
+        String phoneNumber1 = "01012341111";
         UserRequest userCreateRequest1 = UserRequest.builder()
                 .name(name1)
                 .userId(userId1)
@@ -1670,7 +1670,7 @@ public class UserAcceptanceTest{
         String name2 = "alcuk2";
         String userId2 = "alcuk_id2";
         String userPassword2 = "alcuk_pwd2!";
-        String phoneNumber2 = "010-1234-2222";
+        String phoneNumber2 = "01012342222";
         UserRequest userCreateRequest2 = UserRequest.builder()
                 .name(name2)
                 .userId(userId2)
@@ -1742,7 +1742,7 @@ public class UserAcceptanceTest{
         String subjectName = "alcuk2";
         String subjectUserId = "alcuk_id2";
         String subjectUserPassword = "alcuk_pwd2!!";
-        String subjectPhoneNumber = "010-1234-2222";
+        String subjectPhoneNumber = "01012342222";
         String subjectCharacter = "object_character";
         CharacterRequest characterRequest = new CharacterRequest();
         characterRequest.setCharacter(subjectCharacter);
@@ -1786,7 +1786,7 @@ public class UserAcceptanceTest{
         String subjectName = "alcuk2";
         String subjectUserId = "alcuk_id2";
         String subjectUserPassword = "alcuk_pwd2!!";
-        String subjectPhoneNumber = "010-1234-2222";
+        String subjectPhoneNumber = "01012342222";
         UserRequest subjectUserCreateRequest = UserRequest.builder()
                 .name(subjectName)
                 .userId(subjectUserId)
@@ -1829,7 +1829,7 @@ public class UserAcceptanceTest{
         String objectName = "alcuk1";
         String objectUserId = "alcuk_id1";
         String objectUserPassword = "alcuk_pwd1!";
-        String objectPhoneNumber = "010-1234-1111";
+        String objectPhoneNumber = "01012341111";
         UserRequest objectUserCreateRequest = UserRequest.builder()
                 .name(objectName)
                 .userId(objectUserId)
@@ -1877,7 +1877,7 @@ public class UserAcceptanceTest{
         String name1 = "alcuk1";
         String userId1 = "alcuk_id1";
         String userPassword1 = "alcuk_pwd1!";
-        String phoneNumber1 = "010-1234-1111";
+        String phoneNumber1 = "01012341111";
         UserRequest userCreateRequest1 = UserRequest.builder()
                 .name(name1)
                 .userId(userId1)
@@ -1887,7 +1887,7 @@ public class UserAcceptanceTest{
         String name2 = "alcuk2";
         String userId2 = "alcuk_id2";
         String userPassword2 = "alcuk_pwd2!";
-        String phoneNumber2 = "010-1234-2222";
+        String phoneNumber2 = "01012342222";
         UserRequest userCreateRequest2 = UserRequest.builder()
                 .name(name2)
                 .userId(userId2)
@@ -1897,7 +1897,7 @@ public class UserAcceptanceTest{
         String name3 = "alcuk3";
         String userId3 = "alcuk_id3";
         String userPassword3 = "alcuk_pwd3!";
-        String phoneNumber3 = "010-1234-3333";
+        String phoneNumber3 = "01012343333";
         UserRequest userCreateRequest3 = UserRequest.builder()
                 .name(name3)
                 .userId(userId3)
@@ -1918,9 +1918,9 @@ public class UserAcceptanceTest{
         userCreateRequestList.add(userCreateRequest3);
         ResultActions result = UserAcceptanceTestHelper.inquiryAllUserWithToken(mvc, 1, 4, adminToken);
         UserListResponse userList = objectMapper.readValue(result
-                                                                   .andReturn()
-                                                                   .getResponse()
-                                                                   .getContentAsString(), UserListResponse.class);
+                .andReturn()
+                .getResponse()
+                .getContentAsString(), UserListResponse.class);
 
         //then
         result.andExpectAll(
@@ -1962,7 +1962,7 @@ public class UserAcceptanceTest{
         String name1 = "alcuk1";
         String userId1 = "alcuk_id1";
         String userPassword1 = "alcuk_pwd1!";
-        String phoneNumber1 = "010-1234-1111";
+        String phoneNumber1 = "01012341111";
         UserRequest userCreateRequest1 = UserRequest.builder()
                 .name(name1)
                 .userId(userId1)
@@ -1972,7 +1972,7 @@ public class UserAcceptanceTest{
         String name2 = "alcuk2";
         String userId2 = "alcuk_id2";
         String userPassword2 = "alcuk_pwd2!";
-        String phoneNumber2 = "010-1234-2222";
+        String phoneNumber2 = "01012342222";
         UserRequest userCreateRequest2 = UserRequest.builder()
                 .name(name2)
                 .userId(userId2)
@@ -1982,7 +1982,7 @@ public class UserAcceptanceTest{
         String name3 = "alcuk3";
         String userId3 = "alcuk_id3";
         String userPassword3 = "alcuk_pwd3!";
-        String phoneNumber3 = "010-1234-3333";
+        String phoneNumber3 = "01012343333";
         UserRequest userCreateRequest3 = UserRequest.builder()
                 .name(name3)
                 .userId(userId3)
@@ -2001,15 +2001,15 @@ public class UserAcceptanceTest{
         userCreateRequestList.add(userCreateRequest2);
         userCreateRequestList.add(userCreateRequest3);
         ResultActions result = mvc.perform(MockMvcRequestBuilders
-                                                   .get("/users")
-                                                   .accept(MediaType.APPLICATION_JSON)
-                                                   .header("api-version", apiVersion)
-                                                   .header(HttpHeaders.AUTHORIZATION, adminToken));
+                .get("/users")
+                .accept(MediaType.APPLICATION_JSON)
+                .header("api-version", apiVersion)
+                .header(HttpHeaders.AUTHORIZATION, adminToken));
 
         UserListResponse userList = objectMapper.readValue(result
-                                                                   .andReturn()
-                                                                   .getResponse()
-                                                                   .getContentAsString(), UserListResponse.class);
+                .andReturn()
+                .getResponse()
+                .getContentAsString(), UserListResponse.class);
 
         //then
         result.andExpectAll(
@@ -2049,7 +2049,7 @@ public class UserAcceptanceTest{
         String name1 = "alcuk1";
         String userId1 = "alcuk_id1";
         String userPassword1 = "alcuk_pwd1";
-        String phoneNumber1 = "010-1234-1111";
+        String phoneNumber1 = "01012341111";
         String adminToken = AuthenticationAcceptanceTestHelper.getAdminToken(mvc, objectMapper);
         UserRequest userCreateRequest1 = UserRequest.builder()
                 .name(name1)
@@ -2060,7 +2060,7 @@ public class UserAcceptanceTest{
         String name2 = "alcuk2";
         String userId2 = "alcuk_id2";
         String userPassword2 = "alcuk_pwd2";
-        String phoneNumber2 = "010-1234-2222";
+        String phoneNumber2 = "01012342222";
         UserRequest userCreateRequest2 = UserRequest.builder()
                 .name(name2)
                 .userId(userId2)
@@ -2070,7 +2070,7 @@ public class UserAcceptanceTest{
         String name3 = "alcuk3";
         String userId3 = "alcuk_id3";
         String userPassword3 = "alcuk_pwd3";
-        String phoneNumber3 = "010-1234-3333";
+        String phoneNumber3 = "01012343333";
         UserRequest userCreateRequest3 = UserRequest.builder()
                 .name(name3)
                 .userId(userId3)
@@ -2109,7 +2109,7 @@ public class UserAcceptanceTest{
         String name1 = "alcuk1";
         String userId1 = "alcuk_id1";
         String userPassword1 = "alcuk_pwd1!";
-        String phoneNumber1 = "010-1234-1111";
+        String phoneNumber1 = "01012341111";
         UserRequest userCreateRequest1 = UserRequest.builder()
                 .name(name1)
                 .userId(userId1)
@@ -2119,7 +2119,7 @@ public class UserAcceptanceTest{
         String name2 = "alcuk2";
         String userId2 = "alcuk_id2";
         String userPassword2 = "alcuk_pwd2!";
-        String phoneNumber2 = "010-1234-2222";
+        String phoneNumber2 = "01012342222";
         UserRequest userCreateRequest2 = UserRequest.builder()
                 .name(name2)
                 .userId(userId2)
@@ -2129,7 +2129,7 @@ public class UserAcceptanceTest{
         String name3 = "alcuk3";
         String userId3 = "alcuk_id3";
         String userPassword3 = "alcuk_pwd3!";
-        String phoneNumber3 = "010-1234-3333";
+        String phoneNumber3 = "01012343333";
         UserRequest userCreateRequest3 = UserRequest.builder()
                 .name(name3)
                 .userId(userId3)
@@ -2169,6 +2169,110 @@ public class UserAcceptanceTest{
                 MockMvcResultMatchers.jsonPath("$.users.[1].created_at").isNotEmpty()
         ).andDo(MockMvcResultHandlers.print());
 
+    }
+
+    @Test
+    @DisplayName("특정 유저 목록 조회 성공 인수테스트 - 2명")
+    void INQUIRY_SPECIFIC_USERS_WHEN_TWO_SUCCESS_TEST() throws Exception{
+        // given
+        String adminToken = AuthenticationAcceptanceTestHelper.getAdminToken(mvc, objectMapper);
+        String name1 = "alcuk1";
+        String userId1 = "alcuk_id1";
+        String userPassword1 = "alcuk_pwd1!";
+        String phoneNumber1 = "01012341111";
+        UserRequest userCreateRequest1 = UserRequest.builder()
+                .name(name1)
+                .userId(userId1)
+                .userPassword(userPassword1)
+                .phoneNumber(phoneNumber1)
+                .build();
+        String name2 = "alcuk2";
+        String userId2 = "alcuk_id2";
+        String userPassword2 = "alcuk_pwd2!";
+        String phoneNumber2 = "01012342222";
+        UserRequest userCreateRequest2 = UserRequest.builder()
+                .name(name2)
+                .userId(userId2)
+                .userPassword(userPassword2)
+                .phoneNumber(phoneNumber2)
+                .build();
+        String name3 = "alcuk3";
+        String userId3 = "alcuk_id3";
+        String userPassword3 = "alcuk_pwd3!";
+        String phoneNumber3 = "01012343333";
+        UserRequest userCreateRequest3 = UserRequest.builder()
+                .name(name3)
+                .userId(userId3)
+                .userPassword(userPassword3)
+                .phoneNumber(phoneNumber3)
+                .build();
+
+        // when
+        UserAcceptanceTestHelper.createUser(mvc, objectMapper.writeValueAsString(userCreateRequest1));
+        UserAcceptanceTestHelper.createUser(mvc, objectMapper.writeValueAsString(userCreateRequest2));
+        UserAcceptanceTestHelper.createUser(mvc, objectMapper.writeValueAsString(userCreateRequest3));
+        UserAcceptanceTestHelper.approveJoinRequest(mvc, adminToken, userCreateRequest1.getUserId());
+        UserAcceptanceTestHelper.approveJoinRequest(mvc, adminToken, userCreateRequest2.getUserId());
+        UserAcceptanceTestHelper.approveJoinRequest(mvc, adminToken, userCreateRequest3.getUserId());
+
+        userCreateRequestList.add(userCreateRequest1);
+        userCreateRequestList.add(userCreateRequest2);
+        userCreateRequestList.add(userCreateRequest3);
+
+        int id = objectMapper.readValue(
+                UserAcceptanceTestHelper.inquiryUserWithToken(mvc, userCreateRequest1.getUserId(), adminToken)
+                        .andReturn()
+                        .getResponse()
+                        .getContentAsString(), UserResponse.class).getId();
+        int id2 = objectMapper.readValue(
+                UserAcceptanceTestHelper.inquiryUserWithToken(mvc, userCreateRequest3.getUserId(), adminToken)
+                        .andReturn()
+                        .getResponse()
+                        .getContentAsString(), UserResponse.class).getId();
+        ResultActions result = UserAcceptanceTestHelper.inquirySpecificUsers(mvc, "" + id + "," + id2, adminToken);
+
+        // then
+        result.andExpectAll(
+                MockMvcResultMatchers.status().isOk(),
+                MockMvcResultMatchers.header().string(HttpHeaders.CONTENT_TYPE, "application/json"),
+                MockMvcResultMatchers.header().string("api-version", apiVersion),
+                MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON),
+                MockMvcResultMatchers.jsonPath("$.users.[0].id").isNumber(),
+                MockMvcResultMatchers.jsonPath("$.users.[0].name").value(userCreateRequest1.getName()),
+                MockMvcResultMatchers.jsonPath("$.users.[0].user_id").value(userCreateRequest1.getUserId()),
+                MockMvcResultMatchers.jsonPath("$.users.[0].phone_number").value(userCreateRequest1.getPhoneNumber()),
+                MockMvcResultMatchers.jsonPath("$.users.[0].character").isString(),
+                MockMvcResultMatchers.jsonPath("$.users.[0].created_at").isNotEmpty(),
+                MockMvcResultMatchers.jsonPath("$.users.[0].reward_point").isNumber(),
+                MockMvcResultMatchers.jsonPath("$.users.[1].id").isNumber(),
+                MockMvcResultMatchers.jsonPath("$.users.[1].name").value(userCreateRequest3.getName()),
+                MockMvcResultMatchers.jsonPath("$.users.[1].user_id").value(userCreateRequest3.getUserId()),
+                MockMvcResultMatchers.jsonPath("$.users.[1].phone_number").value(userCreateRequest3.getPhoneNumber()),
+                MockMvcResultMatchers.jsonPath("$.users.[1].character").isString(),
+                MockMvcResultMatchers.jsonPath("$.users.[1].created_at").isNotEmpty(),
+                MockMvcResultMatchers.jsonPath("$.users.[1].reward_point").isNumber()
+        ).andDo(MockMvcResultHandlers.print());
+    }
+
+    @Test
+    @DisplayName("특정 유저 목록 조회 실패 인수테스트 - 없는 id")
+    void INQUIRY_SPECIFIC_USERS_FAIL_CAUSE_UNKNOWN_ID_TEST() throws Exception{
+        // given
+        String adminToken = AuthenticationAcceptanceTestHelper.getAdminToken(mvc, objectMapper);
+
+        // when
+        ResultActions result = UserAcceptanceTestHelper.inquirySpecificUsers(mvc, "" + 0, adminToken);
+
+        // then
+        result.andExpectAll(
+                MockMvcResultMatchers.status().isBadRequest(),
+                MockMvcResultMatchers.header().string(HttpHeaders.CONTENT_TYPE, "application/json"),
+                MockMvcResultMatchers.header().string("api-version", apiVersion),
+                MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON),
+                MockMvcResultMatchers.jsonPath("$.code").value("USER-408"),
+                MockMvcResultMatchers.jsonPath("$.messages").value("Unknown id \"" + 0 + "\""),
+                MockMvcResultMatchers.jsonPath("$.document_url").value("docs.waldreg.org")
+        ).andDo(MockMvcResultHandlers.print());
     }
 
     private String createUserAndGetToken(UserRequest userRequest) throws Exception{
