@@ -23,7 +23,8 @@ public class HomeRepositoryServiceProvider implements HomeRepository{
     @Override
     @Transactional
     public void updateHome(HomeRequestable request){
-
+        HomeContent homeContent = homeJpaRepository.findAll().get(0);
+        homeContent.setContent(request.getContent());
     }
 
     @Override
