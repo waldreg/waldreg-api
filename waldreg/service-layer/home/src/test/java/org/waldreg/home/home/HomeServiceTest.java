@@ -43,4 +43,23 @@ public class HomeServiceTest{
 
     }
 
+    @Test
+    @DisplayName("홈화면 게시글 수정 성공 테스트")
+    public void UPDATE_HOME_CONTENT_SUCCESS_TEST(){
+        //given
+        String updateContent = "This is new content of Home~!";
+        HomeContentDto homeContentDto = HomeContentDto.builder()
+                .content(updateContent)
+                .build();
+
+        //when
+        homeManager.updateHome(homeContentDto);
+        Mockito.when(homeRepository.getHome()).thenReturn(homeContentDto);
+        HomeReadable result = homeManager.getHome();
+
+        //then
+        Assertions.assertEquals(result.getContent(),homeContentDto.getContent());
+
+    }
+
 }

@@ -17,7 +17,7 @@ public class DefaultHomeManager implements HomeManager{
 
     @Override
     public void updateHome(HomeRequestable request){
-
+        homeRepository.updateHome(request);
     }
 
     @Override
