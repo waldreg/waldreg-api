@@ -11,9 +11,9 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.waldreg.home.core.HomeManager;
 import org.waldreg.home.core.response.HomeReadable;
+import org.waldreg.home.core.spi.HomeRepository;
 import org.waldreg.home.service.homecontent.dto.HomeContentDto;
 import org.waldreg.home.service.homecontent.management.DefaultHomeManager;
-import org.waldreg.home.service.homecontent.spi.HomeRepository;
 
 @ExtendWith(SpringExtension.class)
 @ContextConfiguration(classes = {DefaultHomeManager.class})
@@ -29,7 +29,7 @@ public class HomeServiceTest{
     @DisplayName("홈화면 게시글 조회 성공 테스트")
     public void UPDATE_HOME_CONTENT_SUCCESS_TEST(){
         //given
-        String content= "This is content for Home~!";
+        String content = "This is content for Home~!";
         HomeContentDto homeContentDto = HomeContentDto.builder()
                 .content(content)
                 .build();
@@ -39,7 +39,7 @@ public class HomeServiceTest{
         HomeReadable result = homeManager.getHome();
 
         //then
-        Assertions.assertEquals(result.getContent(),homeContentDto.getContent());
+        Assertions.assertEquals(result.getContent(), homeContentDto.getContent());
 
     }
 
