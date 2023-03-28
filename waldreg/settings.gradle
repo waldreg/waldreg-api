@@ -76,4 +76,6 @@ include 'repository-layer:joiningpool-jpa'
 findProject(':repository-layer:joiningpool-jpa')?.name = 'joiningpool-jpa'
 include 'service-layer:home'
 findProject(':service-layer:home')?.name = 'home'
+include 'repository-layer:home-jpa'
+findProject(':repository-layer:home-jpa')?.name = 'home-jpa'
 
