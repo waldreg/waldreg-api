@@ -90,7 +90,6 @@ public class DefaultBoardManager implements BoardManager{
         throwIfCategoryDoesNotExist(categoryId);
         throwIfInvalidRangeDetected(from, to);
         int maxIdx = boardRepository.getBoardMaxIdxByCategory(categoryId);
-
         to = adjustEndIdx(from, to, maxIdx);
         List<BoardDto> boardDtoList = boardRepository.inquiryAllBoardByCategory(categoryId, from, to);
         return setCategoryNameAndCommentCount(boardDtoList);
