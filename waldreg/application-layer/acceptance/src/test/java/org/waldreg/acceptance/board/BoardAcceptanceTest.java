@@ -1299,6 +1299,100 @@ class BoardAcceptanceTest{
     }
 
     @Test
+    @DisplayName("카테고리 수정 후 전체 게시글 조회 성공 - 카테고리, json, from 1, to 2")
+    public void INQUIRY_ALL_BOARD_SUCCESS_WITH_MODIFIED_CATEGORY_AND_FROM_TO_TEST() throws Exception{
+        //given
+        int startIdx = 1;
+        int endIdx = 2;
+        String adminToken = AuthenticationAcceptanceTestHelper.getAdminToken(mvc, objectMapper);
+
+        CategoryListResponse categoryListResponse = objectMapper.readValue(BoardAcceptanceTestHelper.inquiryAllCategory(mvc, adminToken).andReturn().getResponse().getContentAsString(), CategoryListResponse.class);
+        int categoryId = categoryListResponse.getCategories()[0].getCategoryId();
+        int categoryId2 = categoryListResponse.getCategories()[1].getCategoryId();
+
+        String name = "alcuk";
+        String userId = "alcuk_id";
+        String userPassword = "2gdddddd!";
+        String token = createUserAndGetToken(name, userId, userPassword);
+
+        String title1 = "notice1";
+        String content1 = "content";
+
+        BoardCreateRequest boardCreateRequest1 = BoardCreateRequest.builder()
+                .title(title1)
+                .content(content1)
+                .categoryId(categoryId)
+                .build();
+        MockMultipartFile jsonContent1 = new MockMultipartFile("boardCreateRequest", "", MediaType.APPLICATION_JSON_VALUE, objectMapper.writeValueAsString(boardCreateRequest1).getBytes());
+
+        String title2 = "notice2";
+        String content2 = "content";
+
+        BoardCreateRequest boardCreateRequest2 = BoardCreateRequest.builder()
+                .title(title2)
+                .content(content2)
+                .categoryId(categoryId)
+
+                .build();
+        MockMultipartFile jsonContent2 = new MockMultipartFile("boardCreateRequest", "", MediaType.APPLICATION_JSON_VALUE, objectMapper.writeValueAsString(boardCreateRequest2).getBytes());
+
+        String title3 = "notice3";
+        String content3 = "content";
+
+        BoardCreateRequest boardCreateRequest3 = BoardCreateRequest.builder()
+                .title(title3)
+                .content(content3)
+                .categoryId(categoryId2)
+                .build();
+        MockMultipartFile jsonContent3 = new MockMultipartFile("boardCreateRequest", "", MediaType.APPLICATION_JSON_VALUE, objectMapper.writeValueAsString(boardCreateRequest3).getBytes());
+
+        String title4 = "notice4";
+        String content4 = "content";
+        BoardCreateRequest boardCreateRequest4 = BoardCreateRequest.builder()
+                .title(title4)
+                .content(content4)
+                .categoryId(categoryId2)
+                .build();
+        MockMultipartFile jsonContent4 = new MockMultipartFile("boardCreateRequest", "", MediaType.APPLICATION_JSON_VALUE, objectMapper.writeValueAsString(boardCreateRequest4).getBytes());
+
+        //when
+
+        BoardAcceptanceTestHelper.createBoardWithOnlyJson(mvc, adminToken, jsonContent1);
+        BoardAcceptanceTestHelper.createBoardWithOnlyJson(mvc, adminToken, jsonContent2);
+        BoardAcceptanceTestHelper.createBoardWithOnlyJson(mvc, adminToken, jsonContent3);
+        BoardAcceptanceTestHelper.createBoardWithOnlyJson(mvc, adminToken, jsonContent4);
+
+        String modifyName = "modified name";
+        CategoryRequest modifyCategoryRequest = CategoryRequest.builder().categoryName(modifyName).build();
+        BoardAcceptanceTestHelper.modifyCategory(mvc, adminToken, categoryId, objectMapper.writeValueAsString(modifyCategoryRequest));
+        ResultActions result = BoardAcceptanceTestHelper.inquiryAllBoardWithCategoryAndFromTo(mvc, token, categoryId, startIdx, endIdx);
+
+        //then
+        result.andExpectAll(
+                MockMvcResultMatchers.status().isOk(),
+                MockMvcResultMatchers.header().string(HttpHeaders.CONTENT_TYPE, "application/json"),
+                MockMvcResultMatchers.header().string("api-version", apiVersion),
+                MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON),
+                MockMvcResultMatchers.jsonPath("$.max_idx").value(2),
+                MockMvcResultMatchers.jsonPath("$.boards.[0].title").value(title1),
+                MockMvcResultMatchers.jsonPath("$.boards.[0].content").value(content1),
+                MockMvcResultMatchers.jsonPath("$.boards.[0].category").value("modified name"),
+                MockMvcResultMatchers.jsonPath("$.boards.[0].author.user_id").value("Admin"),
+                MockMvcResultMatchers.jsonPath("$.boards.[0].author.name").value("Admin"),
+                MockMvcResultMatchers.jsonPath("$.boards.[0].created_at").isNotEmpty(),
+                MockMvcResultMatchers.jsonPath("$.boards.[0].last_modified_at").isNotEmpty(),
+                MockMvcResultMatchers.jsonPath("$.boards.[0].exist_file").value("false"),
+                MockMvcResultMatchers.jsonPath("$.boards.[0].reactions.good").isNumber(),
+                MockMvcResultMatchers.jsonPath("$.boards.[0].reactions.bad").isNumber(),
+                MockMvcResultMatchers.jsonPath("$.boards.[0].reactions.check").isNumber(),
+                MockMvcResultMatchers.jsonPath("$.boards.[0].reactions.heart").isNumber(),
+                MockMvcResultMatchers.jsonPath("$.boards.[0].reactions.smile").isNumber(),
+                MockMvcResultMatchers.jsonPath("$.boards.[0].reactions.sad").isNumber(),
+                MockMvcResultMatchers.jsonPath("$.boards.[1].category").value("modified name")
+        );
+    }
+
+    @Test
     @DisplayName("전체 게시글 조회 실패 - 없는 카테고리 아이디")
     void INQUIRY_ALL_BOARD_Fail_UNKNOWN_CATEGORY_TEST() throws Exception{
         //given
