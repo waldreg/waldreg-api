@@ -61,8 +61,10 @@ public class CategoryRepositoryServiceProvider implements CategoryRepository{
     @Override
     @Transactional
     public void modifyCategory(CategoryDto categoryDto){
-        Category category = categoryRepositoryMapper.categoryDtoToCategoryDomain(categoryDto);
-        jpaCategoryRepository.save(category);
+        Category category = jpaCategoryRepository.findById(categoryDto.getId()).orElseThrow(
+                () -> {throw new IllegalStateException("Cannot find category id \"" + categoryDto.getId() + "\"");}
+        );
+        category.setCategoryName(categoryDto.getCategoryName());
     }
 
     @Override

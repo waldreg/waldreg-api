@@ -1092,7 +1092,7 @@ public class UserAcceptanceTest{
         String adminPassword = "0000";
         String modifiedName = "Admin";
         String modifiedUserPassword = "alcuk2234!";
-        String modifiedPhoneNumber = "010-0000-0000";
+        String modifiedPhoneNumber = "01000000000";
         UpdateUserRequest modifyUserCreateRequest = UpdateUserRequest.builder()
                 .name(modifiedName)
                 .userPassword(modifiedUserPassword)
@@ -1100,7 +1100,7 @@ public class UserAcceptanceTest{
                 .build();
         String modifiedName2 = "Admin";
         String modifiedUserPassword2 = "alcuk2233!";
-        String modifiedPhoneNumber2 = "010-0000-0000";
+        String modifiedPhoneNumber2 = "01000000000";
         UpdateUserRequest modifyUserCreateRequest2 = UpdateUserRequest.builder()
                 .name(modifiedName2)
                 .userPassword(modifiedUserPassword2)
