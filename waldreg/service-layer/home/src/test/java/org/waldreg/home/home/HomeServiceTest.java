@@ -27,7 +27,7 @@ public class HomeServiceTest{
 
     @Test
     @DisplayName("홈화면 게시글 조회 성공 테스트")
-    public void UPDATE_HOME_CONTENT_SUCCESS_TEST(){
+    public void READ_HOME_CONTENT_SUCCESS_TEST(){
         //given
         String content = "This is content for Home~!";
         HomeContentDto homeContentDto = HomeContentDto.builder()
