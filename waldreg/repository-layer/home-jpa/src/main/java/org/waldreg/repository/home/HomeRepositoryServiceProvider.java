@@ -6,7 +6,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.waldreg.domain.home.HomeContent;
 import org.waldreg.home.core.request.HomeRequestable;
 import org.waldreg.home.core.response.HomeReadable;
-import org.waldreg.home.core.spi.HomeRepository;
+import org.waldreg.home.service.spi.HomeRepository;
 import org.waldreg.home.service.homecontent.dto.HomeContentDto;
 import org.waldreg.repository.home.repository.HomeJpaRepository;
 

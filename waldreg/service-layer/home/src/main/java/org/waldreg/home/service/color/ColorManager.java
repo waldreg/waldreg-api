@@ -1,9 +1,9 @@
-package org.waldreg.home.core.spi;
+package org.waldreg.home.service.color;
 
 import org.waldreg.home.core.request.ColorRequestable;
 import org.waldreg.home.core.response.ColorReadable;
 
-public interface ColorRepository{
+public interface ColorManager{
 
     void updateColor(ColorRequestable request);
 
