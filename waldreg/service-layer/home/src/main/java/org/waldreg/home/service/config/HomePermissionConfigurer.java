@@ -1,4 +1,4 @@
-package org.waldreg.home.service.homecontent.config;
+package org.waldreg.home.service.config;
 
 import java.util.List;
 import javax.annotation.PostConstruct;
@@ -21,7 +21,7 @@ public class HomePermissionConfigurer{
                 .service("Home")
                 .name("Home Content Update manager")
                 .info("If set true, can update home content")
-                .permissionVerifiable((s) -> s.equals("true"))
+                .permissionVerifiable(s -> s.equals("true"))
                 .statusList(List.of("true", "false"))
                 .build());
     }

@@ -1,9 +1,6 @@
 package org.waldreg.home.service.homecontent.dto;
 
-import org.waldreg.home.core.request.HomeRequestable;
-import org.waldreg.home.core.response.HomeReadable;
-
-public class HomeContentDto implements HomeRequestable, HomeReadable{
+public final class HomeContentDto{
 
     private Integer id;
     private String content;
@@ -23,7 +20,6 @@ public class HomeContentDto implements HomeRequestable, HomeReadable{
         return id;
     }
 
-    @Override
     public String getContent(){
         return content;
     }

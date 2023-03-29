@@ -9,9 +9,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
-import org.waldreg.home.core.HomeManager;
+import org.waldreg.home.service.homecontent.management.HomeManager;
 import org.waldreg.home.core.response.HomeReadable;
-import org.waldreg.home.core.spi.HomeRepository;
+import org.waldreg.home.service.spi.HomeRepository;
 import org.waldreg.home.service.homecontent.dto.HomeContentDto;
 import org.waldreg.home.service.homecontent.management.DefaultHomeManager;
 
