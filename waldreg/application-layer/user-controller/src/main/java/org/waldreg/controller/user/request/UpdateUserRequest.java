@@ -17,7 +17,7 @@ public class UpdateUserRequest{
     private String userPassword;
 
     @NotNull(message = "USER-405 Invalid phone_number input")
-    @Pattern(regexp = "^(01[016789]{1}|02|0[3-9]{1}[0-9]{1})-?[0-9]{3,4}-?[0-9]{4}$", message = "USER-405 Invalid phone_number input")
+    @Pattern(regexp = "^(01[016789]{1}|02|0[3-9]{1}[0-9]{1})?[0-9]{3,4}?[0-9]{4}$", message = "USER-405 Invalid phone_number input")
     @JsonProperty("phone_number")
     private String phoneNumber;
 
