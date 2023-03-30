@@ -16,10 +16,10 @@ public class HomePermissionConfigurer{
     public HomePermissionConfigurer(PermissionExtension permissionExtension){this.permissionExtension = permissionExtension;}
 
     @PostConstruct
-    public void configUpdateHomeContentPermission(){
+    public void configUpdateHomePermission(){
         permissionExtension.extend(DefaultPermissionUnit.builder()
                 .service("Home")
-                .name("Home Content Update manager")
+                .name("Home Update manager")
                 .info("If set true, can update home content")
                 .permissionVerifiable(s -> s.equals("true"))
                 .statusList(List.of("true", "false"))
