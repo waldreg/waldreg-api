@@ -15,7 +15,7 @@ public class DefaultColorManager implements ColorManager{
 
     @Override
     public void updateColor(ColorDto request){
-
+        colorRepository.updateColor(request);
     }
 
     @Override
