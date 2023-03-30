@@ -4,8 +4,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 import org.waldreg.domain.home.HomeContent;
-import org.waldreg.home.core.request.HomeRequestable;
-import org.waldreg.home.core.response.HomeReadable;
 import org.waldreg.home.service.spi.HomeRepository;
 import org.waldreg.home.service.homecontent.dto.HomeContentDto;
 import org.waldreg.repository.home.repository.HomeJpaRepository;
@@ -22,14 +20,14 @@ public class HomeRepositoryServiceProvider implements HomeRepository{
 
     @Override
     @Transactional
-    public void updateHome(HomeRequestable request){
+    public void updateHome(HomeContentDto request){
         HomeContent homeContent = homeJpaRepository.findAll().get(0);
         homeContent.setContent(request.getContent());
     }
 
     @Override
     @Transactional(readOnly = true)
-    public HomeReadable getHome(){
+    public HomeContentDto getHome(){
         HomeContent homeContent = homeJpaRepository.findAll().get(0);
         return HomeContentDto.builder()
                 .id(homeContent.getId())

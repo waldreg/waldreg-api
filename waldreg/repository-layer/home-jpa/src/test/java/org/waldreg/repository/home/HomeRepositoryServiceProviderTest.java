@@ -7,8 +7,7 @@ import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.TestPropertySource;
 import org.waldreg.domain.home.HomeContent;
-import org.waldreg.home.core.request.HomeRequestable;
-import org.waldreg.home.core.response.HomeReadable;
+import org.waldreg.home.service.homecontent.dto.HomeContentDto;
 import org.waldreg.repository.home.repository.HomeJpaRepository;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -38,7 +37,7 @@ class HomeRepositoryServiceProviderTest{
 
         // when
         homeJpaRepository.saveAndFlush(homeContent);
-        HomeReadable result = homeServiceProvider.getHome();
+        HomeContentDto result = homeServiceProvider.getHome();
 
         // then
         assertEquals(content, result.getContent());
@@ -57,10 +56,10 @@ class HomeRepositoryServiceProviderTest{
 
         // when
         homeJpaRepository.saveAndFlush(homeContent);
-        HomeReadable before = homeServiceProvider.getHome();
+        HomeContentDto before = homeServiceProvider.getHome();
 
-        homeServiceProvider.updateHome(() -> update);
-        HomeReadable after = homeServiceProvider.getHome();
+        homeServiceProvider.updateHome(HomeContentDto.builder().content(update).build());
+        HomeContentDto after = homeServiceProvider.getHome();
 
         // then
         assertAll(
