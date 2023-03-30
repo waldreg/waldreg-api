@@ -72,12 +72,12 @@ public final class ApplicationColor{
             return this;
         }
 
-        private Builder backgroundColor(String backgroundColor){
+        public Builder backgroundColor(String backgroundColor){
             this.backgroundColor = backgroundColor;
             return this;
         }
 
-        private ApplicationColor build(){
+        public ApplicationColor build(){
             return new ApplicationColor(this);
         }
 
