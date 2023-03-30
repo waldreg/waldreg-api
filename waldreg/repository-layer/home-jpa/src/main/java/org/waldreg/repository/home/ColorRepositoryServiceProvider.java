@@ -3,9 +3,9 @@ package org.waldreg.repository.home;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
-import org.waldreg.home.core.request.ColorRequestable;
-import org.waldreg.home.core.response.ColorReadable;
-import org.waldreg.home.core.spi.ColorRepository;
+import org.waldreg.domain.home.ApplicationColor;
+import org.waldreg.home.service.color.dto.ColorDto;
+import org.waldreg.home.service.spi.ColorRepository;
 import org.waldreg.repository.home.repository.ColorJpaRepository;
 
 @Repository
@@ -20,14 +20,21 @@ public class ColorRepositoryServiceProvider implements ColorRepository{
 
     @Override
     @Transactional
-    public void updateColor(ColorRequestable request){
-
+    public void updateColor(ColorDto request){
+        ApplicationColor color = colorJpaRepository.findAll().get(0);
+        color.setPrimaryColor(request.getPrimaryColor());
+        color.setBackgroundColor(request.getBackgroundColor());
     }
 
     @Override
     @Transactional(readOnly = true)
-    public ColorReadable getColor(){
-
+    public ColorDto getColor(){
+        ApplicationColor color = colorJpaRepository.findAll().get(0);
+        return ColorDto.builder()
+                .id(color.getId())
+                .primaryColor(color.getPrimaryColor())
+                .backgroundColor(color.getBackgroundColor())
+                .build();
     }
 
 }
