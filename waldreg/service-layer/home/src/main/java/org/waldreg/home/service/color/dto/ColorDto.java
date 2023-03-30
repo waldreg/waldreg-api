@@ -16,6 +16,8 @@ public final class ColorDto{
         this.backgroundColor = builder.backgroundColor;
     }
 
+    public static Builder builder(){return new Builder();}
+
     public Integer getId(){
         return id;
     }

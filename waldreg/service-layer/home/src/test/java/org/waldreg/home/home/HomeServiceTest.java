@@ -9,11 +9,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
-import org.waldreg.home.service.homecontent.management.HomeManager;
-import org.waldreg.home.core.response.HomeReadable;
-import org.waldreg.home.service.spi.HomeRepository;
 import org.waldreg.home.service.homecontent.dto.HomeContentDto;
 import org.waldreg.home.service.homecontent.management.DefaultHomeManager;
+import org.waldreg.home.service.homecontent.management.HomeManager;
+import org.waldreg.home.service.spi.HomeRepository;
 
 @ExtendWith(SpringExtension.class)
 @ContextConfiguration(classes = {DefaultHomeManager.class})
@@ -36,7 +35,7 @@ public class HomeServiceTest{
 
         //when
         Mockito.when(homeRepository.getHome()).thenReturn(homeContentDto);
-        HomeReadable result = homeManager.getHome();
+        HomeContentDto result = homeManager.getHome();
 
         //then
         Assertions.assertEquals(result.getContent(), homeContentDto.getContent());
@@ -55,10 +54,10 @@ public class HomeServiceTest{
         //when
         homeManager.updateHome(homeContentDto);
         Mockito.when(homeRepository.getHome()).thenReturn(homeContentDto);
-        HomeReadable result = homeManager.getHome();
+        HomeContentDto result = homeManager.getHome();
 
         //then
-        Assertions.assertEquals(result.getContent(),homeContentDto.getContent());
+        Assertions.assertEquals(result.getContent(), homeContentDto.getContent());
 
     }
 
