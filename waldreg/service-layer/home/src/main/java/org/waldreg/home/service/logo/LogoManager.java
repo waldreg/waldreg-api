@@ -1,11 +1,12 @@
 package org.waldreg.home.service.logo;
 
 import java.io.File;
+import org.springframework.web.multipart.MultipartFile;
 
 public interface LogoManager{
 
-    void updateLogo(File request);
+    void updateLogo(MultipartFile request);
 
-    File getLogo();
+    byte[] getLogo();
 
 }

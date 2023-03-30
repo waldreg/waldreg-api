@@ -5,6 +5,8 @@ import org.waldreg.controller.home.request.ApplicationColorRequest;
 import org.waldreg.controller.home.request.HomeContentRequest;
 import org.waldreg.controller.home.response.ApplicationColorResponse;
 import org.waldreg.controller.home.response.HomeContentResponse;
+import org.waldreg.home.service.color.dto.ColorDto;
+import org.waldreg.home.service.homecontent.dto.HomeContentDto;
 
 @Service
 public class ControllerHomeMapper{
@@ -15,23 +17,23 @@ public class ControllerHomeMapper{
                 .build();
     }
 
-    public HomeContentResponse HomeCon기다리tentDtoToHomeContentResponse(HomeContentDto homeContentDto){
+    public HomeContentResponse HomeContentDtoToHomeContentResponse(HomeContentDto homeContentDto){
         return HomeContentResponse.builder()
                 .content(homeContentDto.getContent())
                 .build();
     }
 
-    public ApplicationColorDto applicationColorRequestToApplicationColorDto(ApplicationColorRequest request){
-        return ApplicationColorDto.builder()
+    public ColorDto colorRequestToApplicationColorDto(ApplicationColorRequest request){
+        return ColorDto.builder()
                 .primaryColor(request.getPrimaryColor())
                 .backgroundColor(request.getBackgroundColor())
                 .build();
     }
 
-    public ApplicationColorResponse applicationColorDtoToApplicationColorResponse(ApplicationColorDto applicationColorDto){
+    public ApplicationColorResponse colorDtoToApplicationColorResponse(ColorDto colorDto){
         return ApplicationColorResponse.builder()
-                .primaryColor(applicationColorDto.getPrimaryColor())
-                .backgroundColor(applicationColorDto.getBackGroundColor())
+                .primaryColor(colorDto.getPrimaryColor())
+                .backgroundColor(colorDto.getBackgroundColor())
                 .build();
     }
 

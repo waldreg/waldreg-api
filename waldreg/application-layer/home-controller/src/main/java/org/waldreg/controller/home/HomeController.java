@@ -6,6 +6,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestPart;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 import org.stage.xss.core.meta.Xss;
 import org.stage.xss.core.meta.XssFiltering;
@@ -15,9 +16,11 @@ import org.waldreg.controller.home.request.ApplicationColorRequest;
 import org.waldreg.controller.home.request.HomeContentRequest;
 import org.waldreg.controller.home.response.ApplicationColorResponse;
 import org.waldreg.controller.home.response.HomeContentResponse;
-import org.waldreg.home.core.ColorManager;
-import org.waldreg.home.core.HomeManager;
-import org.waldreg.home.core.LogoManager;
+import org.waldreg.home.service.color.dto.ColorDto;
+import org.waldreg.home.service.color.management.ColorManager;
+import org.waldreg.home.service.homecontent.dto.HomeContentDto;
+import org.waldreg.home.service.homecontent.management.HomeManager;
+import org.waldreg.home.service.logo.LogoManager;
 import org.waldreg.token.aop.annotation.Authenticating;
 
 public class HomeController{
@@ -42,13 +45,13 @@ public class HomeController{
     @PostMapping(value = "/application/home")
     public void updateHomeContent(@Xss("json") @RequestBody @Validated HomeContentRequest homeContentRequest){
         HomeContentDto homeContentDto = controllerHomeMapper.HomeContentRequestToHomeContentDto(homeContentRequest);
-        homeManager.updateContent(homeContentDto);
+        homeManager.updateHome(homeContentDto);
     }
 
     @Authenticating
     @GetMapping(value = "/application/home")
     public HomeContentResponse getHomeContent(){
-        HomeContentDto homeContentDto = homeManager.getHomeContent();
+        HomeContentDto homeContentDto = homeManager.getHome();
         return controllerHomeMapper.HomeContentDtoToHomeContentResponse(homeContentDto);
     }
 
@@ -57,15 +60,15 @@ public class HomeController{
     @PermissionVerifying("")
     @PostMapping(value = "/application/setting/color")
     public void updateApplicationColor(@Xss("json") @RequestBody @Validated ApplicationColorRequest applicationColorRequest){
-        ApplicationColorDto applicationColorDto = controllerHomeMapper.ApplicationColorRequestToApplicationColorDto(applicationColorRequest);
-        colorManager.updateColor(applicationColorDto);
+        ColorDto colorDto = controllerHomeMapper.colorRequestToApplicationColorDto(applicationColorRequest);
+        colorManager.updateColor(colorDto);
     }
 
     @Authenticating
     @GetMapping(value = "/application/setting/color")
     public ApplicationColorResponse getApplicationColor(){
-        ApplicationColorDto applicationColorDto = colorManager.getColor();
-        return controllerHomeMapper.applicationColorDtoToApplicationColorResponse(applicationColorDto);
+        ColorDto colorDto = colorManager.getColor();
+        return controllerHomeMapper.colorDtoToApplicationColorResponse(colorDto);
     }
 
     @Authenticating
@@ -77,9 +80,7 @@ public class HomeController{
 
     @Authenticating
     @GetMapping(value = "/application/setting/logo")
-    public void getLogo(){
-
+    public @ResponseBody byte[] getLogo(){
         return logoManager.getLogo();
     }
-dasf
 }
