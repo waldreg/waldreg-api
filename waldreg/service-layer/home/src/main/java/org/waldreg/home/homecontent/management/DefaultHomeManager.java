@@ -1,9 +1,9 @@
-package org.waldreg.home.service.homecontent.management;
+package org.waldreg.home.homecontent.management;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.waldreg.home.service.homecontent.dto.HomeContentDto;
-import org.waldreg.home.service.spi.HomeRepository;
+import org.waldreg.home.homecontent.dto.HomeContentDto;
+import org.waldreg.home.spi.HomeRepository;
 
 @Service
 public class DefaultHomeManager implements HomeManager{

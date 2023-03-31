@@ -78,4 +78,6 @@ include 'service-layer:home'
 findProject(':service-layer:home')?.name = 'home'
 include 'repository-layer:home-jpa'
 findProject(':repository-layer:home-jpa')?.name = 'home-jpa'
+include 'application-layer:home-controller'
+findProject(':application-layer:home-controller')?.name = 'home-controller'
 

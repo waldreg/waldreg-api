@@ -1,6 +1,6 @@
-package org.waldreg.home.service.spi;
+package org.waldreg.home.spi;
 
-import org.waldreg.home.service.color.dto.ColorDto;
+import org.waldreg.home.color.dto.ColorDto;
 
 public interface ColorRepository{
 

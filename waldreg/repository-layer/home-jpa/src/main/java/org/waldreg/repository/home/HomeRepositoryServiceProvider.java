@@ -4,8 +4,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 import org.waldreg.domain.home.HomeContent;
-import org.waldreg.home.service.spi.HomeRepository;
-import org.waldreg.home.service.homecontent.dto.HomeContentDto;
+import org.waldreg.home.spi.HomeRepository;
+import org.waldreg.home.homecontent.dto.HomeContentDto;
 import org.waldreg.repository.home.repository.HomeJpaRepository;
 
 @Repository

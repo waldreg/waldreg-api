@@ -1,9 +1,9 @@
-package org.waldreg.home.service.color.management;
+package org.waldreg.home.color.management;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.waldreg.home.service.color.dto.ColorDto;
-import org.waldreg.home.service.spi.ColorRepository;
+import org.waldreg.home.color.dto.ColorDto;
+import org.waldreg.home.spi.ColorRepository;
 
 @Service
 public class DefaultColorManager implements ColorManager{
