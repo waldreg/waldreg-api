@@ -7,7 +7,7 @@ import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.TestPropertySource;
 import org.waldreg.domain.home.ApplicationColor;
-import org.waldreg.home.service.color.dto.ColorDto;
+import org.waldreg.home.color.dto.ColorDto;
 import org.waldreg.repository.home.repository.ColorJpaRepository;
 
 import static org.junit.jupiter.api.Assertions.*;

@@ -1,6 +1,6 @@
-package org.waldreg.home.service.spi;
+package org.waldreg.home.spi;
 
-import org.waldreg.home.service.homecontent.dto.HomeContentDto;
+import org.waldreg.home.homecontent.dto.HomeContentDto;
 
 public interface HomeRepository{
 

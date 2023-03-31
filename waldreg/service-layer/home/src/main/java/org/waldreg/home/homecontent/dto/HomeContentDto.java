@@ -1,4 +1,4 @@
-package org.waldreg.home.service.homecontent.dto;
+package org.waldreg.home.homecontent.dto;
 
 public final class HomeContentDto{
 

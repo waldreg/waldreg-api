@@ -7,7 +7,7 @@ import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.TestPropertySource;
 import org.waldreg.domain.home.HomeContent;
-import org.waldreg.home.service.homecontent.dto.HomeContentDto;
+import org.waldreg.home.homecontent.dto.HomeContentDto;
 import org.waldreg.repository.home.repository.HomeJpaRepository;
 
 import static org.junit.jupiter.api.Assertions.*;

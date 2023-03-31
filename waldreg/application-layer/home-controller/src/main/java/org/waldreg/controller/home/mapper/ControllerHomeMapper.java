@@ -5,8 +5,8 @@ import org.waldreg.controller.home.request.ApplicationColorRequest;
 import org.waldreg.controller.home.request.HomeContentRequest;
 import org.waldreg.controller.home.response.ApplicationColorResponse;
 import org.waldreg.controller.home.response.HomeContentResponse;
-import org.waldreg.home.service.color.dto.ColorDto;
-import org.waldreg.home.service.homecontent.dto.HomeContentDto;
+import org.waldreg.home.color.dto.ColorDto;
+import org.waldreg.home.homecontent.dto.HomeContentDto;
 
 @Service
 public class ControllerHomeMapper{

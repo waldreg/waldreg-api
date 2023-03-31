@@ -9,10 +9,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
-import org.waldreg.home.service.color.management.ColorManager;
-import org.waldreg.home.service.color.dto.ColorDto;
-import org.waldreg.home.service.color.management.DefaultColorManager;
-import org.waldreg.home.service.spi.ColorRepository;
+import org.waldreg.home.color.management.ColorManager;
+import org.waldreg.home.color.dto.ColorDto;
+import org.waldreg.home.color.management.DefaultColorManager;
+import org.waldreg.home.spi.ColorRepository;
 
 @ExtendWith(SpringExtension.class)
 @ContextConfiguration(classes = {DefaultColorManager.class})

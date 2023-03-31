@@ -1,4 +1,4 @@
-package org.waldreg.home.service.config;
+package org.waldreg.home.config;
 
 import java.util.List;
 import javax.annotation.PostConstruct;

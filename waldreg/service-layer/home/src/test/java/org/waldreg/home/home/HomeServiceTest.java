@@ -9,10 +9,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
-import org.waldreg.home.service.homecontent.dto.HomeContentDto;
-import org.waldreg.home.service.homecontent.management.DefaultHomeManager;
-import org.waldreg.home.service.homecontent.management.HomeManager;
-import org.waldreg.home.service.spi.HomeRepository;
+import org.waldreg.home.homecontent.dto.HomeContentDto;
+import org.waldreg.home.homecontent.management.DefaultHomeManager;
+import org.waldreg.home.homecontent.management.HomeManager;
+import org.waldreg.home.spi.HomeRepository;
 
 @ExtendWith(SpringExtension.class)
 @ContextConfiguration(classes = {DefaultHomeManager.class})

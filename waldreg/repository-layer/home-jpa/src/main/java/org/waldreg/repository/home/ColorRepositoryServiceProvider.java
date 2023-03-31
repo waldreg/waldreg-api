@@ -4,8 +4,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 import org.waldreg.domain.home.ApplicationColor;
-import org.waldreg.home.service.color.dto.ColorDto;
-import org.waldreg.home.service.spi.ColorRepository;
+import org.waldreg.home.color.dto.ColorDto;
+import org.waldreg.home.spi.ColorRepository;
 import org.waldreg.repository.home.repository.ColorJpaRepository;
 
 @Repository

@@ -1,6 +1,6 @@
-package org.waldreg.home.service.color.management;
+package org.waldreg.home.color.management;
 
-import org.waldreg.home.service.color.dto.ColorDto;
+import org.waldreg.home.color.dto.ColorDto;
 
 public interface ColorManager{
 

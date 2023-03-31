@@ -1,4 +1,4 @@
-package org.waldreg.home.service.color.dto;
+package org.waldreg.home.color.dto;
 
 public final class ColorDto{
 

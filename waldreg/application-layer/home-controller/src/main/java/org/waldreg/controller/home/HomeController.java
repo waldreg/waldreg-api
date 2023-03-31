@@ -16,11 +16,11 @@ import org.waldreg.controller.home.request.ApplicationColorRequest;
 import org.waldreg.controller.home.request.HomeContentRequest;
 import org.waldreg.controller.home.response.ApplicationColorResponse;
 import org.waldreg.controller.home.response.HomeContentResponse;
-import org.waldreg.home.service.color.dto.ColorDto;
-import org.waldreg.home.service.color.management.ColorManager;
-import org.waldreg.home.service.homecontent.dto.HomeContentDto;
-import org.waldreg.home.service.homecontent.management.HomeManager;
-import org.waldreg.home.service.logo.LogoManager;
+import org.waldreg.home.color.dto.ColorDto;
+import org.waldreg.home.color.management.ColorManager;
+import org.waldreg.home.homecontent.dto.HomeContentDto;
+import org.waldreg.home.homecontent.management.HomeManager;
+import org.waldreg.home.logo.management.LogoManager;
 import org.waldreg.token.aop.annotation.Authenticating;
 
 public class HomeController{
