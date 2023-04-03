@@ -77,8 +77,8 @@ public class HomeAcceptanceTest{
     void UPDATE_APPLICATION_COLOR_SUCCESS_TEST() throws Exception{
         //given
         String adminToken = AuthenticationAcceptanceTestHelper.getAdminToken(mvc, objectMapper);
-        String primaryColor = "#1FDEA2";
-        String backgroundColor = "#1FD5A8";
+        String primaryColor = "#FFFFFF";
+        String backgroundColor = "#FFFFFF";
 
         ApplicationColorRequest request = ApplicationColorRequest.builder()
                 .primaryColor(primaryColor)
@@ -100,8 +100,8 @@ public class HomeAcceptanceTest{
     void INQUIRY_APPLICATION_COLOR_SUCCESS_TEST() throws Exception{
         //given
         String adminToken = AuthenticationAcceptanceTestHelper.getAdminToken(mvc, objectMapper);
-        String primaryColor = "#1FDEA2";
-        String backgroundColor = "#1FD5A8";
+        String primaryColor = "#FFFFFF";
+        String backgroundColor = "#FFFFFF";
         ApplicationColorRequest request = ApplicationColorRequest.builder()
                 .primaryColor(primaryColor)
                 .backgroundColor(backgroundColor)

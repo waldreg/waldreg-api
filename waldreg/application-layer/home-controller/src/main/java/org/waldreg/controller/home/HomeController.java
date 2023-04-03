@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 import org.stage.xss.core.meta.Xss;
 import org.stage.xss.core.meta.XssFiltering;
@@ -23,6 +24,7 @@ import org.waldreg.home.homecontent.management.HomeManager;
 import org.waldreg.home.logo.management.LogoManager;
 import org.waldreg.token.aop.annotation.Authenticating;
 
+@RestController
 public class HomeController{
 
     private final HomeManager homeManager;
@@ -41,7 +43,7 @@ public class HomeController{
 
     @XssFiltering
     @Authenticating
-    @PermissionVerifying("")
+    @PermissionVerifying("Home Update manager")
     @PostMapping(value = "/application/home")
     public void updateHomeContent(@Xss("json") @RequestBody @Validated HomeContentRequest homeContentRequest){
         HomeContentDto homeContentDto = controllerHomeMapper.HomeContentRequestToHomeContentDto(homeContentRequest);
@@ -57,7 +59,7 @@ public class HomeController{
 
     @XssFiltering
     @Authenticating
-    @PermissionVerifying("")
+    @PermissionVerifying("Home Update manager")
     @PostMapping(value = "/application/setting/color")
     public void updateApplicationColor(@Xss("json") @RequestBody @Validated ApplicationColorRequest applicationColorRequest){
         ColorDto colorDto = controllerHomeMapper.colorRequestToApplicationColorDto(applicationColorRequest);
@@ -72,7 +74,7 @@ public class HomeController{
     }
 
     @Authenticating
-    @PermissionVerifying("")
+    @PermissionVerifying("Home Update manager")
     @PostMapping(value = "/application/setting/logo")
     public void updateLogo(@RequestPart(value = "logo")MultipartFile file){
         logoManager.updateLogo(file);

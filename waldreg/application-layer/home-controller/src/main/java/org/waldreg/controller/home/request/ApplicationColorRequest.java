@@ -6,10 +6,10 @@ import javax.validation.constraints.Pattern;
 public final class ApplicationColorRequest{
 
     @JsonProperty("primary_color")
-    @Pattern(regexp = "/#?([A-Fa-f0-9]){3}(([A-Fa-f0-9]){3})?/", message = "Invalid Color hex code \\”12345678910\\”")
+    @Pattern(regexp = "^#([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})$", message = "Invalid Color hex code")
     private String primaryColor;
     @JsonProperty("background_color")
-    @Pattern(regexp = "/#?([A-Fa-f0-9]){3}(([A-Fa-f0-9]){3})?/", message = "Invalid Color hex code \\”12345678910\\”")
+    @Pattern(regexp = "^#([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})$", message = "Invalid Color hex code")
     private String backgroundColor;
 
     public ApplicationColorRequest(){}
