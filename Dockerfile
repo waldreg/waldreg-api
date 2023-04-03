@@ -11,5 +11,8 @@ RUN wget https://github.com/jwilder/dockerize/releases/download/$DOCKERIZE_VERSI
 ARG JAR_FILE=./*-SNAPSHOT.jar
 COPY ${JAR_FILE} waldreg-api.jar
 RUN ["mkdir", "/file"]
+RUN ["mkdir", "/logo"]
+ARG LOGO=./logo.svg
+COPY ${LOGO} /logo/logo.svg
 ENTRYPOINT ["dockerize", "-wait", "tcp://database:3306", "-timeout", "20s"]
 CMD ["java", "-jar", "/waldreg-api.jar"]

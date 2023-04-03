@@ -9,7 +9,7 @@ targetCompatibility = '11'
 
 group 'org.waldreg'
 
-version '0.5.5-SNAPSHOT'
+version '0.6.0-SNAPSHOT'
 
 jar {
     enabled = false;
@@ -32,6 +32,7 @@ dependencies {
     implementation project(':application-layer:teambuilding-controller')
     implementation project(':application-layer:socket-plugin')
     implementation project(':service-layer:attendance')
+    implementation project(':application-layer:home-controller')
 
     implementation 'org.springframework.boot:spring-boot-starter'
     implementation 'org.springframework.boot:spring-boot-starter-web'

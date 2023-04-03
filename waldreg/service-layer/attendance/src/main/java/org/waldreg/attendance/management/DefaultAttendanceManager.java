@@ -22,7 +22,7 @@ import org.waldreg.attendance.valid.AttendanceTargetValidable;
 @Service
 public class DefaultAttendanceManager implements AttendanceManager, AttendanceTargetValidable{
 
-    private static final int MAXIMUM_DIFFERENCE_BETWEEN_DAY = 60;
+    private static final int MAXIMUM_DIFFERENCE_BETWEEN_DAY = 10000;
     private final UserExistChecker userExistChecker;
     private final AttendanceRepository attendanceRepository;
     private final AttendanceDateValidator attendanceDateValidator;
