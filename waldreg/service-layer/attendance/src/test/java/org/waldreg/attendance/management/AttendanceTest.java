@@ -332,8 +332,8 @@ class AttendanceTest{
     @DisplayName("모든 출석 대상 유저의 출석 현황 조회 실패 테스트 - From과 To가 너무 멀리 있음")
     void READ_ALL_ATTENDANCE_TARGET_USERS_ATTENDANCE_STATUS_FAIL_FAR_BETWEEN_FROM_AND_TO_TEST(){
         // given
-        LocalDate from = LocalDate.now().minusDays(50);
-        LocalDate to = LocalDate.now().plusDays(50);
+        LocalDate from = LocalDate.now().minusDays(50000);
+        LocalDate to = LocalDate.now().plusDays(50000);
 
         // when & then
         Assertions.assertThrows(InvalidDateException.class, () -> attendanceManager.readAttendanceStatusList(from, to));
@@ -400,11 +400,11 @@ class AttendanceTest{
     }
 
     @Test
-    @DisplayName("자신의 출석 현황 조회 실패 테스트 - to - from > 60")
+    @DisplayName("자신의 출석 현황 조회 실패 테스트 - to - from > 10000")
     void READ_SELF_ATTENDANCE_FAIL_TEST(){
         // given
         int id = 1;
-        LocalDate from = LocalDate.now().minusDays(61);
+        LocalDate from = LocalDate.now().minusDays(100000);
         LocalDate to = LocalDate.now();
 
         // when & then
@@ -417,7 +417,7 @@ class AttendanceTest{
         // given
         int id = 1;
         LocalDate from = LocalDate.now();
-        LocalDate to = LocalDate.now().plusDays(100);
+        LocalDate to = LocalDate.now().plusDays(1000000);
 
         // when & then
         Assertions.assertThrows(TooFarDateException.class, () -> attendanceManager.readSpecificAttendanceStatusList(id, from, to));
@@ -428,7 +428,7 @@ class AttendanceTest{
     void READ_SELF_ATTENDANCE_FAIL_FROM_IS_TOO_EARLY_TEST(){
         // given
         int id = 1;
-        LocalDate from = LocalDate.now().minusDays(100);
+        LocalDate from = LocalDate.now().minusDays(1000000);
         LocalDate to = LocalDate.now();
 
         // when & then

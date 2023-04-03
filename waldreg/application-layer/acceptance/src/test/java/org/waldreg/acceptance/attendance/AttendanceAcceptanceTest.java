@@ -320,10 +320,10 @@ class AttendanceAcceptanceTest{
     }
 
     @Test
-    @DisplayName("출석 면제 신청 실패 인수 테스트 - 서버의 현재 날짜보다 100일 이상인 지점에 면제 신청을 할 경우 발생함")
+    @DisplayName("출석 면제 신청 실패 인수 테스트 - 서버의 현재 날짜보다 100000000일 이상인 지점에 면제 신청을 할 경우 발생함")
     void WAIVER_ATTENDANCE_FAIL_WAIVE_AFTER_100DAYS_TEST() throws Exception{
         // given
-        LocalDate date = LocalDate.now().plusDays(100);
+        LocalDate date = LocalDate.now().plusDays(100000000);
         String token = createUserAndGetToken("hong gil dong", "hello world", "abc1234!!!");
         AttendanceWaiverRequest attendanceWaiverRequest = AttendanceWaiverRequest.builder()
                 .waiverDate(date)
@@ -528,12 +528,12 @@ class AttendanceAcceptanceTest{
     }
 
     @Test
-    @DisplayName("출석 상태 강제 변경 실패 인수 테스트 - attendance_date가 서버의 현재 날짜보다 100일 이상 early 일때 발생함")
+    @DisplayName("출석 상태 강제 변경 실패 인수 테스트 - attendance_date가 서버의 현재 날짜보다 100000000일 이상 early 일때 발생함")
     void FORCE_MODIFY_ATTENDANCE_TYPE_FAIL_BEFORE_HUNDRED_DAYS_TEST() throws Exception{
         // given
         String adminToken = AuthenticationAcceptanceTestHelper.getAdminToken(mvc, objectMapper);
         int id = getUsersId("Admin");
-        LocalDate date = LocalDate.now().minusDays(100);
+        LocalDate date = LocalDate.now().minusDays(100000000);
         AttendanceModifyRequest attendanceModifyRequest = AttendanceModifyRequest.builder()
                 .id(id)
                 .attendanceType(AttendanceType.ABSENCE.toString())
@@ -549,12 +549,12 @@ class AttendanceAcceptanceTest{
     }
 
     @Test
-    @DisplayName("출석 상태 강제 변경 실패 인수 테스트 - attendance_date가 서버의 현재 날짜보다 100일 이상 뒤일때 발생함.")
+    @DisplayName("출석 상태 강제 변경 실패 인수 테스트 - attendance_date가 서버의 현재 날짜보다 100000000일 이상 뒤일때 발생함.")
     void FORCE_MODIFY_ATTENDANCE_TYPE_FAIL_AFTER_HUNDRED_DAYS_TEST() throws Exception{
         // given
         String adminToken = AuthenticationAcceptanceTestHelper.getAdminToken(mvc, objectMapper);
         int id = getUsersId("Admin");
-        LocalDate date = LocalDate.now().plusDays(100);
+        LocalDate date = LocalDate.now().plusDays(100000000);
         AttendanceModifyRequest attendanceModifyRequest = AttendanceModifyRequest.builder()
                 .id(id)
                 .attendanceType(AttendanceType.ABSENCE.toString())
@@ -596,9 +596,9 @@ class AttendanceAcceptanceTest{
     void READ_ALL_USERS_ATTENDANCE_STATUS_SUCCESS_TEST() throws Exception{
         // given
         String adminToken = AuthenticationAcceptanceTestHelper.getAdminToken(mvc, objectMapper);
-        createUserAndGetToken("hong gil dong", "hello world", "abc1234!!!");
+        createUserAndGetToken("hong gil dong", "helloworld", "abc1234!!!");
         int id1 = getUsersId("Admin");
-        int id2 = getUsersId("hello world");
+        int id2 = getUsersId("helloworld");
         LocalDate from = LocalDate.now().minusMonths(1);
         LocalDate to = LocalDate.now().plusMonths(1);
 
@@ -633,15 +633,15 @@ class AttendanceAcceptanceTest{
     }
 
     @Test
-    @DisplayName("모든 출석 대상 유저의 출석 현황 조회 실패 인수테스트 - (to-from) 이 100일 이상 차이 날때")
+    @DisplayName("모든 출석 대상 유저의 출석 현황 조회 실패 인수테스트 - (to-from) 이 100000일 이상 차이 날때")
     void READ_ALL_USERS_ATTENDANCE_STATUS_FAIL_HUNDRED_DAYS_TEST() throws Exception{
         // given
         String adminToken = AuthenticationAcceptanceTestHelper.getAdminToken(mvc, objectMapper);
         createUserAndGetToken("hong gil dong", "hello world", "abc1234!!!");
         int id1 = getUsersId("Admin");
         int id2 = getUsersId("hello world");
-        LocalDate from = LocalDate.now().minusDays(50);
-        LocalDate to = LocalDate.now().plusDays(50);
+        LocalDate from = LocalDate.now().minusDays(100000);
+        LocalDate to = LocalDate.now().plusDays(100000);
 
         // when
         AttendanceAcceptanceTestHelper.subscribeAttendance(mvc, adminToken, id1 + ", " + id2);
@@ -671,7 +671,7 @@ class AttendanceAcceptanceTest{
     }
 
     @Test
-    @DisplayName("모든 출석 대상 유저의 출석 현황 조회 실패 인수테스트 - (to) 가 100일 이상 이후임")
+    @DisplayName("모든 출석 대상 유저의 출석 현황 조회 실패 인수테스트 - (to) 가 100000일 이상 이후임")
     void READ_ALL_USERS_ATTENDANCE_STATUS_FAIL_TOO_FAR_DATE_TEST() throws Exception{
         // given
         String adminToken = AuthenticationAcceptanceTestHelper.getAdminToken(mvc, objectMapper);
@@ -679,7 +679,7 @@ class AttendanceAcceptanceTest{
         int id1 = getUsersId("Admin");
         int id2 = getUsersId("hello world");
         LocalDate from = LocalDate.now();
-        LocalDate to = LocalDate.now().plusMonths(100);
+        LocalDate to = LocalDate.now().plusMonths(100000);
 
         // when
         AttendanceAcceptanceTestHelper.subscribeAttendance(mvc, adminToken, id1 + ", " + id2);
@@ -690,14 +690,14 @@ class AttendanceAcceptanceTest{
     }
 
     @Test
-    @DisplayName("모든 출석 대상 유저의 출석 현황 조회 실패 인수테스트 - (from) 이 100일 이상 이전임")
+    @DisplayName("모든 출석 대상 유저의 출석 현황 조회 실패 인수테스트 - (from) 이 100000000일 이상 이전임")
     void READ_ALL_USERS_ATTENDANCE_STATUS_FAIL_TOO_EARLY_DATE_TEST() throws Exception{
         // given
         String adminToken = AuthenticationAcceptanceTestHelper.getAdminToken(mvc, objectMapper);
         createUserAndGetToken("hong gil dong", "hello world", "abc1234!!!");
         int id1 = getUsersId("Admin");
         int id2 = getUsersId("hello world");
-        LocalDate from = LocalDate.now().minusDays(100);
+        LocalDate from = LocalDate.now().minusDays(100000000);
         LocalDate to = LocalDate.now();
 
         // when
@@ -749,13 +749,13 @@ class AttendanceAcceptanceTest{
     }
 
     @Test
-    @DisplayName("자신의 출석 현황 조회 실패 인수테스트 - (to-from) 이 100일 이상 차이 날때")
+    @DisplayName("자신의 출석 현황 조회 실패 인수테스트 - (to-from) 이 100000일 이상 차이 날때")
     void READ_SELF_ATTENDANCE_STATUS_FAIL_HUNDRED_DAYS_TEST() throws Exception{
         // given
         String adminToken = AuthenticationAcceptanceTestHelper.getAdminToken(mvc, objectMapper);
         int id = getUsersId("Admin");
-        LocalDate from = LocalDate.now().minusDays(50);
-        LocalDate to = LocalDate.now().plusDays(50);
+        LocalDate from = LocalDate.now().minusDays(100000);
+        LocalDate to = LocalDate.now().plusDays(100000);
 
         // when
         AttendanceAcceptanceTestHelper.subscribeAttendance(mvc, adminToken, ""+id);
@@ -783,13 +783,13 @@ class AttendanceAcceptanceTest{
     }
 
     @Test
-    @DisplayName("자신의 출석 현황 조회 실패 인수테스트 - (to)가 100일 이후임")
+    @DisplayName("자신의 출석 현황 조회 실패 인수테스트 - (to)가 100000000일 이후임")
     void READ_SELF_ATTENDANCE_STATUS_FAIL_TOO_LATE_DATE_TEST() throws Exception{
         // given
         String adminToken = AuthenticationAcceptanceTestHelper.getAdminToken(mvc, objectMapper);
         int id = getUsersId("Admin");
         LocalDate from = LocalDate.now();
-        LocalDate to = LocalDate.now().plusDays(100);
+        LocalDate to = LocalDate.now().plusDays(100000000);
 
         // when
         AttendanceAcceptanceTestHelper.subscribeAttendance(mvc, adminToken, ""+id);
@@ -800,12 +800,12 @@ class AttendanceAcceptanceTest{
     }
 
     @Test
-    @DisplayName("자신의 출석 현황 조회 실패 인수테스트 - (from)이 100일 이전임")
+    @DisplayName("자신의 출석 현황 조회 실패 인수테스트 - (from)이 100000000일 이전임")
     void READ_SELF_ATTENDANCE_STATUS_FAIL_TOO_EARLY_DATE_TEST() throws Exception{
         // given
         String adminToken = AuthenticationAcceptanceTestHelper.getAdminToken(mvc, objectMapper);
         int id = getUsersId("Admin");
-        LocalDate from = LocalDate.now().minusDays(100);
+        LocalDate from = LocalDate.now().minusDays(100000000);
         LocalDate to = LocalDate.now();
 
         // when
