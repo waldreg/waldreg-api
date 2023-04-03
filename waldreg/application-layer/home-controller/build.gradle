@@ -24,7 +24,6 @@ dependencyManagement {
 }
 
 dependencies {
-
     implementation project(':service-layer:user')
     implementation project(':repository-layer:user-jpa')
     implementation project(':repository-layer:joiningpool-jpa')
@@ -33,6 +32,7 @@ dependencies {
     implementation project(':core-layer:template')
     implementation project(':service-layer:auth')
     implementation project(':service-layer:home')
+    implementation project(':repository-layer:home-jpa')
 
     implementation 'org.springframework.boot:spring-boot-starter'
     implementation 'org.springframework.boot:spring-boot-starter-web'
