@@ -31,8 +31,7 @@ public class DefaultLogoManager implements LogoManager{
 
     private void deleteOriginalFile(){
         try{
-            Path directoryPath = Paths.get(path);
-            Path existSource = Files.walk(directoryPath).filter(path -> !Files.isDirectory(path)).findFirst().get();
+            Path existSource = Files.walk(Paths.get(path)).filter(path -> !Files.isDirectory(path)).findFirst().get();
             Files.delete(existSource);
         } catch (IOException e){
             throw new IllegalStateException("Failed to delete logo file");

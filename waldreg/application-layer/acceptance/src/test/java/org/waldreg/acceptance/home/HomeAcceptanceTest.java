@@ -128,7 +128,7 @@ public class HomeAcceptanceTest{
 
         String logoName = "TestLogo.svg";
         String logoContentType = "image/svg+xml";
-        String logoPath = "./src/test/java/org/waldreg/acceptance/home/logo.svg";
+        String logoPath = "./src/test/java/org/waldreg/acceptance/home/TestLogo.svg";
         MockMultipartFile logoFile = new MockMultipartFile("logo", logoName, logoContentType, new FileInputStream(logoPath));
         //when
         ResultActions result = HomeAcceptanceTestHelper.updateLogo(mvc, adminToken, logoFile);
@@ -145,13 +145,14 @@ public class HomeAcceptanceTest{
         //given
         String adminToken = AuthenticationAcceptanceTestHelper.getAdminToken(mvc, objectMapper);
         String logoName = "TestLogo.svg";
-        String logoContentType = "image/svg+xml";
-        String logoPath = "./src/test/java/org/waldreg/acceptance/home/logo.svg";
+        String logoContentType = "image/svg";
+        String logoPath = "./src/test/java/org/waldreg/acceptance/home/TestLogo.svg";
         MockMultipartFile logoFile = new MockMultipartFile("logo", logoName, logoContentType, new FileInputStream(logoPath));
         HomeAcceptanceTestHelper.updateLogo(mvc, adminToken, logoFile);
         String url = "logo.svg";
+
         //when
-        ResultActions result = HomeAcceptanceTestHelper.inquiryLogo(mvc,adminToken,"/logo/" + url );
+        ResultActions result = HomeAcceptanceTestHelper.inquiryLogo(mvc,adminToken,"/application/setting/logo");
 
         //then
         result.andExpectAll(
