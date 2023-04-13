@@ -30,6 +30,7 @@ jobs:
         distribution: 'temurin'
     - name: Acceptance test
       run:
+        waldreg/gradle init
         waldreg/gradlew build
       
       
