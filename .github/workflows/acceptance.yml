@@ -30,7 +30,8 @@ jobs:
         distribution: 'temurin'
     - name: Acceptance test
       run:
-        waldreg/gradlew --info test
+        cd waldreg
+        ./gradlew test
       
       
       
