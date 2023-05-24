@@ -29,18 +29,16 @@ public class BoardRepositoryServiceProvider implements BoardRepository{
     private final JpaCategoryRepository jpaCategoryRepository;
     private final JpaReactionRepository jpaReactionRepository;
     private final FileNameCommander fileNameCommander;
-    private final JpaFileNameRepository jpaFileNameRepository;
     private final BoardCommander boardCommander;
 
     @Autowired
-    public BoardRepositoryServiceProvider(BoardRepositoryMapper boardRepositoryMapper, JpaBoardRepository jpaBoardRepository, JpaUserRepository jpaUserRepository, JpaCategoryRepository jpaCategoryRepository, JpaReactionRepository jpaReactionRepository, FileNameCommander fileNameCommander, JpaFileNameRepository jpaFileNameRepository, BoardCommander boardCommander){
+    public BoardRepositoryServiceProvider(BoardRepositoryMapper boardRepositoryMapper, JpaBoardRepository jpaBoardRepository, JpaUserRepository jpaUserRepository, JpaCategoryRepository jpaCategoryRepository, JpaReactionRepository jpaReactionRepository, FileNameCommander fileNameCommander, BoardCommander boardCommander){
         this.boardRepositoryMapper = boardRepositoryMapper;
         this.jpaBoardRepository = jpaBoardRepository;
         this.jpaUserRepository = jpaUserRepository;
         this.jpaCategoryRepository = jpaCategoryRepository;
         this.jpaReactionRepository = jpaReactionRepository;
         this.fileNameCommander = fileNameCommander;
-        this.jpaFileNameRepository = jpaFileNameRepository;
         this.boardCommander = boardCommander;
     }
 
@@ -52,27 +50,9 @@ public class BoardRepositoryServiceProvider implements BoardRepository{
         board.setCategory(category);
         User user = getUserById(boardDto.getUserDto().getId());
         board.setUser(user);
-        List<FileName> fileNameList = getFileListByNameList(boardDto.getFileUrls());
-        board.setFilePathList(fileNameList);
-        List<FileName> imageNameList = getFileListByNameList(boardDto.getImageUrls());
-        board.setImagePathList(imageNameList);
         jpaBoardRepository.save(board);
         board.setReactions(setDefaultReaction(board));
         return boardRepositoryMapper.boardDomainToBoardDto(board);
-    }
-
-    private List<FileName> getFileListByNameList(List<String> fileNameList){
-        List<FileName> fileList = new ArrayList<>();
-        for (String name : fileNameList){
-            fileList.add(getFileByName(name));
-        }
-        return fileList;
-    }
-
-    private FileName getFileByName(String filename){
-        return jpaFileNameRepository.getFileNameByOrigin(filename).orElseThrow(
-                () -> {throw new IllegalStateException("Cannot find file name \"" + filename + "\"");}
-        );
     }
 
     private User getUserById(int id){

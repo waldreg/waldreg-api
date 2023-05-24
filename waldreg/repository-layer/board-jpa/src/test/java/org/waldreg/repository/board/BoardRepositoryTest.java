@@ -17,7 +17,6 @@ import org.waldreg.board.board.spi.BoardRepository;
 import org.waldreg.board.dto.BoardDto;
 import org.waldreg.domain.board.Board;
 import org.waldreg.domain.board.category.Category;
-import org.waldreg.domain.board.file.FileName;
 import org.waldreg.domain.character.Character;
 import org.waldreg.domain.user.User;
 import org.waldreg.repository.board.mapper.BoardRepositoryMapper;
@@ -27,7 +26,6 @@ import org.waldreg.repository.board.mapper.ReactionRepositoryMapper;
 import org.waldreg.repository.board.repository.JpaBoardRepository;
 import org.waldreg.repository.board.repository.JpaCategoryRepository;
 import org.waldreg.repository.board.repository.JpaCharacterRepository;
-import org.waldreg.repository.board.repository.JpaFileNameRepository;
 import org.waldreg.repository.board.repository.JpaReactionRepository;
 import org.waldreg.repository.board.repository.JpaReactionUserRepository;
 import org.waldreg.repository.board.repository.JpaUserRepository;
@@ -52,8 +50,6 @@ class BoardRepositoryTest{
     @Autowired
     private JpaCategoryRepository jpaCategoryRepository;
     @Autowired
-    private JpaFileNameRepository jpaFileNameRepository;
-    @Autowired
     private BoardRepositoryMapper boardRepositoryMapper;
     @Autowired
     private EntityManager entityManager;
@@ -61,7 +57,6 @@ class BoardRepositoryTest{
     @BeforeEach
     @AfterEach
     private void INIT(){
-        jpaFileNameRepository.deleteAll();
         jpaBoardRepository.deleteAll();
         jpaUserRepository.deleteAll();
         jpaCategoryRepository.deleteAll();
@@ -406,13 +401,10 @@ class BoardRepositoryTest{
                 .categoryName("cate2")
                 .build();
 
-        FileName fileName = FileName.builder().origin("uuid.pptx").uuid("abasdf-adfa.pptx").build();
-        FileName imageName = FileName.builder().origin("uuid.png").uuid("abasdf-adfa.png").build();
-
-        List<FileName> filePathList = new ArrayList<>();
-        filePathList.add(fileName);
-        List<FileName> imagePathList = new ArrayList<>();
-        filePathList.add(imageName);
+        List<String> filePathList = new ArrayList<>();
+        filePathList.add("uuid.pptx");
+        List<String> imagePathList = new ArrayList<>();
+        imagePathList.add("uuid.png");
 
         List<Board> boardList = new ArrayList<>();
 
@@ -467,8 +459,6 @@ class BoardRepositoryTest{
                               .build()
         );
 
-        jpaFileNameRepository.save(fileName);
-        jpaFileNameRepository.save(imageName);
         jpaCharacterRepository.save(character);
         jpaUserRepository.save(user);
         jpaUserRepository.save(user2);

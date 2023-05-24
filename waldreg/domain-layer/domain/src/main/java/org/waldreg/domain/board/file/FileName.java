@@ -1,18 +1,13 @@
 package org.waldreg.domain.board.file;
 
 import javax.persistence.Column;
-import javax.persistence.Embeddable;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
 import javax.persistence.Table;
-import org.waldreg.domain.board.Board;
 
-@Embeddable
+@Entity
 @Table(name = "FILENAME")
 public class FileName{
 

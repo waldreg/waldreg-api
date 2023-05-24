@@ -53,19 +53,15 @@ public final class Board{
     @Column(name = "BOARD_LAST_MODIFIED_AT", columnDefinition = "TIMESTAMP", nullable = false)
     private LocalDateTime lastModifiedAt;
 
-    @ElementCollection
-    @CollectionTable(
-            name = "FILENAME", joinColumns =
-    @JoinColumn(name = "FILENAME_ID")
-    )
-    private List<FileName> imagePathList;
+    @Column(name = "BOARD_IMAGE_PATH_LIST")
+    @CollectionTable(name = "IMAGE_PATH_LIST")
+    @ElementCollection(fetch = FetchType.LAZY)
+    private List<String> imagePathList;
 
-    @ElementCollection
-    @CollectionTable(
-            name = "FILENAME", joinColumns =
-    @JoinColumn(name = "FILENAME_ID")
-    )
-    private List<FileName> filePathList;
+    @Column(name = "BOARD_FILE_PATH_LIST")
+    @CollectionTable(name = "FILE_PATH_LIST")
+    @ElementCollection(fetch = FetchType.LAZY)
+    private List<String> filePathList;
 
     @OneToMany(mappedBy = "board", orphanRemoval = true, fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private List<Reaction> reactionList;
@@ -124,11 +120,11 @@ public final class Board{
         return lastModifiedAt;
     }
 
-    public List<FileName> getImagePathList(){
+    public List<String> getImagePathList(){
         return imagePathList;
     }
 
-    public List<FileName> getFilePathList(){
+    public List<String> getFilePathList(){
         return filePathList;
     }
 
@@ -170,11 +166,11 @@ public final class Board{
         this.reactionList = reactionList;
     }
 
-    public void setImagePathList(List<FileName> imagePathList){
+    public void setImagePathList(List<String> imagePathList){
         this.imagePathList = imagePathList;
     }
 
-    public void setFilePathList(List<FileName> filePathList){
+    public void setFilePathList(List<String> filePathList){
         this.filePathList = filePathList;
     }
 
@@ -194,8 +190,8 @@ public final class Board{
         private User user;
         private LocalDateTime createdAt;
         private LocalDateTime lastModifiedAt;
-        private List<FileName> imagePathList;
-        private List<FileName> filePathList;
+        private List<String> imagePathList;
+        private List<String> filePathList;
         private List<Reaction> reactionList;
         private List<Comment> commentList;
         private Integer views;
@@ -239,12 +235,12 @@ public final class Board{
         }
 
 
-        public Builder imagePathList(List<FileName> imagePathList){
+        public Builder imagePathList(List<String> imagePathList){
             this.imagePathList = imagePathList;
             return this;
         }
 
-        public Builder filePathList(List<FileName> filePathList){
+        public Builder filePathList(List<String> filePathList){
             this.filePathList = filePathList;
             return this;
         }
