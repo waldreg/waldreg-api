@@ -6,6 +6,7 @@ import org.springframework.stereotype.Component;
 import org.waldreg.board.dto.BoardDto;
 import org.waldreg.board.dto.UserDto;
 import org.waldreg.domain.board.Board;
+import org.waldreg.domain.board.file.FileName;
 import org.waldreg.domain.user.User;
 
 @Component
@@ -23,8 +24,6 @@ public class BoardRepositoryMapper{
         return Board.builder()
                 .title(boardDto.getTitle())
                 .content(boardDto.getContent())
-                .filePathList(boardDto.getFileUrls())
-                .imagePathList(boardDto.getImageUrls())
                 .build();
     }
 
@@ -35,6 +34,7 @@ public class BoardRepositoryMapper{
         }
         return boardDtoList;
     }
+
     public BoardDto boardDomainToBoardDto(Board board){
         return BoardDto.builder()
                 .id(board.getId())
@@ -44,12 +44,20 @@ public class BoardRepositoryMapper{
                 .userDto(userToUserDto(board.getUser()))
                 .createdAt(board.getCreatedAt())
                 .lastModifiedAt(board.getLastModifiedAt())
-                .fileUrls(board.getFilePathList())
-                .imageUrls(board.getImagePathList())
-                .reactions(reactionRepositoryMapper.reactionDomainListToReactionDto(board.getReactionList(),board.getId()))
+                .fileUrls(getFileNameOriginList(board.getFilePathList()))
+                .imageUrls(getFileNameOriginList(board.getImagePathList()))
+                .reactions(reactionRepositoryMapper.reactionDomainListToReactionDto(board.getReactionList(), board.getId()))
                 .commentList(commentRepositoryMapper.commentDomainListToCommentDtoList(board.getCommentList()))
                 .views(board.getViews())
                 .build();
+    }
+
+    public List<String> getFileNameOriginList(List<FileName> fileNameList){
+        List<String> stringList = new ArrayList<>();
+        for (FileName fileName : fileNameList){
+            stringList.add(fileName.getOrigin());
+        }
+        return stringList;
     }
 
     public UserDto userToUserDto(User user){

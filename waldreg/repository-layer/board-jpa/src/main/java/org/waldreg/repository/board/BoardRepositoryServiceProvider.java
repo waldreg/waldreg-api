@@ -10,11 +10,13 @@ import org.waldreg.board.dto.BoardDto;
 import org.waldreg.board.dto.BoardServiceReactionType;
 import org.waldreg.domain.board.Board;
 import org.waldreg.domain.board.category.Category;
+import org.waldreg.domain.board.file.FileName;
 import org.waldreg.domain.board.reaction.Reaction;
 import org.waldreg.domain.user.User;
 import org.waldreg.repository.board.mapper.BoardRepositoryMapper;
 import org.waldreg.repository.board.repository.JpaBoardRepository;
 import org.waldreg.repository.board.repository.JpaCategoryRepository;
+import org.waldreg.repository.board.repository.JpaFileNameRepository;
 import org.waldreg.repository.board.repository.JpaReactionRepository;
 import org.waldreg.repository.board.repository.JpaUserRepository;
 
@@ -26,16 +28,19 @@ public class BoardRepositoryServiceProvider implements BoardRepository{
     private final JpaUserRepository jpaUserRepository;
     private final JpaCategoryRepository jpaCategoryRepository;
     private final JpaReactionRepository jpaReactionRepository;
-
+    private final FileNameCommander fileNameCommander;
+    private final JpaFileNameRepository jpaFileNameRepository;
     private final BoardCommander boardCommander;
 
     @Autowired
-    public BoardRepositoryServiceProvider(BoardRepositoryMapper boardRepositoryMapper, JpaBoardRepository jpaBoardRepository, JpaUserRepository jpaUserRepository, JpaCategoryRepository jpaCategoryRepository, JpaReactionRepository jpaReactionRepository, BoardCommander boardCommander){
+    public BoardRepositoryServiceProvider(BoardRepositoryMapper boardRepositoryMapper, JpaBoardRepository jpaBoardRepository, JpaUserRepository jpaUserRepository, JpaCategoryRepository jpaCategoryRepository, JpaReactionRepository jpaReactionRepository, FileNameCommander fileNameCommander, JpaFileNameRepository jpaFileNameRepository, BoardCommander boardCommander){
         this.boardRepositoryMapper = boardRepositoryMapper;
         this.jpaBoardRepository = jpaBoardRepository;
         this.jpaUserRepository = jpaUserRepository;
         this.jpaCategoryRepository = jpaCategoryRepository;
         this.jpaReactionRepository = jpaReactionRepository;
+        this.fileNameCommander = fileNameCommander;
+        this.jpaFileNameRepository = jpaFileNameRepository;
         this.boardCommander = boardCommander;
     }
 
@@ -44,12 +49,30 @@ public class BoardRepositoryServiceProvider implements BoardRepository{
     public BoardDto createBoard(BoardDto boardDto){
         Board board = boardRepositoryMapper.boardDtoToBoardDomain(boardDto);
         Category category = getCategoryById(boardDto.getCategoryId());
+        board.setCategory(category);
         User user = getUserById(boardDto.getUserDto().getId());
         board.setUser(user);
-        board.setCategory(category);
+        List<FileName> fileNameList = getFileListByNameList(boardDto.getFileUrls());
+        board.setFilePathList(fileNameList);
+        List<FileName> imageNameList = getFileListByNameList(boardDto.getImageUrls());
+        board.setImagePathList(imageNameList);
         jpaBoardRepository.save(board);
         board.setReactions(setDefaultReaction(board));
         return boardRepositoryMapper.boardDomainToBoardDto(board);
+    }
+
+    private List<FileName> getFileListByNameList(List<String> fileNameList){
+        List<FileName> fileList = new ArrayList<>();
+        for (String name : fileNameList){
+            fileList.add(getFileByName(name));
+        }
+        return fileList;
+    }
+
+    private FileName getFileByName(String filename){
+        return jpaFileNameRepository.getFileNameByOrigin(filename).orElseThrow(
+                () -> {throw new IllegalStateException("Cannot find file name \"" + filename + "\"");}
+        );
     }
 
     private User getUserById(int id){
@@ -97,7 +120,7 @@ public class BoardRepositoryServiceProvider implements BoardRepository{
     @Override
     @Transactional(readOnly = true)
     public List<BoardDto> inquiryAllBoard(int from, int to){
-        List<Board> boardList = boardCommander.inquiryAllBoard(from,to);
+        List<Board> boardList = boardCommander.inquiryAllBoard(from, to);
         return boardRepositoryMapper.boardDomainListToBoardDtoList(boardList);
     }
 

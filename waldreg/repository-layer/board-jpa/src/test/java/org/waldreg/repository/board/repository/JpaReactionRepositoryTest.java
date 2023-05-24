@@ -16,6 +16,7 @@ import org.springframework.util.Assert;
 import org.waldreg.board.reaction.spi.ReactionInBoardRepository;
 import org.waldreg.domain.board.Board;
 import org.waldreg.domain.board.category.Category;
+import org.waldreg.domain.board.file.FileName;
 import org.waldreg.domain.board.reaction.Reaction;
 import org.waldreg.domain.board.reaction.ReactionUser;
 import org.waldreg.domain.character.Character;
@@ -42,6 +43,8 @@ public class JpaReactionRepositoryTest{
 
     @Autowired
     private JpaBoardRepository jpaBoardRepository;
+    @Autowired
+    private JpaFileNameRepository jpaFileNameRepository;
 
     @Autowired
     private EntityManager entityManager;
@@ -49,6 +52,7 @@ public class JpaReactionRepositoryTest{
     @BeforeEach
     @AfterEach
     public void INIT_BOARD(){
+        jpaFileNameRepository.deleteAll();
         jpaReactionUserRepository.deleteAll();
         jpaReactionRepository.deleteAll();
         jpaBoardRepository.deleteAll();
@@ -257,10 +261,13 @@ public class JpaReactionRepositoryTest{
                 .categoryName("cate1")
                 .build();
 
-        List<String> filePathList = new ArrayList<>();
-        filePathList.add("uuid.pptx");
-        List<String> imagePathList = new ArrayList<>();
-        imagePathList.add("uuid.png");
+        FileName fileName = FileName.builder().origin("uuid.pptx").uuid("abasdf-adfa.pptx").build();
+        FileName imageName = FileName.builder().origin("uuid.png").uuid("abasdf-adfa.png").build();
+
+        List<FileName> filePathList = new ArrayList<>();
+        filePathList.add(fileName);
+        List<FileName> imagePathList = new ArrayList<>();
+        filePathList.add(imageName);
         Board board = Board.builder()
                 .title("boardTitle")
                 .content("boardContent")
@@ -270,7 +277,8 @@ public class JpaReactionRepositoryTest{
                 .imagePathList(imagePathList)
                 .filePathList(filePathList)
                 .build();
-
+        jpaFileNameRepository.save(fileName);
+        jpaFileNameRepository.save(imageName);
         jpaCharacterRepository.save(character);
         jpaUserRepository.save(user);
         jpaCategoryRepository.save(category);

@@ -18,6 +18,7 @@ import org.waldreg.board.dto.CommentDto;
 import org.waldreg.board.dto.UserDto;
 import org.waldreg.domain.board.Board;
 import org.waldreg.domain.board.category.Category;
+import org.waldreg.domain.board.file.FileName;
 import org.waldreg.domain.character.Character;
 import org.waldreg.domain.user.User;
 import org.waldreg.repository.board.mapper.CommentRepositoryMapper;
@@ -25,6 +26,7 @@ import org.waldreg.repository.board.repository.JpaBoardRepository;
 import org.waldreg.repository.board.repository.JpaCategoryRepository;
 import org.waldreg.repository.board.repository.JpaCharacterRepository;
 import org.waldreg.repository.board.repository.JpaCommentRepository;
+import org.waldreg.repository.board.repository.JpaFileNameRepository;
 import org.waldreg.repository.board.repository.JpaUserRepository;
 
 @DataJpaTest
@@ -48,6 +50,8 @@ public class CommentRepositoryTest{
     @Autowired
     private JpaCharacterRepository jpaCharacterRepository;
     @Autowired
+    private JpaFileNameRepository jpaFileNameRepository;
+    @Autowired
     private CommentCommander commentCommander;
     @Autowired
     private EntityManager entityManager;
@@ -55,6 +59,7 @@ public class CommentRepositoryTest{
     @BeforeEach
     @AfterEach
     private void INIT(){
+        jpaFileNameRepository.deleteAll();
         jpaCommentRepository.deleteAll();
         jpaBoardRepository.deleteAll();
         jpaUserRepository.deleteAll();
@@ -496,10 +501,13 @@ public class CommentRepositoryTest{
                 .categoryName("cate1")
                 .build();
 
-        List<String> filePathList = new ArrayList<>();
-        filePathList.add("uuid.pptx");
-        List<String> imagePathList = new ArrayList<>();
-        imagePathList.add("uuid.png");
+        FileName fileName = FileName.builder().origin("uuid.pptx").uuid("abasdf-adfa.pptx").build();
+        FileName imageName = FileName.builder().origin("uuid.png").uuid("abasdf-adfa.png").build();
+
+        List<FileName> filePathList = new ArrayList<>();
+        filePathList.add(fileName);
+        List<FileName> imagePathList = new ArrayList<>();
+        filePathList.add(imageName);
         Board board = Board.builder()
                 .title("boardTitle")
                 .content("boardContent")
@@ -510,6 +518,8 @@ public class CommentRepositoryTest{
                 .filePathList(filePathList)
                 .build();
 
+        jpaFileNameRepository.save(fileName);
+        jpaFileNameRepository.save(imageName);
         jpaCharacterRepository.save(character);
         jpaUserRepository.save(user);
         jpaCategoryRepository.save(category);

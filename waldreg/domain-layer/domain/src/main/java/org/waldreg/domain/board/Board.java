@@ -18,6 +18,7 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import org.waldreg.domain.board.comment.Comment;
+import org.waldreg.domain.board.file.FileName;
 import org.waldreg.domain.board.reaction.Reaction;
 import org.waldreg.domain.board.category.Category;
 import org.waldreg.domain.user.User;
@@ -52,15 +53,19 @@ public final class Board{
     @Column(name = "BOARD_LAST_MODIFIED_AT", columnDefinition = "TIMESTAMP", nullable = false)
     private LocalDateTime lastModifiedAt;
 
-    @Column(name = "BOARD_IMAGE_PATH_LIST")
-    @CollectionTable(name = "IMAGE_PATH_LIST")
-    @ElementCollection(fetch = FetchType.LAZY)
-    private List<String> imagePathList;
+    @ElementCollection
+    @CollectionTable(
+            name = "FILENAME", joinColumns =
+    @JoinColumn(name = "FILENAME_ID")
+    )
+    private List<FileName> imagePathList;
 
-    @Column(name = "BOARD_FILE_PATH_LIST")
-    @CollectionTable(name = "FILE_PATH_LIST")
-    @ElementCollection(fetch = FetchType.LAZY)
-    private List<String> filePathList;
+    @ElementCollection
+    @CollectionTable(
+            name = "FILENAME", joinColumns =
+    @JoinColumn(name = "FILENAME_ID")
+    )
+    private List<FileName> filePathList;
 
     @OneToMany(mappedBy = "board", orphanRemoval = true, fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private List<Reaction> reactionList;
@@ -119,11 +124,11 @@ public final class Board{
         return lastModifiedAt;
     }
 
-    public List<String> getImagePathList(){
+    public List<FileName> getImagePathList(){
         return imagePathList;
     }
 
-    public List<String> getFilePathList(){
+    public List<FileName> getFilePathList(){
         return filePathList;
     }
 
@@ -165,6 +170,14 @@ public final class Board{
         this.reactionList = reactionList;
     }
 
+    public void setImagePathList(List<FileName> imagePathList){
+        this.imagePathList = imagePathList;
+    }
+
+    public void setFilePathList(List<FileName> filePathList){
+        this.filePathList = filePathList;
+    }
+
     public void setCommentList(List<Comment> commentList){
         this.commentList = commentList;
     }
@@ -181,8 +194,8 @@ public final class Board{
         private User user;
         private LocalDateTime createdAt;
         private LocalDateTime lastModifiedAt;
-        private List<String> imagePathList;
-        private List<String> filePathList;
+        private List<FileName> imagePathList;
+        private List<FileName> filePathList;
         private List<Reaction> reactionList;
         private List<Comment> commentList;
         private Integer views;
@@ -226,12 +239,12 @@ public final class Board{
         }
 
 
-        public Builder imagePathList(List<String> imagePathList){
+        public Builder imagePathList(List<FileName> imagePathList){
             this.imagePathList = imagePathList;
             return this;
         }
 
-        public Builder filePathList(List<String> filePathList){
+        public Builder filePathList(List<FileName> filePathList){
             this.filePathList = filePathList;
             return this;
         }

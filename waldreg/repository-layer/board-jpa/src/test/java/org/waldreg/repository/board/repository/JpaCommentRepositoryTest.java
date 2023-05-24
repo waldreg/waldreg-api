@@ -16,6 +16,7 @@ import org.springframework.test.context.TestPropertySource;
 import org.waldreg.domain.board.Board;
 import org.waldreg.domain.board.category.Category;
 import org.waldreg.domain.board.comment.Comment;
+import org.waldreg.domain.board.file.FileName;
 import org.waldreg.domain.character.Character;
 import org.waldreg.domain.user.User;
 import org.waldreg.repository.board.CommentCommander;
@@ -38,6 +39,8 @@ public class JpaCommentRepositoryTest{
 
     @Autowired
     private JpaBoardRepository jpaBoardRepository;
+    @Autowired
+    private JpaFileNameRepository jpaFileNameRepository;
 
     @Autowired
     private EntityManager entityManager;
@@ -45,6 +48,7 @@ public class JpaCommentRepositoryTest{
     @BeforeEach
     @AfterEach
     public void INIT_BOARD(){
+        jpaFileNameRepository.deleteAll();
         jpaCommentRepository.deleteAll();
         jpaBoardRepository.deleteAll();
         jpaUserRepository.deleteAll();
@@ -249,10 +253,13 @@ public class JpaCommentRepositoryTest{
                 .categoryName("cate1")
                 .build();
 
-        List<String> filePathList = new ArrayList<>();
-        filePathList.add("uuid.pptx");
-        List<String> imagePathList = new ArrayList<>();
-        imagePathList.add("uuid.png");
+        FileName fileName = FileName.builder().origin("uuid.pptx").uuid("abasdf-adfa.pptx").build();
+        FileName imageName = FileName.builder().origin("uuid.png").uuid("abasdf-adfa.png").build();
+
+        List<FileName> filePathList = new ArrayList<>();
+        filePathList.add(fileName);
+        List<FileName> imagePathList = new ArrayList<>();
+        filePathList.add(imageName);
         Board board = Board.builder()
                 .title("boardTitle")
                 .content("boardContent")
@@ -263,6 +270,8 @@ public class JpaCommentRepositoryTest{
                 .filePathList(filePathList)
                 .build();
 
+        jpaFileNameRepository.save(fileName);
+        jpaFileNameRepository.save(imageName);
         jpaCharacterRepository.save(character);
         jpaUserRepository.save(user);
         jpaCategoryRepository.save(category);

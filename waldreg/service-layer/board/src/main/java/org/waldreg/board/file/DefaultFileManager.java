@@ -27,17 +27,19 @@ public class DefaultFileManager implements FileManager{
     private String path;
     private final ExecutorService executorService;
     private final FileData fileData;
+    private final BoardFileNameRepository boardFileNameRepository;
 
     @Autowired
-    public DefaultFileManager(FileData fileData){
+    public DefaultFileManager(FileData fileData, BoardFileNameRepository boardFileNameRepository){
         this.fileData = fileData;
         executorService = Executors.newFixedThreadPool(3);
+        this.boardFileNameRepository = boardFileNameRepository;
     }
 
     @Override
     public void saveFile(MultipartFile multipartFile){
         Callable<String> callable = createCallable(multipartFile);
-        if(isImage(multipartFile)) {
+        if (isImage(multipartFile)){
             fileData.addImageName(executorService.submit(callable));
             return;
         }
@@ -55,9 +57,13 @@ public class DefaultFileManager implements FileManager{
     private NameWithPath createFile(MultipartFile multipartFile){
         try{
             String id = UUID.randomUUID().toString();
+            String origin = getFileName(multipartFile);
+            boardFileNameRepository.saveFileName(origin, id);
+
             Path filePath = Paths.get(getPath(id, multipartFile));
             Path ans = Files.createFile(filePath);
-            String[] fileNameAndMimeType = getFileNameAndMimeType(id, multipartFile);
+
+            String[] fileNameAndMimeType = getFileNameAndMimeType(origin, multipartFile);
             return new NameWithPath(fileNameAndMimeType[0], ans);
         } catch (FileAlreadyExistsException faee){
             return createFile(multipartFile);
@@ -65,6 +71,31 @@ public class DefaultFileManager implements FileManager{
             throw new IllegalStateException("Something went wrong in progress \"createFile()\" cause " + ioe.getMessage());
         }
     }
+
+    private String getFileName(MultipartFile file){
+        String originalFilename = file.getOriginalFilename();
+
+        if (originalFilename == null){
+            return null;
+        }
+
+        // 파일 경로 구분자에 따라서 파일 이름을 추출합니다
+        // Windows: \
+        // Mac: /
+        int lastUnixPos = originalFilename.lastIndexOf('/');
+        int lastWindowsPos = originalFilename.lastIndexOf('\\');
+        int lastIndex = Math.max(lastUnixPos, lastWindowsPos);
+
+        String fileName;
+        if (lastIndex > 0){
+            fileName = originalFilename.substring(lastIndex + 1);
+        } else{
+            fileName = originalFilename;
+        }
+
+        return fileName;
+    }
+
 
     private String getPath(String id, MultipartFile multipartFile){
         return path + getFileNameAndMimeType(id, multipartFile)[0];
@@ -87,7 +118,8 @@ public class DefaultFileManager implements FileManager{
 
     @Override
     public void deleteFile(String target){
-        Callable<Boolean> callable = deleteCallable(target);
+        String uuid = boardFileNameRepository.getUUIDByOrigin(target);
+        Callable<Boolean> callable = deleteCallable(uuid);
         fileData.setIsDeleted(executorService.submit(callable));
     }
 
@@ -105,28 +137,30 @@ public class DefaultFileManager implements FileManager{
     }
 
     @Override
-    public byte[] getFileIntoByteArray(String target){
+    public byte[] getFileIntoByteArray(String origin){
         try{
+            String target = boardFileNameRepository.getUUIDByOrigin(origin);
             Path existSource = Paths.get(getPath(target));
             throwIfFileDoesNotExist(existSource, target);
             return Files.readAllBytes(existSource);
-        } catch(InvalidPathException ipe){
+        } catch (InvalidPathException ipe){
             throw new IllegalStateException(ipe);
-        } catch(Exception e){
-            throw new UnknownFileId(target);
+        } catch (Exception e){
+            throw new UnknownFileId(origin);
         }
     }
 
     @Override
-    public File getFileIntoFile(String target){
+    public File getFileIntoFile(String origin){
         try{
+            String target = boardFileNameRepository.getUUIDByOrigin(origin);
             Path existSource = Paths.get(getPath(target));
             throwIfFileDoesNotExist(existSource, target);
             return existSource.toFile();
-        } catch(InvalidPathException ipe){
+        } catch (InvalidPathException ipe){
             throw new IllegalStateException(ipe);
-        } catch(Exception e){
-            throw new UnknownFileId(target);
+        } catch (Exception e){
+            throw new UnknownFileId(origin);
         }
     }
 
@@ -135,7 +169,7 @@ public class DefaultFileManager implements FileManager{
     }
 
     private void throwIfFileDoesNotExist(Path path, String target){
-        if(!Files.exists(path)){
+        if (!Files.exists(path)){
             throw new UnknownFileId(target);
         }
     }
