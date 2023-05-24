@@ -31,9 +31,9 @@ dependencies {
     implementation project(':core-layer:template')
     implementation project(':service-layer:auth')
 
-    implementation 'com.github.xss-stage:xss-core:1.2'
+    implementation 'com.github.xss-stage:xss-core:1.2.1'
     implementation 'com.github.xss-stage:xss-extension-string:1.2'
-    implementation 'com.github.xss-stage:xss-extension-json:1.2'
+    implementation 'com.github.xss-stage:xss-extension-json:1.2.1'
 
     implementation 'org.springframework.boot:spring-boot-starter'
     implementation 'org.springframework.boot:spring-boot-starter-web'

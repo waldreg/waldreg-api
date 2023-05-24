@@ -151,6 +151,57 @@ class BoardAcceptanceTest{
     }
 
     @Test
+    @DisplayName("게시글 생성 성공(이미지,파일 포함 : pdf)")
+    void CREATE_BOARD_WITH_ALL_TEST2() throws Exception{
+        //given
+        String adminToken = AuthenticationAcceptanceTestHelper.getAdminToken(mvc, objectMapper);
+
+        String categoryName = "cate12";
+        CategoryRequest categoryRequest = CategoryRequest.builder().categoryName(categoryName).build();
+        BoardAcceptanceTestHelper.createCategory(mvc, adminToken, objectMapper.writeValueAsString(categoryRequest));
+        CategoryListResponse categoryResult = objectMapper.readValue(BoardAcceptanceTestHelper.inquiryAllCategory(mvc, adminToken)
+                .andReturn()
+                .getResponse()
+                .getContentAsString(), CategoryListResponse.class);
+        int categoryId = categoryResult.getCategories()[0].getCategoryId();
+        String title = "notice";
+        String content = "content";
+
+        BoardCreateRequest boardCreateRequest = BoardCreateRequest.builder()
+                .title(title)
+                .content(content)
+                .categoryId(categoryId)
+                .build();
+
+        String imgName = "TestImage.jpg";
+        String imgContentType = "image/jpg";
+        String imgPath = "./src/test/java/org/waldreg/acceptance/board/TestImage.jpg";
+
+        String fileName = "test.pdf";
+        String fileContentType = "application/pdf";
+        String filePath = "./src/test/java/org/waldreg/acceptance/board/test.pdf";
+
+        MockMultipartFile jsonContent = new MockMultipartFile("boardCreateRequest", "", MediaType.APPLICATION_JSON_VALUE, objectMapper.writeValueAsString(boardCreateRequest).getBytes());
+        MockMultipartFile imgFile = new MockMultipartFile("image", imgName, imgContentType, new FileInputStream(imgPath));
+        MockMultipartFile docxFile = new MockMultipartFile("file", fileName, fileContentType, new FileInputStream(filePath));
+
+        //when
+        List<MockMultipartFile> imgFileList = new ArrayList<>();
+        List<MockMultipartFile> docxFileList = new ArrayList<>();
+        imgFileList.add(imgFile);
+        docxFileList.add(docxFile);
+
+        ResultActions result = BoardAcceptanceTestHelper.createBoardWithAll(mvc, adminToken, jsonContent, imgFileList, docxFileList);
+
+        //then
+        result.andExpectAll(
+                MockMvcResultMatchers.status().isOk(),
+                MockMvcResultMatchers.header().string("api-version", apiVersion)
+        );
+
+    }
+
+    @Test
     @DisplayName("게시글 생성 성공(이미지,파일 여러개)")
     void CREATE_BOARD_WITH_ALL_FILE_LIST_TEST() throws Exception{
         //given
