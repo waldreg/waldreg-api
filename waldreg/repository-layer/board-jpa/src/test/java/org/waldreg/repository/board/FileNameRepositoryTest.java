@@ -31,4 +31,18 @@ public class FileNameRepositoryTest{
         Assertions.assertEquals(result, uuid);
     }
 
+
+    @Test
+    @DisplayName("파일 이름, uuid 저장, 조회 테스트")
+    void GET_FILENAME_ORIGIN_BY_UUID_TEST(){
+        //given
+        String origin = "origin.pptx";
+        String uuid = "abasce-dacdscas-dascaasd-asvadv.pptx";
+        //when
+        fileNameCommander.saveFileName(origin,uuid);
+        String result = fileNameCommander.getOriginByUUID(uuid);
+
+        //then
+        Assertions.assertEquals(result, origin);
+    }
 }

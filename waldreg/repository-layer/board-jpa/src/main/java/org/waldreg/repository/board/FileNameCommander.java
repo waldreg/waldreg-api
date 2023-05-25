@@ -31,9 +31,17 @@ public class FileNameCommander implements BoardFileNameRepository{
     @Transactional
     public String getUUIDByOrigin(String origin){
         FileName fileName = jpaFileNameRepository.getFileNameByOrigin(origin).orElseThrow(
-                () -> {throw new IllegalStateException("Cannot find file name \"" + origin + "\"");}
+                () -> {throw new IllegalStateException("Cannot find file name origin: \"" + origin + "\"");}
         );
         return fileName.getUuid();
+    }
+
+    @Override
+    public String getOriginByUUID(String uuid){
+        FileName fileName = jpaFileNameRepository.getFileNameByUuid(uuid).orElseThrow(
+                () -> {throw new IllegalStateException("Cannot find file name uuid : \"" + uuid + "\"");}
+        );
+        return fileName.getOrigin();
     }
 
 }

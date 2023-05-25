@@ -11,4 +11,6 @@ public interface JpaFileNameRepository extends JpaRepository<FileName, Integer>{
 
     Optional<FileName> getFileNameByOrigin(String origin);
 
+    Optional<FileName> getFileNameByUuid(String uuid);
+
 }
