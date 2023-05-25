@@ -50,6 +50,8 @@ public class DefaultFileManager implements FileManager{
         return () -> {
             NameWithPath nameWithPath = createFile(multipartFile);
             multipartFile.transferTo(nameWithPath.path);
+            System.out.println("@@@" + nameWithPath.name + "@@ " + nameWithPath.path);
+
             return nameWithPath.name;
         };
     }
@@ -58,12 +60,12 @@ public class DefaultFileManager implements FileManager{
         try{
             String id = UUID.randomUUID().toString();
             String origin = getFileName(multipartFile);
-            boardFileNameRepository.saveFileName(origin, id);
-
             Path filePath = Paths.get(getPath(id, multipartFile));
             Path ans = Files.createFile(filePath);
-
-            String[] fileNameAndMimeType = getFileNameAndMimeType(origin, multipartFile);
+            String[] originArr = origin.split("\\.");
+            String[] fileNameAndMimeType = getFileNameAndMimeType(originArr[0], multipartFile);
+            String[] uuidAndMimeType = getFileNameAndMimeType(id,multipartFile);
+            boardFileNameRepository.saveFileName(origin, uuidAndMimeType[0]);
             return new NameWithPath(fileNameAndMimeType[0], ans);
         } catch (FileAlreadyExistsException faee){
             return createFile(multipartFile);
