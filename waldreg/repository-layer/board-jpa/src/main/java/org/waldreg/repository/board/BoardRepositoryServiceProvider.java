@@ -10,13 +10,11 @@ import org.waldreg.board.dto.BoardDto;
 import org.waldreg.board.dto.BoardServiceReactionType;
 import org.waldreg.domain.board.Board;
 import org.waldreg.domain.board.category.Category;
-import org.waldreg.domain.board.file.FileName;
 import org.waldreg.domain.board.reaction.Reaction;
 import org.waldreg.domain.user.User;
 import org.waldreg.repository.board.mapper.BoardRepositoryMapper;
 import org.waldreg.repository.board.repository.JpaBoardRepository;
 import org.waldreg.repository.board.repository.JpaCategoryRepository;
-import org.waldreg.repository.board.repository.JpaFileNameRepository;
 import org.waldreg.repository.board.repository.JpaReactionRepository;
 import org.waldreg.repository.board.repository.JpaUserRepository;
 

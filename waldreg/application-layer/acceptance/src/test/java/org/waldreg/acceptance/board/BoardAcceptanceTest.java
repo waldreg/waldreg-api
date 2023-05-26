@@ -162,9 +162,9 @@ class BoardAcceptanceTest{
         CategoryRequest categoryRequest = CategoryRequest.builder().categoryName(categoryName).build();
         BoardAcceptanceTestHelper.createCategory(mvc, adminToken, objectMapper.writeValueAsString(categoryRequest));
         CategoryListResponse categoryResult = objectMapper.readValue(BoardAcceptanceTestHelper.inquiryAllCategory(mvc, adminToken)
-                .andReturn()
-                .getResponse()
-                .getContentAsString(), CategoryListResponse.class);
+                                                                             .andReturn()
+                                                                             .getResponse()
+                                                                             .getContentAsString(), CategoryListResponse.class);
         int categoryId = categoryResult.getCategories()[0].getCategoryId();
         String title = "notice";
         String content = "content";
@@ -3123,7 +3123,7 @@ class BoardAcceptanceTest{
                 .phoneNumber("01012341234")
                 .build();
         UserAcceptanceTestHelper.createUser(mvc, objectMapper.writeValueAsString(userRequest));
-        UserAcceptanceTestHelper.approveJoinRequest(mvc,adminToken,userRequest.getUserId());
+        UserAcceptanceTestHelper.approveJoinRequest(mvc, adminToken, userRequest.getUserId());
         userCreateRequestList.add(userRequest);
 
         return AuthenticationAcceptanceTestHelper.getToken(mvc, objectMapper, AuthTokenRequest.builder()

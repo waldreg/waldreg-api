@@ -44,4 +44,12 @@ public class FileNameCommander implements BoardFileNameRepository{
         return fileName.getOrigin();
     }
 
+    @Override
+    public void deleteFileNameByUUID(String uuid){
+        FileName fileName = jpaFileNameRepository.getFileNameByUuid(uuid).orElseThrow(
+                () -> {throw new IllegalStateException("Cannot find file name uuid : \"" + uuid + "\"");}
+        );
+        jpaFileNameRepository.delete(fileName);
+    }
+
 }

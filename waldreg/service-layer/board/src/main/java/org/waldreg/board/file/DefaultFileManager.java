@@ -61,8 +61,9 @@ public class DefaultFileManager implements FileManager{
             String origin = getFileName(multipartFile);
             Path filePath = Paths.get(getPath(id, multipartFile));
             Path ans = Files.createFile(filePath);
+            String[] originAndMimeType = getFileNameAndMimeType(origin, multipartFile);
             String[] uuidAndMimeType = getFileNameAndMimeType(id,multipartFile);
-            boardFileNameRepository.saveFileName(origin, uuidAndMimeType[0]);
+            boardFileNameRepository.saveFileName(originAndMimeType[0], uuidAndMimeType[0]);
             return new NameWithPath(uuidAndMimeType[0], ans);
         } catch (FileAlreadyExistsException faee){
             return createFile(multipartFile);
@@ -119,6 +120,7 @@ public class DefaultFileManager implements FileManager{
     public void deleteFile(String target){
         Callable<Boolean> callable = deleteCallable(target);
         fileData.setIsDeleted(executorService.submit(callable));
+        boardFileNameRepository.deleteFileNameByUUID(target);
     }
 
     private Callable<Boolean> deleteCallable(String target){

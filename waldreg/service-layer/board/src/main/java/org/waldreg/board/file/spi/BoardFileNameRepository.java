@@ -8,4 +8,6 @@ public interface BoardFileNameRepository{
 
     String getOriginByUUID(String uuid);
 
+    void deleteFileNameByUUID(String uuid);
+
 }
