@@ -20,6 +20,7 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.context.web.WebAppConfiguration;
 import org.springframework.web.multipart.MultipartFile;
 import org.waldreg.board.file.data.FileData;
+import org.waldreg.board.file.spi.BoardFileNameRepository;
 
 @ExtendWith(SpringExtension.class)
 @TestPropertySource("classpath:application.properties")

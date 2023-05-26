@@ -10,9 +10,12 @@ import org.waldreg.board.dto.BoardDto;
 import org.waldreg.board.dto.BoardServiceReactionType;
 import org.waldreg.board.dto.ReactionDto;
 import org.waldreg.board.dto.UserDto;
+import org.waldreg.board.file.FileNameManger;
+import org.waldreg.board.file.spi.BoardFileNameRepository;
 import org.waldreg.controller.board.board.request.BoardCreateRequest;
 import org.waldreg.controller.board.board.request.BoardUpdateRequest;
 import org.waldreg.controller.board.board.response.BoardListResponse;
+import org.waldreg.controller.board.board.response.FileName;
 import org.waldreg.controller.board.board.response.ReactionResponse;
 import org.waldreg.controller.board.board.response.Author;
 import org.waldreg.controller.board.board.response.BoardResponse;
@@ -23,9 +26,12 @@ public class ControllerBoardMapper{
 
     private final DecryptedTokenContextGetter decryptedTokenContextGetter;
 
+    private final FileNameManger fileNameManger;
+
     @Autowired
-    public ControllerBoardMapper(DecryptedTokenContextGetter decryptedTokenContextGetter){
+    public ControllerBoardMapper(DecryptedTokenContextGetter decryptedTokenContextGetter, FileNameManger fileNameManger){
         this.decryptedTokenContextGetter = decryptedTokenContextGetter;
+        this.fileNameManger = fileNameManger;
     }
 
     public BoardRequest boardCreateRequestToBoardRequest(BoardCreateRequest boardCreateRequest){
@@ -62,8 +68,22 @@ public class ControllerBoardMapper{
                 .build();
     }
 
-    private String[] stringListToArray(List<String> list){
-        return list.toArray(new String[0]);
+    private FileName[] stringListToArray(List<String> list){
+        FileName[] fileNameArray = new FileName[list.size()];
+        for (int i = 0; i < fileNameArray.length; i++){
+            fileNameArray[i] = getFileNameByUuid(list.get(i));
+            System.out.println("!!!!  " + getFileNameByUuid(list.get(i)).getUuid());
+            System.out.println("!!!!  " + getFileNameByUuid(list.get(i)).getOrigin());
+        }
+        return fileNameArray;
+    }
+
+    private FileName getFileNameByUuid(String uuid){
+        String origin = fileNameManger.getFileNameOriginByUuid(uuid);
+        System.out.println("11111 : " + origin + "  " + uuid);
+        FileName fileName = FileName.builder().origin(origin).uuid(uuid).build();
+        System.out.println("22222 : " + fileName.getOrigin() + "    " + fileName.getUuid());
+        return fileName;
     }
 
     private String isExistFile(List<String> fileUrls){

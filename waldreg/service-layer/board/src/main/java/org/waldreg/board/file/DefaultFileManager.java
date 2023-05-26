@@ -19,6 +19,7 @@ import org.springframework.util.MimeTypeUtils;
 import org.springframework.web.multipart.MultipartFile;
 import org.waldreg.board.file.data.FileData;
 import org.waldreg.board.file.exception.UnknownFileId;
+import org.waldreg.board.file.spi.BoardFileNameRepository;
 
 @Service
 public class DefaultFileManager implements FileManager{
@@ -30,16 +31,16 @@ public class DefaultFileManager implements FileManager{
     private final BoardFileNameRepository boardFileNameRepository;
 
     @Autowired
-    public DefaultFileManager(FileData fileData, BoardFileNameRepository boardFileNameRepository){
+    public DefaultFileManager(FileData fileData, BoardFileNameRepository boardFileNameRepository, BoardFileNameRepository boardFileNameRepository1){
         this.fileData = fileData;
+        this.boardFileNameRepository = boardFileNameRepository1;
         executorService = Executors.newFixedThreadPool(3);
-        this.boardFileNameRepository = boardFileNameRepository;
     }
 
     @Override
     public void saveFile(MultipartFile multipartFile){
         Callable<String> callable = createCallable(multipartFile);
-        if (isImage(multipartFile)){
+        if(isImage(multipartFile)) {
             fileData.addImageName(executorService.submit(callable));
             return;
         }
@@ -50,8 +51,6 @@ public class DefaultFileManager implements FileManager{
         return () -> {
             NameWithPath nameWithPath = createFile(multipartFile);
             multipartFile.transferTo(nameWithPath.path);
-            System.out.println("@@@" + nameWithPath.name + "@@ " + nameWithPath.path);
-
             return nameWithPath.name;
         };
     }
@@ -62,11 +61,9 @@ public class DefaultFileManager implements FileManager{
             String origin = getFileName(multipartFile);
             Path filePath = Paths.get(getPath(id, multipartFile));
             Path ans = Files.createFile(filePath);
-            String[] originArr = origin.split("\\.");
-            String[] fileNameAndMimeType = getFileNameAndMimeType(originArr[0], multipartFile);
             String[] uuidAndMimeType = getFileNameAndMimeType(id,multipartFile);
             boardFileNameRepository.saveFileName(origin, uuidAndMimeType[0]);
-            return new NameWithPath(fileNameAndMimeType[0], ans);
+            return new NameWithPath(uuidAndMimeType[0], ans);
         } catch (FileAlreadyExistsException faee){
             return createFile(multipartFile);
         } catch (IOException ioe){
@@ -120,8 +117,7 @@ public class DefaultFileManager implements FileManager{
 
     @Override
     public void deleteFile(String target){
-        String uuid = boardFileNameRepository.getUUIDByOrigin(target);
-        Callable<Boolean> callable = deleteCallable(uuid);
+        Callable<Boolean> callable = deleteCallable(target);
         fileData.setIsDeleted(executorService.submit(callable));
     }
 
@@ -139,30 +135,28 @@ public class DefaultFileManager implements FileManager{
     }
 
     @Override
-    public byte[] getFileIntoByteArray(String origin){
+    public byte[] getFileIntoByteArray(String target){
         try{
-            String target = boardFileNameRepository.getUUIDByOrigin(origin);
             Path existSource = Paths.get(getPath(target));
             throwIfFileDoesNotExist(existSource, target);
             return Files.readAllBytes(existSource);
-        } catch (InvalidPathException ipe){
+        } catch(InvalidPathException ipe){
             throw new IllegalStateException(ipe);
-        } catch (Exception e){
-            throw new UnknownFileId(origin);
+        } catch(Exception e){
+            throw new UnknownFileId(target);
         }
     }
 
     @Override
-    public File getFileIntoFile(String origin){
+    public File getFileIntoFile(String target){
         try{
-            String target = boardFileNameRepository.getUUIDByOrigin(origin);
             Path existSource = Paths.get(getPath(target));
             throwIfFileDoesNotExist(existSource, target);
             return existSource.toFile();
-        } catch (InvalidPathException ipe){
+        } catch(InvalidPathException ipe){
             throw new IllegalStateException(ipe);
-        } catch (Exception e){
-            throw new UnknownFileId(origin);
+        } catch(Exception e){
+            throw new UnknownFileId(target);
         }
     }
 
@@ -171,7 +165,7 @@ public class DefaultFileManager implements FileManager{
     }
 
     private void throwIfFileDoesNotExist(Path path, String target){
-        if (!Files.exists(path)){
+        if(!Files.exists(path)){
             throw new UnknownFileId(target);
         }
     }

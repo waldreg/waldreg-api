@@ -3,7 +3,7 @@ package org.waldreg.repository.board;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
-import org.waldreg.board.file.BoardFileNameRepository;
+import org.waldreg.board.file.spi.BoardFileNameRepository;
 import org.waldreg.domain.board.file.FileName;
 import org.waldreg.repository.board.repository.JpaFileNameRepository;
 

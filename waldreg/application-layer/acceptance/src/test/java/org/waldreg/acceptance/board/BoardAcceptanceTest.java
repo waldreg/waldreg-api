@@ -1,6 +1,7 @@
 package org.waldreg.acceptance.board;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import java.io.File;
 import java.io.FileInputStream;
 import java.util.ArrayList;
 import java.util.List;
@@ -23,6 +24,7 @@ import org.waldreg.acceptance.user.UserAcceptanceTestHelper;
 import org.waldreg.auth.request.AuthTokenRequest;
 import org.waldreg.controller.board.board.request.BoardCreateRequest;
 import org.waldreg.controller.board.board.request.BoardUpdateRequest;
+import org.waldreg.controller.board.board.response.FileName;
 import org.waldreg.controller.board.category.request.CategoryRequest;
 import org.waldreg.controller.board.board.response.BoardListResponse;
 import org.waldreg.controller.board.board.response.BoardResponse;
@@ -547,11 +549,14 @@ class BoardAcceptanceTest{
         ResultActions resultCategory = BoardAcceptanceTestHelper.inquiryAllCategory(mvc, adminToken);
         CategoryResponse[] categoryList = objectMapper.readValue(resultCategory.andReturn().getResponse().getContentAsString(), CategoryListResponse.class).getCategories();
 
-        String[] fileUrls = boardListResponse.getBoards().get(0).getFiles();
+        FileName[] fileUrls = boardListResponse.getBoards().get(0).getFiles();
 
         int boardId = boardListResponse.getBoards().get(0).getId();
         int categoryId = categoryList[0].getCategoryId();
-        ArrayList<String> fileUrlList = new ArrayList<>(List.of(fileUrls));
+        ArrayList<String> fileUrlList = new ArrayList<>();
+        for (FileName fileName : fileUrls){
+            fileUrlList.add(fileName.getUuid());
+        }
 
         BoardUpdateRequest boardUpdateRequest = BoardUpdateRequest.builder()
                 .title(title2)
@@ -605,11 +610,14 @@ class BoardAcceptanceTest{
         ResultActions resultCategory = BoardAcceptanceTestHelper.inquiryAllCategory(mvc, adminToken);
         CategoryResponse[] categoryList = objectMapper.readValue(resultCategory.andReturn().getResponse().getContentAsString(), CategoryListResponse.class).getCategories();
 
-        String[] fileUrls = boardListResponse.getBoards().get(0).getFiles();
+        FileName[] fileUrls = boardListResponse.getBoards().get(0).getFiles();
 
         int boardId = boardListResponse.getBoards().get(0).getId();
         int categoryId = categoryList[0].getCategoryId();
-        ArrayList<String> fileUrlList = new ArrayList<>(List.of(fileUrls));
+        ArrayList<String> fileUrlList = new ArrayList<>();
+        for (FileName fileName : fileUrls){
+            fileUrlList.add(fileName.getUuid());
+        }
 
         BoardUpdateRequest boardUpdateRequest = BoardUpdateRequest.builder()
                 .title(title2)
@@ -648,12 +656,14 @@ class BoardAcceptanceTest{
         ResultActions resultCategory = BoardAcceptanceTestHelper.inquiryAllCategory(mvc, adminToken);
         CategoryResponse[] categoryList = objectMapper.readValue(resultCategory.andReturn().getResponse().getContentAsString(), CategoryListResponse.class).getCategories();
 
-        String[] fileUrls = boardListResponse.getBoards().get(0).getFiles();
+        FileName[] fileUrls = boardListResponse.getBoards().get(0).getFiles();
 
         int boardId = boardListResponse.getBoards().get(0).getId();
         int categoryId = categoryList[0].getCategoryId();
-        ArrayList<String> fileUrlList = new ArrayList<>(List.of(fileUrls));
-
+        ArrayList<String> fileUrlList = new ArrayList<>();
+        for (FileName fileName : fileUrls){
+            fileUrlList.add(fileName.getUuid());
+        }
         BoardUpdateRequest boardUpdateRequest = BoardUpdateRequest.builder()
                 .title(title2)
                 .content(content2)
@@ -698,11 +708,14 @@ class BoardAcceptanceTest{
         ResultActions resultCategory = BoardAcceptanceTestHelper.inquiryAllCategory(mvc, adminToken);
         CategoryResponse[] categoryList = objectMapper.readValue(resultCategory.andReturn().getResponse().getContentAsString(), CategoryListResponse.class).getCategories();
 
-        String[] fileUrls = boardListResponse.getBoards().get(0).getFiles();
+        FileName[] fileUrls = boardListResponse.getBoards().get(0).getFiles();
 
         int boardId = boardListResponse.getBoards().get(0).getId();
         int categoryId = categoryList[0].getCategoryId();
-        ArrayList<String> fileUrlList = new ArrayList<>(List.of(fileUrls));
+        ArrayList<String> fileUrlList = new ArrayList<>();
+        for (FileName fileName : fileUrls){
+            fileUrlList.add(fileName.getUuid());
+        }
 
         BoardUpdateRequest boardUpdateRequest = BoardUpdateRequest.builder()
                 .title(title2)
@@ -749,11 +762,13 @@ class BoardAcceptanceTest{
         ResultActions resultCategory = BoardAcceptanceTestHelper.inquiryAllCategory(mvc, adminToken);
         CategoryResponse[] categoryList = objectMapper.readValue(resultCategory.andReturn().getResponse().getContentAsString(), CategoryListResponse.class).getCategories();
 
-        String[] fileUrls = boardListResponse.getBoards().get(0).getFiles();
+        FileName[] fileUrls = boardListResponse.getBoards().get(0).getFiles();
 
         int categoryId = categoryList[0].getCategoryId();
-        ArrayList<String> fileUrlList = new ArrayList<>(List.of(fileUrls));
-
+        ArrayList<String> fileUrlList = new ArrayList<>();
+        for (FileName fileName : fileUrls){
+            fileUrlList.add(fileName.getUuid());
+        }
         BoardUpdateRequest boardUpdateRequest = BoardUpdateRequest.builder()
                 .title(title2)
                 .content(content2)
@@ -811,11 +826,14 @@ class BoardAcceptanceTest{
         ResultActions resultCategory = BoardAcceptanceTestHelper.inquiryAllCategory(mvc, token);
         CategoryResponse[] categoryList = objectMapper.readValue(resultCategory.andReturn().getResponse().getContentAsString(), CategoryListResponse.class).getCategories();
 
-        String[] fileUrls = boardListResponse.getBoards().get(0).getFiles();
+        FileName[] fileUrls = boardListResponse.getBoards().get(0).getFiles();
 
         int boardId = boardListResponse.getBoards().get(0).getId();
         int categoryId = categoryList[0].getCategoryId();
-        ArrayList<String> fileUrlList = new ArrayList<>(List.of(fileUrls));
+        ArrayList<String> fileUrlList = new ArrayList<>();
+        for (FileName fileName : fileUrls){
+            fileUrlList.add(fileName.getUuid());
+        }
 
         BoardUpdateRequest boardUpdateRequest = BoardUpdateRequest.builder()
                 .title(title2)
@@ -2902,10 +2920,11 @@ class BoardAcceptanceTest{
 
         ResultActions resultActions = BoardAcceptanceTestHelper.inquiryAllBoard(mvc, adminToken);
         BoardListResponse boardListResponse = objectMapper.readValue(resultActions.andReturn().getResponse().getContentAsString(), BoardListResponse.class);
-        String[] imagesUrls = boardListResponse.getBoards().get(0).getImages();
+        FileName[] imagesUrls = boardListResponse.getBoards().get(0).getImages();
 
+        System.out.println("@@@@  " + imagesUrls[0].getUuid());
         //when
-        ResultActions result = BoardAcceptanceTestHelper.getImage(mvc, adminToken, "/image/" + imagesUrls[0]);
+        ResultActions result = BoardAcceptanceTestHelper.getImage(mvc, adminToken, "/image/" + imagesUrls[0].getUuid());
         //then
 
         result.andExpectAll(
@@ -2952,10 +2971,10 @@ class BoardAcceptanceTest{
 
         ResultActions resultActions = BoardAcceptanceTestHelper.inquiryAllBoard(mvc, adminToken);
         BoardListResponse boardListResponse = objectMapper.readValue(resultActions.andReturn().getResponse().getContentAsString(), BoardListResponse.class);
-        String[] imagesUrls = boardListResponse.getBoards().get(0).getImages();
+        FileName[] imagesUrls = boardListResponse.getBoards().get(0).getImages();
 
         //when
-        ResultActions result = BoardAcceptanceTestHelper.getImage(mvc, token, "/image/" + imagesUrls[0]);
+        ResultActions result = BoardAcceptanceTestHelper.getImage(mvc, token, "/image/" + imagesUrls[0].getUuid());
         //then
 
         result.andExpectAll(
@@ -2979,9 +2998,9 @@ class BoardAcceptanceTest{
 
         ResultActions resultActions = BoardAcceptanceTestHelper.inquiryAllBoard(mvc, adminToken);
         BoardListResponse boardListResponse = objectMapper.readValue(resultActions.andReturn().getResponse().getContentAsString(), BoardListResponse.class);
-        String[] fileUrls = boardListResponse.getBoards().get(0).getFiles();
+        FileName[] fileUrls = boardListResponse.getBoards().get(0).getFiles();
         //when
-        ResultActions result = BoardAcceptanceTestHelper.downloadFile(mvc, adminToken, "/file/" + fileUrls[0]);
+        ResultActions result = BoardAcceptanceTestHelper.downloadFile(mvc, adminToken, "/file/" + fileUrls[0].getUuid());
 
         //then
         result.andExpectAll(
@@ -3028,10 +3047,10 @@ class BoardAcceptanceTest{
 
         ResultActions resultActions = BoardAcceptanceTestHelper.inquiryAllBoard(mvc, adminToken);
         BoardListResponse boardListResponse = objectMapper.readValue(resultActions.andReturn().getResponse().getContentAsString(), BoardListResponse.class);
-        String[] fileUrls = boardListResponse.getBoards().get(0).getFiles();
+        FileName[] fileUrls = boardListResponse.getBoards().get(0).getFiles();
 
         //when
-        ResultActions result = BoardAcceptanceTestHelper.downloadFile(mvc, token, "/file/" + fileUrls[0]);
+        ResultActions result = BoardAcceptanceTestHelper.downloadFile(mvc, token, "/file/" + fileUrls[0].getUuid());
 
         //then
         result.andExpectAll(

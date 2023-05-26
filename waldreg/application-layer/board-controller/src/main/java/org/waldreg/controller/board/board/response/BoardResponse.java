@@ -20,12 +20,12 @@ public class BoardResponse{
 
     @JsonProperty("comment_count")
     private int commentCount;
-    private String[] images;
+    private FileName[] images;
 
     @JsonProperty("exist_file")
     private String existFile;
 
-    private String[] files;
+    private FileName[] files;
 
     @JsonProperty("reactions")
     private ReactionResponse reactionResponse;
@@ -117,11 +117,11 @@ public class BoardResponse{
         return commentCount;
     }
 
-    public String[] getImages(){
+    public FileName[] getImages(){
         return images;
     }
 
-    public void setImages(String[] images){
+    public void setImages(FileName[] images){
         this.images = images;
     }
 
@@ -133,11 +133,11 @@ public class BoardResponse{
         this.existFile = existFile;
     }
 
-    public String[] getFiles(){
+    public FileName[] getFiles(){
         return files;
     }
 
-    public void setFiles(String[] files){
+    public void setFiles(FileName[] files){
         this.files = files;
     }
 
@@ -160,10 +160,10 @@ public class BoardResponse{
         private LocalDateTime lastModifiedAt;
         private int views;
         private int commentCount;
-        private String[] images;
+        private FileName[] images;
         private String existFile;
 
-        private String[] files;
+        private FileName[] files;
 
         private ReactionResponse reactionResponse;
 
@@ -216,7 +216,7 @@ public class BoardResponse{
             return this;
         }
 
-        public Builder images(String[] images){
+        public Builder images(FileName[] images){
             this.images = images;
             return this;
         }
@@ -226,7 +226,7 @@ public class BoardResponse{
             return this;
         }
 
-        public Builder files(String[] files){
+        public Builder files(FileName[] files){
             this.files = files;
             return this;
         }
