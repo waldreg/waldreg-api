@@ -77,13 +77,8 @@ public class FileManagerTest{
 
         // when
         fileManager.saveFile(multipartFile);
-
-        //String name = boardFileNameRepository.getUUIDByOrigin(fileData.getSavedImageNameList().get(0).get());
         String name = fileData.getSavedImageNameList().get(0).get();
-        System.out.println("@@ name : " + name);
         deleteQueue.add(name);
-
-        //이름으로 조회를 해야하는데 mockbean으로 레포를 해둬서 이름에 매칭되는 uuid 값을 가져올수가 없어서 테스트가 안돼.
 
         // then
         Assertions.assertDoesNotThrow(() -> fileManager.getFileIntoByteArray(name));

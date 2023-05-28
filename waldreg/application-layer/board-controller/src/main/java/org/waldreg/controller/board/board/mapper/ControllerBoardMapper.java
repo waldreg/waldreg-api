@@ -72,17 +72,13 @@ public class ControllerBoardMapper{
         FileName[] fileNameArray = new FileName[list.size()];
         for (int i = 0; i < fileNameArray.length; i++){
             fileNameArray[i] = getFileNameByUuid(list.get(i));
-            System.out.println("!!!!  " + getFileNameByUuid(list.get(i)).getUuid());
-            System.out.println("!!!!  " + getFileNameByUuid(list.get(i)).getOrigin());
         }
         return fileNameArray;
     }
 
     private FileName getFileNameByUuid(String uuid){
         String origin = fileNameManger.getFileNameOriginByUuid(uuid);
-        System.out.println("11111 : " + origin + "  " + uuid);
         FileName fileName = FileName.builder().origin(origin).uuid(uuid).build();
-        System.out.println("22222 : " + fileName.getOrigin() + "    " + fileName.getUuid());
         return fileName;
     }
 

@@ -16,22 +16,6 @@ public class FileNameRepositoryTest{
     @Autowired
     private FileNameCommander fileNameCommander;
 
-
-    @Test
-    @DisplayName("파일 이름, uuid 저장, 조회 테스트")
-    void SAVE_FILENAME_TEST(){
-        //given
-        String origin = "origin.pptx";
-        String uuid = "abasce-dacdscas-dascaasd-asvadv.pptx";
-        //when
-        fileNameCommander.saveFileName(origin,uuid);
-        String result = fileNameCommander.getUUIDByOrigin(origin);
-
-        //then
-        Assertions.assertEquals(result, uuid);
-    }
-
-
     @Test
     @DisplayName("파일 이름, uuid 저장, 조회 테스트")
     void GET_FILENAME_ORIGIN_BY_UUID_TEST(){
@@ -45,4 +29,20 @@ public class FileNameRepositoryTest{
         //then
         Assertions.assertEquals(result, origin);
     }
+
+    @Test
+    @DisplayName("FileName 삭제 테스트")
+    void DELETE_FILENAME_BY_UUID_TEST(){
+        //given
+        String origin = "origin.pptx";
+        String uuid = "abasce-dacdscas-dascaasd-asvadv.pptx";
+        //when
+        fileNameCommander.saveFileName(origin,uuid);
+        fileNameCommander.deleteFileNameByUUID(uuid);
+
+        //then
+        Assertions.assertThrows(IllegalStateException.class, ()->fileNameCommander.getOriginByUUID(uuid));
+
+    }
+
 }

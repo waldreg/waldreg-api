@@ -28,15 +28,6 @@ public class FileNameCommander implements BoardFileNameRepository{
     }
 
     @Override
-    @Transactional
-    public String getUUIDByOrigin(String origin){
-        FileName fileName = jpaFileNameRepository.getFileNameByOrigin(origin).orElseThrow(
-                () -> {throw new IllegalStateException("Cannot find file name origin: \"" + origin + "\"");}
-        );
-        return fileName.getUuid();
-    }
-
-    @Override
     public String getOriginByUUID(String uuid){
         FileName fileName = jpaFileNameRepository.getFileNameByUuid(uuid).orElseThrow(
                 () -> {throw new IllegalStateException("Cannot find file name uuid : \"" + uuid + "\"");}
