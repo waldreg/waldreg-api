@@ -46,9 +46,7 @@ public class ReactionRepositoryServiceProvider implements ReactionUserRepository
     @Override
     @Transactional
     public void storeReactionDto(ReactionDto reactionDto){
-        System.out.println("reaction Dto : " + reactionDto);
         List<Reaction> reactionList = jpaReactionRepository.findByBoardId(reactionDto.getBoardId());
-        reactionList.forEach(r -> System.out.println("reaction List : " + r));
         Map<BoardServiceReactionType, List<UserDto>> map = reactionDto.getReactionMap();
         for (BoardServiceReactionType type : map.keySet()){
             for (Reaction reaction : reactionList){
@@ -59,7 +57,6 @@ public class ReactionRepositoryServiceProvider implements ReactionUserRepository
                 }
             }
         }
-        reactionList.forEach(r -> System.out.println("reaction List : " + r));
         jpaReactionRepository.saveAll(reactionList);
     }
 

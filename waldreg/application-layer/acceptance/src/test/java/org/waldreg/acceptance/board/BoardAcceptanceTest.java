@@ -235,7 +235,7 @@ class BoardAcceptanceTest{
         String imgContentType2 = "image/jpg";
         String imgPath2 = "./src/test/java/org/waldreg/acceptance/board/TestImage2.jpg";
 
-        String fileName = "TestDocx";
+        String fileName = "TestDocx.docx";
         String fileContentType = "application/msword";
         String filePath = "./src/test/java/org/waldreg/acceptance/board/TestDocx.docx";
 
@@ -489,6 +489,55 @@ class BoardAcceptanceTest{
     }
 
     @Test
+    @DisplayName("특정 게시글 조회 성공 - 이미지, 파일 포함")
+    void INQUIRY_BOARD_BY_BOARD_ID_ALL_SUCCESS_TEST() throws Exception{
+        //given
+        String adminToken = AuthenticationAcceptanceTestHelper.getAdminToken(mvc, objectMapper);
+
+        createTier1BoardWithAll();
+
+        //when
+        ResultActions boards = BoardAcceptanceTestHelper.inquiryAllBoard(mvc, adminToken);
+
+        BoardListResponse boardListResponse = objectMapper.readValue(boards.andReturn()
+                .getResponse()
+                .getContentAsString(), BoardListResponse.class);
+        int boardId = boardListResponse.getBoards().get(0).getId();
+        ResultActions result = BoardAcceptanceTestHelper.inquiryBoardById(mvc, adminToken, boardId);
+
+        //then
+        result.andExpectAll(
+                MockMvcResultMatchers.status().isOk(),
+                MockMvcResultMatchers.header().string(HttpHeaders.CONTENT_TYPE, "application/json"),
+                MockMvcResultMatchers.header().string("api-version", apiVersion),
+                MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON),
+                MockMvcResultMatchers.jsonPath("$.id").value(boardId),
+                MockMvcResultMatchers.jsonPath("$.title").value(boardListResponse.getBoards().get(0).getTitle()),
+                MockMvcResultMatchers.jsonPath("$.content").value(boardListResponse.getBoards().get(0).getContent()),
+                MockMvcResultMatchers.jsonPath("$.category").value(boardListResponse.getBoards().get(0).getCategory()),
+                MockMvcResultMatchers.jsonPath("$.author.user_id").value("Admin"),
+                MockMvcResultMatchers.jsonPath("$.author.name").value("Admin"),
+                MockMvcResultMatchers.jsonPath("$.created_at").isNotEmpty(),
+                MockMvcResultMatchers.jsonPath("$.last_modified_at").isNotEmpty(),
+                MockMvcResultMatchers.jsonPath("$.views").value(1),
+                MockMvcResultMatchers.jsonPath("$.comment_count").value(0),
+                MockMvcResultMatchers.jsonPath("$.exist_file").value("true"),
+                MockMvcResultMatchers.jsonPath("$.images.[0].origin").value("TestImage.jpg"),
+                MockMvcResultMatchers.jsonPath("$.images.[0].uuid").isString(),
+                MockMvcResultMatchers.jsonPath("$.files.[0].origin").value("TestDocx.docx"),
+                MockMvcResultMatchers.jsonPath("$.files.[0].uuid").isString(),
+                MockMvcResultMatchers.jsonPath("$.reactions.good").isNumber(),
+                MockMvcResultMatchers.jsonPath("$.reactions.bad").isNumber(),
+                MockMvcResultMatchers.jsonPath("$.reactions.check").isNumber(),
+                MockMvcResultMatchers.jsonPath("$.reactions.heart").isNumber(),
+                MockMvcResultMatchers.jsonPath("$.reactions.smile").isNumber(),
+                MockMvcResultMatchers.jsonPath("$.reactions.sad").isNumber(),
+                MockMvcResultMatchers.jsonPath("$.reactions.users").isArray()
+        );
+
+    }
+
+    @Test
     @DisplayName("특정 게시글 조회 실패 - 없는 게시글 id")
     void INQUERY_BOARD_BY_BOARD_ID_Fail_TEST() throws Exception{
         //given
@@ -569,7 +618,7 @@ class BoardAcceptanceTest{
         String imgContentType2 = "image/jpg";
         String imgPath2 = "./src/test/java/org/waldreg/acceptance/board/TestImage2.jpg";
 
-        String fileName2 = "TestDocx2";
+        String fileName2 = "TestDocx2.docx";
         String fileContentType2 = "application/msword";
         String filePath2 = "./src/test/java/org/waldreg/acceptance/board/TestDocx2.docx";
 
@@ -724,7 +773,7 @@ class BoardAcceptanceTest{
                 .deleteFileUrls(fileUrlList)
                 .build();
 
-        String fileName2 = "TestDocx2";
+        String fileName2 = "TestDocx2.docx";
         String fileContentType2 = "application/msword";
         String filePath2 = "./src/test/java/org/waldreg/acceptance/board/TestDocx2.docx";
 
@@ -780,7 +829,7 @@ class BoardAcceptanceTest{
         String imgContentType2 = "image/jpg";
         String imgPath2 = "./src/test/java/org/waldreg/acceptance/board/TestImage2.jpg";
 
-        String fileName2 = "TestDocx2";
+        String fileName2 = "TestDocx2.docx";
         String fileContentType2 = "application/msword";
         String filePath2 = "./src/test/java/org/waldreg/acceptance/board/TestDocx2.docx";
 
@@ -846,7 +895,7 @@ class BoardAcceptanceTest{
         String imgContentType2 = "image/jpg";
         String imgPath2 = "./src/test/java/org/waldreg/acceptance/board/TestImage2.jpg";
 
-        String fileName2 = "TestDocx2";
+        String fileName2 = "TestDocx2.docx";
         String fileContentType2 = "application/msword";
         String filePath2 = "./src/test/java/org/waldreg/acceptance/board/TestDocx2.docx";
 
@@ -898,7 +947,7 @@ class BoardAcceptanceTest{
         String imgContentType = "image/jpg";
         String imgPath = "./src/test/java/org/waldreg/acceptance/board/TestImage.jpg";
 
-        String fileName = "TestDocx";
+        String fileName = "TestDocx.docx";
         String fileContentType = "application/msword";
         String filePath = "./src/test/java/org/waldreg/acceptance/board/TestDocx.docx";
 
@@ -2922,7 +2971,6 @@ class BoardAcceptanceTest{
         BoardListResponse boardListResponse = objectMapper.readValue(resultActions.andReturn().getResponse().getContentAsString(), BoardListResponse.class);
         FileName[] imagesUrls = boardListResponse.getBoards().get(0).getImages();
 
-        System.out.println("@@@@  " + imagesUrls[0].getUuid());
         //when
         ResultActions result = BoardAcceptanceTestHelper.getImage(mvc, adminToken, "/image/" + imagesUrls[0].getUuid());
         //then
@@ -3155,7 +3203,7 @@ class BoardAcceptanceTest{
         String imgContentType = "image/jpg";
         String imgPath = "./src/test/java/org/waldreg/acceptance/board/TestImage.jpg";
 
-        String fileName = "TestDocx";
+        String fileName = "TestDocx.docx";
         String fileContentType = "application/msword";
         String filePath = "./src/test/java/org/waldreg/acceptance/board/TestDocx.docx";
 

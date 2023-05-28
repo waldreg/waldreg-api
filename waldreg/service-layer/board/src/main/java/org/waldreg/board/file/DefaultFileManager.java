@@ -61,9 +61,8 @@ public class DefaultFileManager implements FileManager{
             String origin = getFileName(multipartFile);
             Path filePath = Paths.get(getPath(id, multipartFile));
             Path ans = Files.createFile(filePath);
-            String[] originAndMimeType = getFileNameAndMimeType(origin, multipartFile);
             String[] uuidAndMimeType = getFileNameAndMimeType(id,multipartFile);
-            boardFileNameRepository.saveFileName(originAndMimeType[0], uuidAndMimeType[0]);
+            boardFileNameRepository.saveFileName(origin, uuidAndMimeType[0]);
             return new NameWithPath(uuidAndMimeType[0], ans);
         } catch (FileAlreadyExistsException faee){
             return createFile(multipartFile);
