@@ -1,6 +1,7 @@
 package org.waldreg.acceptance.board;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import java.io.File;
 import java.io.FileInputStream;
 import java.util.ArrayList;
 import java.util.List;
@@ -23,6 +24,7 @@ import org.waldreg.acceptance.user.UserAcceptanceTestHelper;
 import org.waldreg.auth.request.AuthTokenRequest;
 import org.waldreg.controller.board.board.request.BoardCreateRequest;
 import org.waldreg.controller.board.board.request.BoardUpdateRequest;
+import org.waldreg.controller.board.board.response.FileName;
 import org.waldreg.controller.board.category.request.CategoryRequest;
 import org.waldreg.controller.board.board.response.BoardListResponse;
 import org.waldreg.controller.board.board.response.BoardResponse;
@@ -160,9 +162,9 @@ class BoardAcceptanceTest{
         CategoryRequest categoryRequest = CategoryRequest.builder().categoryName(categoryName).build();
         BoardAcceptanceTestHelper.createCategory(mvc, adminToken, objectMapper.writeValueAsString(categoryRequest));
         CategoryListResponse categoryResult = objectMapper.readValue(BoardAcceptanceTestHelper.inquiryAllCategory(mvc, adminToken)
-                .andReturn()
-                .getResponse()
-                .getContentAsString(), CategoryListResponse.class);
+                                                                             .andReturn()
+                                                                             .getResponse()
+                                                                             .getContentAsString(), CategoryListResponse.class);
         int categoryId = categoryResult.getCategories()[0].getCategoryId();
         String title = "notice";
         String content = "content";
@@ -233,7 +235,7 @@ class BoardAcceptanceTest{
         String imgContentType2 = "image/jpg";
         String imgPath2 = "./src/test/java/org/waldreg/acceptance/board/TestImage2.jpg";
 
-        String fileName = "TestDocx";
+        String fileName = "TestDocx.docx";
         String fileContentType = "application/msword";
         String filePath = "./src/test/java/org/waldreg/acceptance/board/TestDocx.docx";
 
@@ -487,6 +489,55 @@ class BoardAcceptanceTest{
     }
 
     @Test
+    @DisplayName("특정 게시글 조회 성공 - 이미지, 파일 포함")
+    void INQUIRY_BOARD_BY_BOARD_ID_ALL_SUCCESS_TEST() throws Exception{
+        //given
+        String adminToken = AuthenticationAcceptanceTestHelper.getAdminToken(mvc, objectMapper);
+
+        createTier1BoardWithAll();
+
+        //when
+        ResultActions boards = BoardAcceptanceTestHelper.inquiryAllBoard(mvc, adminToken);
+
+        BoardListResponse boardListResponse = objectMapper.readValue(boards.andReturn()
+                .getResponse()
+                .getContentAsString(), BoardListResponse.class);
+        int boardId = boardListResponse.getBoards().get(0).getId();
+        ResultActions result = BoardAcceptanceTestHelper.inquiryBoardById(mvc, adminToken, boardId);
+
+        //then
+        result.andExpectAll(
+                MockMvcResultMatchers.status().isOk(),
+                MockMvcResultMatchers.header().string(HttpHeaders.CONTENT_TYPE, "application/json"),
+                MockMvcResultMatchers.header().string("api-version", apiVersion),
+                MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON),
+                MockMvcResultMatchers.jsonPath("$.id").value(boardId),
+                MockMvcResultMatchers.jsonPath("$.title").value(boardListResponse.getBoards().get(0).getTitle()),
+                MockMvcResultMatchers.jsonPath("$.content").value(boardListResponse.getBoards().get(0).getContent()),
+                MockMvcResultMatchers.jsonPath("$.category").value(boardListResponse.getBoards().get(0).getCategory()),
+                MockMvcResultMatchers.jsonPath("$.author.user_id").value("Admin"),
+                MockMvcResultMatchers.jsonPath("$.author.name").value("Admin"),
+                MockMvcResultMatchers.jsonPath("$.created_at").isNotEmpty(),
+                MockMvcResultMatchers.jsonPath("$.last_modified_at").isNotEmpty(),
+                MockMvcResultMatchers.jsonPath("$.views").value(1),
+                MockMvcResultMatchers.jsonPath("$.comment_count").value(0),
+                MockMvcResultMatchers.jsonPath("$.exist_file").value("true"),
+                MockMvcResultMatchers.jsonPath("$.images.[0].origin").value("TestImage.jpg"),
+                MockMvcResultMatchers.jsonPath("$.images.[0].uuid").isString(),
+                MockMvcResultMatchers.jsonPath("$.files.[0].origin").value("TestDocx.docx"),
+                MockMvcResultMatchers.jsonPath("$.files.[0].uuid").isString(),
+                MockMvcResultMatchers.jsonPath("$.reactions.good").isNumber(),
+                MockMvcResultMatchers.jsonPath("$.reactions.bad").isNumber(),
+                MockMvcResultMatchers.jsonPath("$.reactions.check").isNumber(),
+                MockMvcResultMatchers.jsonPath("$.reactions.heart").isNumber(),
+                MockMvcResultMatchers.jsonPath("$.reactions.smile").isNumber(),
+                MockMvcResultMatchers.jsonPath("$.reactions.sad").isNumber(),
+                MockMvcResultMatchers.jsonPath("$.reactions.users").isArray()
+        );
+
+    }
+
+    @Test
     @DisplayName("특정 게시글 조회 실패 - 없는 게시글 id")
     void INQUERY_BOARD_BY_BOARD_ID_Fail_TEST() throws Exception{
         //given
@@ -547,11 +598,14 @@ class BoardAcceptanceTest{
         ResultActions resultCategory = BoardAcceptanceTestHelper.inquiryAllCategory(mvc, adminToken);
         CategoryResponse[] categoryList = objectMapper.readValue(resultCategory.andReturn().getResponse().getContentAsString(), CategoryListResponse.class).getCategories();
 
-        String[] fileUrls = boardListResponse.getBoards().get(0).getFiles();
+        FileName[] fileUrls = boardListResponse.getBoards().get(0).getFiles();
 
         int boardId = boardListResponse.getBoards().get(0).getId();
         int categoryId = categoryList[0].getCategoryId();
-        ArrayList<String> fileUrlList = new ArrayList<>(List.of(fileUrls));
+        ArrayList<String> fileUrlList = new ArrayList<>();
+        for (FileName fileName : fileUrls){
+            fileUrlList.add(fileName.getUuid());
+        }
 
         BoardUpdateRequest boardUpdateRequest = BoardUpdateRequest.builder()
                 .title(title2)
@@ -564,7 +618,7 @@ class BoardAcceptanceTest{
         String imgContentType2 = "image/jpg";
         String imgPath2 = "./src/test/java/org/waldreg/acceptance/board/TestImage2.jpg";
 
-        String fileName2 = "TestDocx2";
+        String fileName2 = "TestDocx2.docx";
         String fileContentType2 = "application/msword";
         String filePath2 = "./src/test/java/org/waldreg/acceptance/board/TestDocx2.docx";
 
@@ -605,11 +659,14 @@ class BoardAcceptanceTest{
         ResultActions resultCategory = BoardAcceptanceTestHelper.inquiryAllCategory(mvc, adminToken);
         CategoryResponse[] categoryList = objectMapper.readValue(resultCategory.andReturn().getResponse().getContentAsString(), CategoryListResponse.class).getCategories();
 
-        String[] fileUrls = boardListResponse.getBoards().get(0).getFiles();
+        FileName[] fileUrls = boardListResponse.getBoards().get(0).getFiles();
 
         int boardId = boardListResponse.getBoards().get(0).getId();
         int categoryId = categoryList[0].getCategoryId();
-        ArrayList<String> fileUrlList = new ArrayList<>(List.of(fileUrls));
+        ArrayList<String> fileUrlList = new ArrayList<>();
+        for (FileName fileName : fileUrls){
+            fileUrlList.add(fileName.getUuid());
+        }
 
         BoardUpdateRequest boardUpdateRequest = BoardUpdateRequest.builder()
                 .title(title2)
@@ -648,12 +705,14 @@ class BoardAcceptanceTest{
         ResultActions resultCategory = BoardAcceptanceTestHelper.inquiryAllCategory(mvc, adminToken);
         CategoryResponse[] categoryList = objectMapper.readValue(resultCategory.andReturn().getResponse().getContentAsString(), CategoryListResponse.class).getCategories();
 
-        String[] fileUrls = boardListResponse.getBoards().get(0).getFiles();
+        FileName[] fileUrls = boardListResponse.getBoards().get(0).getFiles();
 
         int boardId = boardListResponse.getBoards().get(0).getId();
         int categoryId = categoryList[0].getCategoryId();
-        ArrayList<String> fileUrlList = new ArrayList<>(List.of(fileUrls));
-
+        ArrayList<String> fileUrlList = new ArrayList<>();
+        for (FileName fileName : fileUrls){
+            fileUrlList.add(fileName.getUuid());
+        }
         BoardUpdateRequest boardUpdateRequest = BoardUpdateRequest.builder()
                 .title(title2)
                 .content(content2)
@@ -698,11 +757,14 @@ class BoardAcceptanceTest{
         ResultActions resultCategory = BoardAcceptanceTestHelper.inquiryAllCategory(mvc, adminToken);
         CategoryResponse[] categoryList = objectMapper.readValue(resultCategory.andReturn().getResponse().getContentAsString(), CategoryListResponse.class).getCategories();
 
-        String[] fileUrls = boardListResponse.getBoards().get(0).getFiles();
+        FileName[] fileUrls = boardListResponse.getBoards().get(0).getFiles();
 
         int boardId = boardListResponse.getBoards().get(0).getId();
         int categoryId = categoryList[0].getCategoryId();
-        ArrayList<String> fileUrlList = new ArrayList<>(List.of(fileUrls));
+        ArrayList<String> fileUrlList = new ArrayList<>();
+        for (FileName fileName : fileUrls){
+            fileUrlList.add(fileName.getUuid());
+        }
 
         BoardUpdateRequest boardUpdateRequest = BoardUpdateRequest.builder()
                 .title(title2)
@@ -711,7 +773,7 @@ class BoardAcceptanceTest{
                 .deleteFileUrls(fileUrlList)
                 .build();
 
-        String fileName2 = "TestDocx2";
+        String fileName2 = "TestDocx2.docx";
         String fileContentType2 = "application/msword";
         String filePath2 = "./src/test/java/org/waldreg/acceptance/board/TestDocx2.docx";
 
@@ -749,11 +811,13 @@ class BoardAcceptanceTest{
         ResultActions resultCategory = BoardAcceptanceTestHelper.inquiryAllCategory(mvc, adminToken);
         CategoryResponse[] categoryList = objectMapper.readValue(resultCategory.andReturn().getResponse().getContentAsString(), CategoryListResponse.class).getCategories();
 
-        String[] fileUrls = boardListResponse.getBoards().get(0).getFiles();
+        FileName[] fileUrls = boardListResponse.getBoards().get(0).getFiles();
 
         int categoryId = categoryList[0].getCategoryId();
-        ArrayList<String> fileUrlList = new ArrayList<>(List.of(fileUrls));
-
+        ArrayList<String> fileUrlList = new ArrayList<>();
+        for (FileName fileName : fileUrls){
+            fileUrlList.add(fileName.getUuid());
+        }
         BoardUpdateRequest boardUpdateRequest = BoardUpdateRequest.builder()
                 .title(title2)
                 .content(content2)
@@ -765,7 +829,7 @@ class BoardAcceptanceTest{
         String imgContentType2 = "image/jpg";
         String imgPath2 = "./src/test/java/org/waldreg/acceptance/board/TestImage2.jpg";
 
-        String fileName2 = "TestDocx2";
+        String fileName2 = "TestDocx2.docx";
         String fileContentType2 = "application/msword";
         String filePath2 = "./src/test/java/org/waldreg/acceptance/board/TestDocx2.docx";
 
@@ -811,11 +875,14 @@ class BoardAcceptanceTest{
         ResultActions resultCategory = BoardAcceptanceTestHelper.inquiryAllCategory(mvc, token);
         CategoryResponse[] categoryList = objectMapper.readValue(resultCategory.andReturn().getResponse().getContentAsString(), CategoryListResponse.class).getCategories();
 
-        String[] fileUrls = boardListResponse.getBoards().get(0).getFiles();
+        FileName[] fileUrls = boardListResponse.getBoards().get(0).getFiles();
 
         int boardId = boardListResponse.getBoards().get(0).getId();
         int categoryId = categoryList[0].getCategoryId();
-        ArrayList<String> fileUrlList = new ArrayList<>(List.of(fileUrls));
+        ArrayList<String> fileUrlList = new ArrayList<>();
+        for (FileName fileName : fileUrls){
+            fileUrlList.add(fileName.getUuid());
+        }
 
         BoardUpdateRequest boardUpdateRequest = BoardUpdateRequest.builder()
                 .title(title2)
@@ -828,7 +895,7 @@ class BoardAcceptanceTest{
         String imgContentType2 = "image/jpg";
         String imgPath2 = "./src/test/java/org/waldreg/acceptance/board/TestImage2.jpg";
 
-        String fileName2 = "TestDocx2";
+        String fileName2 = "TestDocx2.docx";
         String fileContentType2 = "application/msword";
         String filePath2 = "./src/test/java/org/waldreg/acceptance/board/TestDocx2.docx";
 
@@ -880,7 +947,7 @@ class BoardAcceptanceTest{
         String imgContentType = "image/jpg";
         String imgPath = "./src/test/java/org/waldreg/acceptance/board/TestImage.jpg";
 
-        String fileName = "TestDocx";
+        String fileName = "TestDocx.docx";
         String fileContentType = "application/msword";
         String filePath = "./src/test/java/org/waldreg/acceptance/board/TestDocx.docx";
 
@@ -2902,10 +2969,10 @@ class BoardAcceptanceTest{
 
         ResultActions resultActions = BoardAcceptanceTestHelper.inquiryAllBoard(mvc, adminToken);
         BoardListResponse boardListResponse = objectMapper.readValue(resultActions.andReturn().getResponse().getContentAsString(), BoardListResponse.class);
-        String[] imagesUrls = boardListResponse.getBoards().get(0).getImages();
+        FileName[] imagesUrls = boardListResponse.getBoards().get(0).getImages();
 
         //when
-        ResultActions result = BoardAcceptanceTestHelper.getImage(mvc, adminToken, "/image/" + imagesUrls[0]);
+        ResultActions result = BoardAcceptanceTestHelper.getImage(mvc, adminToken, "/image/" + imagesUrls[0].getUuid());
         //then
 
         result.andExpectAll(
@@ -2952,10 +3019,10 @@ class BoardAcceptanceTest{
 
         ResultActions resultActions = BoardAcceptanceTestHelper.inquiryAllBoard(mvc, adminToken);
         BoardListResponse boardListResponse = objectMapper.readValue(resultActions.andReturn().getResponse().getContentAsString(), BoardListResponse.class);
-        String[] imagesUrls = boardListResponse.getBoards().get(0).getImages();
+        FileName[] imagesUrls = boardListResponse.getBoards().get(0).getImages();
 
         //when
-        ResultActions result = BoardAcceptanceTestHelper.getImage(mvc, token, "/image/" + imagesUrls[0]);
+        ResultActions result = BoardAcceptanceTestHelper.getImage(mvc, token, "/image/" + imagesUrls[0].getUuid());
         //then
 
         result.andExpectAll(
@@ -2979,9 +3046,9 @@ class BoardAcceptanceTest{
 
         ResultActions resultActions = BoardAcceptanceTestHelper.inquiryAllBoard(mvc, adminToken);
         BoardListResponse boardListResponse = objectMapper.readValue(resultActions.andReturn().getResponse().getContentAsString(), BoardListResponse.class);
-        String[] fileUrls = boardListResponse.getBoards().get(0).getFiles();
+        FileName[] fileUrls = boardListResponse.getBoards().get(0).getFiles();
         //when
-        ResultActions result = BoardAcceptanceTestHelper.downloadFile(mvc, adminToken, "/file/" + fileUrls[0]);
+        ResultActions result = BoardAcceptanceTestHelper.downloadFile(mvc, adminToken, "/file/" + fileUrls[0].getUuid());
 
         //then
         result.andExpectAll(
@@ -3028,10 +3095,10 @@ class BoardAcceptanceTest{
 
         ResultActions resultActions = BoardAcceptanceTestHelper.inquiryAllBoard(mvc, adminToken);
         BoardListResponse boardListResponse = objectMapper.readValue(resultActions.andReturn().getResponse().getContentAsString(), BoardListResponse.class);
-        String[] fileUrls = boardListResponse.getBoards().get(0).getFiles();
+        FileName[] fileUrls = boardListResponse.getBoards().get(0).getFiles();
 
         //when
-        ResultActions result = BoardAcceptanceTestHelper.downloadFile(mvc, token, "/file/" + fileUrls[0]);
+        ResultActions result = BoardAcceptanceTestHelper.downloadFile(mvc, token, "/file/" + fileUrls[0].getUuid());
 
         //then
         result.andExpectAll(
@@ -3104,7 +3171,7 @@ class BoardAcceptanceTest{
                 .phoneNumber("01012341234")
                 .build();
         UserAcceptanceTestHelper.createUser(mvc, objectMapper.writeValueAsString(userRequest));
-        UserAcceptanceTestHelper.approveJoinRequest(mvc,adminToken,userRequest.getUserId());
+        UserAcceptanceTestHelper.approveJoinRequest(mvc, adminToken, userRequest.getUserId());
         userCreateRequestList.add(userRequest);
 
         return AuthenticationAcceptanceTestHelper.getToken(mvc, objectMapper, AuthTokenRequest.builder()
@@ -3136,7 +3203,7 @@ class BoardAcceptanceTest{
         String imgContentType = "image/jpg";
         String imgPath = "./src/test/java/org/waldreg/acceptance/board/TestImage.jpg";
 
-        String fileName = "TestDocx";
+        String fileName = "TestDocx.docx";
         String fileContentType = "application/msword";
         String filePath = "./src/test/java/org/waldreg/acceptance/board/TestDocx.docx";
 

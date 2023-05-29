@@ -17,16 +17,10 @@ import org.waldreg.domain.board.Board;
 import org.waldreg.domain.board.category.Category;
 import org.waldreg.domain.character.Character;
 import org.waldreg.domain.user.User;
-import org.waldreg.repository.board.mapper.BoardRepositoryMapper;
 import org.waldreg.repository.board.mapper.BoardUserRepositoryMapper;
-import org.waldreg.repository.board.mapper.CategoryRepositoryMapper;
-import org.waldreg.repository.board.mapper.CommentRepositoryMapper;
-import org.waldreg.repository.board.mapper.ReactionRepositoryMapper;
 import org.waldreg.repository.board.repository.JpaBoardRepository;
 import org.waldreg.repository.board.repository.JpaCategoryRepository;
 import org.waldreg.repository.board.repository.JpaCharacterRepository;
-import org.waldreg.repository.board.repository.JpaReactionRepository;
-import org.waldreg.repository.board.repository.JpaReactionUserRepository;
 import org.waldreg.repository.board.repository.JpaUserRepository;
 
 @DataJpaTest

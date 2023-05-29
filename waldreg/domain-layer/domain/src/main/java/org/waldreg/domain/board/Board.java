@@ -18,6 +18,7 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import org.waldreg.domain.board.comment.Comment;
+import org.waldreg.domain.board.file.FileName;
 import org.waldreg.domain.board.reaction.Reaction;
 import org.waldreg.domain.board.category.Category;
 import org.waldreg.domain.user.User;
@@ -163,6 +164,14 @@ public final class Board{
 
     public void setReactions(List<Reaction> reactionList){
         this.reactionList = reactionList;
+    }
+
+    public void setImagePathList(List<String> imagePathList){
+        this.imagePathList = imagePathList;
+    }
+
+    public void setFilePathList(List<String> filePathList){
+        this.filePathList = filePathList;
     }
 
     public void setCommentList(List<Comment> commentList){

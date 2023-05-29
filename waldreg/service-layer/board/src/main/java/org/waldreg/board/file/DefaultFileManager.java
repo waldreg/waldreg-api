@@ -19,6 +19,7 @@ import org.springframework.util.MimeTypeUtils;
 import org.springframework.web.multipart.MultipartFile;
 import org.waldreg.board.file.data.FileData;
 import org.waldreg.board.file.exception.UnknownFileId;
+import org.waldreg.board.file.spi.BoardFileNameRepository;
 
 @Service
 public class DefaultFileManager implements FileManager{
@@ -27,10 +28,12 @@ public class DefaultFileManager implements FileManager{
     private String path;
     private final ExecutorService executorService;
     private final FileData fileData;
+    private final BoardFileNameRepository boardFileNameRepository;
 
     @Autowired
-    public DefaultFileManager(FileData fileData){
+    public DefaultFileManager(FileData fileData, BoardFileNameRepository boardFileNameRepository, BoardFileNameRepository boardFileNameRepository1){
         this.fileData = fileData;
+        this.boardFileNameRepository = boardFileNameRepository1;
         executorService = Executors.newFixedThreadPool(3);
     }
 
@@ -55,16 +58,43 @@ public class DefaultFileManager implements FileManager{
     private NameWithPath createFile(MultipartFile multipartFile){
         try{
             String id = UUID.randomUUID().toString();
+            String origin = getFileName(multipartFile);
             Path filePath = Paths.get(getPath(id, multipartFile));
             Path ans = Files.createFile(filePath);
-            String[] fileNameAndMimeType = getFileNameAndMimeType(id, multipartFile);
-            return new NameWithPath(fileNameAndMimeType[0], ans);
+            String[] uuidAndMimeType = getFileNameAndMimeType(id,multipartFile);
+            boardFileNameRepository.saveFileName(origin, uuidAndMimeType[0]);
+            return new NameWithPath(uuidAndMimeType[0], ans);
         } catch (FileAlreadyExistsException faee){
             return createFile(multipartFile);
         } catch (IOException ioe){
             throw new IllegalStateException("Something went wrong in progress \"createFile()\" cause " + ioe.getMessage());
         }
     }
+
+    private String getFileName(MultipartFile file){
+        String originalFilename = file.getOriginalFilename();
+
+        if (originalFilename == null){
+            return null;
+        }
+
+        // 파일 경로 구분자에 따라서 파일 이름을 추출합니다
+        // Windows: \
+        // Mac: /
+        int lastUnixPos = originalFilename.lastIndexOf('/');
+        int lastWindowsPos = originalFilename.lastIndexOf('\\');
+        int lastIndex = Math.max(lastUnixPos, lastWindowsPos);
+
+        String fileName;
+        if (lastIndex > 0){
+            fileName = originalFilename.substring(lastIndex + 1);
+        } else{
+            fileName = originalFilename;
+        }
+
+        return fileName;
+    }
+
 
     private String getPath(String id, MultipartFile multipartFile){
         return path + getFileNameAndMimeType(id, multipartFile)[0];
@@ -89,6 +119,7 @@ public class DefaultFileManager implements FileManager{
     public void deleteFile(String target){
         Callable<Boolean> callable = deleteCallable(target);
         fileData.setIsDeleted(executorService.submit(callable));
+        boardFileNameRepository.deleteFileNameByUUID(target);
     }
 
     private Callable<Boolean> deleteCallable(String target){
