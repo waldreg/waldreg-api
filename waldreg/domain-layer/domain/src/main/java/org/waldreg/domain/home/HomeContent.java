@@ -5,6 +5,7 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.Lob;
 import javax.persistence.Table;
 
 @Entity
@@ -16,6 +17,7 @@ public final class HomeContent{
     @Column(name = "HOME_CONTENT_ID")
     private Integer id;
 
+    @Lob
     @Column(name = "HOME_CONTENT_CONTENT")
     private String content;
 
