@@ -12,6 +12,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.TestPropertySource;
@@ -19,6 +20,7 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.context.web.WebAppConfiguration;
 import org.springframework.web.multipart.MultipartFile;
 import org.waldreg.board.file.data.FileData;
+import org.waldreg.board.file.spi.BoardFileNameRepository;
 
 @ExtendWith(SpringExtension.class)
 @TestPropertySource("classpath:application.properties")
@@ -33,6 +35,9 @@ public class FileManagerTest{
 
     @Autowired
     private FileData fileData;
+
+    @MockBean
+    private BoardFileNameRepository boardFileNameRepository;
 
     @BeforeEach
     @AfterEach

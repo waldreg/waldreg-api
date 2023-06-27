@@ -35,6 +35,7 @@ public class BoardRepositoryMapper{
         }
         return boardDtoList;
     }
+
     public BoardDto boardDomainToBoardDto(Board board){
         return BoardDto.builder()
                 .id(board.getId())
@@ -46,7 +47,7 @@ public class BoardRepositoryMapper{
                 .lastModifiedAt(board.getLastModifiedAt())
                 .fileUrls(board.getFilePathList())
                 .imageUrls(board.getImagePathList())
-                .reactions(reactionRepositoryMapper.reactionDomainListToReactionDto(board.getReactionList(),board.getId()))
+                .reactions(reactionRepositoryMapper.reactionDomainListToReactionDto(board.getReactionList(), board.getId()))
                 .commentList(commentRepositoryMapper.commentDomainListToCommentDtoList(board.getCommentList()))
                 .views(board.getViews())
                 .build();

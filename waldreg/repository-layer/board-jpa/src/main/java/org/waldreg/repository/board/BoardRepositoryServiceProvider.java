@@ -26,16 +26,17 @@ public class BoardRepositoryServiceProvider implements BoardRepository{
     private final JpaUserRepository jpaUserRepository;
     private final JpaCategoryRepository jpaCategoryRepository;
     private final JpaReactionRepository jpaReactionRepository;
-
+    private final FileNameCommander fileNameCommander;
     private final BoardCommander boardCommander;
 
     @Autowired
-    public BoardRepositoryServiceProvider(BoardRepositoryMapper boardRepositoryMapper, JpaBoardRepository jpaBoardRepository, JpaUserRepository jpaUserRepository, JpaCategoryRepository jpaCategoryRepository, JpaReactionRepository jpaReactionRepository, BoardCommander boardCommander){
+    public BoardRepositoryServiceProvider(BoardRepositoryMapper boardRepositoryMapper, JpaBoardRepository jpaBoardRepository, JpaUserRepository jpaUserRepository, JpaCategoryRepository jpaCategoryRepository, JpaReactionRepository jpaReactionRepository, FileNameCommander fileNameCommander, BoardCommander boardCommander){
         this.boardRepositoryMapper = boardRepositoryMapper;
         this.jpaBoardRepository = jpaBoardRepository;
         this.jpaUserRepository = jpaUserRepository;
         this.jpaCategoryRepository = jpaCategoryRepository;
         this.jpaReactionRepository = jpaReactionRepository;
+        this.fileNameCommander = fileNameCommander;
         this.boardCommander = boardCommander;
     }
 
@@ -44,9 +45,9 @@ public class BoardRepositoryServiceProvider implements BoardRepository{
     public BoardDto createBoard(BoardDto boardDto){
         Board board = boardRepositoryMapper.boardDtoToBoardDomain(boardDto);
         Category category = getCategoryById(boardDto.getCategoryId());
+        board.setCategory(category);
         User user = getUserById(boardDto.getUserDto().getId());
         board.setUser(user);
-        board.setCategory(category);
         jpaBoardRepository.save(board);
         board.setReactions(setDefaultReaction(board));
         return boardRepositoryMapper.boardDomainToBoardDto(board);
@@ -97,7 +98,7 @@ public class BoardRepositoryServiceProvider implements BoardRepository{
     @Override
     @Transactional(readOnly = true)
     public List<BoardDto> inquiryAllBoard(int from, int to){
-        List<Board> boardList = boardCommander.inquiryAllBoard(from,to);
+        List<Board> boardList = boardCommander.inquiryAllBoard(from, to);
         return boardRepositoryMapper.boardDomainListToBoardDtoList(boardList);
     }
 

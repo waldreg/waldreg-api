@@ -34,7 +34,7 @@ import org.waldreg.repository.board.repository.JpaUserRepository;
 @ContextConfiguration(classes = {BoardRepositoryServiceProvider.class, CategoryRepositoryServiceProvider.class, CommentRepositoryServiceProvider.class, ReactionRepositoryServiceProvider.class,
         BoardRepositoryMapper.class, CategoryRepositoryMapper.class, ReactionRepositoryMapper.class, CommentRepositoryMapper.class,
         JpaCharacterRepository.class, JpaCategoryRepository.class, JpaUserRepository.class, JpaReactionRepository.class, JpaReactionUserRepository.class,
-        BoardCommander.class, CommentCommander.class,
+        BoardCommander.class, CommentCommander.class, FileNameCommander.class,
         JpaBoardTestInitializer.class})
 @TestPropertySource("classpath:h2-application.properties")
 class BoardRepositoryTest{
