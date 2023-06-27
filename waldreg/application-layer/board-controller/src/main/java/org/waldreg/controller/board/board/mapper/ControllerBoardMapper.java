@@ -93,13 +93,13 @@ public class ControllerBoardMapper{
                 .build();
     }
 
-    public BoardListResponse boardDtoListToBoardListResponse(List<BoardDto> boardDtoList){
+    public BoardListResponse boardDtoListToBoardListResponse(List<BoardDto> boardDtoList, int maxIdx){
         List<BoardResponse> boardResponseList = new ArrayList<>();
         for (BoardDto boardDto : boardDtoList){
             boardResponseList.add(boardDtoToBoardResponse(boardDto));
         }
         return BoardListResponse.builder()
-                .maxIdx(boardResponseList.size())
+                .maxIdx(maxIdx)
                 .boards(boardResponseList)
                 .build();
     }

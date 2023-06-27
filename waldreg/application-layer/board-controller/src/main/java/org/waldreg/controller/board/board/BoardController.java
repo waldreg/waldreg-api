@@ -92,10 +92,12 @@ public class BoardController{
         }
         if (isCategoryIdNull(categoryId)){
             boardDtoList = boardManager.inquiryAllBoard(from, to);
-            return controllerBoardMapper.boardDtoListToBoardListResponse(boardDtoList);
+            int boardCount = boardManager.getBoardAllCount();
+            return controllerBoardMapper.boardDtoListToBoardListResponse(boardDtoList,boardCount);
         }
         boardDtoList = boardManager.inquiryAllBoardByCategory(categoryId, from, to);
-        return controllerBoardMapper.boardDtoListToBoardListResponse(boardDtoList);
+        int boardCountByCategoryId = boardManager.getBoardCountByCategoryId(categoryId);
+        return controllerBoardMapper.boardDtoListToBoardListResponse(boardDtoList, boardCountByCategoryId);
     }
 
     private boolean isCategoryIdNull(Integer categoryId){
@@ -177,7 +179,7 @@ public class BoardController{
             to = PerPage.PER_PAGE;
         }
         List<BoardDto> boardDtoList = type.searchRunnable.search(keyword, from, to);
-        return controllerBoardMapper.boardDtoListToBoardListResponse(boardDtoList);
+        return controllerBoardMapper.boardDtoListToBoardListResponse(boardDtoList,boardDtoList.size());
     }
 
     private boolean isInvalidRange(Integer from, Integer to){
