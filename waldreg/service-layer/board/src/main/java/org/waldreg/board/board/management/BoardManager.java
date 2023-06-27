@@ -25,6 +25,9 @@ public interface BoardManager{
 
     void deleteBoard(int boardId);
 
+    int getBoardCountByCategoryId(int categoryId);
+    int getBoardAllCount();
+
 
     final class BoardRequest{
 

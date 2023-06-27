@@ -283,4 +283,14 @@ public class DefaultBoardManager implements BoardManager{
         }
     }
 
+    @Override
+    public int getBoardCountByCategoryId(int categoryId){
+        return boardRepository.getBoardMaxIdxByCategory(categoryId);
+    }
+
+    @Override
+    public int getBoardAllCount(){
+        return boardRepository.getBoardMaxIdx();
+    }
+
 }
