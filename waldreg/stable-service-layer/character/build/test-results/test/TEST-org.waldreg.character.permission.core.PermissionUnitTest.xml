@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="org.waldreg.character.permission.core.PermissionUnitTest" tests="1" skipped="0" failures="0" errors="0" timestamp="2023-06-27T14:37:01" hostname="xb-apple.local" time="0.0">
+  <properties/>
+  <testcase name="String status PermissionUnit 생성 성공 테스트" classname="org.waldreg.character.permission.core.PermissionUnitTest" time="0.0"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>
