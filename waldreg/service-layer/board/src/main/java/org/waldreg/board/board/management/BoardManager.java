@@ -28,6 +28,9 @@ public interface BoardManager{
     int getBoardCountByCategoryId(int categoryId);
     int getBoardAllCount();
 
+    int getSearchCountByTitle(String keyword);
+    int getSearchCountByContent(String keyword);
+    int getSearchCountByAuthorUserId(String keyword);
 
     final class BoardRequest{
 

@@ -179,7 +179,26 @@ public class BoardController{
             to = PerPage.PER_PAGE;
         }
         List<BoardDto> boardDtoList = type.searchRunnable.search(keyword, from, to);
-        return controllerBoardMapper.boardDtoListToBoardListResponse(boardDtoList,boardDtoList.size());
+        int searchCount = getSearchCount(type, keyword);
+        return controllerBoardMapper.boardDtoListToBoardListResponse(boardDtoList,searchCount);
+    }
+
+    private int getSearchCount(Type type, String keyword){
+        int searchCount;
+        switch (type){
+            case title:
+                searchCount = boardManager.getSearchCountByTitle(keyword);
+                break;
+            case content:
+                searchCount = boardManager.getSearchCountByContent(keyword);
+                break;
+            case author:
+                searchCount = boardManager.getSearchCountByAuthorUserId(keyword);
+                break;
+            default:
+                throw new IllegalArgumentException("Invalid search type: " + type);
+        }
+        return searchCount;
     }
 
     private boolean isInvalidRange(Integer from, Integer to){

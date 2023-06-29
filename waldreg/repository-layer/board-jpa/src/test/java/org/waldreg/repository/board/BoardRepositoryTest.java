@@ -147,11 +147,11 @@ class BoardRepositoryTest{
         //then
         Assertions.assertAll(
                 () -> Assertions.assertEquals(boardDtoList.size(), 5),
-                () -> Assertions.assertEquals(boardDtoList.get(0).getTitle(), "boardTitle"),
-                () -> Assertions.assertEquals(boardDtoList.get(1).getTitle(), "boardTitle2"),
+                () -> Assertions.assertEquals(boardDtoList.get(4).getTitle(), "boardTitle"),
+                () -> Assertions.assertEquals(boardDtoList.get(3).getTitle(), "boardTitle2"),
                 () -> Assertions.assertEquals(boardDtoList.get(2).getTitle(), "boardTitle3"),
-                () -> Assertions.assertEquals(boardDtoList.get(3).getTitle(), "boardTitle4"),
-                () -> Assertions.assertEquals(boardDtoList.get(4).getTitle(), "boardTitle5")
+                () -> Assertions.assertEquals(boardDtoList.get(1).getTitle(), "boardTitle4"),
+                () -> Assertions.assertEquals(boardDtoList.get(0).getTitle(), "boardTitle5")
         );
 
     }
@@ -187,11 +187,11 @@ class BoardRepositoryTest{
         //then
         Assertions.assertAll(
                 () -> Assertions.assertTrue(foundBoardList.size() == 5),
-                () -> Assertions.assertEquals(foundBoardList.get(0).getTitle(), title),
-                () -> Assertions.assertEquals(foundBoardList.get(1).getTitle(), "boardTitle2"),
+                () -> Assertions.assertEquals(foundBoardList.get(4).getTitle(), title),
+                () -> Assertions.assertEquals(foundBoardList.get(3).getTitle(), "boardTitle2"),
                 () -> Assertions.assertEquals(foundBoardList.get(2).getTitle(), "boardTitle3"),
-                () -> Assertions.assertEquals(foundBoardList.get(3).getTitle(), "boardTitle4"),
-                () -> Assertions.assertEquals(foundBoardList.get(4).getTitle(), "boardTitle5")
+                () -> Assertions.assertEquals(foundBoardList.get(1).getTitle(), "boardTitle4"),
+                () -> Assertions.assertEquals(foundBoardList.get(0).getTitle(), "boardTitle5")
         );
 
     }
@@ -207,11 +207,11 @@ class BoardRepositoryTest{
         //then
         Assertions.assertAll(
                 () -> Assertions.assertTrue(foundBoardList.size() == 5),
-                () -> Assertions.assertEquals(foundBoardList.get(0).getContent(), content),
-                () -> Assertions.assertEquals(foundBoardList.get(1).getContent(), "boardContent2"),
+                () -> Assertions.assertEquals(foundBoardList.get(4).getContent(), content),
+                () -> Assertions.assertEquals(foundBoardList.get(3).getContent(), "boardContent2"),
                 () -> Assertions.assertEquals(foundBoardList.get(2).getContent(), "boardContent3"),
-                () -> Assertions.assertEquals(foundBoardList.get(3).getContent(), "boardContent4"),
-                () -> Assertions.assertEquals(foundBoardList.get(4).getContent(), "boardContent5")
+                () -> Assertions.assertEquals(foundBoardList.get(1).getContent(), "boardContent4"),
+                () -> Assertions.assertEquals(foundBoardList.get(0).getContent(), "boardContent5")
         );
 
     }
