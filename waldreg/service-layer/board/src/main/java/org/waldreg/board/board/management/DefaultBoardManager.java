@@ -293,4 +293,19 @@ public class DefaultBoardManager implements BoardManager{
         return boardRepository.getBoardMaxIdx();
     }
 
+    @Override
+    public int getSearchCountByTitle(String keyword){
+        return boardRepository.getBoardMaxIdxByTitle(keyword);
+    }
+
+    @Override
+    public int getSearchCountByContent(String keyword){
+        return boardRepository.getBoardMaxIdxByContent(keyword);
+    }
+
+    @Override
+    public int getSearchCountByAuthorUserId(String keyword){
+        return boardRepository.getBoardMaxIdxByAuthorUserId(keyword);
+    }
+
 }
